@@ -22,8 +22,8 @@
 # THE SOFTWARE.
 ##############################################################################
 
-import torch
 import triton
+import torch
 from triton.experimental import gluon
 from triton.experimental.gluon import language as gl
 

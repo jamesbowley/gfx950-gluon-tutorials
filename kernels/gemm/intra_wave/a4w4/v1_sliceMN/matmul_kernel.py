@@ -4,8 +4,8 @@
 # Copyright (c) 2026 Advanced Micro Devices, Inc. All Rights Reserved.
 ##############################################################################
 
-import torch
 import triton
+import torch
 from common import get_pids
 from triton.experimental import gluon
 from triton.experimental.gluon import language as gl

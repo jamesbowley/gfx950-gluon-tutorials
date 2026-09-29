@@ -32,12 +32,11 @@ import argparse
 import os
 import sys
 
-import torch
-
 if os.environ.get("LLVM_PASS_PLUGIN_PATH"):
     sys.setdlopenflags(os.RTLD_NOW | os.RTLD_GLOBAL)
 
 import triton
+import torch
 
 # Out-of-tree amdgcnas peephole (post-assembly): install the amdgcn-stage hook
 # when TRITON_AMDGCNAS_PLUGIN is set. Pure-Python text transform, no rebuild.

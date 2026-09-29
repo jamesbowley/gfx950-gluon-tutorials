@@ -36,8 +36,8 @@ import importlib
 import os
 import sys
 
-import torch
 import triton
+import torch
 
 # Put the shared kernels/gemm/utils/ on the path so each version's
 # `from common import get_pids` resolves to the shared helper.

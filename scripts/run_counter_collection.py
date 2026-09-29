@@ -55,6 +55,10 @@ VERSION_MAP = {
     7: "v7_sliceN",
     8: "v8_sliceMN",
     9: "v9_beyond_hotloop",
+    10: "v10_persistant",
+    11: "v11_persistant_overlap_global",
+    12: "v12_persistant_overlap_lds",
+    13: "v13_persistant_peel_acc",
 }
 
 # a4w4 has its own version -> directory map. Each directory's matmul_kernel.py
@@ -152,7 +156,7 @@ def parse_counter_csv(csv_path, counters, kernel_name):
     return averages, n_dispatches
 
 
-def run_collection(version, config, counters, K, dtype, kernel="a16w16"):
+def run_collection(version, config, counters, K, dtype, kernel="a16w16", M=None, N=None):
     """Run rocprofv3 counter collection for one (version, config) pair.
 
     Returns a dict with version_dir, averages (counter->value), and n_dispatches.
@@ -203,6 +207,10 @@ def run_collection(version, config, counters, K, dtype, kernel="a16w16"):
     bench_cmd = ["python", "bench.py", "--rocprof", "--K", str(K)]
     if kernel == "a16w16":
         bench_cmd.extend(["--dtype", dtype, "--version", str(version)])
+        if M is not None:
+            bench_cmd.extend(["--M", str(M)])
+        if N is not None:
+            bench_cmd.extend(["--N", str(N)])
     elif kernel == "a4w4":
         bench_cmd.extend(["--version", str(version)])
 
@@ -314,6 +322,12 @@ def parse_args():
         help="K dimension for GEMM (default: 4096)",
     )
     parser.add_argument(
+        "--M", type=int, default=None, help="Override M, a16w16 only (default: bench.py's 4096)"
+    )
+    parser.add_argument(
+        "--N", type=int, default=None, help="Override N, a16w16 only (default: bench.py's 4096)"
+    )
+    parser.add_argument(
         "--dtype",
         default="fp16",
         choices=["fp16", "bf16"],
@@ -357,7 +371,9 @@ def main():
         print(f"{'='*60}")
         results[config] = []
         for version in versions:
-            row = run_collection(version, config, counters, args.K, args.dtype, kernel=args.kernel)
+            row = run_collection(
+                version, config, counters, args.K, args.dtype, kernel=args.kernel, M=args.M, N=args.N
+            )
             results[config].append(row)
 
     # Print summary tables

@@ -51,8 +51,8 @@ if os.environ.get("LLVM_PASS_PLUGIN_PATH"):
         except OSError:
             pass  # best effort; bench.py sets the flag early enough on its own
 
-import torch
 import triton
+import torch
 import triton.language as tl
 from triton.experimental import gluon
 from triton.experimental.gluon import language as gl

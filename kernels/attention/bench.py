@@ -33,8 +33,6 @@ import argparse
 import os
 import sys
 
-import torch
-
 # The out-of-tree LLIR scheduler ships as an LLVM pass plugin. Loaded via
 # LLVM_PASS_PLUGIN_PATH, it resolves LLVM symbols from libtriton at dlopen time,
 # which requires libtriton in the *global* symbol scope. CPython loads
@@ -44,6 +42,7 @@ if os.environ.get("LLVM_PASS_PLUGIN_PATH"):
     sys.setdlopenflags(os.RTLD_NOW | os.RTLD_GLOBAL)
 
 import triton  # noqa: E402
+import torch
 
 # Out-of-tree amdgcnas peephole (post-assembly): install the amdgcn-stage hook
 # when TRITON_AMDGCNAS_PLUGIN is set. Pure-Python text transform, no rebuild.

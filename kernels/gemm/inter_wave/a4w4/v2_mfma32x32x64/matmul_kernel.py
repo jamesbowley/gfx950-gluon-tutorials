@@ -37,8 +37,8 @@ K-column, and the 8 warps cover the 8 K groups. (v0's [128,8] halves happen to
 coalesce because there tileN=128 == the warp's N-span, so no gap.)
 """
 
-import torch
 import triton
+import torch
 import triton.language as tl
 from common import get_pids
 from triton.experimental import gluon

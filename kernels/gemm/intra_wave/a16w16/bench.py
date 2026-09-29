@@ -33,12 +33,11 @@ import importlib
 import os
 import sys
 
-import torch
-
 if os.environ.get("LLVM_PASS_PLUGIN_PATH"):
     sys.setdlopenflags(os.RTLD_NOW | os.RTLD_GLOBAL)
 
 import triton
+import torch
 
 # Out-of-tree amdgcnas peephole (post-assembly): install the amdgcn-stage hook
 # when TRITON_AMDGCNAS_PLUGIN is set. Pure-Python text transform, no rebuild.
@@ -75,6 +74,10 @@ VERSION_MAP = {
     7: "v7_sliceN",
     8: "v8_sliceMN",
     9: "v9_beyond_hotloop",
+    10: "v10_persistant",
+    11: "v11_persistant_overlap_global",
+    12: "v12_persistant_overlap_lds",
+    13: "v13_persistant_peel_acc",
 }
 
 DEVICE = triton.runtime.driver.active.get_active_torch_device()
@@ -95,21 +98,16 @@ def get_x_vals():
     ]
 
 
-def get_gemm_sizes(selected_k=None):
-    sizes = get_x_vals()
+def get_gemm_sizes(selected_k=None, M=None, N=None):
+    sizes = [(M or m, N or n, k) for m, n, k in get_x_vals()]
 
     if selected_k is None:
         return sizes
 
     filtered = [s for s in sizes if s[2] == selected_k]
 
-    if not filtered:
-        raise ValueError(
-            f"No GEMM size found with K={selected_k}. "
-            f"Available K values: {[k for _, _, k in sizes]}"
-        )
-
-    return filtered
+    # The list only sets the default sweep; an explicit K outside it runs as given.
+    return filtered or [(M or 4096, N or 4096, selected_k)]
 
 
 def get_dtypes(selected_dtype=None):
@@ -134,6 +132,8 @@ def parse_args():
 
     parser = argparse.ArgumentParser(description="GEMM benchmark")
     parser.add_argument("--K", type=int, default=None, help="Select GEMM problem size with given K")
+    parser.add_argument("--M", type=int, default=None, help="Override M (default: 4096)")
+    parser.add_argument("--N", type=int, default=None, help="Override N (default: 4096)")
     parser.add_argument(
         "--dtype",
         nargs="+",
@@ -145,7 +145,7 @@ def parse_args():
         "--version",
         type=int,
         default=9,
-        choices=range(0, 10),
+        choices=range(0, 14),
         help="Kernel version to benchmark (default: 9, the final version)",
     )
     parser.add_argument(
@@ -181,7 +181,10 @@ def test_correctness(matmul, dtype, gemm_sizes, version_dir):
             torch_output = torch.matmul(a.to(torch.float16), b.to(torch.float16))
         else:
             torch_output = torch.matmul(a, b)
-        if torch.allclose(triton_output, torch_output, atol=1e-1, rtol=0):
+        # bf16 has an 8-bit mantissa: at large K the outputs are big enough that one ulp
+        # exceeds atol, so allow a relative tolerance of a couple of ulps.
+        rtol = 1e-2 if dtype == "bf16" else 0
+        if torch.allclose(triton_output, torch_output, atol=1e-1, rtol=rtol):
             print(f"[{version_dir}] {M=} {N=} {K=} {dtype=}: ✅ Triton and Torch match")
         else:
             print(f"[{version_dir}] {M=} {N=} {K=} {dtype=}: ❌ Triton and Torch differ")
@@ -247,7 +250,7 @@ def main():
     module = importlib.import_module(f"{version_dir}.matmul_kernel")
     matmul = module.matmul
 
-    gemm_sizes = get_gemm_sizes(args.K)
+    gemm_sizes = get_gemm_sizes(args.K, args.M, args.N)
     dtypes = get_dtypes(args.dtype)
 
     for dtype in dtypes:

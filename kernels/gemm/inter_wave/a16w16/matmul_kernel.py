@@ -16,8 +16,8 @@ from a16w16/v9 (with the warp dim extended 4->8), validated for correctness
 before the warp_pipeline_stage wrapping is added.
 """
 
-import torch
 import triton
+import torch
 import triton.language as tl
 from common import get_pids
 from triton.experimental import gluon

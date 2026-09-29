@@ -52,6 +52,7 @@ from glob import glob
 # MFMA instruction cycle mapping for non-scaled versions
 MFMA_CYCLE_MAP = {
     "v_mfma_f32_16x16x32_f16": 16,
+    "v_mfma_f32_16x16x32_bf16": 16,
     "v_mfma_f32_32x32x16_f16": 32,
     # "v_mfma_f32_4x4x4_f16": 4,
     # "v_mfma_f32_16x16x4_f32": 16,

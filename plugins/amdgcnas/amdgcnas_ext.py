@@ -28,6 +28,14 @@ import re
 from collections import defaultdict
 from typing import Optional, Set, Tuple
 
+## scratch_load is deliberately absent: can_hoist handles it itself, checking the loop's spill stores.
+MEMORY_PREFIXES = (
+    "ds_", "buffer_", "global_", "flat_",
+    "s_load", "s_buffer_load", "s_atomic", "s_memtime", "s_memrealtime", "s_getreg",
+)
+
+CACHE_POLICY = {"sc0", "sc1", "nt", "glc", "slc", "dlc"}
+
 NO_DEF_OPS = {
     "s_waitcnt",
     "s_nop",
@@ -129,6 +137,12 @@ class Instruction:
             return self.raw_line
         if not self.operands:
             return self.opcode
+        if self.opcode.startswith(("global_", "flat_", "scratch_")):
+            ## The assembler rejects a comma before these instructions' cache-policy modifiers
+            ## (`off, sc0, sc1`), so re-emit those space-separated.
+            ops = [o for o in self.operands if o not in CACHE_POLICY]
+            mods = [o for o in self.operands if o in CACHE_POLICY]
+            return " ".join([f"{self.opcode} " + ", ".join(ops)] + mods)
         return f"{self.opcode} " + ", ".join(self.operands)
 
     def get_dst_regs(self) -> Register:
@@ -185,7 +199,10 @@ class Instruction:
 
     # ---------- classification ----------
     def is_memory(self):
-        return self.opcode.startswith("ds_") or self.opcode.startswith("buffer_")
+        ## Anything that reads memory or a clock. The loop-invariant hoist is the only user: an
+        ## s_load poll or s_memtime whose operands don't change inside the loop is still not
+        ## invariant, and hoisting it turns the loop into a spin on one stale value.
+        return self.opcode.startswith(MEMORY_PREFIXES)
 
     def is_control(self):
         return self.opcode.startswith("s_branch") or self.opcode.startswith("s_cbranch")
@@ -396,14 +413,21 @@ class Program:
         self.tail_lines = []  # after s_endpgm
 
     def get_prologue(self):
-        for bb in self.blocks:
-            if bb.is_prologue():
-                return bb
+        ## The hot loop's entry: its first predecessor in program order other than itself.
+        loop = self.get_loop()
+        if loop is None:
+            return None
+        preds = [bb for bb in loop.preds if bb is not loop]
+        return min(preds, key=self.blocks.index) if preds else None
 
     def get_loop(self):
-        for bb in self.blocks:
-            if bb.is_loop():
-                return bb
+        ## The hot loop is the self-looping block with the most MFMAs (the first such, on a tie). A
+        ## kernel may have a small loop ahead of it, e.g. a wait or poll at the top of a tile, which
+        ## must not receive the K-loop's peepholes in its place.
+        loops = [bb for bb in self.blocks if bb.is_loop()]
+        if not loops:
+            return None
+        return max(loops, key=lambda bb: (sum(i.is_mfma() for i in bb.instructions), -self.blocks.index(bb)))
 
     def update_inst_index(self):
         for bb in self.blocks:
@@ -1144,6 +1168,12 @@ def can_hoist(inst, bb, invariant_regs):
                     f"  cannot rewrite user {user.emit()} (register embedded in wider group), cannot hoist"
                 )
                 return False
+        ## free_regs is only free inside the loop: a user after the loop would read the renamed
+        ## register past code that may redefine it (e.g. the epilogue), so keep such defs in place.
+        in_loop = set(bb.instructions)
+        if any(user not in in_loop for user in inst.users):
+            logging.debug(f"  {inst.emit()} has users after the loop, cannot rename, cannot hoist")
+            return False
 
         free_reg = pick_and_remove_contiguous_regs(bb.free_regs, num, kind)
         if not free_reg:

@@ -69,6 +69,10 @@ VERSION_MAP = {
     7: "v7_sliceN",
     8: "v8_sliceMN",
     9: "v9_beyond_hotloop",
+    10: "v10_persistant",
+    11: "v11_persistant_overlap_global",
+    12: "v12_persistant_overlap_lds",
+    13: "v13_persistant_peel_acc",
 }
 
 # The LLIR scheduler now ships as an out-of-tree LLVM pass plugin
@@ -176,24 +180,43 @@ def get_git_root():
     return result.stdout.strip()
 
 
-def write_att_config(version_dir, work_dir=None, kernel_type="a16w16"):
+def write_att_config(
+    version_dir, work_dir=None, kernel_type="a16w16", att_iteration=None, att_buffer_size=None
+):
     """Write att_matmul.json with kernel_include_regex set to the version dir name."""
     cfg = json.loads(json.dumps(ATT_MATMUL_TEMPLATE))
     cfg["jobs"][0]["kernel_include_regex"] = version_dir
+    if att_iteration is not None:
+        cfg["jobs"][0]["kernel_iteration_range"] = f"[{att_iteration}]"
     if kernel_type in ATT_BUFFER_SIZE_OVERRIDES:
         cfg["jobs"][0]["att_buffer_size"] = ATT_BUFFER_SIZE_OVERRIDES[kernel_type]
+    if att_buffer_size is not None:
+        cfg["jobs"][0]["att_buffer_size"] = att_buffer_size
     att_path = os.path.join(work_dir, "att_matmul.json") if work_dir else "att_matmul.json"
     with open(att_path, "w") as f:
         json.dump(cfg, f, indent=4)
 
 
-def clean_caches(work_dir=None):
-    """Remove triton cache and local tmp/ directory."""
+def clean_caches(att_run_dir=None):
+    """Remove the Triton cache and, if given, this run's own ATT output directory.
+
+    Only the current (config, version) directory is removed, so a matrix run
+    accumulates one trace per combination instead of repeatedly wiping a single
+    shared one.
+    """
     if os.path.isdir(TRITON_CACHE):
         shutil.rmtree(TRITON_CACHE)
-    tmp_dir = os.path.join(work_dir, "tmp") if work_dir else "tmp"
-    if os.path.isdir(tmp_dir):
-        shutil.rmtree(tmp_dir)
+    if att_run_dir and os.path.isdir(att_run_dir):
+        shutil.rmtree(att_run_dir)
+
+
+def att_run_dir_for(att_output, work_dir, config, version_dir):
+    """Per-(config, version) ATT output directory.
+
+    Defaults under the kernel directory's tmp/, which .gitignore already covers.
+    """
+    base = att_output if att_output else os.path.join(work_dir, "tmp")
+    return os.path.join(base, config, version_dir)
 
 
 def parse_tflops(output):
@@ -297,12 +320,14 @@ def run_rocprof_trace(
     iters=1000,
     rotating_sets=3,
     last_n=100,
+    M=4096,
+    N=4096,
+    rotating_buffer_mb=None,
 ):
     """Run rocprofv3 --kernel-trace to collect kernel timestamps.
 
     Returns TFLOPS computed from the average kernel time, or None on failure.
     """
-    M, N = 4096, 4096
     trace_dir = os.path.join(work_dir, f"{version_dir}_rocprof_trace")
     if os.path.isdir(trace_dir):
         shutil.rmtree(trace_dir)
@@ -344,8 +369,10 @@ def run_rocprof_trace(
             cmd.extend(["--version", str(version)])
     else:
         cmd.extend([sys.executable, "bench.py", "--rocprof", "--K", str(K)])
+        if rotating_buffer_mb is not None:
+            cmd.extend(["--rotating-buffer-size", str(rotating_buffer_mb)])
         if kernel_type == "a16w16":
-            cmd.extend(["--dtype", dtype, "--version", str(version)])
+            cmd.extend(["--dtype", dtype, "--version", str(version), "--M", str(M), "--N", str(N)])
         elif kernel_type == "a4w4":
             cmd.extend(["--version", str(version)])
 
@@ -403,6 +430,12 @@ def run_benchmark(
     iters=1000,
     rotating_sets=3,
     last_n=100,
+    att_output=None,
+    M=4096,
+    N=4096,
+    rotating_buffer_mb=None,
+    att_iteration=None,
+    att_buffer_size=None,
 ):
     """Run a single benchmark for the given version, config, and kernel type.
 
@@ -428,8 +461,16 @@ def run_benchmark(
         "mfma_eff": None,
     }
 
-    clean_caches(work_dir)
-    write_att_config(version_dir, work_dir, kernel_type=kernel)
+    att_dir = att_run_dir_for(att_output, work_dir, config, version_dir)
+
+    clean_caches(att_dir)
+    write_att_config(
+        version_dir,
+        work_dir,
+        kernel_type=kernel,
+        att_iteration=att_iteration,
+        att_buffer_size=att_buffer_size,
+    )
 
     run_att_path = os.path.join(git_root, "scripts", "run_att.py")
 
@@ -449,14 +490,14 @@ def run_benchmark(
         sys.executable,
         run_att_path,
         "--att-output",
-        "tmp",
+        att_dir,
         "python",
         "bench.py",
         "--K",
         str(K),
     ]
     if kernel == "a16w16":
-        cmd.extend(["--dtype", dtype, "--version", str(version)])
+        cmd.extend(["--dtype", dtype, "--version", str(version), "--M", str(M), "--N", str(N)])
     elif kernel == "a4w4":
         cmd.extend(["--version", str(version)])
 
@@ -464,6 +505,7 @@ def run_benchmark(
         print(f"  Running: {kernel} config={config}")
     else:
         print(f"  Running: v{version} ({version_dir}) config={config}")
+    print(f"  ATT trace: {att_dir}")
     try:
         proc = subprocess.run(
             cmd,
@@ -473,6 +515,9 @@ def run_benchmark(
             cwd=work_dir,
         )
         combined = proc.stdout + "\n" + proc.stderr
+        for line in combined.splitlines():
+            if "Triton and Torch match" in line or "Triton and Torch differ" in line:
+                print(f"  {line.strip()}")
 
         if proc.returncode != 0:
             print(f"  FAILED (exit code {proc.returncode})")
@@ -511,6 +556,9 @@ def run_benchmark(
             iters=iters,
             rotating_sets=rotating_sets,
             last_n=last_n,
+            M=M,
+            N=N,
+            rotating_buffer_mb=rotating_buffer_mb,
         )
         result["tflops"] = tflops
 
@@ -577,6 +625,18 @@ def parse_args():
         help="K dimension for GEMM (default: 4096)",
     )
     parser.add_argument(
+        "--M", type=int, default=4096, help="M dimension, a16w16 only (default: 4096)"
+    )
+    parser.add_argument(
+        "--N", type=int, default=4096, help="N dimension, a16w16 only (default: 4096)"
+    )
+    parser.add_argument(
+        "--rotating-buffer-size",
+        type=int,
+        default=None,
+        help="MB of rotating A/B/C copies for bench.py --rocprof (default: bench.py's 512)",
+    )
+    parser.add_argument(
         "--dtype",
         default="fp16",
         choices=["fp16", "bf16"],
@@ -617,6 +677,28 @@ def parse_args():
         help="Final matching rocprof dispatches averaged for timing (default: 100).",
     )
     parser.add_argument(
+        "--att-output",
+        default=None,
+        help="Base directory for ATT traces. Every (config, version) gets its own "
+        "<base>/<config>/<version> subdirectory, so a matrix run keeps each trace "
+        "instead of overwriting one shared directory. Relative paths resolve "
+        "against the current directory. Default: <kernel dir>/tmp, which "
+        ".gitignore already covers.",
+    )
+    parser.add_argument(
+        "--att-iteration",
+        type=int,
+        default=None,
+        help="Kernel dispatch captured by ATT (default: 15). bench.py dispatches the kernel "
+        "1 + 1 + 5 + 25/t + 100/t times for a t ms kernel, so kernels longer than ~12 ms "
+        "need an earlier dispatch.",
+    )
+    parser.add_argument(
+        "--att-buffer-size",
+        default=None,
+        help="ATT buffer size, hex string (default: 0x60000000, or the per-kernel override).",
+    )
+    parser.add_argument(
         "--allow-unreported",
         action="store_true",
         help="Run (version, config) pairs that do not have a published number "
@@ -636,6 +718,13 @@ def main():
     if min(args.warmup, args.iters, args.rotating_sets, args.last_n) <= 0:
         print("Error: --warmup, --iters, --rotating-sets, and --last-n must be positive")
         sys.exit(2)
+    if (args.M, args.N) != (4096, 4096) and (args.kernel != "a16w16" or args.prepared):
+        print("Error: --M/--N are only supported for --kernel a16w16 without --prepared")
+        sys.exit(2)
+
+    # Resolve against the invocation directory, not each kernel's work_dir,
+    # which is what the subprocesses actually run in.
+    att_output = os.path.abspath(args.att_output) if args.att_output else None
 
     if args.kernel == "a8w8":
         # a8w8 has a single kernel, --versions is ignored
@@ -705,6 +794,12 @@ def main():
                 iters=args.iters,
                 rotating_sets=args.rotating_sets,
                 last_n=args.last_n,
+                att_output=att_output,
+                M=args.M,
+                N=args.N,
+                rotating_buffer_mb=args.rotating_buffer_size,
+                att_iteration=args.att_iteration,
+                att_buffer_size=args.att_buffer_size,
             )
             results[config].append(row)
 

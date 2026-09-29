@@ -8,8 +8,8 @@ correctness reference, and the FLOP model).
 
 import math
 
-import torch
 import triton.language as tl
+import torch
 from triton.experimental import gluon
 from triton.experimental.gluon import language as gl
 

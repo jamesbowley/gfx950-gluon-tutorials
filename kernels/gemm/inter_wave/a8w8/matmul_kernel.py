@@ -28,8 +28,8 @@ base promoted to a third warp base (the extra warp dim, since warpsPerCTA goes
 verbatim from the 4-wave a8w8 kernel.
 """
 
-import torch
 import triton
+import torch
 import triton.language as tl
 from common import get_pids
 from triton.experimental import gluon

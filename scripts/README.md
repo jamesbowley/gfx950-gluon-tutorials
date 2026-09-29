@@ -154,6 +154,7 @@ python scripts/run_perf_table.py --kernel a16w16 --versions 9 --configs llir+amd
 | `--iters` | `1000` | Measured dispatches in prepared mode |
 | `--rotating-sets` | `3` | Complete input/output tensor sets in prepared mode |
 | `--last-n` | `100` | Final matching dispatches averaged from the kernel trace |
+| `--att-output` | `<kernel dir>/tmp` | Base directory for ATT traces; each `(config, version)` lands in its own `<base>/<config>/<version>` subdirectory, so a matrix run keeps every trace |
 
 ### Configs
 

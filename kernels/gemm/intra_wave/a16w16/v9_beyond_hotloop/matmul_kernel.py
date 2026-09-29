@@ -22,8 +22,8 @@
 # THE SOFTWARE.
 ##############################################################################
 
-import torch
 import triton
+import torch
 from common import get_pids
 from triton.experimental import gluon
 from triton.experimental.gluon import language as gl

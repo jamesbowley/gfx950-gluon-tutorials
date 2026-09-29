@@ -22,8 +22,8 @@
 # THE SOFTWARE.
 ##############################################################################
 
-import torch
 import triton
+import torch
 from triton.experimental import gluon
 from triton.experimental.gluon import language as gl
 
@@ -83,7 +83,7 @@ def v0_naive(
     b_ptrs = b_base + b_offsets
 
     mfmaLayout: gl.constexpr = gl.amd.AMDMFMALayout(
-        version=4, instr_shape=[16, 16, 32], transposed=True, warps_per_cta=[2, 2]
+        version=4, instr_shape=[32, 32, 16], transposed=True, warps_per_cta=[2, 2]
     )
 
     dotOpLayoutA: gl.constexpr = gl.DotOperandLayout(operand_index=0, parent=mfmaLayout, k_width=8)
