@@ -115,8 +115,8 @@ CONFIG_ENV = {
 REPORTED_COMBINATIONS = {
     "a16w16": {
         "base": {0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
-        "llir": {5, 6, 7, 8, 9},
-        "llir+amdgcnas": {7, 8, 9},
+        "llir": {5, 6, 7, 8, 9, 10, 11, 12, 13},
+        "llir+amdgcnas": {7, 8, 9, 10, 11, 12, 13},
     },
     "a8w8": {
         "base": {None},
@@ -323,6 +323,7 @@ def run_rocprof_trace(
     M=4096,
     N=4096,
     rotating_buffer_mb=None,
+    bias=False,
 ):
     """Run rocprofv3 --kernel-trace to collect kernel timestamps.
 
@@ -373,6 +374,8 @@ def run_rocprof_trace(
             cmd.extend(["--rotating-buffer-size", str(rotating_buffer_mb)])
         if kernel_type == "a16w16":
             cmd.extend(["--dtype", dtype, "--version", str(version), "--M", str(M), "--N", str(N)])
+            if bias:
+                cmd.append("--bias")
         elif kernel_type == "a4w4":
             cmd.extend(["--version", str(version)])
 
@@ -436,6 +439,7 @@ def run_benchmark(
     rotating_buffer_mb=None,
     att_iteration=None,
     att_buffer_size=None,
+    bias=False,
 ):
     """Run a single benchmark for the given version, config, and kernel type.
 
@@ -498,6 +502,8 @@ def run_benchmark(
     ]
     if kernel == "a16w16":
         cmd.extend(["--dtype", dtype, "--version", str(version), "--M", str(M), "--N", str(N)])
+        if bias:
+            cmd.append("--bias")
     elif kernel == "a4w4":
         cmd.extend(["--version", str(version)])
 
@@ -559,6 +565,7 @@ def run_benchmark(
             M=M,
             N=N,
             rotating_buffer_mb=rotating_buffer_mb,
+            bias=bias,
         )
         result["tflops"] = tflops
 
@@ -706,6 +713,11 @@ def parse_args():
         "crashes (e.g. v0..v4 + llir segfault) and configs that aren't part "
         "of the documented optimization story.",
     )
+    parser.add_argument(
+        "--bias",
+        action="store_true",
+        help="a16w16 v9-v13 only: benchmark with a bias[N] (bench.py --bias).",
+    )
     return parser.parse_args()
 
 
@@ -720,6 +732,9 @@ def main():
         sys.exit(2)
     if (args.M, args.N) != (4096, 4096) and (args.kernel != "a16w16" or args.prepared):
         print("Error: --M/--N are only supported for --kernel a16w16 without --prepared")
+        sys.exit(2)
+    if args.bias and (args.kernel != "a16w16" or args.prepared or min(args.versions) < 9):
+        print("Error: --bias is only supported for --kernel a16w16 --versions 9..13 without --prepared")
         sys.exit(2)
 
     # Resolve against the invocation directory, not each kernel's work_dir,
@@ -800,6 +815,7 @@ def main():
                 rotating_buffer_mb=args.rotating_buffer_size,
                 att_iteration=args.att_iteration,
                 att_buffer_size=args.att_buffer_size,
+                bias=args.bias,
             )
             results[config].append(row)
 

@@ -27,6 +27,7 @@ import os
 import triton
 import torch
 # from common import get_pids
+from common import init_acc
 from triton.experimental import gluon
 from triton.experimental.gluon import language as gl
 
@@ -117,6 +118,7 @@ def v12_persistant_overlap_lds(
     a_ptr,
     b_ptr,
     c_ptr,
+    bias_ptr,
     M,
     N,
     K: gl.constexpr,
@@ -134,6 +136,7 @@ def v12_persistant_overlap_lds(
     GROUP_SIZE_M: gl.constexpr,  #
     TILE_ORDER_V9: gl.constexpr,
     MASK_TAIL_PREFETCH: gl.constexpr,
+    ADD_BIAS: gl.constexpr,
 ):
     """
     v11_persistant_overlap_global plus cross-tile LDS reads: the next tile's K-step 0 LDS
@@ -314,10 +317,9 @@ def v12_persistant_overlap_lds(
         a_base = a_ptr + pid_m.to(gl.int64) * BLOCK_M * stride_am + BLOCK_K * stride_ak * 2
         b_base = b_ptr + pid_n.to(gl.int64) * BLOCK_N * stride_bn + BLOCK_K * stride_bk * 2
 
-        acc_tl = gl.zeros((BLOCK_M // 2, BLOCK_N // 2), gl.float32, mfmaLayout)
-        acc_bl = gl.zeros((BLOCK_M // 2, BLOCK_N // 2), gl.float32, mfmaLayout)
-        acc_tr = gl.zeros((BLOCK_M // 2, BLOCK_N // 2), gl.float32, mfmaLayout)
-        acc_br = gl.zeros((BLOCK_M // 2, BLOCK_N // 2), gl.float32, mfmaLayout)
+        acc_tl, acc_bl, acc_tr, acc_br = init_acc(
+            bias_ptr, pid_n, BLOCK_M, BLOCK_N, mfmaLayout, ADD_BIAS
+        )
 
         ## Main loop — same as v8
         for k in range(0, iterMax - 2, 2):
@@ -329,7 +331,7 @@ def v12_persistant_overlap_lds(
             ########################################
             ## Region 0: C_tl = DOT(a_top, b_left)
             ########################################
-            acc_tl = gl.amd.cdna3.mfma(a_top, b_left, acc_tl)
+            acc_tl = gl.amd.cdna3.mfma(a_top, b_left, acc_tl, cd_regclass="a")
 
             gl.amd.cdna4.async_copy.wait_group(5)
             a_bot = smemA_bot.index(0).load(dotOpLayoutA)
@@ -340,7 +342,7 @@ def v12_persistant_overlap_lds(
             ########################################
             ## Region 1: C_bl = DOT(a_bot, b_left)
             ########################################
-            acc_bl = gl.amd.cdna3.mfma(a_bot, b_left, acc_bl)
+            acc_bl = gl.amd.cdna3.mfma(a_bot, b_left, acc_bl, cd_regclass="a")
 
             gl.amd.cdna4.async_copy.wait_group(5)
             b_right = smemB_right.index(0).load(dotOpLayoutB)
@@ -351,7 +353,7 @@ def v12_persistant_overlap_lds(
             ########################################
             ## Region 2: C_tr = DOT(a_top, b_right)
             ########################################
-            acc_tr = gl.amd.cdna3.mfma(a_top, b_right, acc_tr)
+            acc_tr = gl.amd.cdna3.mfma(a_top, b_right, acc_tr, cd_regclass="a")
 
             gl.amd.cdna4.async_copy.wait_group(5)
             b_left = smemB_left.index(1).load(dotOpLayoutB)
@@ -364,7 +366,7 @@ def v12_persistant_overlap_lds(
             ########################################
             ## Region 3: C_br = DOT(a_bot, b_right)
             ########################################
-            acc_br = gl.amd.cdna3.mfma(a_bot, b_right, acc_br)
+            acc_br = gl.amd.cdna3.mfma(a_bot, b_right, acc_br, cd_regclass="a")
 
             gl.amd.cdna4.async_copy.wait_group(5)
             a_top = smemA_top.index(1).load(dotOpLayoutA)
@@ -382,7 +384,7 @@ def v12_persistant_overlap_lds(
             ########################################
             ## Region 0: C_tl = DOT(a_top, b_left)
             ########################################
-            acc_tl = gl.amd.cdna3.mfma(a_top, b_left, acc_tl)
+            acc_tl = gl.amd.cdna3.mfma(a_top, b_left, acc_tl, cd_regclass="a")
 
             gl.amd.cdna4.async_copy.wait_group(5)
             a_bot = smemA_bot.index(1).load(dotOpLayoutA)
@@ -395,7 +397,7 @@ def v12_persistant_overlap_lds(
             ########################################
             ## Region 1: C_bl = DOT(a_bot, b_left)
             ########################################
-            acc_bl = gl.amd.cdna3.mfma(a_bot, b_left, acc_bl)
+            acc_bl = gl.amd.cdna3.mfma(a_bot, b_left, acc_bl, cd_regclass="a")
 
             gl.amd.cdna4.async_copy.wait_group(5)
             b_right = smemB_right.index(1).load(dotOpLayoutB)
@@ -408,7 +410,7 @@ def v12_persistant_overlap_lds(
             ########################################
             ## Region 2: C_tr = DOT(a_top, b_right)
             ########################################
-            acc_tr = gl.amd.cdna3.mfma(a_top, b_right, acc_tr)
+            acc_tr = gl.amd.cdna3.mfma(a_top, b_right, acc_tr, cd_regclass="a")
 
             gl.amd.cdna4.async_copy.wait_group(5)
             b_left = smemB_left.index(0).load(dotOpLayoutB)
@@ -421,7 +423,7 @@ def v12_persistant_overlap_lds(
             ########################################
             ## Region 3: C_br = DOT(a_bot, b_right)
             ########################################
-            acc_br = gl.amd.cdna3.mfma(a_bot, b_right, acc_br)
+            acc_br = gl.amd.cdna3.mfma(a_bot, b_right, acc_br, cd_regclass="a")
 
             gl.amd.cdna4.async_copy.wait_group(5)
             a_top = smemA_top.index(0).load(dotOpLayoutA)
@@ -458,7 +460,7 @@ def v12_persistant_overlap_lds(
         ## Iter iterMax - 2: same 4-region pattern as main loop. Each async copy prefetches the
         ## next tile's K-step 0 into the buffer the main loop would refill here, so every wait
         ## keeps the main loop's count of 5 groups in flight.
-        acc_tl = gl.amd.cdna3.mfma(a_top, b_left, acc_tl)
+        acc_tl = gl.amd.cdna3.mfma(a_top, b_left, acc_tl, cd_regclass="a")
         gl.amd.cdna4.async_copy.wait_group(5)
         l_idx = (iterMax - 2) % 2
         a_bot = smemA_bot.index(l_idx).load(dotOpLayoutA)
@@ -468,7 +470,7 @@ def v12_persistant_overlap_lds(
         )
         gl.amd.cdna4.async_copy.commit_group()
 
-        acc_bl = gl.amd.cdna3.mfma(a_bot, b_left, acc_bl)
+        acc_bl = gl.amd.cdna3.mfma(a_bot, b_left, acc_bl, cd_regclass="a")
         gl.amd.cdna4.async_copy.wait_group(5)
         b_right = smemB_right.index(l_idx).load(dotOpLayoutB)
 
@@ -477,7 +479,7 @@ def v12_persistant_overlap_lds(
         )
         gl.amd.cdna4.async_copy.commit_group()
 
-        acc_tr = gl.amd.cdna3.mfma(a_top, b_right, acc_tr)
+        acc_tr = gl.amd.cdna3.mfma(a_top, b_right, acc_tr, cd_regclass="a")
         gl.amd.cdna4.async_copy.wait_group(5)
         g_idx = 1 - l_idx
         b_left = smemB_left.index(g_idx).load(dotOpLayoutB)
@@ -487,7 +489,7 @@ def v12_persistant_overlap_lds(
         )
         gl.amd.cdna4.async_copy.commit_group()
 
-        acc_br = gl.amd.cdna3.mfma(a_bot, b_right, acc_br)
+        acc_br = gl.amd.cdna3.mfma(a_bot, b_right, acc_br, cd_regclass="a")
         gl.amd.cdna4.async_copy.wait_group(5)
         a_top = smemA_top.index(g_idx).load(dotOpLayoutA)
 
@@ -499,7 +501,7 @@ def v12_persistant_overlap_lds(
         ## Iter iterMax - 1: prefetch the next tile's K-step 1.
         ## Natural-pipeline epilogue: each store follows its MFMA with one
         ## MFMA cycle of gap, yielding uniform MFMA-store interleaving.
-        acc_tl = gl.amd.cdna3.mfma(a_top, b_left, acc_tl)
+        acc_tl = gl.amd.cdna3.mfma(a_top, b_left, acc_tl, cd_regclass="a")
         gl.amd.cdna4.async_copy.wait_group(5)
         a_bot = smemA_bot.index(g_idx).load(dotOpLayoutA)
 
@@ -508,7 +510,7 @@ def v12_persistant_overlap_lds(
         )
         gl.amd.cdna4.async_copy.commit_group()
 
-        acc_bl = gl.amd.cdna3.mfma(a_bot, b_left, acc_bl)
+        acc_bl = gl.amd.cdna3.mfma(a_bot, b_left, acc_bl, cd_regclass="a")
         gl.amd.cdna4.async_copy.wait_group(5)
         b_right = smemB_right.index(g_idx).load(dotOpLayoutB)
 
@@ -521,7 +523,7 @@ def v12_persistant_overlap_lds(
         c_tl = gl.convert_layout(c_tl, layout=gStoreLayoutC)
         gl.amd.cdna3.buffer_store(ptr=c_tl_base, offsets=c_offsets, stored_value=c_tl)
 
-        acc_tr = gl.amd.cdna3.mfma(a_top, b_right, acc_tr)
+        acc_tr = gl.amd.cdna3.mfma(a_top, b_right, acc_tr, cd_regclass="a")
 
         gl.amd.cdna4.async_copy.buffer_load_to_shared(
             smemA_bot.index(1), a_next + a_half, a_offsets_next, mask=has_next
@@ -532,7 +534,7 @@ def v12_persistant_overlap_lds(
         c_bl = gl.convert_layout(c_bl, layout=gStoreLayoutC)
         gl.amd.cdna3.buffer_store(ptr=c_bl_base, offsets=c_offsets, stored_value=c_bl)
 
-        acc_br = gl.amd.cdna3.mfma(a_bot, b_right, acc_br)
+        acc_br = gl.amd.cdna3.mfma(a_bot, b_right, acc_br, cd_regclass="a")
 
         # Next tile's K-step 0 operands (prefetched in iter iterMax - 2), read while the last
         # MFMAs and stores drain; this tile's operand registers are all dead after acc_br.
@@ -557,11 +559,12 @@ def v12_persistant_overlap_lds(
     gl.amd.cdna4.async_copy.wait_group(0)
 
 
-def matmul(a, b, c=None):
+def matmul(a, b, c=None, bias=None):
     assert a.shape[1] == b.shape[0], "Incompatible dimensions"
     assert a.is_contiguous(), "Matrix A must be contiguous"
     M, K = a.shape
     K, N = b.shape
+    assert bias is None or (bias.shape == (N,) and bias.is_contiguous()), "bias must be contiguous (N,)"
     BLOCK_M, BLOCK_N, BLOCK_K = 256, 256, 64
     num_warps = 4
     if c is None:
@@ -583,6 +586,7 @@ def matmul(a, b, c=None):
         a,
         b,
         c,  #
+        bias,
         M,
         N,
         K,  #
@@ -603,9 +607,7 @@ def matmul(a, b, c=None):
         # The masked prefetch costs about 12 VGPRs, which here pushes the kernel into spills,
         # so the last trip loads the clamped tile unmasked.
         MASK_TAIL_PREFETCH=False,
+        ADD_BIAS=bias is not None,
         num_warps=num_warps,
-        # force-agpr RA hint: reserve 256 AGPRs for MFMA accumulators, enabled by
-        # TRITON_FORCE_MFMA_AGPR (paired in llvm.cc with amdgpu-mfma-vgpr-form=0).
-        llvm_fn_attrs=("amdgpu-agpr-alloc=256" if os.environ.get("TRITON_FORCE_MFMA_AGPR") else ""),
     )
     return c

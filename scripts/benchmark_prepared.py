@@ -218,7 +218,7 @@ def launch_configuration(args, jit_kernel):
     block_k = {"a16w16": 64, "a8w8": 128, "a4w4": 256}[args.kernel]
     grid_mn = triton.cdiv(args.M, 256) * triton.cdiv(args.N, 256)
     constexprs = {"BLOCK_M": 256, "BLOCK_N": 256, "BLOCK_K": block_k}
-    optional = {"GRID_MN": grid_mn, "NUM_XCDS": 8, "GROUP_SIZE_M": 4}
+    optional = {"GRID_MN": grid_mn, "NUM_XCDS": 8, "GROUP_SIZE_M": 4, "ADD_BIAS": False}
     constexprs.update(
         {name: value for name, value in optional.items() if name in jit_kernel.arg_names}
     )
@@ -243,6 +243,9 @@ def main():
     device = triton.runtime.driver.active.get_active_torch_device()
     torch.manual_seed(0)
     runtime_sets, bytes_per_set = make_runtime_arguments(args, device)
+    if "bias_ptr" in jit_kernel.arg_names:
+        # a16w16 v9-v13: bias_ptr follows c_ptr; prepared timing runs without bias.
+        runtime_sets = [(*rs[:3], None, *rs[3:]) for rs in runtime_sets]
     grid, constexprs, compiler_options = launch_configuration(args, jit_kernel)
     prepared = PreparedKernel.create(
         jit_kernel,

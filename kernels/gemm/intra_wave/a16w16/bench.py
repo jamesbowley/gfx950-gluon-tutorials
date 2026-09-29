@@ -24,6 +24,7 @@
 
 import argparse
 import importlib
+import inspect
 
 # The out-of-tree LLIR scheduler ships as an LLVM pass plugin (see ../../../../plugins/).
 # Loaded via LLVM_PASS_PLUGIN_PATH, it resolves LLVM symbols from libtriton at
@@ -161,10 +162,15 @@ def parse_args():
         help="Total size (MB) of rotating tensors (a, b, c) for rocprof mode. "
         "Should exceed GPU cache (L2+MALL) size. (default: 512)",
     )
+    parser.add_argument(
+        "--bias",
+        action="store_true",
+        help="Add a bias[N] to the output (v9-v13): correctness, do_bench and rocprof mode.",
+    )
     return parser.parse_args()
 
 
-def test_correctness(matmul, dtype, gemm_sizes, version_dir):
+def test_correctness(matmul, dtype, gemm_sizes, version_dir, bias=False):
     if dtype == "f8":
         torch_dtype = torch.float16
     else:
@@ -176,10 +182,16 @@ def test_correctness(matmul, dtype, gemm_sizes, version_dir):
         if dtype == "f8":
             a = a.to(torch.float8_e5m2)
             b = b.to(torch.float8_e5m2)
-        triton_output = matmul(a, b)
-        if dtype == "f8":
+        if bias:
+            bias_n = torch.rand((N,), device=DEVICE, dtype=torch_dtype) - 0.5
+            triton_output = matmul(a, b, bias=bias_n)
+            # fp32 reference: the kernel adds the bias to its fp32 accumulator.
+            torch_output = (torch.matmul(a.float(), b.float()) + bias_n.float()).to(torch_dtype)
+        elif dtype == "f8":
+            triton_output = matmul(a, b)
             torch_output = torch.matmul(a.to(torch.float16), b.to(torch.float16))
         else:
+            triton_output = matmul(a, b)
             torch_output = torch.matmul(a, b)
         # bf16 has an 8-bit mantissa: at large K the outputs are big enough that one ulp
         # exceeds atol, so allow a relative tolerance of a couple of ulps.
@@ -215,7 +227,7 @@ def gen_rotating_tensors(M, N, K, torch_dtype, rotating_buffer_size_mb=512):
 
 
 def run_rocprof_iterations(
-    matmul, dtypes, gemm_sizes, version_dir, n_iters=1000, rotating_buffer_size_mb=512
+    matmul, dtypes, gemm_sizes, version_dir, n_iters=1000, rotating_buffer_size_mb=512, bias=False
 ):
     """Run the kernel n_iters times for each dtype/size combo using rotating tensors.
 
@@ -234,12 +246,13 @@ def run_rocprof_iterations(
                 f"rotating tensors: {block_count} copies, "
                 f"{block_count * (M*K + K*N + M*N) * a_list[0].element_size() / 1024**2:.0f} MB"
             )
+            kwargs = {"bias": torch.randn((N,), device=DEVICE, dtype=torch_dtype)} if bias else {}
             # Warmup
-            matmul(a_list[0], b_list[0], c_list[0])
+            matmul(a_list[0], b_list[0], c_list[0], **kwargs)
             torch.cuda.synchronize()
             for i in range(n_iters):
                 idx = i % block_count
-                matmul(a_list[idx], b_list[idx], c_list[idx])
+                matmul(a_list[idx], b_list[idx], c_list[idx], **kwargs)
             torch.cuda.synchronize()
             print(f"[{version_dir}] {M=} {N=} {K=} {dtype=}: {n_iters} iterations done")
 
@@ -249,12 +262,14 @@ def main():
     version_dir = VERSION_MAP[args.version]
     module = importlib.import_module(f"{version_dir}.matmul_kernel")
     matmul = module.matmul
+    if args.bias and "bias" not in inspect.signature(matmul).parameters:
+        sys.exit(f"{version_dir} has no bias option (v9-v13 do)")
 
     gemm_sizes = get_gemm_sizes(args.K, args.M, args.N)
     dtypes = get_dtypes(args.dtype)
 
     for dtype in dtypes:
-        test_correctness(matmul, dtype, gemm_sizes, version_dir)
+        test_correctness(matmul, dtype, gemm_sizes, version_dir, bias=args.bias)
 
     if args.rocprof:
         run_rocprof_iterations(
@@ -263,6 +278,7 @@ def main():
             gemm_sizes,
             version_dir,
             rotating_buffer_size_mb=args.rotating_buffer_size,
+            bias=args.bias,
         )
         return
 
@@ -275,7 +291,7 @@ def main():
             line_names=dtypes,
             styles=[("green", "-"), ("yellow", "--"), ("red", "--")],
             ylabel="TFLOPS",
-            plot_name=f"matmul-performance-{version_dir}",
+            plot_name=f"matmul-performance-{version_dir}" + ("-bias" if args.bias else ""),
             args={},
         )
     ]
@@ -291,15 +307,18 @@ def main():
         if dtype == "f8":
             a = a.to(torch.float8_e5m2)
             b = b.to(torch.float8_e5m2)
+        kwargs = {"bias": torch.randn((N,), device=DEVICE, dtype=torch_dtype)} if args.bias else {}
         quantiles = [0.5, 0.2, 0.8]
-        ms, min_ms, max_ms = triton.testing.do_bench(lambda: matmul(a, b), quantiles=quantiles)
+        ms, min_ms, max_ms = triton.testing.do_bench(
+            lambda: matmul(a, b, **kwargs), quantiles=quantiles
+        )
 
         def perf(ms):
             return 2 * M * N * K * 1e-12 / (ms * 1e-3)
 
         return perf(ms), perf(max_ms), perf(min_ms)
 
-    print(f"\n{version_dir}:")
+    print(f"\n{version_dir}" + (" (bias)" if args.bias else "") + ":")
     benchmark.run(show_plots=False, print_data=True)
 
 

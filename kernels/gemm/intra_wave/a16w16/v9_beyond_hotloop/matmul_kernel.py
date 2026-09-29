@@ -24,7 +24,7 @@
 
 import triton
 import torch
-from common import get_pids
+from common import get_pids, init_acc
 from triton.experimental import gluon
 from triton.experimental.gluon import language as gl
 
@@ -34,6 +34,7 @@ def v9_beyond_hotloop(
     a_ptr,
     b_ptr,
     c_ptr,
+    bias_ptr,
     M,
     N,
     K: gl.constexpr,
@@ -49,6 +50,7 @@ def v9_beyond_hotloop(
     GRID_MN: gl.constexpr,
     NUM_XCDS: gl.constexpr,
     GROUP_SIZE_M: gl.constexpr,  #
+    ADD_BIAS: gl.constexpr,
 ):
     """
     Beyond the hot loop: L2 locality + interleaved epilogue on top of v8_sliceMN.
@@ -165,10 +167,10 @@ def v9_beyond_hotloop(
     dotOpLayoutA: gl.constexpr = gl.DotOperandLayout(operand_index=0, parent=mfmaLayout, k_width=8)
     dotOpLayoutB: gl.constexpr = gl.DotOperandLayout(operand_index=1, parent=mfmaLayout, k_width=8)
 
-    acc_tl = gl.zeros((BLOCK_M // 2, BLOCK_N // 2), gl.float32, mfmaLayout)
-    acc_bl = gl.zeros((BLOCK_M // 2, BLOCK_N // 2), gl.float32, mfmaLayout)
-    acc_tr = gl.zeros((BLOCK_M // 2, BLOCK_N // 2), gl.float32, mfmaLayout)
-    acc_br = gl.zeros((BLOCK_M // 2, BLOCK_N // 2), gl.float32, mfmaLayout)
+    # Ahead of the prologue loads, so the prologue's wait covers the bias load.
+    acc_tl, acc_bl, acc_tr, acc_br = init_acc(
+        bias_ptr, pid_n, BLOCK_M, BLOCK_N, mfmaLayout, ADD_BIAS
+    )
 
     iterMax = gl.cdiv(K, BLOCK_K)
 
@@ -387,11 +389,12 @@ def v9_beyond_hotloop(
     gl.amd.cdna3.buffer_store(ptr=c_base, offsets=c_br_offsets, stored_value=c_br)
 
 
-def matmul(a, b, c=None):
+def matmul(a, b, c=None, bias=None):
     assert a.shape[1] == b.shape[0], "Incompatible dimensions"
     assert a.is_contiguous(), "Matrix A must be contiguous"
     M, K = a.shape
     K, N = b.shape
+    assert bias is None or (bias.shape == (N,) and bias.is_contiguous()), "bias must be contiguous (N,)"
     BLOCK_M, BLOCK_N, BLOCK_K = 256, 256, 64
     num_warps = 4
     if c is None:
@@ -404,6 +407,7 @@ def matmul(a, b, c=None):
         a,
         b,
         c,  #
+        bias,
         M,
         N,
         K,  #
@@ -419,6 +423,7 @@ def matmul(a, b, c=None):
         GRID_MN=GRID_MN,
         NUM_XCDS=NUM_XCDS,
         GROUP_SIZE_M=GROUP_SIZE_M,
+        ADD_BIAS=bias is not None,
         num_warps=num_warps,
     )
     return c

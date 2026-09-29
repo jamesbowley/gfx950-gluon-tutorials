@@ -27,6 +27,7 @@ import os
 import triton
 import torch
 # from common import get_pids
+from common import init_acc
 from triton.experimental import gluon
 from triton.experimental.gluon import language as gl
 
@@ -117,6 +118,7 @@ def v10_persistant(
     a_ptr,
     b_ptr,
     c_ptr,
+    bias_ptr,
     M,
     N,
     K: gl.constexpr,
@@ -133,6 +135,7 @@ def v10_persistant(
     NUM_XCDS: gl.constexpr,
     GROUP_SIZE_M: gl.constexpr,  #
     TILE_ORDER_V9: gl.constexpr,
+    ADD_BIAS: gl.constexpr,
 ):
     """
     v9 turned into a persistent kernel: NUM_PROGRAMS programs loop over the output tiles
@@ -262,10 +265,10 @@ def v10_persistant(
         dotOpLayoutA: gl.constexpr = gl.DotOperandLayout(operand_index=0, parent=mfmaLayout, k_width=8)
         dotOpLayoutB: gl.constexpr = gl.DotOperandLayout(operand_index=1, parent=mfmaLayout, k_width=8)
 
-        acc_tl = gl.zeros((BLOCK_M // 2, BLOCK_N // 2), gl.float32, mfmaLayout)
-        acc_bl = gl.zeros((BLOCK_M // 2, BLOCK_N // 2), gl.float32, mfmaLayout)
-        acc_tr = gl.zeros((BLOCK_M // 2, BLOCK_N // 2), gl.float32, mfmaLayout)
-        acc_br = gl.zeros((BLOCK_M // 2, BLOCK_N // 2), gl.float32, mfmaLayout)
+        # Ahead of the prologue loads, so the prologue's wait covers the bias load.
+        acc_tl, acc_bl, acc_tr, acc_br = init_acc(
+            bias_ptr, pid_n, BLOCK_M, BLOCK_N, mfmaLayout, ADD_BIAS
+        )
 
         iterMax = gl.cdiv(K, BLOCK_K)
 
@@ -321,7 +324,7 @@ def v10_persistant(
             ########################################
             ## Region 0: C_tl = DOT(a_top, b_left)
             ########################################
-            acc_tl = gl.amd.cdna3.mfma(a_top, b_left, acc_tl)
+            acc_tl = gl.amd.cdna3.mfma(a_top, b_left, acc_tl, cd_regclass="a")
 
             gl.amd.cdna4.async_copy.wait_group(5)
             a_bot = smemA_bot.index(0).load(dotOpLayoutA)
@@ -332,7 +335,7 @@ def v10_persistant(
             ########################################
             ## Region 1: C_bl = DOT(a_bot, b_left)
             ########################################
-            acc_bl = gl.amd.cdna3.mfma(a_bot, b_left, acc_bl)
+            acc_bl = gl.amd.cdna3.mfma(a_bot, b_left, acc_bl, cd_regclass="a")
 
             gl.amd.cdna4.async_copy.wait_group(5)
             b_right = smemB_right.index(0).load(dotOpLayoutB)
@@ -343,7 +346,7 @@ def v10_persistant(
             ########################################
             ## Region 2: C_tr = DOT(a_top, b_right)
             ########################################
-            acc_tr = gl.amd.cdna3.mfma(a_top, b_right, acc_tr)
+            acc_tr = gl.amd.cdna3.mfma(a_top, b_right, acc_tr, cd_regclass="a")
 
             gl.amd.cdna4.async_copy.wait_group(5)
             b_left = smemB_left.index(1).load(dotOpLayoutB)
@@ -356,7 +359,7 @@ def v10_persistant(
             ########################################
             ## Region 3: C_br = DOT(a_bot, b_right)
             ########################################
-            acc_br = gl.amd.cdna3.mfma(a_bot, b_right, acc_br)
+            acc_br = gl.amd.cdna3.mfma(a_bot, b_right, acc_br, cd_regclass="a")
 
             gl.amd.cdna4.async_copy.wait_group(5)
             a_top = smemA_top.index(1).load(dotOpLayoutA)
@@ -374,7 +377,7 @@ def v10_persistant(
             ########################################
             ## Region 0: C_tl = DOT(a_top, b_left)
             ########################################
-            acc_tl = gl.amd.cdna3.mfma(a_top, b_left, acc_tl)
+            acc_tl = gl.amd.cdna3.mfma(a_top, b_left, acc_tl, cd_regclass="a")
 
             gl.amd.cdna4.async_copy.wait_group(5)
             a_bot = smemA_bot.index(1).load(dotOpLayoutA)
@@ -387,7 +390,7 @@ def v10_persistant(
             ########################################
             ## Region 1: C_bl = DOT(a_bot, b_left)
             ########################################
-            acc_bl = gl.amd.cdna3.mfma(a_bot, b_left, acc_bl)
+            acc_bl = gl.amd.cdna3.mfma(a_bot, b_left, acc_bl, cd_regclass="a")
 
             gl.amd.cdna4.async_copy.wait_group(5)
             b_right = smemB_right.index(1).load(dotOpLayoutB)
@@ -400,7 +403,7 @@ def v10_persistant(
             ########################################
             ## Region 2: C_tr = DOT(a_top, b_right)
             ########################################
-            acc_tr = gl.amd.cdna3.mfma(a_top, b_right, acc_tr)
+            acc_tr = gl.amd.cdna3.mfma(a_top, b_right, acc_tr, cd_regclass="a")
 
             gl.amd.cdna4.async_copy.wait_group(5)
             b_left = smemB_left.index(0).load(dotOpLayoutB)
@@ -413,7 +416,7 @@ def v10_persistant(
             ########################################
             ## Region 3: C_br = DOT(a_bot, b_right)
             ########################################
-            acc_br = gl.amd.cdna3.mfma(a_bot, b_right, acc_br)
+            acc_br = gl.amd.cdna3.mfma(a_bot, b_right, acc_br, cd_regclass="a")
 
             gl.amd.cdna4.async_copy.wait_group(5)
             a_top = smemA_top.index(0).load(dotOpLayoutA)
@@ -443,32 +446,32 @@ def v10_persistant(
         c_br_offsets = c_bl_offsets + BLOCK_N * stride_cn // 2
 
         ## Iter iterMax - 2: same 4-region pattern as main loop, no AC
-        acc_tl = gl.amd.cdna3.mfma(a_top, b_left, acc_tl)
+        acc_tl = gl.amd.cdna3.mfma(a_top, b_left, acc_tl, cd_regclass="a")
         gl.amd.cdna4.async_copy.wait_group(5)
         l_idx = (iterMax - 2) % 2
         a_bot = smemA_bot.index(l_idx).load(dotOpLayoutA)
 
-        acc_bl = gl.amd.cdna3.mfma(a_bot, b_left, acc_bl)
+        acc_bl = gl.amd.cdna3.mfma(a_bot, b_left, acc_bl, cd_regclass="a")
         gl.amd.cdna4.async_copy.wait_group(4)
         b_right = smemB_right.index(l_idx).load(dotOpLayoutB)
 
-        acc_tr = gl.amd.cdna3.mfma(a_top, b_right, acc_tr)
+        acc_tr = gl.amd.cdna3.mfma(a_top, b_right, acc_tr, cd_regclass="a")
         gl.amd.cdna4.async_copy.wait_group(3)
         g_idx = 1 - l_idx
         b_left = smemB_left.index(g_idx).load(dotOpLayoutB)
 
-        acc_br = gl.amd.cdna3.mfma(a_bot, b_right, acc_br)
+        acc_br = gl.amd.cdna3.mfma(a_bot, b_right, acc_br, cd_regclass="a")
         gl.amd.cdna4.async_copy.wait_group(2)
         a_top = smemA_top.index(g_idx).load(dotOpLayoutA)
 
         ## Iter iterMax - 1
         ## Natural-pipeline epilogue: each store follows its MFMA with one
         ## MFMA cycle of gap, yielding uniform MFMA-store interleaving.
-        acc_tl = gl.amd.cdna3.mfma(a_top, b_left, acc_tl)
+        acc_tl = gl.amd.cdna3.mfma(a_top, b_left, acc_tl, cd_regclass="a")
         gl.amd.cdna4.async_copy.wait_group(1)
         a_bot = smemA_bot.index(g_idx).load(dotOpLayoutA)
 
-        acc_bl = gl.amd.cdna3.mfma(a_bot, b_left, acc_bl)
+        acc_bl = gl.amd.cdna3.mfma(a_bot, b_left, acc_bl, cd_regclass="a")
         gl.amd.cdna4.async_copy.wait_group(0)
         b_right = smemB_right.index(g_idx).load(dotOpLayoutB)
 
@@ -476,13 +479,13 @@ def v10_persistant(
         c_tl = gl.convert_layout(c_tl, layout=gStoreLayoutC)
         gl.amd.cdna3.buffer_store(ptr=c_base, offsets=c_tl_offsets, stored_value=c_tl)
 
-        acc_tr = gl.amd.cdna3.mfma(a_top, b_right, acc_tr)
+        acc_tr = gl.amd.cdna3.mfma(a_top, b_right, acc_tr, cd_regclass="a")
 
         c_bl = acc_bl.to(a_ptr.dtype.element_ty)
         c_bl = gl.convert_layout(c_bl, layout=gStoreLayoutC)
         gl.amd.cdna3.buffer_store(ptr=c_base, offsets=c_bl_offsets, stored_value=c_bl)
 
-        acc_br = gl.amd.cdna3.mfma(a_bot, b_right, acc_br)
+        acc_br = gl.amd.cdna3.mfma(a_bot, b_right, acc_br, cd_regclass="a")
 
         c_tr = acc_tr.to(a_ptr.dtype.element_ty)
         c_tr = gl.convert_layout(c_tr, layout=gStoreLayoutC)
@@ -493,11 +496,12 @@ def v10_persistant(
         gl.amd.cdna3.buffer_store(ptr=c_base, offsets=c_br_offsets, stored_value=c_br)
 
 
-def matmul(a, b, c=None):
+def matmul(a, b, c=None, bias=None):
     assert a.shape[1] == b.shape[0], "Incompatible dimensions"
     assert a.is_contiguous(), "Matrix A must be contiguous"
     M, K = a.shape
     K, N = b.shape
+    assert bias is None or (bias.shape == (N,) and bias.is_contiguous()), "bias must be contiguous (N,)"
     BLOCK_M, BLOCK_N, BLOCK_K = 256, 256, 64
     num_warps = 4
     if c is None:
@@ -519,6 +523,7 @@ def matmul(a, b, c=None):
         a,
         b,
         c,  #
+        bias,
         M,
         N,
         K,  #
@@ -536,9 +541,7 @@ def matmul(a, b, c=None):
         GROUP_SIZE_M=GROUP_SIZE_M,
         # Tiles are walked in v9's order; PERSISTENT_TILE_ORDER=split selects the split order.
         TILE_ORDER_V9=os.environ.get("PERSISTENT_TILE_ORDER", "v9") == "v9",
+        ADD_BIAS=bias is not None,
         num_warps=num_warps,
-        # force-agpr RA hint: reserve 256 AGPRs for MFMA accumulators, enabled by
-        # TRITON_FORCE_MFMA_AGPR (paired in llvm.cc with amdgpu-mfma-vgpr-form=0).
-        llvm_fn_attrs=("amdgpu-agpr-alloc=256" if os.environ.get("TRITON_FORCE_MFMA_AGPR") else ""),
     )
     return c
