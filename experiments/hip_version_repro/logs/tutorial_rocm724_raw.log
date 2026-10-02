@@ -1,0 +1,204 @@
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+Using backend: triton
+bench_gemm_a16w16:
+        M       N       K  TFLOPS (Throughput (TFLOPS))
+0  4096.0  4096.0  8192.0                   1280.673659
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+Using backend: gluon
+bench_gemm_a16w16:
+        M       N       K  TFLOPS (Throughput (TFLOPS))
+0  4096.0  4096.0  8192.0                   1341.877504
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+Using backend: gluon
+bench_gemm_a16w16:
+        M       N       K  TFLOPS (Throughput (TFLOPS))
+0  4096.0  4096.0  8192.0                   1585.985466
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+RESULT hipblaslt 4096 4096 8192 1505.1
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+Using backend: triton
+bench_gemm_a16w16:
+        M       N       K  TFLOPS (Throughput (TFLOPS))
+0  8192.0  8192.0  8192.0                   1256.010208
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+Using backend: gluon
+bench_gemm_a16w16:
+        M       N       K  TFLOPS (Throughput (TFLOPS))
+0  8192.0  8192.0  8192.0                   1333.015514
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+Using backend: gluon
+bench_gemm_a16w16:
+        M       N       K  TFLOPS (Throughput (TFLOPS))
+0  8192.0  8192.0  8192.0                   1574.386533
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+RESULT hipblaslt 8192 8192 8192 1565.8
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+Using backend: triton
+bench_gemm_a16w16:
+        M       N       K  TFLOPS (Throughput (TFLOPS))
+0  4096.0  8192.0  4096.0                   1220.139873
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+Using backend: gluon
+bench_gemm_a16w16:
+        M       N       K  TFLOPS (Throughput (TFLOPS))
+0  4096.0  8192.0  4096.0                    1305.12441
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+Using backend: gluon
+bench_gemm_a16w16:
+        M       N       K  TFLOPS (Throughput (TFLOPS))
+0  4096.0  8192.0  4096.0                   1523.732406
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+RESULT hipblaslt 4096 8192 4096 1481.4
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+Using backend: triton
+bench_gemm_a16w16:
+        M         N        K  TFLOPS (Throughput (TFLOPS))
+0  4096.0  106496.0  16384.0                   1205.119678
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+Using backend: gluon
+bench_gemm_a16w16:
+        M         N        K  TFLOPS (Throughput (TFLOPS))
+0  4096.0  106496.0  16384.0                   1300.576257
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+Using backend: gluon
+bench_gemm_a16w16:
+        M         N        K  TFLOPS (Throughput (TFLOPS))
+0  4096.0  106496.0  16384.0                   1591.604544
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+RESULT hipblaslt 4096 106496 16384 1503.8
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+Using backend: triton
+bench_gemm_a16w16:
+        M       N       K  TFLOPS (Throughput (TFLOPS))
+0  4096.0  4096.0  8192.0                   1279.685223
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+Using backend: gluon
+bench_gemm_a16w16:
+        M       N       K  TFLOPS (Throughput (TFLOPS))
+0  4096.0  4096.0  8192.0                   1347.106773
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+Using backend: gluon
+bench_gemm_a16w16:
+        M       N       K  TFLOPS (Throughput (TFLOPS))
+0  4096.0  4096.0  8192.0                   1578.740285
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+RESULT hipblaslt 4096 4096 8192 1503.3
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+Using backend: triton
+bench_gemm_a16w16:
+        M       N       K  TFLOPS (Throughput (TFLOPS))
+0  8192.0  8192.0  8192.0                   1256.911798
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+Using backend: gluon
+bench_gemm_a16w16:
+        M       N       K  TFLOPS (Throughput (TFLOPS))
+0  8192.0  8192.0  8192.0                   1331.370729
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+Using backend: gluon
+bench_gemm_a16w16:
+        M       N       K  TFLOPS (Throughput (TFLOPS))
+0  8192.0  8192.0  8192.0                   1575.679865
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+RESULT hipblaslt 8192 8192 8192 1562.7
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+Using backend: triton
+bench_gemm_a16w16:
+        M       N       K  TFLOPS (Throughput (TFLOPS))
+0  4096.0  8192.0  4096.0                   1213.518874
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+Using backend: gluon
+bench_gemm_a16w16:
+        M       N       K  TFLOPS (Throughput (TFLOPS))
+0  4096.0  8192.0  4096.0                   1311.530592
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+Using backend: gluon
+bench_gemm_a16w16:
+        M       N       K  TFLOPS (Throughput (TFLOPS))
+0  4096.0  8192.0  4096.0                   1515.845978
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+RESULT hipblaslt 4096 8192 4096 1478.0
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+Using backend: triton
+bench_gemm_a16w16:
+        M         N        K  TFLOPS (Throughput (TFLOPS))
+0  4096.0  106496.0  16384.0                   1205.400081
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+Using backend: gluon
+bench_gemm_a16w16:
+        M         N        K  TFLOPS (Throughput (TFLOPS))
+0  4096.0  106496.0  16384.0                   1312.152583
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+Using backend: gluon
+bench_gemm_a16w16:
+        M         N        K  TFLOPS (Throughput (TFLOPS))
+0  4096.0  106496.0  16384.0                   1593.278765
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+RESULT hipblaslt 4096 106496 16384 1504.4
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+Using backend: triton
+bench_gemm_a16w16:
+        M       N       K  TFLOPS (Throughput (TFLOPS))
+0  4096.0  4096.0  8192.0                   1279.082807
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+Using backend: gluon
+bench_gemm_a16w16:
+        M       N       K  TFLOPS (Throughput (TFLOPS))
+0  4096.0  4096.0  8192.0                   1347.412417
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+Using backend: gluon
+bench_gemm_a16w16:
+        M       N       K  TFLOPS (Throughput (TFLOPS))
+0  4096.0  4096.0  8192.0                   1576.022264
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+RESULT hipblaslt 4096 4096 8192 1505.4
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+Using backend: triton
+bench_gemm_a16w16:
+        M       N       K  TFLOPS (Throughput (TFLOPS))
+0  8192.0  8192.0  8192.0                   1256.341644
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+Using backend: gluon
+bench_gemm_a16w16:
+        M       N       K  TFLOPS (Throughput (TFLOPS))
+0  8192.0  8192.0  8192.0                   1332.634088
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+Using backend: gluon
+bench_gemm_a16w16:
+        M       N       K  TFLOPS (Throughput (TFLOPS))
+0  8192.0  8192.0  8192.0                    1572.78792
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+RESULT hipblaslt 8192 8192 8192 1564.7
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+Using backend: triton
+bench_gemm_a16w16:
+        M       N       K  TFLOPS (Throughput (TFLOPS))
+0  4096.0  8192.0  4096.0                   1217.399773
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+Using backend: gluon
+bench_gemm_a16w16:
+        M       N       K  TFLOPS (Throughput (TFLOPS))
+0  4096.0  8192.0  4096.0                   1302.596989
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+Using backend: gluon
+bench_gemm_a16w16:
+        M       N       K  TFLOPS (Throughput (TFLOPS))
+0  4096.0  8192.0  4096.0                   1523.020374
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+RESULT hipblaslt 4096 8192 4096 1478.5
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+Using backend: triton
+bench_gemm_a16w16:
+        M         N        K  TFLOPS (Throughput (TFLOPS))
+0  4096.0  106496.0  16384.0                   1208.930638
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+Using backend: gluon
+bench_gemm_a16w16:
+        M         N        K  TFLOPS (Throughput (TFLOPS))
+0  4096.0  106496.0  16384.0                   1307.449562
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+Using backend: gluon
+bench_gemm_a16w16:
+        M         N        K  TFLOPS (Throughput (TFLOPS))
+0  4096.0  106496.0  16384.0                   1591.211021
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+RESULT hipblaslt 4096 106496 16384 1500.7

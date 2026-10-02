@@ -1,0 +1,16 @@
+[v9_beyond_hotloop] M=2048 N=2304 K=16384 dtype='bf16': ✅ Triton and Torch match
+[v9_beyond_hotloop] M=2048 N=2304 K=16384 dtype='bf16': rotating tensors: 3 copies, 435 MB
+[v9_beyond_hotloop] M=2048 N=2304 K=16384 dtype='bf16': 1000 iterations done
+
+W0928 13:51:14.659561  538173 simple_timer.cpp:55] [rocprofv3] tool initialization ::     0.000309 sec
+W0928 13:51:14.659708  538173 simple_timer.cpp:55] [rocprofv3] '/opt/venv/bin/python /home/jbowley/repos/gfx950-gluon-tutorials/experiments/aiter_256x256_loss_investigation/run_compare.py --worker --version 9 --M 2048 --N 2304 --K 16384 --iters 1000 --rotating-buffer-size 512' ::     0.000000 sec
+W0928 13:51:15.641869  538173 tool.cpp:3082] HSA version 1.21.0 initialized (instance=0)
+W0928 13:51:15.749829  538339 simple_timer.cpp:55] [rocprofv3] tool initialization ::     0.000288 sec
+W0928 13:51:15.749987  538339 simple_timer.cpp:55] [rocprofv3] '/bin/sh /sbin/ldconfig -p' ::     0.000000 sec
+/home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a16w16/bench.py:183: UserWarning: bgemm_internal_cublaslt error: HIPBLAS_STATUS_INTERNAL_ERROR when calling hipblasLtMatmul with transpose_mat1 t transpose_mat2 n m 2304 n 2048 k 16384 lda 16384 ldb 16384 ldc 2304 abType 14 cType 14 computeType 2 scaleType 0. Will attempt to recover by calling cublas instead. (Triggered internally at /__w/TheRock/TheRock/external-builds/pytorch/pytorch/aten/src/ATen/hip/HIPBlas.cpp:612.)
+  torch_output = torch.matmul(a, b)
+W0928 13:51:19.154358  538173 simple_timer.cpp:55] [rocprofv3] '/opt/venv/bin/python /home/jbowley/repos/gfx950-gluon-tutorials/experiments/aiter_256x256_loss_investigation/run_compare.py --worker --version 9 --M 2048 --N 2304 --K 16384 --iters 1000 --rotating-buffer-size 512' ::     4.494648 sec
+E0928 13:51:19.166418  538173 output_stream.cpp:111] Opened result file: /home/jbowley/repos/gfx950-gluon-tutorials/experiments/aiter_256x256_loss_investigation/results/rocprof_gg7xgx7o/smci355-ccs-aus-m01-29/538173_kernel_trace.csv
+E0928 13:51:19.171420  538173 output_stream.cpp:111] Opened result file: /home/jbowley/repos/gfx950-gluon-tutorials/experiments/aiter_256x256_loss_investigation/results/rocprof_gg7xgx7o/smci355-ccs-aus-m01-29/538173_agent_info.csv
+W0928 13:51:19.172378  538173 simple_timer.cpp:55] [rocprofv3] output generation ::     0.010178 sec
+W0928 13:51:19.174160  538173 simple_timer.cpp:55] [rocprofv3] tool finalization ::     0.011975 sec

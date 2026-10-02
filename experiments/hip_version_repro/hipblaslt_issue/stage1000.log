@@ -1,0 +1,15 @@
+heuristic 10.0.0 13:02:30
+GPU 3 busy (1%), waiting
+ws32 10.0.0 13:05:51
+1.2.2: hipblaslt=100202 rev=dabb6df2b9 gpu=gfx950:sramecc+:xnack- pci_bus=21 pci_domain=0 mode=heuristic pick= reps=3 iters=100  shapes=630
+10.0.0: hipblaslt=100401 rev=8d1ae90e gpu=gfx950:sramecc+:xnack- pci_bus=21 pci_domain=0 mode=heuristic pick= reps=3 iters=100 workspace_kb=131072  shapes=630
+1.5.0: hipblaslt=100500 rev=6054c511 gpu=gfx950:sramecc+:xnack- pci_bus=21 pci_domain=0 mode=heuristic pick= reps=3 iters=100  shapes=630
+1.2.2: tile/MFMA/SK identical to the torch run on 630/630 shapes
+1.5.0: tile/MFMA/SK identical to the torch run on 629/630 shapes
+regress >=5% in 10.0.0 or 1.5.0: 107 (>=256 tiles: 33); 10.0.0: 66, 1.5.0: 97; improve >=5% in 1.5.0: 208
+best256 10.0.0 13:09:11
+GPU 3 busy (1%), waiting
+best256 1.5.0 13:16:35
+GPU 3 busy (1%), waiting
+pick256 1.5.0 13:24:27
+STAGE1000_DONE 13:24:49

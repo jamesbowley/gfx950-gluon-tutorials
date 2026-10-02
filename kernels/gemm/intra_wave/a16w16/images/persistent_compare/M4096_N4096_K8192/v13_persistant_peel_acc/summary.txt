@@ -1,0 +1,10 @@
+tile i: 280692 cycles; prologue 8396, main loop 259384 (62 iterations, 4184 per iteration), epilogue 12912
+  tile 0 (se0_sm0_sl0_wv0.json, trip 0): start 0, prologue 8396 (first wait vmcnt(24) stalls 40 with 0 stores issued), loop 259384 (MFMA 97.91%), epilogue 12912, gap to next tile 0
+MFMA utilization over all 1 tiles on this SIMD: 93.39% (1 x 262144 MFMA cycles in 280692 cycles)
+first load issued at 764; the first wait releases at 3088 (about 2064 cycles after group 2 was issued)
+last global->LDS load of tile i issued at 276868, 3824 cycles before tile i ends
+tile boundary (shifted): longest load-lane gap 4588 cycles, MFMA idle 6020 cycles
+last read of each buffer (cycles after the epilogue starts): B_left[0] -904 (refilled +756), A_top[0] -384 (refilled +976), A_bot[0] +520 (refilled +1848), B_right[0] +1688 (refilled +3100), B_left[1] +2940 (refilled +3428), A_top[1] +3188 (refilled +3912), A_bot[1] +3792 (refilled +7080), B_right[1] +4728 (refilled +9028)
+LDS reads issued before a wait guarantees their data: 0 of 512
+tile i C stores: 32 x 16 cycles of issue; extra before the next instruction: 172 when it is another store, 0 when it is an MFMA, 196 otherwise
+wrote kernels/gemm/intra_wave/a16w16/images/persistent_compare/M4096_N4096_K8192/v13_persistant_peel_acc/pipeline_schedule.html

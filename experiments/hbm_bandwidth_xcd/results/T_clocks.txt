@@ -1,0 +1,232 @@
+=== Sun Sep 27 06:23:38 2026 (physical GPU 0)
+GPU: 0
+    POWER:
+        SOCKET_POWER: 222 W
+        GFX_VOLTAGE: N/A
+        SOC_VOLTAGE: N/A
+        MEM_VOLTAGE: N/A
+        THROTTLE_STATUS: N/A
+        POWER_MANAGEMENT: ENABLED
+        UBB_POWER: N/A
+    CLOCK:
+        GFX_0:
+            CLK: 94 MHz
+            MIN_CLK: 500 MHz
+            MAX_CLK: 2400 MHz
+            CLK_LOCKED: DISABLED
+            DEEP_SLEEP: ENABLED
+        GFX_1:
+            CLK: 95 MHz
+            MIN_CLK: 500 MHz
+            MAX_CLK: 2400 MHz
+            CLK_LOCKED: DISABLED
+            DEEP_SLEEP: ENABLED
+        GFX_2:
+            CLK: 95 MHz
+            MIN_CLK: 500 MHz
+            MAX_CLK: 2400 MHz
+            CLK_LOCKED: DISABLED
+            DEEP_SLEEP: ENABLED
+        GFX_3:
+            CLK: 95 MHz
+            MIN_CLK: 500 MHz
+            MAX_CLK: 2400 MHz
+            CLK_LOCKED: DISABLED
+            DEEP_SLEEP: ENABLED
+        GFX_4:
+            CLK: 94 MHz
+            MIN_CLK: 500 MHz
+            MAX_CLK: 2400 MHz
+            CLK_LOCKED: DISABLED
+            DEEP_SLEEP: ENABLED
+        GFX_5:
+            CLK: 97 MHz
+            MIN_CLK: 500 MHz
+            MAX_CLK: 2400 MHz
+            CLK_LOCKED: DISABLED
+            DEEP_SLEEP: ENABLED
+        GFX_6:
+            CLK: 104 MHz
+            MIN_CLK: 500 MHz
+            MAX_CLK: 2400 MHz
+            CLK_LOCKED: DISABLED
+            DEEP_SLEEP: ENABLED
+        GFX_7:
+            CLK: 105 MHz
+            MIN_CLK: 500 MHz
+            MAX_CLK: 2400 MHz
+            CLK_LOCKED: DISABLED
+            DEEP_SLEEP: ENABLED
+        MEM_0:
+            CLK: 2000 MHz
+            MIN_CLK: 2000 MHz
+            MAX_CLK: 2000 MHz
+            DEEP_SLEEP: DISABLED
+        VCLK_0:
+            CLK: 59 MHz
+            MIN_CLK: 1900 MHz
+            MAX_CLK: 1900 MHz
+            DEEP_SLEEP: ENABLED
+        VCLK_1:
+            CLK: 59 MHz
+            MIN_CLK: 1900 MHz
+            MAX_CLK: 1900 MHz
+            DEEP_SLEEP: ENABLED
+        VCLK_2:
+            CLK: 59 MHz
+            MIN_CLK: 1900 MHz
+            MAX_CLK: 1900 MHz
+            DEEP_SLEEP: ENABLED
+        VCLK_3:
+            CLK: 59 MHz
+            MIN_CLK: 1900 MHz
+            MAX_CLK: 1900 MHz
+            DEEP_SLEEP: ENABLED
+        DCLK_0:
+            CLK: 48 MHz
+            MIN_CLK: 1520 MHz
+            MAX_CLK: 1520 MHz
+            DEEP_SLEEP: ENABLED
+        DCLK_1:
+            CLK: 48 MHz
+            MIN_CLK: 1520 MHz
+            MAX_CLK: 1520 MHz
+            DEEP_SLEEP: ENABLED
+        DCLK_2:
+            CLK: 48 MHz
+            MIN_CLK: 1520 MHz
+            MAX_CLK: 1520 MHz
+            DEEP_SLEEP: ENABLED
+        DCLK_3:
+            CLK: 48 MHz
+            MIN_CLK: 1520 MHz
+            MAX_CLK: 1520 MHz
+            DEEP_SLEEP: ENABLED
+        FCLK_0:
+            CLK: 1250 MHz
+            MIN_CLK: 1250 MHz
+            MAX_CLK: 1250 MHz
+            DEEP_SLEEP: DISABLED
+        SOCCLK_0:
+            CLK: 39 MHz
+            MIN_CLK: 1200 MHz
+            MAX_CLK: 1200 MHz
+            DEEP_SLEEP: ENABLED
+
+
+=== Sun Sep 27 06:23:39 2026 (physical GPU 0)
+GPU: 0
+    POWER:
+        SOCKET_POWER: 223 W
+        GFX_VOLTAGE: N/A
+        SOC_VOLTAGE: N/A
+        MEM_VOLTAGE: N/A
+        THROTTLE_STATUS: N/A
+        POWER_MANAGEMENT: ENABLED
+        UBB_POWER: N/A
+    CLOCK:
+        GFX_0:
+            CLK: 94 MHz
+            MIN_CLK: 500 MHz
+            MAX_CLK: 2400 MHz
+            CLK_LOCKED: DISABLED
+            DEEP_SLEEP: ENABLED
+        GFX_1:
+            CLK: 95 MHz
+            MIN_CLK: 500 MHz
+            MAX_CLK: 2400 MHz
+            CLK_LOCKED: DISABLED
+            DEEP_SLEEP: ENABLED
+        GFX_2:
+            CLK: 95 MHz
+            MIN_CLK: 500 MHz
+            MAX_CLK: 2400 MHz
+            CLK_LOCKED: DISABLED
+            DEEP_SLEEP: ENABLED
+        GFX_3:
+            CLK: 95 MHz
+            MIN_CLK: 500 MHz
+            MAX_CLK: 2400 MHz
+            CLK_LOCKED: DISABLED
+            DEEP_SLEEP: ENABLED
+        GFX_4:
+            CLK: 94 MHz
+            MIN_CLK: 500 MHz
+            MAX_CLK: 2400 MHz
+            CLK_LOCKED: DISABLED
+            DEEP_SLEEP: ENABLED
+        GFX_5:
+            CLK: 97 MHz
+            MIN_CLK: 500 MHz
+            MAX_CLK: 2400 MHz
+            CLK_LOCKED: DISABLED
+            DEEP_SLEEP: ENABLED
+        GFX_6:
+            CLK: 110 MHz
+            MIN_CLK: 500 MHz
+            MAX_CLK: 2400 MHz
+            CLK_LOCKED: DISABLED
+            DEEP_SLEEP: ENABLED
+        GFX_7:
+            CLK: 111 MHz
+            MIN_CLK: 500 MHz
+            MAX_CLK: 2400 MHz
+            CLK_LOCKED: DISABLED
+            DEEP_SLEEP: ENABLED
+        MEM_0:
+            CLK: 2000 MHz
+            MIN_CLK: 2000 MHz
+            MAX_CLK: 2000 MHz
+            DEEP_SLEEP: DISABLED
+        VCLK_0:
+            CLK: 59 MHz
+            MIN_CLK: 1900 MHz
+            MAX_CLK: 1900 MHz
+            DEEP_SLEEP: ENABLED
+        VCLK_1:
+            CLK: 59 MHz
+            MIN_CLK: 1900 MHz
+            MAX_CLK: 1900 MHz
+            DEEP_SLEEP: ENABLED
+        VCLK_2:
+            CLK: 59 MHz
+            MIN_CLK: 1900 MHz
+            MAX_CLK: 1900 MHz
+            DEEP_SLEEP: ENABLED
+        VCLK_3:
+            CLK: 59 MHz
+            MIN_CLK: 1900 MHz
+            MAX_CLK: 1900 MHz
+            DEEP_SLEEP: ENABLED
+        DCLK_0:
+            CLK: 48 MHz
+            MIN_CLK: 1520 MHz
+            MAX_CLK: 1520 MHz
+            DEEP_SLEEP: ENABLED
+        DCLK_1:
+            CLK: 48 MHz
+            MIN_CLK: 1520 MHz
+            MAX_CLK: 1520 MHz
+            DEEP_SLEEP: ENABLED
+        DCLK_2:
+            CLK: 48 MHz
+            MIN_CLK: 1520 MHz
+            MAX_CLK: 1520 MHz
+            DEEP_SLEEP: ENABLED
+        DCLK_3:
+            CLK: 48 MHz
+            MIN_CLK: 1520 MHz
+            MAX_CLK: 1520 MHz
+            DEEP_SLEEP: ENABLED
+        FCLK_0:
+            CLK: 1250 MHz
+            MIN_CLK: 1250 MHz
+            MAX_CLK: 1250 MHz
+            DEEP_SLEEP: DISABLED
+        SOCCLK_0:
+            CLK: 38 MHz
+            MIN_CLK: 1200 MHz
+            MAX_CLK: 1200 MHz
+            DEEP_SLEEP: ENABLED
+
+

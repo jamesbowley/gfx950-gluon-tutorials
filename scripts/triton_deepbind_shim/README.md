@@ -69,8 +69,9 @@ plugins/llir_scheduler/build_linked.sh
 
 ## Verified
 
-a16w16, the full documented config matrix, 4096x4096x8192 FP16, `--rocprof`,
-against the values published in the kernel READMEs:
+Recorded on the `gfx950-tutorial-v2.1` pin, whose `llir+force-agpr+amdgcnas` config is
+today's `llir+amdgcnas`. a16w16, the full documented config matrix, 4096x4096x8192 FP16,
+`--rocprof`, against the values published in the kernel READMEs at the time:
 
 | config / version | measured | published |
 |---|---|---|

@@ -137,7 +137,7 @@ class Instruction:
             return self.raw_line
         if not self.operands:
             return self.opcode
-        if self.opcode.startswith(("global_", "flat_", "scratch_")):
+        if self.opcode.startswith(("global_", "flat_", "scratch_", "buffer_")):
             ## The assembler rejects a comma before these instructions' cache-policy modifiers
             ## (`off, sc0, sc1`), so re-emit those space-separated.
             ops = [o for o in self.operands if o not in CACHE_POLICY]
@@ -481,6 +481,9 @@ class Program:
                 if i + 1 < len(self.blocks):
                     bb.succs.append(self.blocks[i + 1])
 
+            elif last == "s_endpgm":
+                pass
+
             else:
                 if i + 1 < len(self.blocks):
                     bb.succs.append(self.blocks[i + 1])
@@ -704,8 +707,12 @@ def parse_asm(text):
     files = {}
     in_blocks = False
     ended = False
+    lines = text.splitlines()
+    # LLVM can place an early-exit block (ending in its own s_endpgm) ahead of other blocks, so
+    # only the last s_endpgm ends the program; earlier ones are ordinary block terminators.
+    last_endpgm = max((i for i, l in enumerate(lines) if "s_endpgm" in l), default=-1)
 
-    for raw in text.splitlines():
+    for idx, raw in enumerate(lines):
         line = raw.rstrip()
 
         # Program tail (after s_endpgm)
@@ -714,7 +721,7 @@ def parse_asm(text):
             continue
 
         # Detect program end
-        if "s_endpgm" in line:
+        if "s_endpgm" in line and idx == last_endpgm:
             if cur_block:
                 inst = parse_instruction(line, cur_loc, cur_block)
                 if inst:
@@ -1194,22 +1201,28 @@ def hoist_loop_invariants(bb: BasicBlock):
     invariant_insts, invariant_regs = find_loop_invariants(bb)
 
     hoistable = []
-    for inst in invariant_insts:
+    ## An invariant whose def stays in the loop (can_hoist refused it) makes every invariant
+    ## reading that def loop-dependent too: hoisted, it would read the register before the loop
+    ## writes it. Program order visits each def before its in-loop users.
+    kept_defs = set()
+    for inst in sorted(invariant_insts, key=lambda i: i.index):
         logging.debug(f"loop invariant: {inst.emit()}")
         if inst.users:
             logging.debug(f"  users: {[u.emit() for u in inst.users]}")
-        if can_hoist(inst, bb, invariant_regs):
-            hoistable.append(inst)
-            if "scratch_load" in inst.opcode:
-                next_inst = bb.next_instruction(inst)
-                if (
-                    next_inst is not None
-                    and next_inst.operands
-                    and "vmcnt(0)" in next_inst.operands[0]
-                ):
-                    logging.debug(f"    Also hoist {next_inst.emit()}")
-                    hoistable.append(next_inst)
-            logging.debug("  can hoist!!")
+        if inst.uses & kept_defs:
+            logging.debug("  reads a def that stays in the loop, cannot hoist")
+            kept_defs |= inst.defs
+            continue
+        if not can_hoist(inst, bb, invariant_regs):
+            kept_defs |= inst.defs
+            continue
+        hoistable.append(inst)
+        if "scratch_load" in inst.opcode:
+            next_inst = bb.next_instruction(inst)
+            if next_inst is not None and next_inst.operands and "vmcnt(0)" in next_inst.operands[0]:
+                logging.debug(f"    Also hoist {next_inst.emit()}")
+                hoistable.append(next_inst)
+        logging.debug("  can hoist!!")
 
     if not hoistable:
         return [], bb.instructions

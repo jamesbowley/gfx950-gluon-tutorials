@@ -79,6 +79,13 @@ VERSION_MAP = {
     11: "v11_persistant_overlap_global",
     12: "v12_persistant_overlap_lds",
     13: "v13_persistant_peel_acc",
+    14: "v14_streamk",
+    15: "v15_streamk_onetile",
+    16: "v16_streamk_lane_partials",
+    17: "v17_streamk_tile_aligned",
+    18: "v18_streamk_chunk_major",
+    19: "v19_streamk_two_tile_reversed",
+    20: "v20_streamk_reduce_scatter",
 }
 
 DEVICE = triton.runtime.driver.active.get_active_torch_device()
@@ -146,7 +153,7 @@ def parse_args():
         "--version",
         type=int,
         default=9,
-        choices=range(0, 14),
+        choices=range(0, 21),
         help="Kernel version to benchmark (default: 9, the final version)",
     )
     parser.add_argument(
@@ -165,7 +172,7 @@ def parse_args():
     parser.add_argument(
         "--bias",
         action="store_true",
-        help="Add a bias[N] to the output (v9-v13): correctness, do_bench and rocprof mode.",
+        help="Add a bias[N] to the output (v9-v20): correctness, do_bench and rocprof mode.",
     )
     return parser.parse_args()
 
@@ -263,7 +270,7 @@ def main():
     module = importlib.import_module(f"{version_dir}.matmul_kernel")
     matmul = module.matmul
     if args.bias and "bias" not in inspect.signature(matmul).parameters:
-        sys.exit(f"{version_dir} has no bias option (v9-v13 do)")
+        sys.exit(f"{version_dir} has no bias option (v9-v20 do)")
 
     gemm_sizes = get_gemm_sizes(args.K, args.M, args.N)
     dtypes = get_dtypes(args.dtype)

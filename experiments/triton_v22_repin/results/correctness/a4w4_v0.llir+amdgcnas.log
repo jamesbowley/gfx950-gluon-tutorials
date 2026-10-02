@@ -1,0 +1,20 @@
+[v0_sliceN] M=4096 N=4096 K=1024: Triton and Torch match
+[v0_sliceN] M=4096 N=4096 K=2048: Triton and Torch match
+[v0_sliceN] M=4096 N=4096 K=3072: Triton and Torch match
+[v0_sliceN] M=4096 N=4096 K=4096: Triton and Torch match
+[v0_sliceN] M=4096 N=4096 K=8192: Triton and Torch match
+[v0_sliceN] M=4096 N=4096 K=16384: Triton and Torch match
+[v0_sliceN] M=4096 N=4096 K=32768: Triton and Torch match
+[v0_sliceN] M=4096 N=4096 K=65536: Triton and Torch match
+
+a4w4_kernel (v0_sliceN):
+matmul-performance:
+        M       N        K  mxfp4 (TFLOPS)
+0  4096.0  4096.0   1024.0      284.433746
+1  4096.0  4096.0   2048.0      608.567801
+2  4096.0  4096.0   3072.0      918.709587
+3  4096.0  4096.0   4096.0     1249.433698
+4  4096.0  4096.0   8192.0     2604.959245
+5  4096.0  4096.0  16384.0     4214.593836
+6  4096.0  4096.0  32768.0     4518.769941
+7  4096.0  4096.0  65536.0     4641.017685

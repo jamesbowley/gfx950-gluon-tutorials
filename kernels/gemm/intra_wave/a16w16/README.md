@@ -24,8 +24,22 @@ a16w16/
 ├── v6_loop_unroll/       # Loop unrolling to eliminate copy overhead
 ├── v7_sliceN/            # N-slicing for register pressure reduction
 ├── v8_sliceMN/           # M+N slicing, buffer load throughput analysis
-└── v9_beyond_hotloop/    # L2 cache locality via XCD-aware PID remapping
+├── v9_beyond_hotloop/    # L2 cache locality via XCD-aware PID remapping
+├── v10_persistant/       # v9 as a persistent kernel (one program per CU loops over tiles)
+├── v11_persistant_overlap_global/  # + next tile's first global->LDS loads in the epilogue
+├── v12_persistant_overlap_lds/     # + next tile's first LDS reads in the epilogue
+├── v13_persistant_peel_acc/        # + peeled first K-steps with an inline-0 accumulator
+├── v14_streamk/                    # v13 with the last wave peeled out; stream-K notes and models
+├── v15_streamk_onetile/            # + one-tile stream-K tail (row-major partials)
+├── v16_streamk_lane_partials/      # + lane-contiguous partials
+├── v17_streamk_tile_aligned/       # + tile-aligned cuts
+├── v18_streamk_chunk_major/        # + chunk-major placement, rotating owner
+├── v19_streamk_two_tile_reversed/  # + two-tile stream-K, segments in reversed order
+└── v20_streamk_reduce_scatter/     # + reduce-scatter ending, host policy rule, spread
 ```
+
+v14-v20 balance a partly empty last wave with stream-K. [STREAMK.md](STREAMK.md) summarizes
+what each version changes and what it measured.
 
 ## 2. How to Run
 
@@ -35,7 +49,35 @@ From the `a16w16` directory:
 python bench.py --version 9 --K 8192 --dtype fp16
 ```
 
-This runs correctness checks against `torch.matmul` and reports TFLOPS. Use `--version` to select a kernel version (0–9) and `--rocprof` for accurate performance measurement.
+This runs correctness checks against `torch.matmul` and reports TFLOPS. Use `--version` to select a kernel version (0–13) and `--rocprof` for accurate performance measurement.
+
+### Bias (v9–v13)
+
+v9–v13 take an optional `bias[N]`: `matmul(a, b, bias=bias)`, or `--bias` on `bench.py` and
+`scripts/run_perf_table.py`. The bias is not added before the C stores: the epilogue already
+holds the register peak, and adding it there pushes the persistent kernels into spills. Instead
+`init_acc` in [`../../utils/common.py`](../../utils/common.py) starts the four fp32 accumulators
+from the broadcast bias, loaded before the prologue loads, so the K loop and epilogue carry no
+extra registers. Without bias the accumulators stay a constant zero and the code is unchanged.
+The measurements behind this choice are in
+[`experiments/aiter_bias_spills/results.md`](../../../../experiments/aiter_bias_spills/results.md).
+
+4096×4096×8192 FP16, `llir+amdgcnas`, Triton `gfx950-tutorial-v2.2`, rocprof timing (1000
+dispatches, last-100 average), mean of two rounds on one MI355X. The bias cost is relative to the
+same kernel without bias on the same GPU; absolute TFLOPS on that GPU sit ~17% below the
+well-performing part the other tables use, so they are not quoted.
+
+| Version | VGPRs / spills | VGPRs / spills, bias | MFMA Eff. | MFMA Eff., bias | Bias cost |
+|---------|----------------|----------------------|-----------|-----------------|-----------|
+| v9_beyond_hotloop             | 448 / 0 | 448 / 0 | 98.08% | 97.96% | -0.7% |
+| v10_persistant                | 480 / 0 | 488 / 0 | 97.72% | 97.47% | -0.5% |
+| v11_persistant_overlap_global | 452 / 0 | 464 / 0 | 98.06% | 97.50% | -0.3% |
+| v12_persistant_overlap_lds    | 440 / 0 | 444 / 0 | 97.63% | 97.35% | -0.2% |
+| v13_persistant_peel_acc       | 480 / 0 | 488 / 0 | 97.78% | 98.12% | +0.2% |
+
+Run-to-run noise on these rows is about ±1% TFLOPS and ±0.9pp MFMA efficiency. On shapes where
+the epilogue weighs more (fewer tiles than CUs: 16384×512×8192, 2048×2304×16384; short K:
+4096×8192×1024; BF16) the bias costs 0.4–2.5%, with no version consistently worse.
 
 ## 3. The Optimization Journey
 

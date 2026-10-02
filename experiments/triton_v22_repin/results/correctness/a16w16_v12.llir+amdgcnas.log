@@ -1,0 +1,28 @@
+[v12_persistant_overlap_lds] M=4096 N=4096 K=512 dtype='fp16': ✅ Triton and Torch match
+[v12_persistant_overlap_lds] M=4096 N=4096 K=1024 dtype='fp16': ✅ Triton and Torch match
+[v12_persistant_overlap_lds] M=4096 N=4096 K=2048 dtype='fp16': ✅ Triton and Torch match
+[v12_persistant_overlap_lds] M=4096 N=4096 K=3072 dtype='fp16': ✅ Triton and Torch match
+[v12_persistant_overlap_lds] M=4096 N=4096 K=4096 dtype='fp16': ✅ Triton and Torch match
+[v12_persistant_overlap_lds] M=4096 N=4096 K=8192 dtype='fp16': ✅ Triton and Torch match
+[v12_persistant_overlap_lds] M=4096 N=4096 K=16384 dtype='fp16': ✅ Triton and Torch match
+[v12_persistant_overlap_lds] M=4096 N=4096 K=32768 dtype='fp16': ✅ Triton and Torch match
+[v12_persistant_overlap_lds] M=4096 N=4096 K=512 dtype='bf16': ✅ Triton and Torch match
+[v12_persistant_overlap_lds] M=4096 N=4096 K=1024 dtype='bf16': ✅ Triton and Torch match
+[v12_persistant_overlap_lds] M=4096 N=4096 K=2048 dtype='bf16': ✅ Triton and Torch match
+[v12_persistant_overlap_lds] M=4096 N=4096 K=3072 dtype='bf16': ✅ Triton and Torch match
+[v12_persistant_overlap_lds] M=4096 N=4096 K=4096 dtype='bf16': ✅ Triton and Torch match
+[v12_persistant_overlap_lds] M=4096 N=4096 K=8192 dtype='bf16': ✅ Triton and Torch match
+[v12_persistant_overlap_lds] M=4096 N=4096 K=16384 dtype='bf16': ✅ Triton and Torch match
+[v12_persistant_overlap_lds] M=4096 N=4096 K=32768 dtype='bf16': ✅ Triton and Torch match
+
+v12_persistant_overlap_lds:
+matmul-performance-v12_persistant_overlap_lds:
+        M       N        K  fp16 (TFLOPS)  bf16 (TFLOPS)
+0  4096.0  4096.0    512.0     148.613496     159.783011
+1  4096.0  4096.0   1024.0     312.813425     326.117482
+2  4096.0  4096.0   2048.0     684.177535     688.841085
+3  4096.0  4096.0   3072.0    1042.467786    1042.046223
+4  4096.0  4096.0   4096.0    1241.757454    1322.024179
+5  4096.0  4096.0   8192.0    1329.955736    1416.889094
+6  4096.0  4096.0  16384.0    1364.759469    1455.063711
+7  4096.0  4096.0  32768.0    1260.206206    1241.087424

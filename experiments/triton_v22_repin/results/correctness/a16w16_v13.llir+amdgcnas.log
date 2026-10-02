@@ -1,0 +1,28 @@
+[v13_persistant_peel_acc] M=4096 N=4096 K=512 dtype='fp16': ✅ Triton and Torch match
+[v13_persistant_peel_acc] M=4096 N=4096 K=1024 dtype='fp16': ✅ Triton and Torch match
+[v13_persistant_peel_acc] M=4096 N=4096 K=2048 dtype='fp16': ✅ Triton and Torch match
+[v13_persistant_peel_acc] M=4096 N=4096 K=3072 dtype='fp16': ✅ Triton and Torch match
+[v13_persistant_peel_acc] M=4096 N=4096 K=4096 dtype='fp16': ✅ Triton and Torch match
+[v13_persistant_peel_acc] M=4096 N=4096 K=8192 dtype='fp16': ✅ Triton and Torch match
+[v13_persistant_peel_acc] M=4096 N=4096 K=16384 dtype='fp16': ✅ Triton and Torch match
+[v13_persistant_peel_acc] M=4096 N=4096 K=32768 dtype='fp16': ✅ Triton and Torch match
+[v13_persistant_peel_acc] M=4096 N=4096 K=512 dtype='bf16': ✅ Triton and Torch match
+[v13_persistant_peel_acc] M=4096 N=4096 K=1024 dtype='bf16': ✅ Triton and Torch match
+[v13_persistant_peel_acc] M=4096 N=4096 K=2048 dtype='bf16': ✅ Triton and Torch match
+[v13_persistant_peel_acc] M=4096 N=4096 K=3072 dtype='bf16': ✅ Triton and Torch match
+[v13_persistant_peel_acc] M=4096 N=4096 K=4096 dtype='bf16': ✅ Triton and Torch match
+[v13_persistant_peel_acc] M=4096 N=4096 K=8192 dtype='bf16': ✅ Triton and Torch match
+[v13_persistant_peel_acc] M=4096 N=4096 K=16384 dtype='bf16': ✅ Triton and Torch match
+[v13_persistant_peel_acc] M=4096 N=4096 K=32768 dtype='bf16': ✅ Triton and Torch match
+
+v13_persistant_peel_acc:
+matmul-performance-v13_persistant_peel_acc:
+        M       N        K  fp16 (TFLOPS)  bf16 (TFLOPS)
+0  4096.0  4096.0    512.0     151.631011     156.577771
+1  4096.0  4096.0   1024.0     328.861127     328.861127
+2  4096.0  4096.0   2048.0     681.734087     685.542624
+3  4096.0  4096.0   3072.0    1031.204640    1033.686461
+4  4096.0  4096.0   4096.0    1233.731785    1315.960920
+5  4096.0  4096.0   8192.0    1325.594429    1413.392087
+6  4096.0  4096.0  16384.0    1361.244992    1455.138834
+7  4096.0  4096.0  32768.0    1258.186584    1240.892066

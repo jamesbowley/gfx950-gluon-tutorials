@@ -1,0 +1,722 @@
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_aiter_core.so
+[aiter] merge tuned file under model_configs/ and configs/ /home/jbowley/repos/aiter/aiter/configs/bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/kimi_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/gptoss_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/llama70B_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/qwen3_8_2p4t_a95b_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/flux2_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/qwen3_8b_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/qwen3_5_397b_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/dsv3_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/kimik3_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/kimik2_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/dsv4_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/glm53_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/q3vl_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/glm5_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/dsv41_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/llama405B_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/minimax_m3_eagle_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/minimax_m3_mxfp4_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/qwen32B_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/glm47_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/glm53_flash_bf16_tuned_gemm.csv
+torch=2.10.0+rocm7.2.4.git3d3aa833 hip=7.2.53211 hipblaslt=100202 (dabb6df2b9) triton=3.8.0 @ /home/jbowley/repos/triton_gfx950-tutorial-v2.2/python/triton llir_sched=/root/.aiter/llir_sched/ccf9a789cf3f11ab/libLlirSched.so gpu_pci_bus=117 gpu=gfx950:sramecc+:xnack-
+/home/jbowley/rocm724_env/venv/lib/python3.12/site-packages/torch/profiler/profiler.py:217: UserWarning: Warning: Profiler clears events at the end of each cycle.Only events from the current cycle will be reported.To keep events across cycles, set acc_events=True.
+  _warn_once(
+[W929 09:16:59.544227704 collection.cpp:1148] Warning: ROCTracer produced duplicate flow start: 2 (function operator())
+[1/630      2s] 1024x3072x512 bfloat16 pick=flydsl   462.5 gluon=  226.0
+[2/630      2s] 1024x4096x512 bfloat16 pick=flydsl   529.9 gluon=  285.7
+[3/630      3s] 1024x7168x512 bfloat16 pick=flydsl   615.5 gluon=  460.1
+[4/630      4s] 2048x2048x512 bfloat16 pick=flydsl   532.5 gluon=  285.5
+[5/630      5s] 2048x4096x512 bfloat16 pick=torch    622.9 gluon=  498.1
+[6/630      6s] 4096x2048x512 bfloat16 pick=torch    669.9 gluon=  495.5
+[7/630      6s] 4096x4096x512 bfloat16 pick=torch    807.1 gluon=  860.9
+[8/630      7s] 4096x7168x512 bfloat16 pick=flydsl   858.8 gluon=  881.2
+[9/630      8s] 8192x2048x512 bfloat16 pick=torch    808.1 gluon=  868.0
+[10/630      9s] 8192x4096x512 bfloat16 pick=flydsl   863.6 gluon=  931.3
+[11/630     10s] 16384x2048x512 bfloat16 pick=torch    862.6 gluon=  931.1
+[12/630     11s] 16384x4096x512 bfloat16 pick=torch    942.5 gluon=  977.3
+[13/630     12s] 16384x7168x512 bfloat16 pick=torch    992.8 gluon= 1016.9
+[14/630     13s] 32768x2048x512 bfloat16 pick=torch    948.0 gluon=  979.6
+[15/630     14s] 1024x5120x640 bfloat16 pick=torch    528.2 gluon=  379.2
+[16/630     15s] 2048x5120x640 bfloat16 pick=flydsl   675.7 gluon=  681.0
+[17/630     16s] 4096x5120x640 bfloat16 pick=flydsl   816.4 gluon=  754.2
+[18/630     18s] 8192x5120x640 bfloat16 pick=torch    898.1 gluon=  938.4
+[19/630     19s] 16384x5120x640 bfloat16 pick=torch   1051.8 gluon= 1082.2
+[20/630     20s] 32768x5120x640 bfloat16 pick=torch   1084.7 gluon= 1072.9
+[21/630     21s] 1024x7168x768 bfloat16 pick=flydsl   712.8 gluon=  544.6
+[aiter] import [module_deepgemm_opus] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/rocm724/module_deepgemm_opus.so
+[22/630     22s] 10240x7168x768 bfloat16 pick=opus     419.8 gluon= 1070.6
+[aiter] shape is M:512, N:4096, K:1024 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:512, N:4096, K:1024 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[23/630     23s] 512x4096x1024 bfloat16 pick=torch    488.1 gluon=  199.6
+[24/630     24s] 512x6144x1024 bfloat16 pick=flydsl   587.7 gluon=  298.0
+[25/630     25s] 512x7168x1024 bfloat16 pick=flydsl   648.9 gluon=  335.7
+[26/630     26s] 512x8192x1024 bfloat16 pick=flydsl   705.7 gluon=  375.4
+[aiter] shape is M:1024, N:4096, K:1024 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:1024, N:4096, K:1024 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[27/630     27s] 1024x4096x1024 bfloat16 pick=torch    666.3 gluon=  374.1
+[28/630     28s] 1024x7168x1024 bfloat16 pick=flydsl   783.4 gluon=  612.7
+[29/630     29s] 1024x8192x1024 bfloat16 pick=torch    844.9 gluon=  672.9
+[aiter] shape is M:2048, N:4096, K:1024 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:2048, N:4096, K:1024 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[30/630     30s] 2048x4096x1024 bfloat16 pick=torch    840.0 gluon=  674.6
+[31/630     31s] 2048x7168x1024 bfloat16 pick=flydsl  1037.6 gluon= 1074.6
+[32/630     32s] 2048x8192x1024 bfloat16 pick=flydsl  1109.6 gluon= 1155.0
+[aiter] shape is M:3072, N:4096, K:1024 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:3072, N:4096, K:1024 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[33/630     33s] 3072x4096x1024 bfloat16 pick=torch    978.0 gluon=  957.2
+[aiter] shape is M:4096, N:4096, K:1024 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:4096, N:4096, K:1024 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[34/630     34s] 4096x4096x1024 bfloat16 pick=torch   1132.2 gluon= 1154.3
+[35/630     35s] 4096x7168x1024 bfloat16 pick=flydsl  1110.9 gluon= 1129.1
+[aiter] LoadKernel: _ZN5aiter24bf16gemm_bf16_tn_256x256E hsaco: /home/jbowley/repos/aiter/hsa//gfx950/bf16gemm/bf16gemm_bf16_tn_256x256.co
+[36/630     36s] 4096x8192x1024 bfloat16 pick=asm     1193.6 gluon= 1185.9
+[aiter] shape is M:5120, N:4096, K:1024 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:5120, N:4096, K:1024 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[37/630     38s] 5120x4096x1024 bfloat16 pick=torch   1024.8 gluon=  893.3
+[aiter] shape is M:7680, N:4096, K:1024 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:7680, N:4096, K:1024 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[38/630     39s] 7680x4096x1024 bfloat16 pick=torch    982.1 gluon= 1158.8
+[39/630     40s] 8192x7168x1024 bfloat16 pick=asm     1104.1 gluon= 1169.5
+[40/630     41s] 8192x8192x1024 bfloat16 pick=asm     1213.6 gluon= 1228.3
+[aiter] shape is M:16384, N:4096, K:1024 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:16384, N:4096, K:1024 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[41/630     42s] 16384x4096x1024 bfloat16 pick=torch   1199.9 gluon= 1239.6
+[42/630     44s] 16384x7168x1024 bfloat16 pick=asm     1192.1 gluon= 1269.7
+[43/630     45s] 16384x8192x1024 bfloat16 pick=torch   1241.5 gluon= 1243.2
+[44/630     47s] 32768x7168x1024 bfloat16 pick=torch   1261.5 gluon= 1240.0
+[45/630     47s] 32768x8192x1024 bfloat16 pick=torch   1253.7 gluon= 1227.1
+[46/630     48s] 512x5120x1280 bfloat16 pick=flydsl   550.0 gluon=  264.2
+[47/630     50s] 1024x5120x1280 bfloat16 pick=torch    719.8 gluon=  487.4
+[48/630     51s] 2048x5120x1280 bfloat16 pick=torch    955.1 gluon=  887.5
+[49/630     52s] 4096x5120x1280 bfloat16 pick=torch    993.3 gluon=  961.1
+[50/630     54s] 8192x5120x1280 bfloat16 pick=flydsl  1154.1 gluon= 1178.9
+[51/630     55s] 16384x5120x1280 bfloat16 pick=flydsl  1257.3 gluon= 1317.2
+[52/630     57s] 32768x5120x1280 bfloat16 pick=torch   1305.9 gluon= 1292.0
+[53/630     58s] 512x1536x1536 bfloat16 pick=flydsl   348.5 gluon=   85.7
+[aiter] shape is M:512, N:2048, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:512, N:2048, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[54/630     59s] 512x2048x1536 bfloat16 pick=torch    404.3 gluon=  113.5
+[55/630     60s] 512x2304x1536 bfloat16 pick=flydsl   394.6 gluon=  126.4
+[aiter] shape is M:512, N:4096, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:512, N:4096, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[56/630     61s] 512x4096x1536 bfloat16 pick=torch    573.8 gluon=  223.3
+[57/630     62s] 512x6144x1536 bfloat16 pick=flydsl   656.5 gluon=  328.9
+[58/630     63s] 512x7168x1536 bfloat16 pick=flydsl   682.4 gluon=  375.8
+[59/630     64s] 1024x1536x1536 bfloat16 pick=flydsl   502.1 gluon=  168.7
+[aiter] shape is M:1024, N:2048, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:1024, N:2048, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[60/630     65s] 1024x2048x1536 bfloat16 pick=torch    575.0 gluon=  220.2
+[61/630     66s] 1024x2304x1536 bfloat16 pick=torch    532.4 gluon=  248.7
+[62/630     66s] 1024x3072x1536 bfloat16 pick=flydsl   647.9 gluon=  329.7
+[aiter] shape is M:1024, N:4096, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:1024, N:4096, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[63/630     68s] 1024x4096x1536 bfloat16 pick=torch    637.7 gluon=  421.6
+[64/630     69s] 1024x7168x1536 bfloat16 pick=torch    890.3 gluon=  689.9
+[65/630     70s] 2048x1536x1536 bfloat16 pick=torch    667.5 gluon=  328.6
+[aiter] shape is M:2048, N:2048, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:2048, N:2048, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[66/630     70s] 2048x2048x1536 bfloat16 pick=torch    637.7 gluon=  420.7
+[67/630     72s] 2048x4096x1536 bfloat16 pick=torch    956.7 gluon=  763.7
+[68/630     72s] 3072x2048x1536 bfloat16 pick=opus     878.8 gluon=  604.1
+[69/630     74s] 3072x4096x1536 bfloat16 pick=opus    1149.5 gluon= 1079.2
+[70/630     75s] 4096x1536x1536 bfloat16 pick=torch    817.5 gluon=  603.6
+[71/630     75s] 4096x2048x1536 bfloat16 pick=opus    1023.7 gluon=  764.9
+[72/630     76s] 4096x3072x1536 bfloat16 pick=flydsl  1046.6 gluon= 1083.6
+[aiter] shape is M:4096, N:4096, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:4096, N:4096, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[73/630     77s] 4096x4096x1536 bfloat16 pick=torch   1228.4 gluon= 1263.2
+[aiter] shape is M:5120, N:2048, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:5120, N:2048, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[74/630     79s] 5120x2048x1536 bfloat16 pick=torch   1032.4 gluon=  930.1
+[aiter] shape is M:5120, N:4096, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:5120, N:4096, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[75/630     80s] 5120x4096x1536 bfloat16 pick=torch   1103.5 gluon= 1012.7
+[aiter] shape is M:7680, N:2048, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:7680, N:2048, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[76/630     81s] 7680x2048x1536 bfloat16 pick=torch   1043.1 gluon= 1222.6
+[aiter] shape is M:7680, N:4096, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:7680, N:4096, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[77/630     83s] 7680x4096x1536 bfloat16 pick=torch   1086.6 gluon= 1262.4
+[78/630     84s] 8192x1536x1536 bfloat16 pick=torch   1106.4 gluon= 1077.5
+[79/630     85s] 10240x7168x1536 bfloat16 pick=asm     1226.5 gluon= 1258.3
+[80/630     86s] 16384x1536x1536 bfloat16 pick=torch   1149.7 gluon= 1155.2
+[aiter] shape is M:16384, N:2048, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:16384, N:2048, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[81/630     88s] 16384x2048x1536 bfloat16 pick=torch   1282.1 gluon= 1306.7
+[82/630     89s] 16384x3072x1536 bfloat16 pick=torch   1309.3 gluon= 1338.6
+[aiter] shape is M:16384, N:4096, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:16384, N:4096, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[83/630     91s] 16384x4096x1536 bfloat16 pick=torch   1325.3 gluon= 1350.1
+[84/630     91s] 32768x1536x1536 bfloat16 pick=flydsl  1286.9 gluon= 1328.8
+[85/630     92s] 512x7168x1792 bfloat16 pick=flydsl   719.8 gluon=  391.9
+[86/630     94s] 1024x7168x1792 bfloat16 pick=flydsl   862.9 gluon=  720.6
+[87/630     95s] 2048x7168x1792 bfloat16 pick=flydsl  1189.5 gluon= 1254.8
+[88/630     96s] 4096x7168x1792 bfloat16 pick=flydsl  1258.1 gluon= 1282.3
+[89/630     98s] 8192x7168x1792 bfloat16 pick=asm     1267.8 gluon= 1314.3
+[90/630     99s] 16384x7168x1792 bfloat16 pick=torch   1386.2 gluon= 1398.5
+[91/630    100s] 32768x7168x1792 bfloat16 pick=torch   1397.5 gluon= 1373.9
+[aiter] shape is M:512, N:4096, K:2048 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:512, N:4096, K:2048 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[92/630    102s] 512x4096x2048 bfloat16 pick=torch    616.0 gluon=  237.5
+[aiter] LoadKernel: _ZN5aiter37bf16gemm_fp32bf16_tn_96x64_pf3_splitkE hsaco: /home/jbowley/repos/aiter/hsa//gfx950/bf16gemm/bf16gemm_fp32bf16_tn_96x64_pf3_splitk.co
+[93/630    103s] 512x6144x2048 float32  pick=asm      424.3 gluon=  315.4
+[94/630    104s] 512x6144x2048 bfloat16 pick=flydsl   682.0 gluon=  356.3
+[95/630    105s] 512x8192x2048 bfloat16 pick=flydsl   788.1 gluon=  452.8
+[96/630    106s] 512x16384x2048 bfloat16 pick=flydsl   815.8 gluon=  827.1
+[aiter] shape is M:1024, N:4096, K:2048 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:1024, N:4096, K:2048 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[97/630    107s] 1024x4096x2048 bfloat16 pick=torch    688.3 gluon=  453.3
+[98/630    108s] 1024x6144x2048 float32  pick=opus     668.4 gluon=  598.8
+[99/630    109s] 1024x6144x2048 bfloat16 pick=flydsl   812.5 gluon=  652.7 PICK-WRONG
+[100/630    110s] 1024x8192x2048 bfloat16 pick=flydsl  1057.2 gluon=  821.5
+[101/630    111s] 1024x16384x2048 bfloat16 pick=flydsl   940.3 gluon= 1375.8
+[aiter] shape is M:2048, N:4096, K:2048 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:2048, N:4096, K:2048 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[102/630    112s] 2048x4096x2048 bfloat16 pick=torch   1038.4 gluon=  828.1
+[103/630    113s] 2048x6144x2048 float32  pick=asm     1031.0 gluon= 1081.4
+[104/630    114s] 2048x6144x2048 bfloat16 pick=flydsl  1149.3 gluon= 1162.6
+[105/630    114s] 2048x8192x2048 bfloat16 pick=flydsl  1318.4 gluon= 1365.0
+[106/630    116s] 2048x16384x2048 bfloat16 pick=flydsl  1105.7 gluon= 1403.2
+[aiter] shape is M:3072, N:4096, K:2048 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:3072, N:4096, K:2048 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[107/630    117s] 3072x4096x2048 bfloat16 pick=torch   1183.4 gluon= 1190.8
+[aiter] shape is M:4096, N:4096, K:2048 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:4096, N:4096, K:2048 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[108/630    118s] 4096x4096x2048 bfloat16 pick=torch   1323.0 gluon= 1377.2
+[109/630    119s] 4096x6144x2048 float32  pick=asm     1039.3 gluon= 1086.9
+[110/630    120s] 4096x6144x2048 bfloat16 pick=flydsl  1055.9 gluon= 1223.0
+[111/630    121s] 4096x8192x2048 bfloat16 pick=flydsl  1348.3 gluon= 1399.2
+[112/630    123s] 4096x16384x2048 bfloat16 pick=flydsl   974.7 gluon= 1429.3
+[aiter] shape is M:5120, N:4096, K:2048 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:5120, N:4096, K:2048 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[113/630    124s] 5120x4096x2048 bfloat16 pick=torch   1228.4 gluon= 1060.4
+[aiter] shape is M:7680, N:4096, K:2048 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:7680, N:4096, K:2048 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[114/630    125s] 7680x4096x2048 bfloat16 pick=torch   1147.3 gluon= 1356.8
+[115/630    127s] 8192x6144x2048 float32  pick=asm     1226.7 gluon= 1265.9
+[116/630    128s] 8192x6144x2048 bfloat16 pick=flydsl   854.8 gluon= 1425.8 PICK-WRONG
+[117/630    129s] 8192x8192x2048 bfloat16 pick=asm     1399.3 gluon= 1429.3
+[118/630    130s] 8192x16384x2048 bfloat16 pick=triton  1034.2 gluon= 1361.2
+[119/630    131s] 16384x4096x2048 bfloat16 pick=torch   1361.3 gluon= 1434.4
+[120/630    132s] 16384x6144x2048 float32  pick=asm     1187.1 gluon= 1224.2
+[121/630    133s] 16384x6144x2048 bfloat16 pick=torch   1407.5 gluon= 1440.7
+[122/630    134s] 16384x8192x2048 bfloat16 pick=torch   1415.8 gluon= 1425.7
+[123/630    136s] 16384x16384x2048 bfloat16 pick=flydsl   970.8 gluon= 1363.3
+[124/630    137s] 32768x6144x2048 bfloat16 pick=flydsl  1003.0 gluon= 1395.1
+[125/630    138s] 32768x8192x2048 bfloat16 pick=torch   1420.9 gluon= 1419.9
+[126/630    139s] 32768x16384x2048 bfloat16 pick=flydsl   843.4 gluon= 1370.7
+[127/630    141s] 512x6144x3072 float32  pick=opus     399.7 gluon=  346.3
+[128/630    142s] 512x6144x3072 bfloat16 pick=flydsl   747.1 gluon=  380.3
+[129/630    143s] 1024x6144x3072 float32  pick=opus     631.2 gluon=  687.6
+[130/630    144s] 1024x6144x3072 bfloat16 pick=flydsl   887.7 gluon=  732.2 PICK-WRONG
+[131/630    145s] 2048x6144x3072 float32  pick=asm     1149.7 gluon= 1198.9
+[132/630    146s] 2048x6144x3072 bfloat16 pick=flydsl  1212.4 gluon= 1281.5
+[133/630    148s] 4096x6144x3072 float32  pick=asm     1145.5 gluon= 1183.0
+[134/630    149s] 4096x6144x3072 bfloat16 pick=flydsl  1110.1 gluon= 1276.9
+[135/630    150s] 8192x6144x3072 float32  pick=asm     1329.7 gluon= 1370.2
+[136/630    152s] 8192x6144x3072 bfloat16 pick=flydsl   850.1 gluon= 1506.7
+[137/630    154s] 16384x6144x3072 float32  pick=asm     1294.5 gluon= 1323.8
+[138/630    155s] 16384x6144x3072 bfloat16 pick=torch   1471.2 gluon= 1494.9
+[139/630    156s] 32768x6144x3072 bfloat16 pick=flydsl   870.5 gluon= 1492.0 PICK-WRONG
+[140/630    158s] 512x5120x3200 bfloat16 pick=flydsl   637.3 gluon=  318.3
+[141/630    159s] 1024x5120x3200 bfloat16 pick=torch    959.0 gluon=  597.1
+[142/630    160s] 2048x5120x3200 bfloat16 pick=torch   1173.9 gluon= 1162.7
+[143/630    162s] 4096x5120x3200 bfloat16 pick=torch   1191.2 gluon= 1118.0
+[144/630    163s] 8192x5120x3200 bfloat16 pick=asm     1328.2 gluon= 1374.0
+[145/630    165s] 16384x5120x3200 bfloat16 pick=torch   1473.7 gluon= 1499.4
+[146/630    166s] 32768x5120x3200 bfloat16 pick=torch   1481.3 gluon= 1492.9
+[147/630    167s] 512x7168x3584 bfloat16 pick=flydsl   851.1 gluon=  449.4
+[148/630    168s] 512x8192x3584 bfloat16 pick=flydsl   791.1 gluon=  500.0
+[149/630    170s] 1024x7168x3584 bfloat16 pick=torch   1079.5 gluon=  855.1
+[150/630    171s] 1024x8192x3584 bfloat16 pick=flydsl   890.3 gluon=  948.5
+[151/630    172s] 2048x8192x3584 bfloat16 pick=flydsl  1433.0 gluon= 1481.4
+[152/630    174s] 4096x8192x3584 bfloat16 pick=flydsl  1043.4 gluon= 1508.3
+[153/630    175s] 8192x8192x3584 bfloat16 pick=torch   1484.5 gluon= 1536.9
+[154/630    177s] 10240x7168x3584 bfloat16 pick=flydsl   838.8 gluon= 1425.9
+[155/630    178s] 16384x8192x3584 bfloat16 pick=flydsl   852.0 gluon= 1527.5
+[156/630    179s] 32768x8192x3584 bfloat16 pick=flydsl   876.3 gluon= 1521.4
+[157/630    180s] 512x1024x4096 bfloat16 pick=flydsl   348.5 gluon=   66.6 PICK-WRONG
+[158/630    182s] 512x2048x4096 bfloat16 pick=flydsl   514.9 gluon=  133.0
+[159/630    183s] 512x4096x4096 bfloat16 pick=flydsl   714.9 gluon=  264.6
+[160/630    184s] 512x8192x4096 bfloat16 pick=flydsl   912.8 gluon=  516.6
+[161/630    185s] 512x8704x4096 bfloat16 pick=torch    903.7 gluon=  554.9
+[162/630    187s] 512x10240x4096 bfloat16 pick=torch    868.9 gluon=  644.7
+[163/630    188s] 512x16384x4096 bfloat16 pick=flydsl   839.1 gluon=  951.8
+[164/630    189s] 512x129280x4096 bfloat16 pick=asm     1308.5 gluon= 1380.7
+[165/630    191s] 768x1024x4096 bfloat16 pick=torch    435.9 gluon=  100.3
+[166/630    192s] 768x2048x4096 bfloat16 pick=flydsl   551.2 gluon=  199.5
+[167/630    193s] 768x4096x4096 bfloat16 pick=flydsl   760.7 gluon=  394.6
+[168/630    194s] 768x8192x4096 bfloat16 pick=torch   1010.6 gluon=  758.5
+[169/630    195s] 768x8704x4096 bfloat16 pick=flydsl   961.9 gluon=  805.5 PICK-WRONG
+[170/630    197s] 768x10240x4096 bfloat16 pick=flydsl  1208.0 gluon=  951.9
+[171/630    198s] 768x129280x4096 bfloat16 pick=torch   1357.5 gluon= 1426.2
+[172/630    199s] 1024x512x4096 bfloat16 pick=flydsl   329.4 gluon=   66.6
+[173/630    199s] 1024x1024x4096 bfloat16 pick=flydsl   502.5 gluon=  133.0
+[174/630    200s] 1024x2048x4096 bfloat16 pick=flydsl   693.9 gluon=  261.9
+[175/630    200s] 1024x4096x4096 bfloat16 pick=flydsl   926.4 gluon=  519.9
+[176/630    201s] 1024x8192x4096 bfloat16 pick=flydsl  1237.1 gluon=  988.1
+[177/630    202s] 1024x8704x4096 bfloat16 pick=torch   1121.0 gluon= 1067.1
+[178/630    203s] 1024x10240x4096 bfloat16 pick=torch   1222.4 gluon= 1186.0
+[179/630    205s] 1024x16384x4096 bfloat16 pick=flydsl   898.7 gluon= 1520.9
+[180/630    206s] 1024x129280x4096 bfloat16 pick=torch   1384.0 gluon= 1455.8
+[181/630    207s] 1280x512x4096 bfloat16 pick=flydsl   335.2 gluon=   83.0 PICK-WRONG
+[182/630    209s] 1280x1024x4096 bfloat16 pick=torch    564.6 gluon=  166.3
+[183/630    210s] 1280x2048x4096 bfloat16 pick=flydsl   656.4 gluon=  331.7
+[184/630    211s] 1280x129280x4096 bfloat16 pick=torch   1393.1 gluon= 1429.0
+[185/630    212s] 1536x512x4096 bfloat16 pick=torch    434.5 gluon=  100.2
+[186/630    212s] 1536x1024x4096 bfloat16 pick=flydsl   545.2 gluon=  198.9
+[187/630    213s] 1536x2048x4096 bfloat16 pick=flydsl   761.3 gluon=  395.7
+[188/630    214s] 1536x129280x4096 bfloat16 pick=torch   1403.4 gluon= 1446.8
+[189/630    215s] 1792x512x4096 bfloat16 pick=flydsl   418.4 gluon=  117.0
+[190/630    217s] 1792x1024x4096 bfloat16 pick=flydsl   611.4 gluon=  233.0
+[191/630    218s] 1792x2048x4096 bfloat16 pick=flydsl   830.1 gluon=  458.7
+[192/630    219s] 1792x129280x4096 bfloat16 pick=asm     1444.0 gluon= 1458.2
+[193/630    220s] 2048x512x4096 bfloat16 pick=flydsl   481.8 gluon=  132.2
+[194/630    220s] 2048x1024x4096 bfloat16 pick=flydsl   691.1 gluon=  264.9
+[195/630    221s] 2048x2048x4096 bfloat16 pick=flydsl   908.9 gluon=  518.7
+[196/630    222s] 2048x4096x4096 bfloat16 pick=opus    1212.4 gluon=  991.5
+[197/630    222s] 2048x8192x4096 bfloat16 pick=flydsl  1458.7 gluon= 1516.2
+[198/630    224s] 2048x8704x4096 bfloat16 pick=torch   1150.9 gluon=  990.4
+[199/630    225s] 2048x10240x4096 bfloat16 pick=torch   1234.3 gluon= 1150.1
+[200/630    227s] 2048x16384x4096 bfloat16 pick=flydsl  1488.3 gluon= 1533.8
+[201/630    228s] 2048x129280x4096 bfloat16 pick=flydsl  1445.7 gluon= 1493.7
+[202/630    229s] 2304x512x4096 bfloat16 pick=flydsl   439.8 gluon=  149.5
+[203/630    230s] 2304x1024x4096 bfloat16 pick=flydsl   646.2 gluon=  295.7
+[204/630    231s] 2304x2048x4096 bfloat16 pick=opus     886.1 gluon=  580.1
+[205/630    232s] 2560x512x4096 bfloat16 pick=flydsl   480.5 gluon=  165.6
+[206/630    233s] 2560x1024x4096 bfloat16 pick=flydsl   690.1 gluon=  330.5
+[207/630    233s] 2560x2048x4096 bfloat16 pick=opus     968.4 gluon=  634.1
+[208/630    235s] 2816x512x4096 bfloat16 pick=flydsl   518.7 gluon=  182.4
+[209/630    236s] 2816x1024x4096 bfloat16 pick=flydsl   727.9 gluon=  363.3
+[210/630    237s] 2816x2048x4096 bfloat16 pick=opus    1017.7 gluon=  703.0
+[211/630    238s] 3072x512x4096 bfloat16 pick=flydsl   543.4 gluon=  199.9
+[212/630    238s] 3072x1024x4096 bfloat16 pick=flydsl   748.6 gluon=  395.6
+[213/630    239s] 3072x2048x4096 bfloat16 pick=opus    1122.3 gluon=  767.9
+[214/630    240s] 3328x512x4096 bfloat16 pick=flydsl   587.3 gluon=  215.2
+[215/630    241s] 3328x1024x4096 bfloat16 pick=flydsl   775.1 gluon=  427.5
+[216/630    243s] 3328x2048x4096 bfloat16 pick=opus    1104.3 gluon=  820.9
+[217/630    243s] 3584x512x4096 bfloat16 pick=flydsl   611.9 gluon=  233.5
+[218/630    244s] 3584x1024x4096 bfloat16 pick=flydsl   801.1 gluon=  454.9
+[219/630    245s] 3584x2048x4096 bfloat16 pick=opus    1155.3 gluon=  873.4
+[220/630    246s] 3840x512x4096 bfloat16 pick=flydsl   644.0 gluon=  250.2
+[221/630    248s] 3840x1024x4096 bfloat16 pick=flydsl   810.6 gluon=  489.3
+[222/630    248s] 3840x2048x4096 bfloat16 pick=opus    1179.4 gluon=  941.7
+[223/630    249s] 4096x512x4096 bfloat16 pick=flydsl   678.8 gluon=  264.4
+[224/630    250s] 4096x1024x4096 bfloat16 pick=flydsl   913.5 gluon=  513.9
+[225/630    250s] 4096x2048x4096 bfloat16 pick=opus    1237.8 gluon=  993.1
+[226/630    251s] 4096x4096x4096 bfloat16 pick=flydsl  1464.4 gluon= 1525.0
+[227/630    252s] 4096x8192x4096 bfloat16 pick=asm     1516.5 gluon= 1542.6
+[228/630    253s] 4096x8704x4096 bfloat16 pick=torch   1263.3 gluon= 1252.3
+[229/630    255s] 4096x10240x4096 bfloat16 pick=flydsl  1371.1 gluon= 1417.3
+[230/630    256s] 4096x16384x4096 bfloat16 pick=flydsl  1493.1 gluon= 1541.7
+[231/630    258s] 4096x129280x4096 bfloat16 pick=asm     1479.0 gluon= 1509.9
+[232/630    259s] 4352x512x4096 bfloat16 pick=flydsl   490.9 gluon=  280.7
+[233/630    260s] 4352x1024x4096 bfloat16 pick=opus     848.7 gluon=  547.3
+[234/630    261s] 4352x2048x4096 bfloat16 pick=torch   1088.3 gluon= 1053.3
+[235/630    261s] 5120x512x4096 bfloat16 pick=flydsl   581.2 gluon=  328.3
+[236/630    262s] 5120x1024x4096 bfloat16 pick=opus     991.5 gluon=  636.5
+[237/630    263s] 5120x2048x4096 bfloat16 pick=torch   1243.3 gluon= 1171.3
+[238/630    264s] 6144x512x4096 bfloat16 pick=flydsl   763.2 gluon=  394.9
+[239/630    264s] 6144x1024x4096 bfloat16 pick=opus    1124.4 gluon=  755.4
+[240/630    266s] 6144x2048x4096 bfloat16 pick=opus    1374.5 gluon= 1308.0
+[241/630    267s] 6144x129280x4096 bfloat16 pick=asm     1478.6 gluon= 1487.0
+[242/630    268s] 6400x512x4096 bfloat16 pick=flydsl   724.3 gluon=  411.5
+[243/630    270s] 6400x1024x4096 bfloat16 pick=opus    1077.9 gluon=  795.6
+[244/630    271s] 6400x2048x4096 bfloat16 pick=torch   1229.6 gluon= 1335.5
+[245/630    273s] 6912x512x4096 bfloat16 pick=flydsl   618.1 gluon=  443.7
+[246/630    274s] 6912x1024x4096 bfloat16 pick=opus    1113.9 gluon=  863.9
+[247/630    275s] 6912x2048x4096 bfloat16 pick=torch   1327.2 gluon= 1370.4
+[248/630    276s] 7168x512x4096 bfloat16 pick=flydsl   581.5 gluon=  456.6
+[249/630    277s] 7168x1024x4096 bfloat16 pick=opus    1179.0 gluon=  895.7
+[250/630    278s] 7168x2048x4096 bfloat16 pick=torch   1349.5 gluon= 1406.7
+[251/630    279s] 7424x512x4096 bfloat16 pick=flydsl   746.0 gluon=  472.1
+[252/630    281s] 7424x1024x4096 bfloat16 pick=opus    1136.0 gluon=  916.6
+[253/630    282s] 7424x2048x4096 bfloat16 pick=torch   1210.8 gluon= 1429.6
+[254/630    283s] 7680x512x4096 bfloat16 pick=flydsl   636.1 gluon=  488.7
+[255/630    284s] 7680x1024x4096 bfloat16 pick=opus    1195.5 gluon=  951.4
+[256/630    285s] 7680x2048x4096 bfloat16 pick=torch   1241.2 gluon= 1459.5
+[257/630    286s] 7936x512x4096 bfloat16 pick=flydsl   798.7 gluon=  503.6
+[258/630    288s] 7936x1024x4096 bfloat16 pick=opus    1168.3 gluon=  975.8
+[259/630    289s] 7936x2048x4096 bfloat16 pick=torch   1441.0 gluon= 1487.1
+[260/630    290s] 8192x512x4096 bfloat16 pick=flydsl   863.1 gluon=  507.8
+[261/630    290s] 8192x1024x4096 bfloat16 pick=opus    1248.9 gluon=  983.2
+[262/630    291s] 8192x2048x4096 bfloat16 pick=torch   1462.2 gluon= 1519.4
+[263/630    292s] 8192x4096x4096 bfloat16 pick=flydsl  1498.6 gluon= 1543.9
+[264/630    293s] 8192x8192x4096 bfloat16 pick=asm     1531.8 gluon= 1552.2
+[265/630    294s] 8192x8704x4096 bfloat16 pick=asm     1402.5 gluon= 1422.4
+[266/630    296s] 8192x10240x4096 bfloat16 pick=torch   1495.8 gluon= 1552.0
+[267/630    297s] 8192x16384x4096 bfloat16 pick=torch   1522.8 gluon= 1527.4
+[268/630    299s] 8192x129280x4096 bfloat16 pick=flydsl  1475.7 gluon= 1518.6
+[269/630    299s] 10240x512x4096 bfloat16 pick=torch   1006.8 gluon=  636.1
+[270/630    300s] 10240x1024x4096 bfloat16 pick=torch   1254.1 gluon= 1168.9
+[271/630    301s] 10240x2048x4096 bfloat16 pick=torch   1277.1 gluon= 1135.8
+[272/630    303s] 10240x129280x4096 bfloat16 pick=asm     1496.5 gluon= 1502.7
+[273/630    303s] 12288x512x4096 bfloat16 pick=opus    1114.1 gluon=  760.3
+[274/630    304s] 12288x1024x4096 bfloat16 pick=opus    1379.9 gluon= 1316.5
+[275/630    305s] 12288x2048x4096 bfloat16 pick=opus    1384.5 gluon= 1307.2
+[276/630    307s] 12288x129280x4096 bfloat16 pick=asm     1491.7 gluon= 1517.1
+[277/630    308s] 14336x512x4096 bfloat16 pick=opus    1169.7 gluon=  874.9
+[278/630    309s] 14336x1024x4096 bfloat16 pick=torch   1351.8 gluon= 1396.1
+[279/630    310s] 14336x2048x4096 bfloat16 pick=flydsl  1403.9 gluon= 1435.0
+[280/630    312s] 14336x129280x4096 bfloat16 pick=asm     1495.9 gluon= 1498.8
+[281/630    312s] 16384x512x4096 bfloat16 pick=opus    1247.3 gluon=  978.7
+[282/630    313s] 16384x1024x4096 bfloat16 pick=flydsl  1466.6 gluon= 1517.9
+[283/630    314s] 16384x2048x4096 bfloat16 pick=torch   1407.3 gluon= 1546.8
+[284/630    315s] 16384x16384x4096 bfloat16 pick=torch   1535.6 gluon= 1521.2
+[285/630    317s] 16384x129280x4096 bfloat16 pick=asm     1488.5 gluon= 1532.5
+[286/630    318s] 32768x16384x4096 bfloat16 pick=flydsl  1487.3 gluon= 1521.6
+[287/630    320s] 512x7168x4224 bfloat16 pick=flydsl   838.7 gluon=  457.4
+[288/630    321s] 1024x7168x4224 bfloat16 pick=flydsl  1150.4 gluon=  878.6
+[289/630    322s] 10240x7168x4224 bfloat16 pick=opus     959.0 gluon= 1447.3
+[290/630    323s] 512x6144x4608 bfloat16 pick=flydsl   788.4 gluon=  398.6
+[291/630    325s] 1024x6144x4608 bfloat16 pick=torch   1012.2 gluon=  773.8
+[292/630    326s] 2048x6144x4608 bfloat16 pick=flydsl  1269.4 gluon= 1335.9
+[293/630    328s] 4096x6144x4608 bfloat16 pick=torch   1324.5 gluon= 1333.5
+[294/630    329s] 8192x6144x4608 bfloat16 pick=torch   1509.9 gluon= 1566.5
+[295/630    330s] 16384x6144x4608 bfloat16 pick=torch   1527.6 gluon= 1550.6
+[296/630    332s] 32768x6144x4608 bfloat16 pick=torch   1505.8 gluon= 1543.1
+[aiter] LoadKernel: _ZN5aiter39bf16gemm_fp32bf16_tn_64x64_splitk_cleanE hsaco: /home/jbowley/repos/aiter/hsa//gfx950/bf16gemm/bf16gemm_fp32bf16_tn_64x64_splitk_clean.co
+[297/630    333s] 512x1024x5120 float32  pick=asm      333.7 gluon=   65.4
+[298/630    334s] 512x5120x5120 bfloat16 pick=torch    788.6 gluon=  335.9
+[299/630    336s] 512x6400x5120 bfloat16 pick=flydsl   697.2 gluon=  418.9 PICK-WRONG
+[300/630    337s] 512x12800x5120 bfloat16 pick=flydsl   801.8 gluon=  813.6 PICK-WRONG
+[301/630    338s] 512x37888x5120 bfloat16 pick=torch   1057.4 gluon=  980.4
+[302/630    340s] 512x51200x5120 bfloat16 pick=flydsl  1144.2 gluon= 1213.4
+[aiter] LoadKernel: _ZN5aiter39bf16gemm_fp32bf16_tn_96x64_splitk_cleanE hsaco: /home/jbowley/repos/aiter/hsa//gfx950/bf16gemm/bf16gemm_fp32bf16_tn_96x64_splitk_clean.co
+[303/630    341s] 768x1024x5120 float32  pick=asm      411.5 gluon=   98.0
+[aiter] shape is M:768, N:37888, K:5120 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:768, N:37888, K:5120 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[304/630    342s] 768x37888x5120 bfloat16 pick=torch   1235.7 gluon= 1340.8
+[aiter] LoadKernel: _ZN5aiter37bf16gemm_fp32bf16_tn_64x64_pf3_splitkE hsaco: /home/jbowley/repos/aiter/hsa//gfx950/bf16gemm/bf16gemm_fp32bf16_tn_64x64_pf3_splitk.co
+[305/630    344s] 1024x1024x5120 float32  pick=asm      457.9 gluon=  130.5
+[306/630    345s] 1024x5120x5120 bfloat16 pick=torch   1008.4 gluon=  659.2
+[307/630    346s] 1024x6400x5120 bfloat16 pick=flydsl   956.2 gluon=  813.8 PICK-WRONG
+[308/630    347s] 1024x12800x5120 bfloat16 pick=flydsl   796.6 gluon= 1364.0
+[aiter] shape is M:1024, N:37888, K:5120 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:1024, N:37888, K:5120 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[309/630    349s] 1024x37888x5120 bfloat16 pick=torch   1066.7 gluon= 1265.6
+[310/630    350s] 1024x51200x5120 bfloat16 pick=asm     1226.2 gluon= 1272.7
+[311/630    351s] 1536x1024x5120 float32  pick=asm      578.7 gluon=  194.9
+[aiter] shape is M:1536, N:37888, K:5120 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:1536, N:37888, K:5120 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[312/630    353s] 1536x37888x5120 bfloat16 pick=torch   1275.7 gluon= 1367.0
+[313/630    354s] 2048x1024x5120 float32  pick=opus     634.7 gluon=  256.1
+[314/630    355s] 2048x5120x5120 bfloat16 pick=torch   1242.5 gluon= 1230.9
+[315/630    356s] 2048x6400x5120 bfloat16 pick=flydsl  1248.0 gluon= 1366.4
+[316/630    357s] 2048x12800x5120 bfloat16 pick=flydsl   795.6 gluon= 1380.1
+[aiter] shape is M:2048, N:37888, K:5120 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:2048, N:37888, K:5120 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[317/630    358s] 2048x37888x5120 bfloat16 pick=torch   1213.2 gluon= 1443.0
+[aiter] LoadKernel: _ZN5aiter37bf16gemm_fp32bf16_tn_48x64_pf3_splitkE hsaco: /home/jbowley/repos/aiter/hsa//gfx950/bf16gemm/bf16gemm_fp32bf16_tn_48x64_pf3_splitk.co
+[318/630    360s] 2048x51200x5120 bfloat16 pick=asm      213.0 gluon= 1417.8
+[319/630    361s] 4096x1024x5120 float32  pick=opus     967.5 gluon=  490.8
+[320/630    363s] 4096x5120x5120 bfloat16 pick=torch   1266.0 gluon= 1165.9
+[321/630    363s] 4096x6400x5120 bfloat16 pick=flydsl  1327.2 gluon= 1380.1
+[322/630    364s] 4096x12800x5120 bfloat16 pick=asm     1321.7 gluon= 1350.8
+[323/630    366s] 4096x51200x5120 bfloat16 pick=asm     1459.1 gluon= 1503.9
+[324/630    367s] 8192x1024x5120 float32  pick=opus    1246.2 gluon=  981.0
+[325/630    369s] 8192x5120x5120 bfloat16 pick=torch   1355.2 gluon= 1433.0
+[326/630    369s] 8192x6400x5120 bfloat16 pick=flydsl  1314.0 gluon= 1354.3
+[327/630    370s] 8192x12800x5120 bfloat16 pick=asm     1420.6 gluon= 1454.7
+[328/630    372s] 8192x51200x5120 bfloat16 pick=flydsl  1504.3 gluon= 1552.9
+[329/630    373s] 16384x1024x5120 float32  pick=opus    1339.0 gluon= 1457.6
+[330/630    374s] 16384x5120x5120 bfloat16 pick=torch   1523.8 gluon= 1551.6
+[331/630    375s] 16384x6400x5120 bfloat16 pick=flydsl  1394.3 gluon= 1449.9
+[332/630    376s] 16384x12800x5120 bfloat16 pick=torch   1495.4 gluon= 1502.1
+[333/630    377s] 16384x51200x5120 bfloat16 pick=flydsl  1499.1 gluon= 1543.2
+[334/630    379s] 32768x5120x5120 bfloat16 pick=torch   1494.1 gluon= 1537.5
+[335/630    379s] 32768x6400x5120 bfloat16 pick=torch   1483.4 gluon= 1499.7
+[336/630    380s] 32768x12800x5120 bfloat16 pick=torch   1526.3 gluon= 1539.2
+[337/630    382s] 32768x51200x5120 bfloat16 pick=flydsl  1500.6 gluon= 1550.6
+[338/630    383s] 512x1280x6144 bfloat16 pick=flydsl   408.2 gluon=   86.0 PICK-WRONG
+[339/630    384s] 512x1536x6144 bfloat16 pick=flydsl   437.5 gluon=  103.6 PICK-WRONG
+[340/630    386s] 512x2048x6144 float32  pick=asm      487.5 gluon=  133.4
+[341/630    387s] 512x2304x6144 bfloat16 pick=flydsl   520.4 gluon=  154.5 PICK-WRONG
+[342/630    388s] 512x2560x6144 bfloat16 pick=torch    511.8 gluon=  171.2
+[343/630    390s] 512x3072x6144 float32  pick=opus     504.2 gluon=  199.4
+[344/630    391s] 512x3072x6144 bfloat16 pick=flydsl   598.5 gluon=  205.3 PICK-WRONG
+[345/630    392s] 512x6144x6144 bfloat16 pick=flydsl   812.4 gluon=  404.6
+[346/630    393s] 512x9216x6144 bfloat16 pick=flydsl   901.7 gluon=  606.1
+[347/630    395s] 1024x2048x6144 float32  pick=opus     534.2 gluon=  264.1
+[348/630    396s] 1024x2304x6144 bfloat16 pick=torch    676.0 gluon=  305.2
+[349/630    397s] 1024x2560x6144 bfloat16 pick=torch    777.8 gluon=  340.9
+[350/630    399s] 1024x3072x6144 float32  pick=opus     565.7 gluon=  393.7
+[351/630    400s] 1024x6144x6144 bfloat16 pick=torch   1015.8 gluon=  802.8
+[352/630    402s] 1024x9216x6144 bfloat16 pick=torch   1225.5 gluon= 1163.8
+[353/630    403s] 2048x2048x6144 float32  pick=opus     887.4 gluon=  511.5
+[354/630    404s] 2048x2304x6144 bfloat16 pick=torch    988.3 gluon=  606.1
+[355/630    405s] 2048x2560x6144 bfloat16 pick=torch   1046.0 gluon=  671.9
+[356/630    406s] 2048x3072x6144 float32  pick=opus     809.5 gluon=  772.9
+[357/630    408s] 2048x6144x6144 bfloat16 pick=torch   1344.0 gluon= 1373.1
+[358/630    409s] 2048x9216x6144 bfloat16 pick=torch   1237.5 gluon= 1061.2
+[359/630    411s] 4096x2048x6144 float32  pick=opus    1155.0 gluon= 1011.4
+[360/630    411s] 4096x2304x6144 bfloat16 pick=flydsl   785.5 gluon= 1164.2
+[361/630    413s] 4096x2560x6144 bfloat16 pick=flydsl   710.9 gluon= 1250.6
+[362/630    414s] 4096x3072x6144 float32  pick=asm     1239.1 gluon= 1320.6
+[363/630    416s] 4096x6144x6144 bfloat16 pick=torch   1358.9 gluon= 1353.6
+[364/630    417s] 4096x9216x6144 bfloat16 pick=torch   1365.9 gluon= 1347.3
+[365/630    418s] 8192x2048x6144 float32  pick=opus    1395.3 gluon= 1510.5
+[366/630    419s] 8192x2304x6144 bfloat16 pick=torch   1235.3 gluon= 1071.0
+[367/630    420s] 8192x2560x6144 bfloat16 pick=asm      519.2 gluon= 1179.6
+[368/630    422s] 8192x3072x6144 float32  pick=asm     1253.5 gluon= 1319.6
+[369/630    423s] 8192x6144x6144 bfloat16 pick=flydsl  1539.6 gluon= 1586.7
+[370/630    425s] 8192x9216x6144 bfloat16 pick=asm     1447.8 gluon= 1481.9
+[371/630    426s] 16384x2048x6144 float32  pick=opus    1351.9 gluon= 1442.1
+[372/630    427s] 16384x2304x6144 bfloat16 pick=flydsl  1049.5 gluon= 1318.0
+[373/630    428s] 16384x2560x6144 bfloat16 pick=flydsl  1373.9 gluon= 1410.7
+[374/630    430s] 16384x3072x6144 float32  pick=asm     1398.0 gluon= 1433.8
+[375/630    431s] 16384x6144x6144 bfloat16 pick=asm     1530.8 gluon= 1566.6
+[376/630    432s] 16384x9216x6144 bfloat16 pick=torch   1547.7 gluon= 1553.1
+[377/630    433s] 32768x2304x6144 bfloat16 pick=flydsl   656.8 gluon= 1426.3
+[378/630    435s] 32768x2560x6144 bfloat16 pick=flydsl  1467.7 gluon= 1521.2
+[379/630    436s] 32768x6144x6144 bfloat16 pick=torch   1537.7 gluon= 1566.9
+[380/630    437s] 32768x9216x6144 bfloat16 pick=torch   1561.2 gluon= 1551.6
+[381/630    439s] 512x5120x6400 bfloat16 pick=flydsl   710.5 gluon=  342.9 PICK-WRONG
+[382/630    440s] 1024x5120x6400 bfloat16 pick=flydsl   702.6 gluon=  676.8
+[383/630    441s] 2048x5120x6400 bfloat16 pick=flydsl   787.7 gluon= 1248.9
+[384/630    443s] 4096x5120x6400 bfloat16 pick=torch   1293.1 gluon= 1183.0
+[385/630    444s] 8192x5120x6400 bfloat16 pick=flydsl  1419.1 gluon= 1448.3
+[386/630    445s] 16384x5120x6400 bfloat16 pick=torch   1556.8 gluon= 1566.2
+[387/630    447s] 32768x5120x6400 bfloat16 pick=torch   1545.7 gluon= 1568.0
+[388/630    448s] 512x16384x6656 bfloat16 pick=flydsl   953.5 gluon= 1055.5
+[389/630    449s] 1024x16384x6656 bfloat16 pick=asm      453.2 gluon= 1581.8
+[390/630    451s] 2048x16384x6656 bfloat16 pick=asm     1483.5 gluon= 1538.7
+[391/630    452s] 4096x16384x6656 bfloat16 pick=torch   1571.4 gluon= 1553.1
+[392/630    454s] 8192x16384x6656 bfloat16 pick=asm     1536.2 gluon= 1586.0
+[393/630    455s] 16384x16384x6656 bfloat16 pick=asm     1549.4 gluon= 1579.7
+[394/630    457s] 32768x16384x6656 bfloat16 pick=asm      292.2 gluon= 1582.6
+[395/630    458s] 512x1024x7168 bfloat16 pick=torch    434.2 gluon=   69.8
+[396/630    460s] 512x1536x7168 bfloat16 pick=torch    457.9 gluon=  104.8
+[397/630    461s] 512x2048x7168 bfloat16 pick=torch    598.4 gluon=  138.9
+[398/630    462s] 512x3584x7168 bfloat16 pick=flydsl   614.3 gluon=  241.6
+[399/630    463s] 512x6144x7168 bfloat16 pick=flydsl   826.3 gluon=  412.1
+[400/630    465s] 512x8192x7168 bfloat16 pick=flydsl   876.7 gluon=  546.9
+[401/630    466s] 512x8448x7168 bfloat16 pick=flydsl   748.3 gluon=  564.2
+[402/630    467s] 512x20480x7168 bfloat16 pick=flydsl  1034.3 gluon= 1108.5
+[403/630    468s] 768x1024x7168 bfloat16 pick=torch    446.2 gluon=  104.8
+[404/630    469s] 768x2048x7168 bfloat16 pick=flydsl   613.5 gluon=  208.5 PICK-WRONG
+[405/630    470s] 1024x512x7168 bfloat16 pick=flydsl   380.3 gluon=   69.8 PICK-WRONG
+[406/630    471s] 1024x1024x7168 bfloat16 pick=torch    589.4 gluon=  139.1
+[407/630    471s] 1024x1536x7168 bfloat16 pick=flydsl   627.7 gluon=  207.5 PICK-WRONG
+[408/630    473s] 1024x2048x7168 bfloat16 pick=torch    752.9 gluon=  277.1
+[409/630    474s] 1024x3584x7168 bfloat16 pick=flydsl   873.7 gluon=  477.8
+[410/630    475s] 1024x6144x7168 bfloat16 pick=torch   1063.5 gluon=  814.3
+[411/630    477s] 1024x8192x7168 bfloat16 pick=flydsl  1101.6 gluon= 1063.1
+[412/630    478s] 1024x8448x7168 bfloat16 pick=torch   1183.4 gluon= 1099.4
+[413/630    480s] 1024x20480x7168 bfloat16 pick=flydsl   782.8 gluon= 1120.6
+[414/630    481s] 1280x512x7168 bfloat16 pick=torch    412.3 gluon=   87.6
+[415/630    483s] 1280x1024x7168 bfloat16 pick=torch    595.1 gluon=  173.5
+[416/630    484s] 1280x2048x7168 bfloat16 pick=torch    851.4 gluon=  345.1
+[417/630    485s] 1536x512x7168 bfloat16 pick=torch    446.2 gluon=  104.4
+[418/630    486s] 1536x1024x7168 bfloat16 pick=torch    748.8 gluon=  208.4
+[419/630    486s] 1536x2048x7168 bfloat16 pick=torch    958.8 gluon=  413.2
+[420/630    488s] 1792x512x7168 bfloat16 pick=torch    491.4 gluon=  122.3
+[421/630    488s] 1792x1024x7168 bfloat16 pick=flydsl   633.2 gluon=  243.2
+[422/630    489s] 1792x2048x7168 bfloat16 pick=flydsl   902.6 gluon=  477.1
+[423/630    490s] 2048x512x7168 bfloat16 pick=torch    585.3 gluon=  138.9
+[424/630    491s] 2048x1024x7168 bfloat16 pick=torch    797.0 gluon=  276.5
+[425/630    491s] 2048x2048x7168 bfloat16 pick=flydsl   989.8 gluon=  545.6
+[426/630    493s] 2048x3584x7168 bfloat16 pick=opus    1216.5 gluon=  946.2
+[427/630    494s] 2048x8192x7168 bfloat16 pick=asm     1547.3 gluon= 1584.4
+[428/630    495s] 2048x20480x7168 bfloat16 pick=flydsl   827.6 gluon= 1398.5
+[429/630    496s] 4096x512x7168 bfloat16 pick=flydsl   712.7 gluon=  276.2 PICK-WRONG
+[430/630    497s] 4096x1024x7168 bfloat16 pick=torch    971.7 gluon=  544.3
+[431/630    498s] 4096x2048x7168 bfloat16 pick=torch   1297.3 gluon= 1061.9
+[432/630    499s] 4096x3584x7168 bfloat16 pick=flydsl  1404.1 gluon= 1472.3
+[433/630    501s] 4096x8192x7168 bfloat16 pick=flydsl  1534.6 gluon= 1595.0
+[434/630    502s] 4096x20480x7168 bfloat16 pick=flydsl  1528.7 gluon= 1570.3
+[435/630    503s] 6144x512x7168 bfloat16 pick=flydsl   801.7 gluon=  413.8
+[436/630    503s] 6144x1024x7168 bfloat16 pick=opus    1203.8 gluon=  815.0
+[437/630    505s] 6144x2048x7168 bfloat16 pick=opus    1458.6 gluon= 1357.6
+[438/630    505s] 8192x512x7168 bfloat16 pick=flydsl   972.3 gluon=  544.9
+[439/630    506s] 8192x1024x7168 bfloat16 pick=torch   1157.3 gluon= 1061.5
+[440/630    507s] 8192x2048x7168 bfloat16 pick=torch   1446.2 gluon= 1583.8
+[441/630    508s] 8192x3584x7168 bfloat16 pick=flydsl  1460.0 gluon= 1498.5
+[442/630    510s] 8192x8192x7168 bfloat16 pick=flydsl  1536.1 gluon= 1581.4
+[443/630    511s] 8192x20480x7168 bfloat16 pick=asm     1546.7 gluon= 1588.6
+[444/630    513s] 10240x512x7168 bfloat16 pick=torch    843.7 gluon=  682.5
+[445/630    513s] 10240x1024x7168 bfloat16 pick=torch   1314.6 gluon= 1246.0
+[446/630    514s] 10240x2048x7168 bfloat16 pick=torch   1326.9 gluon= 1178.6
+[447/630    516s] 10240x8448x7168 bfloat16 pick=asm     1417.2 gluon= 1418.5
+[448/630    517s] 10240x20480x7168 bfloat16 pick=asm     1515.4 gluon= 1488.3
+[449/630    518s] 12288x512x7168 bfloat16 pick=opus    1179.5 gluon=  813.0
+[450/630    519s] 12288x1024x7168 bfloat16 pick=opus    1474.1 gluon= 1345.7
+[451/630    520s] 12288x2048x7168 bfloat16 pick=opus    1476.1 gluon= 1363.7
+[452/630    521s] 14336x512x7168 bfloat16 pick=opus    1256.5 gluon=  943.1
+[453/630    522s] 14336x1024x7168 bfloat16 pick=torch   1405.5 gluon= 1462.9
+[454/630    522s] 14336x2048x7168 bfloat16 pick=flydsl  1426.2 gluon= 1449.1
+[455/630    523s] 16384x512x7168 bfloat16 pick=opus    1331.5 gluon= 1059.7
+[456/630    524s] 16384x1024x7168 bfloat16 pick=torch   1526.2 gluon= 1526.0
+[457/630    525s] 16384x2048x7168 bfloat16 pick=torch   1561.0 gluon= 1540.2
+[458/630    526s] 16384x3584x7168 bfloat16 pick=flydsl  1400.1 gluon= 1445.6
+[459/630    528s] 16384x8192x7168 bfloat16 pick=torch   1559.2 gluon= 1578.2
+[460/630    529s] 16384x20480x7168 bfloat16 pick=flydsl  1538.3 gluon= 1590.6
+[461/630    530s] 32768x512x7168 bfloat16 pick=torch   1395.3 gluon= 1397.1
+[462/630    531s] 32768x1024x7168 bfloat16 pick=torch   1452.9 gluon= 1501.5
+[463/630    532s] 32768x2048x7168 bfloat16 pick=torch   1516.7 gluon= 1536.3
+[464/630    533s] 32768x3584x7168 bfloat16 pick=torch   1521.4 gluon= 1538.8
+[465/630    535s] 32768x8192x7168 bfloat16 pick=torch   1576.0 gluon= 1580.0
+[466/630    536s] 32768x20480x7168 bfloat16 pick=asm     1557.6 gluon= 1589.2
+[467/630    537s] 512x1280x8192 bfloat16 pick=torch    469.1 gluon=   88.4
+[468/630    539s] 512x2560x8192 bfloat16 pick=torch    607.3 gluon=  175.0
+[469/630    540s] 512x4096x8192 bfloat16 pick=flydsl   760.0 gluon=  279.2 PICK-WRONG
+[aiter] shape is M:512, N:4608, K:8192 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:512, N:4608, K:8192 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[470/630    541s] 512x4608x8192 bfloat16 pick=torch    852.6 gluon=  313.0
+[471/630    543s] 512x7168x8192 bfloat16 pick=flydsl   926.4 gluon=  484.8
+[472/630    544s] 512x8192x8192 bfloat16 pick=flydsl   886.9 gluon=  551.2
+[473/630    545s] 512x10240x8192 bfloat16 pick=flydsl   691.7 gluon=  691.3
+[474/630    547s] 512x14336x8192 bfloat16 pick=torch   1036.4 gluon=  955.8
+[475/630    548s] 512x16384x8192 bfloat16 pick=flydsl   687.4 gluon= 1018.3 PICK-WRONG
+[476/630    550s] 512x57344x8192 bfloat16 pick=flydsl  1306.9 gluon= 1346.5
+[477/630    551s] 768x4096x8192 bfloat16 pick=flydsl   839.3 gluon=  415.5
+[aiter] shape is M:1024, N:512, K:8192 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:1024, N:512, K:8192 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[478/630    552s] 1024x512x8192 bfloat16 pick=torch    367.5 gluon=   70.7
+[479/630    553s] 1024x1280x8192 bfloat16 pick=torch    621.8 gluon=  174.9
+[480/630    554s] 1024x2560x8192 bfloat16 pick=torch    873.9 gluon=  348.4
+[481/630    555s] 1024x4096x8192 bfloat16 pick=flydsl   993.3 gluon=  548.5
+[aiter] shape is M:1024, N:4608, K:8192 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:1024, N:4608, K:8192 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[482/630    557s] 1024x4608x8192 bfloat16 pick=torch    987.5 gluon=  620.8
+[483/630    557s] 1024x7168x8192 bfloat16 pick=flydsl   841.9 gluon=  956.4
+[484/630    558s] 1024x8192x8192 bfloat16 pick=flydsl  1161.5 gluon= 1076.7
+[485/630    560s] 1024x10240x8192 bfloat16 pick=flydsl   875.8 gluon= 1272.0 PICK-WRONG
+[486/630    561s] 1024x14336x8192 bfloat16 pick=flydsl  1414.9 gluon= 1445.3
+[487/630    562s] 1024x16384x8192 bfloat16 pick=torch   1489.5 gluon= 1530.9
+[488/630    564s] 1024x57344x8192 bfloat16 pick=asm     1377.8 gluon= 1423.1
+[aiter] shape is M:2048, N:512, K:8192 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:2048, N:512, K:8192 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[489/630    565s] 2048x512x8192 bfloat16 pick=torch    533.1 gluon=  140.4
+[490/630    566s] 2048x1280x8192 bfloat16 pick=torch    721.9 gluon=  348.7
+[491/630    567s] 2048x2560x8192 bfloat16 pick=torch   1032.4 gluon=  685.7
+[492/630    567s] 2048x4096x8192 bfloat16 pick=opus    1301.7 gluon= 1079.8
+[aiter] shape is M:2048, N:4608, K:8192 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:2048, N:4608, K:8192 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[493/630    569s] 2048x4608x8192 bfloat16 pick=torch   1257.7 gluon= 1185.0
+[494/630    570s] 2048x7168x8192 bfloat16 pick=asm     1453.1 gluon= 1490.5
+[495/630    570s] 2048x8192x8192 bfloat16 pick=torch   1560.2 gluon= 1597.3
+[496/630    572s] 2048x10240x8192 bfloat16 pick=flydsl   993.8 gluon= 1201.4
+[497/630    573s] 2048x14336x8192 bfloat16 pick=flydsl  1409.8 gluon= 1449.5
+[498/630    574s] 2048x16384x8192 bfloat16 pick=asm     1502.4 gluon= 1549.7
+[499/630    575s] 2048x57344x8192 bfloat16 pick=flydsl  1526.6 gluon= 1581.2
+[500/630    576s] 4096x512x8192 bfloat16 pick=flydsl   755.7 gluon=  280.0
+[501/630    577s] 4096x1280x8192 bfloat16 pick=torch   1038.4 gluon=  687.5
+[502/630    578s] 4096x2560x8192 bfloat16 pick=torch   1304.2 gluon= 1266.6
+[503/630    578s] 4096x4096x8192 bfloat16 pick=torch   1545.6 gluon= 1598.9
+[aiter] shape is M:4096, N:4608, K:8192 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:4096, N:4608, K:8192 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[504/630    580s] 4096x4608x8192 bfloat16 pick=torch   1273.4 gluon= 1088.8
+[505/630    581s] 4096x7168x8192 bfloat16 pick=flydsl  1466.4 gluon= 1505.2
+[506/630    582s] 4096x8192x8192 bfloat16 pick=asm     1574.7 gluon= 1605.7
+[507/630    583s] 4096x10240x8192 bfloat16 pick=flydsl  1376.7 gluon= 1430.9
+[508/630    584s] 4096x14336x8192 bfloat16 pick=flydsl  1430.8 gluon= 1475.2
+[509/630    585s] 4096x16384x8192 bfloat16 pick=flydsl  1533.0 gluon= 1588.6
+[510/630    587s] 4096x57344x8192 bfloat16 pick=flydsl  1553.9 gluon= 1601.6
+[511/630    587s] 8192x512x8192 bfloat16 pick=flydsl   983.6 gluon=  551.7
+[512/630    588s] 8192x1280x8192 bfloat16 pick=torch   1305.9 gluon= 1269.8
+[513/630    589s] 8192x2560x8192 bfloat16 pick=torch   1311.9 gluon= 1187.9
+[514/630    590s] 8192x4096x8192 bfloat16 pick=torch   1583.2 gluon= 1597.5
+[aiter] shape is M:8192, N:4608, K:8192 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:8192, N:4608, K:8192 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[515/630    591s] 8192x4608x8192 bfloat16 pick=torch   1376.4 gluon= 1359.0
+[516/630    592s] 8192x7168x8192 bfloat16 pick=asm     1442.6 gluon= 1488.8
+[517/630    593s] 8192x8192x8192 bfloat16 pick=asm     1579.7 gluon= 1602.1
+[518/630    594s] 8192x10240x8192 bfloat16 pick=flydsl  1548.8 gluon= 1606.6
+[519/630    595s] 8192x14336x8192 bfloat16 pick=flydsl  1562.7 gluon= 1604.8
+[520/630    596s] 8192x16384x8192 bfloat16 pick=asm     1563.8 gluon= 1604.4
+[521/630    598s] 8192x57344x8192 bfloat16 pick=asm     1566.1 gluon= 1609.7
+[aiter] shape is M:16384, N:512, K:8192 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:16384, N:512, K:8192 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[522/630    599s] 16384x512x8192 bfloat16 pick=torch   1059.5 gluon=  985.6
+[523/630    599s] 16384x1280x8192 bfloat16 pick=torch   1272.4 gluon= 1181.6
+[524/630    600s] 16384x2560x8192 bfloat16 pick=flydsl  1354.0 gluon= 1391.3
+[525/630    602s] 16384x4608x8192 bfloat16 pick=flydsl  1431.9 gluon= 1467.1
+[526/630    603s] 16384x7168x8192 bfloat16 pick=torch   1583.6 gluon= 1584.1
+[527/630    603s] 16384x8192x8192 bfloat16 pick=torch   1593.1 gluon= 1593.8
+[528/630    605s] 16384x10240x8192 bfloat16 pick=torch   1594.4 gluon= 1597.3
+[529/630    606s] 16384x14336x8192 bfloat16 pick=asm     1570.5 gluon= 1603.4
+[530/630    607s] 16384x16384x8192 bfloat16 pick=asm     1555.4 gluon= 1604.0
+[531/630    609s] 16384x57344x8192 bfloat16 pick=asm     1566.7 gluon= 1606.5
+[532/630    610s] 32768x1280x8192 bfloat16 pick=flydsl  1326.6 gluon= 1361.6
+[533/630    610s] 32768x2560x8192 bfloat16 pick=torch   1554.3 gluon= 1547.0
+[534/630    611s] 32768x7168x8192 bfloat16 pick=torch   1595.0 gluon= 1594.5
+[535/630    612s] 32768x8192x8192 bfloat16 pick=flydsl  1566.5 gluon= 1599.9
+[536/630    614s] 32768x10240x8192 bfloat16 pick=torch   1595.5 gluon= 1601.5
+[537/630    614s] 32768x14336x8192 bfloat16 pick=asm     1567.8 gluon= 1602.2
+[538/630    616s] 32768x16384x8192 bfloat16 pick=asm     1570.6 gluon= 1607.1
+[539/630    618s] 32768x57344x8192 bfloat16 pick=asm     1568.1 gluon= 1596.4
+[540/630    620s] 512x6144x12288 bfloat16 pick=torch    935.9 gluon=  422.9
+[541/630    621s] 1024x6144x12288 bfloat16 pick=torch   1189.4 gluon=  835.5
+[542/630    622s] 2048x6144x12288 bfloat16 pick=torch   1392.5 gluon= 1401.1
+[543/630    624s] 4096x6144x12288 bfloat16 pick=torch   1390.6 gluon= 1379.5
+[544/630    625s] 8192x6144x12288 bfloat16 pick=torch   1580.1 gluon= 1587.0
+[545/630    626s] 16384x6144x12288 bfloat16 pick=torch   1584.6 gluon= 1572.9
+[546/630    628s] 32768x6144x12288 bfloat16 pick=asm     1560.5 gluon= 1577.9
+[547/630    629s] 512x16384x13312 bfloat16 pick=flydsl   710.3 gluon=  930.0
+[548/630    631s] 1024x16384x13312 bfloat16 pick=asm     1489.8 gluon= 1537.2
+[549/630    632s] 2048x16384x13312 bfloat16 pick=flydsl  1012.6 gluon= 1574.0
+[550/630    634s] 4096x16384x13312 bfloat16 pick=flydsl  1555.8 gluon= 1617.0
+[551/630    635s] 8192x16384x13312 bfloat16 pick=flydsl  1541.4 gluon= 1591.5
+[552/630    637s] 16384x16384x13312 bfloat16 pick=asm     1547.1 gluon= 1590.0
+[553/630    638s] 32768x16384x13312 bfloat16 pick=flydsl  1539.5 gluon= 1585.2
+[554/630    640s] 512x2304x16384 bfloat16 pick=torch    732.8 gluon=  161.2
+[555/630    641s] 512x4608x16384 bfloat16 pick=flydsl   584.8 gluon=  322.4
+[556/630    643s] 512x9216x16384 bfloat16 pick=flydsl   645.3 gluon=  590.0
+[557/630    644s] 512x13312x16384 bfloat16 pick=flydsl   546.2 gluon=  764.1 PICK-WRONG
+[558/630    646s] 512x26624x16384 bfloat16 pick=flydsl   774.0 gluon= 1295.9
+[559/630    647s] 512x53248x16384 bfloat16 pick=flydsl   653.4 gluon= 1321.6
+[560/630    648s] 1024x2304x16384 bfloat16 pick=torch    899.2 gluon=  322.2
+[561/630    649s] 1024x4608x16384 bfloat16 pick=flydsl   838.6 gluon=  640.3
+[562/630    650s] 1024x9216x16384 bfloat16 pick=flydsl   721.6 gluon= 1136.6
+[563/630    651s] 1024x13312x16384 bfloat16 pick=asm     1337.2 gluon= 1366.4
+[564/630    652s] 1024x26624x16384 bfloat16 pick=flydsl   952.9 gluon= 1383.6
+[565/630    654s] 1024x53248x16384 bfloat16 pick=triton   984.6 gluon= 1372.7
+[566/630    654s] 2048x2304x16384 bfloat16 pick=torch    943.7 gluon=  639.6
+[567/630    655s] 2048x4608x16384 bfloat16 pick=flydsl   733.2 gluon= 1220.5
+[568/630    657s] 2048x9216x16384 bfloat16 pick=flydsl   918.6 gluon= 1096.0
+[569/630    657s] 2048x13312x16384 bfloat16 pick=flydsl  1382.3 gluon= 1414.1
+[570/630    658s] 2048x26624x16384 bfloat16 pick=flydsl   905.3 gluon= 1410.3
+[571/630    660s] 2048x53248x16384 bfloat16 pick=flydsl   779.5 gluon= 1525.2
+[572/630    660s] 4096x2304x16384 bfloat16 pick=torch   1306.8 gluon= 1218.3
+[573/630    661s] 4096x4608x16384 bfloat16 pick=torch   1255.0 gluon= 1100.4
+[574/630    663s] 4096x9216x16384 bfloat16 pick=torch   1336.5 gluon= 1375.4
+[575/630    663s] 4096x13312x16384 bfloat16 pick=flydsl  1386.0 gluon= 1424.2
+[576/630    664s] 4096x26624x16384 bfloat16 pick=flydsl  1508.6 gluon= 1547.9
+[577/630    666s] 4096x53248x16384 bfloat16 pick=flydsl  1575.6 gluon= 1616.6
+[578/630    667s] 8192x2304x16384 bfloat16 pick=torch   1204.2 gluon= 1042.4
+[579/630    667s] 8192x4608x16384 bfloat16 pick=torch   1368.7 gluon= 1318.5
+[580/630    669s] 8192x9216x16384 bfloat16 pick=flydsl  1420.1 gluon= 1442.4
+[581/630    670s] 8192x13312x16384 bfloat16 pick=flydsl  1469.3 gluon= 1502.5
+[582/630    671s] 8192x26624x16384 bfloat16 pick=flydsl  1540.1 gluon= 1579.7
+[583/630    672s] 8192x53248x16384 bfloat16 pick=flydsl  1545.6 gluon= 1577.8
+[584/630    673s] 16384x2304x16384 bfloat16 pick=torch   1361.8 gluon= 1311.3
+[585/630    674s] 16384x4608x16384 bfloat16 pick=flydsl  1438.4 gluon= 1472.5
+[586/630    675s] 16384x9216x16384 bfloat16 pick=flydsl  1539.6 gluon= 1577.2
+[587/630    676s] 16384x13312x16384 bfloat16 pick=asm     1536.8 gluon= 1581.9
+[588/630    677s] 16384x26624x16384 bfloat16 pick=flydsl  1549.9 gluon= 1584.5
+[589/630    679s] 16384x53248x16384 bfloat16 pick=asm     1536.1 gluon= 1584.6
+[590/630    680s] 32768x2304x16384 bfloat16 pick=flydsl  1424.5 gluon= 1459.1
+[591/630    681s] 32768x4608x16384 bfloat16 pick=torch   1555.3 gluon= 1570.5
+[592/630    683s] 32768x9216x16384 bfloat16 pick=asm     1508.5 gluon= 1581.9
+[593/630    684s] 32768x13312x16384 bfloat16 pick=asm     1539.7 gluon= 1579.4
+[594/630    685s] 32768x26624x16384 bfloat16 pick=flydsl  1548.1 gluon= 1581.1
+[595/630    689s] 32768x53248x16384 bfloat16 pick=flydsl  1534.3 gluon= 1573.4
+[596/630    690s] 512x6144x18432 bfloat16 pick=flydsl   926.5 gluon=  425.1 PICK-WRONG
+[597/630    691s] 1024x6144x18432 bfloat16 pick=torch   1208.2 gluon=  820.8
+[598/630    693s] 2048x6144x18432 bfloat16 pick=torch   1346.1 gluon= 1348.8
+[599/630    694s] 4096x6144x18432 bfloat16 pick=torch   1341.0 gluon= 1385.6
+[600/630    696s] 8192x6144x18432 bfloat16 pick=torch   1511.1 gluon= 1587.9
+[601/630    697s] 16384x6144x18432 bfloat16 pick=asm     1556.7 gluon= 1596.2
+[602/630    698s] 32768x6144x18432 bfloat16 pick=asm     1558.3 gluon= 1598.4
+[603/630    700s] 512x5120x25600 bfloat16 pick=flydsl   447.7 gluon=  328.8 PICK-WRONG
+[604/630    701s] 1024x5120x25600 bfloat16 pick=torch   1165.1 gluon=  654.2
+[605/630    703s] 2048x5120x25600 bfloat16 pick=torch   1289.8 gluon= 1181.0
+[606/630    704s] 4096x5120x25600 bfloat16 pick=torch   1279.2 gluon= 1162.8
+[607/630    705s] 8192x5120x25600 bfloat16 pick=asm     1401.6 gluon= 1431.9
+[608/630    707s] 16384x5120x25600 bfloat16 pick=torch   1515.8 gluon= 1586.5
+[609/630    708s] 32768x5120x25600 bfloat16 pick=torch   1498.9 gluon= 1601.4
+[610/630    710s] 512x16384x26624 bfloat16 pick=flydsl   652.2 gluon=  951.8 PICK-WRONG
+[611/630    711s] 1024x16384x26624 bfloat16 pick=flydsl   787.9 gluon= 1576.9
+[612/630    712s] 2048x16384x26624 bfloat16 pick=flydsl   819.7 gluon= 1607.7 PICK-WRONG
+[613/630    714s] 4096x16384x26624 bfloat16 pick=flydsl  1570.9 gluon= 1623.8
+[614/630    716s] 8192x16384x26624 bfloat16 pick=asm      239.6 gluon= 1607.8
+[615/630    717s] 16384x16384x26624 bfloat16 pick=asm     1579.2 gluon= 1612.0
+[616/630    719s] 32768x16384x26624 bfloat16 pick=asm     1572.6 gluon= 1613.5
+[617/630    721s] 512x8192x28672 bfloat16 pick=flydsl   802.2 gluon=  481.7 PICK-WRONG
+[618/630    722s] 1024x8192x28672 bfloat16 pick=triton   692.6 gluon=  941.9
+[619/630    724s] 2048x8192x28672 bfloat16 pick=flydsl  1024.0 gluon= 1589.9
+[620/630    725s] 4096x8192x28672 bfloat16 pick=flydsl  1569.6 gluon= 1616.2
+[621/630    727s] 8192x8192x28672 bfloat16 pick=asm     1574.3 gluon= 1606.7
+[622/630    728s] 16384x8192x28672 bfloat16 pick=asm     1578.7 gluon= 1610.5
+[623/630    730s] 32768x8192x28672 bfloat16 pick=asm     1581.9 gluon= 1613.6
+[624/630    731s] 512x7168x35840 bfloat16 pick=flydsl   813.3 gluon=  440.2 PICK-WRONG
+[625/630    732s] 1024x7168x35840 bfloat16 pick=flydsl   574.5 gluon=  866.0
+[626/630    734s] 2048x7168x35840 bfloat16 pick=asm     1457.5 gluon= 1496.1
+[627/630    735s] 4096x7168x35840 bfloat16 pick=flydsl  1468.0 gluon= 1509.5
+[628/630    737s] 8192x7168x35840 bfloat16 pick=asm     1433.9 gluon= 1478.7
+[629/630    738s] 16384x7168x35840 bfloat16 pick=torch   1502.0 gluon= 1553.2
+[630/630    739s] 32768x7168x35840 bfloat16 pick=flydsl  1558.7 gluon= 1608.6
+DONE

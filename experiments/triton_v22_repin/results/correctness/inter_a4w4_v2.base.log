@@ -1,0 +1,23 @@
+[inter_wave/a4w4] version=2 (v2_mfma32x32x64)  kernel=v2_mfma32x32x64
+[inter_wave/a4w4] M=4096 N=4096 K=512: SKIPPED (K < 1024)
+[inter_wave/a4w4] M=4096 N=4096 K=1024: ✅ Triton and Torch match
+[inter_wave/a4w4] M=4096 N=4096 K=2048: ✅ Triton and Torch match
+[inter_wave/a4w4] M=4096 N=4096 K=3072: ✅ Triton and Torch match
+[inter_wave/a4w4] M=4096 N=4096 K=4096: ✅ Triton and Torch match
+[inter_wave/a4w4] M=4096 N=4096 K=8192: ✅ Triton and Torch match
+[inter_wave/a4w4] M=4096 N=4096 K=16384: ✅ Triton and Torch match
+[inter_wave/a4w4] M=4096 N=4096 K=32768: ✅ Triton and Torch match
+[inter_wave/a4w4] M=4096 N=4096 K=65536: ✅ Triton and Torch match
+
+inter_wave/a4w4 (v2_mfma32x32x64):
+matmul-performance-inter_wave/a4w4:
+        M       N        K  mxfp4 (TFLOPS)
+0  4096.0  4096.0    512.0      789.516050
+1  4096.0  4096.0   1024.0     1599.615407
+2  4096.0  4096.0   2048.0     2379.400848
+3  4096.0  4096.0   3072.0     2813.220445
+4  4096.0  4096.0   4096.0     3126.383713
+5  4096.0  4096.0   8192.0     3674.838348
+6  4096.0  4096.0  16384.0     3997.613594
+7  4096.0  4096.0  32768.0     4213.301508
+8  4096.0  4096.0  65536.0     4351.541614

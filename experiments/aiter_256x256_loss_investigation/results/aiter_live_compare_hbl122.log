@@ -1,0 +1,129 @@
+[aiter] import [module_aiter_core] under /home/jbowley/repos/aiter/aiter/jit/module_aiter_core.so
+[1/37] 32768x5120x640 tiles=2560
+[aiter] merge tuned file under model_configs/ and configs/ /home/jbowley/repos/aiter/aiter/configs/bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/kimi_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/gptoss_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/llama70B_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/qwen3_8_2p4t_a95b_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/flux2_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/qwen3_8b_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/qwen3_5_397b_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/dsv3_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/kimik3_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/kimik2_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/dsv4_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/glm53_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/q3vl_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/glm5_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/dsv41_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/llama405B_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/minimax_m3_eagle_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/minimax_m3_mxfp4_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/qwen32B_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/glm47_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/glm53_flash_bf16_tuned_gemm.csv
+    pick=torch 1100.7 | v9=1076.3 v10=1090.8 v11=1140.4 v12=1145.6 v13=1131.7 | wrong: -
+[2/37] 4096x8192x1024 tiles=512
+[aiter] LoadKernel: _ZN5aiter24bf16gemm_bf16_tn_256x256E hsaco: /home/jbowley/repos/aiter/hsa//gfx950/bf16gemm/bf16gemm_bf16_tn_256x256.co
+    pick=asm 1187.1 | v9=1183.3 v10=1182.2 v11=1217.1 v12=1210.7 v13=1199.4 | wrong: -
+[3/37] 16384x8192x1024 tiles=2048
+    pick=torch 1247.9 | v9=1247.8 v10=1248.8 v11=1296.7 v12=1302.3 v13=1284.0 | wrong: -
+[4/37] 32768x7168x1024 tiles=3584
+    pick=torch 1264.3 | v9=1243.6 v10=1251.8 v11=1284.5 v12=1288.4 v13=1278.2 | wrong: -
+[5/37] 32768x8192x1024 tiles=4096
+    pick=torch 1266.8 | v9=1233.4 v10=1241.9 v11=1289.5 v12=1295.8 v13=1281.8 | wrong: -
+[6/37] 32768x5120x1280 tiles=2560
+    pick=torch 1315.3 | v9=1301.1 v10=1303.8 v11=1329.3 v12=1330.2 v13=1322.9 | wrong: -
+[7/37] 32768x7168x1792 tiles=3584
+    pick=torch 1398.9 | v9=1380.6 v10=1392.8 v11=1413.8 v12=1417.1 v13=1407.4 | wrong: -
+[8/37] 32768x8192x2048 tiles=4096
+    pick=torch 1419.6 | v9=1427.1 v10=1422.3 v11=1464.7 v12=1467.1 v13=1453.1 | wrong: -
+[9/37] 2048x6144x3072 tiles=192
+    pick=asm 1156.3 | v9=1198.2 v10=1187.0 v11=1182.3 v12=1177.2 v13=1174.7 | wrong: -
+[10/37] 32768x5120x3200 tiles=2560
+    pick=torch 1479.8 | v9=1495.8 v10=1512.4 v11=1530.9 v12=1532.6 v13=1526.9 | wrong: -
+[11/37] 6144x129280x4096 tiles=12120
+    pick=asm 1493.3 | v9=1493.4 v10=1504.0 v11=1520.0 v12=1519.7 v13=1517.2 | wrong: -
+[12/37] 16384x16384x4096 tiles=4096
+    pick=torch 1537.1 | v9=1522.0 v10=1531.6 v11=1561.2 v12=1562.2 v13=1554.5 | wrong: -
+[13/37] 16384x5120x5120 tiles=1280
+    pick=torch 1535.4 | v9=1550.5 v10=1560.7 v11=1571.8 v12=1571.7 v13=1569.7 | wrong: -
+[14/37] 16384x12800x5120 tiles=3200
+    pick=torch 1497.9 | v9=1506.0 v10=1508.8 v11=1529.1 v12=1534.5 v13=1524.4 | wrong: -
+[15/37] 32768x6400x5120 tiles=3200
+    pick=torch 1485.2 | v9=1496.7 v10=1508.7 v11=1524.7 v12=1526.6 v13=1522.1 | wrong: -
+[16/37] 32768x12800x5120 tiles=6400
+    pick=torch 1530.1 | v9=1538.1 v10=1546.5 v11=1567.8 v12=1570.2 v13=1563.9 | wrong: -
+[17/37] 8192x9216x6144 tiles=1152
+    pick=asm 1469.2 | v9=1475.7 v10=1481.4 v11=1493.8 v12=1498.0 v13=1492.0 | wrong: -
+[18/37] 32768x9216x6144 tiles=4608
+    pick=torch 1564.7 | v9=1556.9 v10=1561.3 v11=1580.0 v12=1580.8 v13=1575.6 | wrong: -
+[19/37] 16384x5120x6400 tiles=1280
+    pick=torch 1564.1 | v9=1562.4 v10=1568.9 v11=1577.3 v12=1578.5 v13=1576.3 | wrong: -
+[20/37] 4096x16384x6656 tiles=1024
+    pick=torch 1576.7 | v9=1557.9 v10=1571.0 v11=1573.9 v12=1576.0 v13=1570.7 | wrong: -
+[21/37] 10240x8448x7168 tiles=1320
+    pick=asm 1435.4 | v9=1430.1 v10=1435.5 v11=1449.1 v12=1446.0 v13=1443.9 | wrong: -
+[22/37] 10240x20480x7168 tiles=3200
+    pick=asm 1520.2 | v9=1488.1 v10=1495.8 v11=1507.3 v12=1506.4 v13=1506.0 | wrong: -
+[23/37] 16384x1024x7168 tiles=256
+    pick=torch 1527.0 | v9=1537.5 v10=1537.1 v11=1540.8 v12=1537.5 v13=1535.5 | wrong: -
+[24/37] 16384x2048x7168 tiles=512
+    pick=torch 1559.4 | v9=1537.1 v10=1541.2 v11=1546.6 v12=1540.1 v13=1546.7 | wrong: -
+[25/37] 16384x8192x7168 tiles=2048
+    pick=torch 1572.5 | v9=1574.2 v10=1577.6 v11=1593.3 v12=1593.4 v13=1590.9 | wrong: -
+[26/37] 32768x3584x7168 tiles=1792
+    pick=torch 1524.7 | v9=1538.6 v10=1549.2 v11=1558.9 v12=1561.2 v13=1560.0 | wrong: -
+[27/37] 32768x8192x7168 tiles=4096
+    pick=torch 1584.3 | v9=1578.0 v10=1584.6 v11=1599.6 v12=1601.1 v13=1597.7 | wrong: -
+[28/37] 8192x8192x8192 tiles=1024
+    pick=asm 1575.5 | v9=1604.8 v10=1609.0 v11=1615.6 v12=1617.1 v13=1613.5 | wrong: -
+[29/37] 16384x512x8192 tiles=128
+[aiter] shape is M:16384, N:512, K:8192 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+    pick=torch 1068.4 | v9=994.5 v10=997.1 v11=1000.1 v12=1001.6 v13=999.5 | wrong: -
+[30/37] 16384x7168x8192 tiles=1792
+    pick=torch 1593.3 | v9=1581.8 v10=1586.5 v11=1597.2 v12=1600.4 v13=1597.8 | wrong: -
+[31/37] 16384x8192x8192 tiles=2048
+    pick=torch 1593.1 | v9=1593.5 v10=1597.7 v11=1609.3 v12=1611.1 v13=1607.0 | wrong: -
+[32/37] 32768x10240x8192 tiles=5120
+    pick=torch 1584.1 | v9=1599.0 v10=1606.0 v11=1617.1 v12=1615.8 v13=1613.4 | wrong: -
+[33/37] 16384x6144x12288 tiles=1536
+    pick=torch 1586.4 | v9=1572.3 v10=1577.6 v11=1584.2 v12=1584.2 v13=1583.2 | wrong: -
+[34/37] 32768x6144x12288 tiles=3072
+    pick=asm 1578.7 | v9=1577.2 v10=1584.9 v11=1592.1 v12=1592.1 v13=1591.1 | wrong: -
+[35/37] 1024x2304x16384 tiles=36
+    pick=torch 900.4 | v9=322.8 v10=324.1 v11=324.4 v12=324.3 v13=323.9 | wrong: -
+[36/37] 2048x2304x16384 tiles=72
+    pick=torch 939.8 | v9=641.0 v10=642.2 v11=643.6 v12=643.2 v13=642.4 | wrong: -
+[37/37] 8192x5120x25600 tiles=640
+    pick=asm 1408.1 | v9=1428.8 v10=1431.7 v11=1431.7 v12=1432.0 v13=1430.9 | wrong: -
+| Shape | Tiles | Waves | Bucket | Live pick | Pick | v9 | v10 | v11 | v12 | v13 | Best Gluon | Live gap | CSV gap | Wrong |
+|---|---:|---:|---|---|---:|---:|---:|---:|---:|---:|---|---:|---:|---|
+| 1024x2304x16384 | 36 | 0.14 | few tiles (< 1 wave) | torch | 900 | 323 | 324 | 324 | 324 | 324 | v11 | +177.6% | +173.9% | - |
+| 2048x2304x16384 | 72 | 0.28 | few tiles (< 1 wave) | torch | 940 | 641 | 642 | 644 | 643 | 642 | v11 | +46.0% | +47.3% | - |
+| 16384x512x8192 | 128 | 0.50 | few tiles (< 1 wave) | torch | 1068 | 994 | 997 | 1000 | 1002 | 1000 | v12 | +6.7% | +10.4% | - |
+| 2048x6144x3072 fp32 out | 192 | 0.75 | few tiles (< 1 wave) | asm | 1156 | 1198 | 1187 | 1182 | 1177 | 1175 | v9 | -3.5% | +2.5% | - |
+| 16384x1024x7168 | 256 | 1.00 | full waves | torch | 1527 | 1538 | 1537 | 1541 | 1538 | 1536 | v11 | -0.9% | +0.8% | - |
+| 4096x8192x1024 | 512 | 2.00 | full waves | asm | 1187 | 1183 | 1182 | 1217 | 1211 | 1199 | v11 | -2.5% | +0.2% | - |
+| 16384x2048x7168 | 512 | 2.00 | full waves | torch | 1559 | 1537 | 1541 | 1547 | 1540 | 1547 | v13 | +0.8% | +2.9% | - |
+| 8192x5120x25600 | 640 | 2.50 | partial waves | asm | 1408 | 1429 | 1432 | 1432 | 1432 | 1431 | v12 | -1.7% | +0.0% | - |
+| 4096x16384x6656 | 1024 | 4.00 | full waves | torch | 1577 | 1558 | 1571 | 1574 | 1576 | 1571 | v12 | +0.0% | +1.3% | - |
+| 8192x8192x8192 | 1024 | 4.00 | full waves | asm | 1576 | 1605 | 1609 | 1616 | 1617 | 1614 | v12 | -2.6% | +0.3% | - |
+| 8192x9216x6144 | 1152 | 4.50 | partial waves | asm | 1469 | 1476 | 1481 | 1494 | 1498 | 1492 | v12 | -1.9% | +0.0% | - |
+| 16384x5120x5120 | 1280 | 5.00 | full waves | torch | 1535 | 1550 | 1561 | 1572 | 1572 | 1570 | v11 | -2.3% | +0.0% | - |
+| 16384x5120x6400 | 1280 | 5.00 | full waves | torch | 1564 | 1562 | 1569 | 1577 | 1578 | 1576 | v12 | -0.9% | +0.4% | - |
+| 10240x8448x7168 | 1320 | 5.16 | partial waves | asm | 1435 | 1430 | 1436 | 1449 | 1446 | 1444 | v11 | -0.9% | +1.3% | - |
+| 16384x6144x12288 | 1536 | 6.00 | full waves | torch | 1586 | 1572 | 1578 | 1584 | 1584 | 1583 | v11 | +0.1% | +1.0% | - |
+| 32768x3584x7168 | 1792 | 7.00 | full waves | torch | 1525 | 1539 | 1549 | 1559 | 1561 | 1560 | v12 | -2.3% | +0.0% | - |
+| 16384x7168x8192 | 1792 | 7.00 | full waves | torch | 1593 | 1582 | 1586 | 1597 | 1600 | 1598 | v12 | -0.4% | +0.3% | - |
+| 16384x8192x1024 | 2048 | 8.00 | full waves | torch | 1248 | 1248 | 1249 | 1297 | 1302 | 1284 | v12 | -4.2% | +0.5% | - |
+| 16384x8192x7168 | 2048 | 8.00 | full waves | torch | 1572 | 1574 | 1578 | 1593 | 1593 | 1591 | v12 | -1.3% | +0.4% | - |
+| 16384x8192x8192 | 2048 | 8.00 | full waves | torch | 1593 | 1594 | 1598 | 1609 | 1611 | 1607 | v12 | -1.1% | +0.1% | - |
+| 32768x5120x640 | 2560 | 10.00 | full waves | torch | 1101 | 1076 | 1091 | 1140 | 1146 | 1132 | v12 | -3.9% | +3.4% | - |
+| 32768x5120x1280 | 2560 | 10.00 | full waves | torch | 1315 | 1301 | 1304 | 1329 | 1330 | 1323 | v12 | -1.1% | +1.8% | - |
+| 32768x5120x3200 | 2560 | 10.00 | full waves | torch | 1480 | 1496 | 1512 | 1531 | 1533 | 1527 | v12 | -3.4% | +0.0% | - |
+| 32768x6144x12288 | 3072 | 12.00 | full waves | asm | 1579 | 1577 | 1585 | 1592 | 1592 | 1591 | v11 | -0.8% | +0.8% | - |
+| 16384x12800x5120 | 3200 | 12.50 | partial waves | torch | 1498 | 1506 | 1509 | 1529 | 1534 | 1524 | v12 | -2.4% | +0.3% | - |
+| 32768x6400x5120 | 3200 | 12.50 | partial waves | torch | 1485 | 1497 | 1509 | 1525 | 1527 | 1522 | v12 | -2.7% | +0.9% | - |
+| 10240x20480x7168 | 3200 | 12.50 | partial waves | asm | 1520 | 1488 | 1496 | 1507 | 1506 | 1506 | v11 | +0.9% | +2.3% | - |
+| 32768x7168x1024 | 3584 | 14.00 | full waves | torch | 1264 | 1244 | 1252 | 1284 | 1288 | 1278 | v12 | -1.9% | +1.5% | - |
+| 32768x7168x1792 | 3584 | 14.00 | full waves | torch | 1399 | 1381 | 1393 | 1414 | 1417 | 1407 | v12 | -1.3% | +1.8% | - |
+| 32768x8192x1024 | 4096 | 16.00 | full waves | torch | 1267 | 1233 | 1242 | 1290 | 1296 | 1282 | v12 | -2.2% | +3.6% | - |
+| 32768x8192x2048 | 4096 | 16.00 | full waves | torch | 1420 | 1427 | 1422 | 1465 | 1467 | 1453 | v12 | -3.2% | +1.8% | - |
+| 16384x16384x4096 | 4096 | 16.00 | full waves | torch | 1537 | 1522 | 1532 | 1561 | 1562 | 1554 | v12 | -1.6% | +0.2% | - |
+| 32768x8192x7168 | 4096 | 16.00 | full waves | torch | 1584 | 1578 | 1585 | 1600 | 1601 | 1598 | v12 | -1.0% | +0.1% | - |
+| 32768x9216x6144 | 4608 | 18.00 | full waves | torch | 1565 | 1557 | 1561 | 1580 | 1581 | 1576 | v12 | -1.0% | +0.1% | - |
+| 32768x10240x8192 | 5120 | 20.00 | full waves | torch | 1584 | 1599 | 1606 | 1617 | 1616 | 1613 | v11 | -2.0% | +0.2% | - |
+| 32768x12800x5120 | 6400 | 25.00 | full waves | torch | 1530 | 1538 | 1546 | 1568 | 1570 | 1564 | v12 | -2.6% | +0.1% | - |
+| 6144x129280x4096 | 12120 | 47.34 | partial waves | asm | 1493 | 1493 | 1504 | 1520 | 1520 | 1517 | v11 | -1.8% | +0.2% | - |
+
+Live gap = pick / best Gluon - 1 (positive: AITER's pick is faster).
+
+| Bucket | Shapes | Median live gap | Max live gap | Median CSV gap | Gluon (best) wins |
+|---|---:|---:|---:|---:|---:|
+| few tiles (< 1 wave) | 4 | +26.3% | +177.6% | +28.8% | 1 |
+| full waves | 26 | -1.5% | +0.8% | +0.4% | 23 |
+| partial waves | 7 | -1.8% | +0.9% | +0.3% | 6 |
+
+Best Gluon version per shape: v12: 24, v11: 11, v9: 1, v13: 1
+
+EXIT=0

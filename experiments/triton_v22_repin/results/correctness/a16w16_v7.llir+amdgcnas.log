@@ -1,0 +1,28 @@
+[v7_sliceN] M=4096 N=4096 K=512 dtype='fp16': ✅ Triton and Torch match
+[v7_sliceN] M=4096 N=4096 K=1024 dtype='fp16': ✅ Triton and Torch match
+[v7_sliceN] M=4096 N=4096 K=2048 dtype='fp16': ✅ Triton and Torch match
+[v7_sliceN] M=4096 N=4096 K=3072 dtype='fp16': ✅ Triton and Torch match
+[v7_sliceN] M=4096 N=4096 K=4096 dtype='fp16': ✅ Triton and Torch match
+[v7_sliceN] M=4096 N=4096 K=8192 dtype='fp16': ✅ Triton and Torch match
+[v7_sliceN] M=4096 N=4096 K=16384 dtype='fp16': ✅ Triton and Torch match
+[v7_sliceN] M=4096 N=4096 K=32768 dtype='fp16': ✅ Triton and Torch match
+[v7_sliceN] M=4096 N=4096 K=512 dtype='bf16': ✅ Triton and Torch match
+[v7_sliceN] M=4096 N=4096 K=1024 dtype='bf16': ✅ Triton and Torch match
+[v7_sliceN] M=4096 N=4096 K=2048 dtype='bf16': ✅ Triton and Torch match
+[v7_sliceN] M=4096 N=4096 K=3072 dtype='bf16': ✅ Triton and Torch match
+[v7_sliceN] M=4096 N=4096 K=4096 dtype='bf16': ✅ Triton and Torch match
+[v7_sliceN] M=4096 N=4096 K=8192 dtype='bf16': ✅ Triton and Torch match
+[v7_sliceN] M=4096 N=4096 K=16384 dtype='bf16': ✅ Triton and Torch match
+[v7_sliceN] M=4096 N=4096 K=32768 dtype='bf16': ✅ Triton and Torch match
+
+v7_sliceN:
+matmul-performance-v7_sliceN:
+        M       N        K  fp16 (TFLOPS)  bf16 (TFLOPS)
+0  4096.0  4096.0    512.0     151.844770     159.012492
+1  4096.0  4096.0   1024.0     322.563038     327.107884
+2  4096.0  4096.0   2048.0     680.114795     693.295781
+3  4096.0  4096.0   3072.0    1037.839075    1048.181489
+4  4096.0  4096.0   4096.0    1208.137702    1272.099936
+5  4096.0  4096.0   8192.0    1308.929916    1383.788911
+6  4096.0  4096.0  16384.0    1280.282397    1295.179577
+7  4096.0  4096.0  32768.0    1218.476371    1213.045379

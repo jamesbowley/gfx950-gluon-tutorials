@@ -1,0 +1,6 @@
+[a8w8] M=4096 N=4096 K=16384 dtype=f8: ✅ Triton and Torch match
+
+a8w8_kernel:
+matmul-performance:
+        M       N        K  f8 (TFLOPS)
+0  4096.0  4096.0  16384.0  2905.363724

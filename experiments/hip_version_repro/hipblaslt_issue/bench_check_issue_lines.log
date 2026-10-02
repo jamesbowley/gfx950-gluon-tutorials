@@ -1,0 +1,9 @@
+10.0.0: -m 7168 -n 32768 -k 1024 --transA T --transB N --lda 1024 --... -> rc=0 224x384 MI16 SK5 1095.8 TFLOPS 
+1.5.0: -m 7168 -n 32768 -k 1024 --transA T --transB N --lda 1024 --... -> rc=0 224x384 MI16 SK5 1088.5 TFLOPS 
+10.0.0: -m 8192 -n 32768 -k 1024 --transA T --transB N --lda 1024 --... -> rc=0 256x320 MI16 SK5 1094.1 TFLOPS 
+1.5.0: -m 8192 -n 32768 -k 1024 --transA T --transB N --lda 1024 --... -> rc=0 256x320 MI16 SK5 1098.2 TFLOPS 
+10.0.0: -m 1024 -n 512 -k 7168 --transA T --transB N --lda 7168 --ld... -> rc=0 128x128 MI32 SK5 424.2 TFLOPS 
+1.5.0: -m 1024 -n 512 -k 7168 --transA T --transB N --lda 7168 --ld... -> rc=0 128x128 MI32 SK5 159.4 TFLOPS 
+10.0.0: -m 2304 -n 2048 -k 16384 --transA T --transB N --lda 16384 -... -> rc=0 288x288 MI16 SK5 503.2 TFLOPS 
+1.5.0: -m 2304 -n 2048 -k 16384 --transA T --transB N --lda 16384 -... -> rc=0 288x288 MI16 SK5 504.5 TFLOPS 
+1.5.0: ANALYTICAL_GEMM_PICK -m 7168 -n 32768 -k 1024 --transA T --transB N --lda 1024 --... -> rc=0 256x256 MI16 SK5 1219.0 TFLOPS 

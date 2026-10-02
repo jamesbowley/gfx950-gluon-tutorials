@@ -1,0 +1,65 @@
+tile i: 295992 cycles; prologue 7880, main loop 274644 (63 iterations, 4359 per iteration), epilogue 13468
+  tile 0 (se0_sm0_sl0_wv0.json, trip 0): start 0, prologue 7880 (first wait vmcnt(24) stalls 12 with 0 stores issued), loop 274644 (MFMA 93.96%), epilogue 13468, gap to next tile 0
+  tile 1 (se0_sm0_sl0_wv0.json, trip 1): start 295992, prologue 1560 (first wait vmcnt(20) stalls 12 with 32 stores issued), loop 268596 (MFMA 96.07%), epilogue 12544, gap to next tile 0
+  tile 2 (se0_sm0_sl0_wv0.json, trip 2): start 578692, prologue 1384 (first wait vmcnt(20) stalls 12 with 64 stores issued), loop 264744 (MFMA 97.47%), epilogue 14824, gap to next tile 0
+  tile 3 (se0_sm0_sl0_wv0.json, trip 3): start 859644, prologue 1432 (first wait vmcnt(20) stalls 12 with 96 stores issued), loop 268112 (MFMA 96.25%), epilogue 12856, gap to next tile 0
+  tile 4 (se0_sm0_sl0_wv0.json, trip 4): start 1142044, prologue 1480 (first wait vmcnt(20) stalls 12 with 128 stores issued), loop 268424 (MFMA 96.13%), epilogue 12904, gap to next tile 0
+  tile 5 (se0_sm0_sl0_wv0.json, trip 5): start 1424852, prologue 1432 (first wait vmcnt(20) stalls 12 with 160 stores issued), loop 270364 (MFMA 95.44%), epilogue 12384, gap to next tile 0
+  tile 6 (se0_sm0_sl0_wv0.json, trip 6): start 1709032, prologue 1616 (first wait vmcnt(20) stalls 12 with 192 stores issued), loop 270264 (MFMA 95.48%), epilogue 12064, gap to next tile 0
+  tile 7 (se0_sm0_sl0_wv0.json, trip 7): start 1992976, prologue 1560 (first wait vmcnt(20) stalls 12 with 224 stores issued), loop 281832 (MFMA 91.56%), epilogue 12968, gap to next tile 0
+  tile 8 (se0_sm0_sl0_wv0.json, trip 8): start 2289336, prologue 1604 (first wait vmcnt(20) stalls 12 with 256 stores issued), loop 270316 (MFMA 95.46%), epilogue 13312, gap to next tile 0
+  tile 9 (se0_sm0_sl0_wv0.json, trip 9): start 2574568, prologue 1396 (first wait vmcnt(20) stalls 12 with 288 stores issued), loop 268608 (MFMA 96.07%), epilogue 12324, gap to next tile 0
+  tile 10 (se0_sm0_sl0_wv0.json, trip 10): start 2856896, prologue 1384 (first wait vmcnt(20) stalls 12 with 320 stores issued), loop 268752 (MFMA 96.02%), epilogue 12732, gap to next tile 0
+  tile 11 (se0_sm0_sl0_wv0.json, trip 11): start 3139764, prologue 1632 (first wait vmcnt(20) stalls 12 with 352 stores issued), loop 270932 (MFMA 95.24%), epilogue 12208, gap to next tile 0
+  tile 12 (se0_sm0_sl0_wv0.json, trip 12): start 3424536, prologue 1560 (first wait vmcnt(20) stalls 12 with 384 stores issued), loop 268900 (MFMA 95.96%), epilogue 12400, gap to next tile 0
+  tile 13 (se0_sm0_sl0_wv0.json, trip 13): start 3707396, prologue 1820 (first wait vmcnt(20) stalls 12 with 416 stores issued), loop 265820 (MFMA 97.08%), epilogue 12428, gap to next tile 0
+  tile 14 (se0_sm0_sl0_wv0.json, trip 14): start 3987464, prologue 1432 (first wait vmcnt(20) stalls 12 with 448 stores issued), loop 274912 (MFMA 93.87%), epilogue 12388, gap to next tile 0
+  tile 15 (se0_sm0_sl0_wv0.json, trip 15): start 4276196, prologue 1556 (first wait vmcnt(20) stalls 12 with 480 stores issued), loop 267608 (MFMA 96.43%), epilogue 13068, gap to next tile 0
+  tile 16 (se0_sm0_sl0_wv0.json, trip 16): start 4558428, prologue 1384 (first wait vmcnt(20) stalls 12 with 512 stores issued), loop 264840 (MFMA 97.44%), epilogue 12484, gap to next tile 0
+  tile 17 (se0_sm0_sl0_wv0.json, trip 17): start 4837136, prologue 1560 (first wait vmcnt(20) stalls 12 with 544 stores issued), loop 266968 (MFMA 96.66%), epilogue 12520, gap to next tile 0
+  tile 18 (se0_sm0_sl0_wv0.json, trip 18): start 5118184, prologue 1544 (first wait vmcnt(20) stalls 12 with 576 stores issued), loop 266964 (MFMA 96.66%), epilogue 12396, gap to next tile 0
+  tile 19 (se0_sm0_sl0_wv0.json, trip 19): start 5399088, prologue 1604 (first wait vmcnt(20) stalls 12 with 608 stores issued), loop 266900 (MFMA 96.68%), epilogue 12488, gap to next tile 0
+  tile 20 (se0_sm0_sl0_wv0.json, trip 20): start 5680080, prologue 1432 (first wait vmcnt(20) stalls 12 with 640 stores issued), loop 264952 (MFMA 97.39%), epilogue 12596, gap to next tile 0
+  tile 21 (se0_sm0_sl0_wv0.json, trip 21): start 5959060, prologue 1384 (first wait vmcnt(20) stalls 12 with 672 stores issued), loop 264928 (MFMA 97.40%), epilogue 12564, gap to next tile 0
+  tile 22 (se0_sm0_sl0_wv0.json, trip 22): start 6237936, prologue 1716 (first wait vmcnt(20) stalls 12 with 704 stores issued), loop 267356 (MFMA 96.52%), epilogue 12676, gap to next tile 0
+  tile 23 (se0_sm0_sl0_wv0.json, trip 23): start 6519684, prologue 1456 (first wait vmcnt(20) stalls 12 with 736 stores issued), loop 265160 (MFMA 97.32%), epilogue 12592, gap to next tile 0
+  tile 24 (se0_sm0_sl0_wv0.json, trip 24): start 6798892, prologue 1644 (first wait vmcnt(20) stalls 12 with 768 stores issued), loop 265088 (MFMA 97.34%), epilogue 12656, gap to next tile 0
+  tile 25 (se0_sm0_sl0_wv0.json, trip 25): start 7078280, prologue 1384 (first wait vmcnt(20) stalls 12 with 800 stores issued), loop 264436 (MFMA 97.58%), epilogue 15400, gap to next tile 0
+  tile 26 (se0_sm0_sl0_wv0.json, trip 26): start 7359500, prologue 1488 (first wait vmcnt(20) stalls 12 with 832 stores issued), loop 265092 (MFMA 97.34%), epilogue 12532, gap to next tile 0
+  tile 27 (se0_sm0_sl0_wv0.json, trip 27): start 7638612, prologue 1384 (first wait vmcnt(20) stalls 12 with 864 stores issued), loop 263788 (MFMA 97.82%), epilogue 12328, gap to next tile 0
+  tile 28 (se0_sm0_sl0_wv0.json, trip 28): start 7916112, prologue 1560 (first wait vmcnt(20) stalls 12 with 896 stores issued), loop 268600 (MFMA 96.07%), epilogue 12472, gap to next tile 0
+  tile 29 (se0_sm0_sl0_wv0.json, trip 29): start 8198744, prologue 1560 (first wait vmcnt(20) stalls 12 with 928 stores issued), loop 266756 (MFMA 96.74%), epilogue 12736, gap to next tile 0
+  tile 30 (se0_sm0_sl0_wv0.json, trip 30): start 8479796, prologue 1384 (first wait vmcnt(20) stalls 12 with 960 stores issued), loop 265720 (MFMA 97.11%), epilogue 12428, gap to next tile 0
+  tile 31 (se0_sm0_sl0_wv0.json, trip 31): start 8759328, prologue 1464 (first wait vmcnt(20) stalls 12 with 992 stores issued), loop 264484 (MFMA 97.57%), epilogue 12448, gap to next tile 0
+  tile 32 (se0_sm0_sl0_wv0.json, trip 32): start 9037724, prologue 1384 (first wait vmcnt(20) stalls 12 with 1024 stores issued), loop 266144 (MFMA 96.96%), epilogue 12588, gap to next tile 0
+  tile 33 (se0_sm0_sl0_wv0.json, trip 33): start 9317840, prologue 1480 (first wait vmcnt(20) stalls 12 with 1056 stores issued), loop 266688 (MFMA 96.76%), epilogue 12372, gap to next tile 0
+  tile 34 (se0_sm0_sl0_wv0.json, trip 34): start 9598380, prologue 1480 (first wait vmcnt(20) stalls 12 with 1088 stores issued), loop 266160 (MFMA 96.95%), epilogue 12312, gap to next tile 0
+  tile 35 (se0_sm0_sl0_wv0.json, trip 35): start 9878332, prologue 1384 (first wait vmcnt(20) stalls 12 with 1120 stores issued), loop 272344 (MFMA 94.75%), epilogue 12176, gap to next tile 0
+  tile 36 (se0_sm0_sl0_wv0.json, trip 36): start 10164236, prologue 1620 (first wait vmcnt(20) stalls 12 with 1152 stores issued), loop 266816 (MFMA 96.71%), epilogue 12208, gap to next tile 0
+  tile 37 (se0_sm0_sl0_wv0.json, trip 37): start 10444880, prologue 1544 (first wait vmcnt(20) stalls 12 with 1184 stores issued), loop 267256 (MFMA 96.55%), epilogue 12476, gap to next tile 0
+  tile 38 (se0_sm0_sl0_wv0.json, trip 38): start 10726156, prologue 1384 (first wait vmcnt(20) stalls 12 with 1216 stores issued), loop 265724 (MFMA 97.11%), epilogue 12532, gap to next tile 0
+  tile 39 (se0_sm0_sl0_wv0.json, trip 39): start 11005796, prologue 1700 (first wait vmcnt(20) stalls 12 with 1248 stores issued), loop 266264 (MFMA 96.91%), epilogue 12324, gap to next tile 0
+  tile 40 (se0_sm0_sl0_wv0.json, trip 40): start 11286084, prologue 1604 (first wait vmcnt(20) stalls 12 with 1280 stores issued), loop 266900 (MFMA 96.68%), epilogue 12572, gap to next tile 0
+  tile 41 (se0_sm0_sl0_wv0.json, trip 41): start 11567160, prologue 1384 (first wait vmcnt(20) stalls 12 with 1312 stores issued), loop 265192 (MFMA 97.31%), epilogue 12384, gap to next tile 0
+  tile 42 (se0_sm0_sl0_wv0.json, trip 42): start 11846120, prologue 1560 (first wait vmcnt(20) stalls 12 with 1344 stores issued), loop 268196 (MFMA 96.22%), epilogue 12220, gap to next tile 0
+  tile 43 (se0_sm0_sl0_wv0.json, trip 43): start 12128096, prologue 1528 (first wait vmcnt(20) stalls 12 with 1376 stores issued), loop 265588 (MFMA 97.16%), epilogue 12452, gap to next tile 0
+  tile 44 (se0_sm0_sl0_wv0.json, trip 44): start 12407664, prologue 1560 (first wait vmcnt(20) stalls 12 with 1408 stores issued), loop 266168 (MFMA 96.95%), epilogue 12708, gap to next tile 0
+  tile 45 (se0_sm0_sl0_wv0.json, trip 45): start 12688100, prologue 1644 (first wait vmcnt(20) stalls 12 with 1440 stores issued), loop 266384 (MFMA 96.87%), epilogue 12804, gap to next tile 0
+  tile 46 (se0_sm0_sl0_wv0.json, trip 46): start 12968932, prologue 1396 (first wait vmcnt(20) stalls 12 with 1472 stores issued), loop 266236 (MFMA 96.92%), epilogue 12476, gap to next tile 0
+  tile 47 (se0_sm0_sl0_wv0.json, trip 47): start 13249040, prologue 1560 (first wait vmcnt(20) stalls 12 with 1504 stores issued), loop 267272 (MFMA 96.55%), epilogue 12596, gap to next tile 0
+  tile 48 (se0_sm0_sl0_wv0.json, trip 48): start 13530468, prologue 1560 (first wait vmcnt(20) stalls 12 with 1536 stores issued), loop 267560 (MFMA 96.44%), epilogue 12412, gap to next tile 0
+  tile 49 (se0_sm0_sl0_wv0.json, trip 49): start 13812000, prologue 1560 (first wait vmcnt(20) stalls 12 with 1568 stores issued), loop 266204 (MFMA 96.94%), epilogue 12436, gap to next tile 0
+  tile 50 (se0_sm0_sl0_wv0.json, trip 50): start 14092200, prologue 2200 (first wait vmcnt(20) stalls 12 with 1600 stores issued), loop 266640 (MFMA 96.78%), epilogue 12540, gap to next tile 0
+  tile 51 (se0_sm0_sl0_wv0.json, trip 51): start 14373580, prologue 1560 (first wait vmcnt(20) stalls 12 with 1632 stores issued), loop 266864 (MFMA 96.70%), epilogue 12516, gap to next tile 0
+  tile 52 (se0_sm0_sl0_wv0.json, trip 52): start 14654520, prologue 1480 (first wait vmcnt(20) stalls 12 with 1664 stores issued), loop 265116 (MFMA 97.33%), epilogue 12592, gap to next tile 0
+  tile 53 (se0_sm0_sl0_wv0.json, trip 53): start 14933708, prologue 1432 (first wait vmcnt(20) stalls 12 with 1696 stores issued), loop 263868 (MFMA 97.79%), epilogue 12416, gap to next tile 0
+  tile 54 (se0_sm0_sl0_wv0.json, trip 54): start 15211424, prologue 1732 (first wait vmcnt(20) stalls 12 with 1728 stores issued), loop 266076 (MFMA 96.98%), epilogue 12576, gap to next tile 0
+  tile 55 (se0_sm0_sl0_wv0.json, trip 55): start 15491808, prologue 1684 (first wait vmcnt(20) stalls 12 with 1760 stores issued), loop 264576 (MFMA 97.53%), epilogue 13292, gap to next tile 0
+MFMA utilization over all 56 tiles on this SIMD: 93.08% (56 x 262144 MFMA cycles in 15771360 cycles)
+first load issued at 812; the first wait releases at 5724 (about 4464 cycles after group 2 was issued)
+last global->LDS load of tile i issued at 292012, 3980 cycles before tile i ends
+tile boundary (persistent): longest load-lane gap 5712 cycles, MFMA idle 5872 cycles
+last read of each buffer (cycles after the epilogue starts): B_left[0] -912 (refilled +600), A_top[0] -388 (refilled +728), A_bot[0] +248 (refilled +1716), B_right[0] +1580 (refilled +2088), B_left[1] +1800 (refilled +2220), A_top[1] +2024 (refilled +4700), A_bot[1] +3772 (refilled +7296), B_right[1] +3988 (refilled +9424)
+LDS reads issued before a wait guarantees their data: 0 of 512
+tile i C stores: 32 x 16 cycles of issue; extra before the next instruction: 936 when it is another store, 24 when it is an MFMA, 532 otherwise
+wrote kernels/gemm/intra_wave/a16w16/images/persistent_compare/M16384_N57344_K8192/v12_persistant_overlap_lds/pipeline_schedule.html

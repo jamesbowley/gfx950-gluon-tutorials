@@ -155,6 +155,7 @@ python scripts/run_perf_table.py --kernel a16w16 --versions 9 --configs llir+amd
 | `--rotating-sets` | `3` | Complete input/output tensor sets in prepared mode |
 | `--last-n` | `100` | Final matching dispatches averaged from the kernel trace |
 | `--att-output` | `<kernel dir>/tmp` | Base directory for ATT traces; each `(config, version)` lands in its own `<base>/<config>/<version>` subdirectory, so a matrix run keeps every trace |
+| `--bias` | off | a16w16 v9–v13 only (not with `--prepared`): benchmark with a `bias[N]`, passed to `bench.py --bias` |
 
 ### Configs
 

@@ -1,0 +1,21 @@
+
+============================================================
+Config: llir+amdgcnas
+============================================================
+  Running: v0 (v0_sliceN) config=llir+amdgcnas
+  rocprofv3: collecting kernel trace for v0_sliceN ...
+  rocprofv3: 1002 dispatches, final-100 avg=238.84 us, tflops=4603.5
+  Running: v1 (v1_sliceMN) config=llir+amdgcnas
+  rocprofv3: collecting kernel trace for v1_sliceMN ...
+  rocprofv3: 1002 dispatches, final-100 avg=227.39 us, tflops=4835.3
+
+============================================================
+RESULTS SUMMARY
+============================================================
+
+Config: llir+amdgcnas
+| Version              | TFLOPS | VGPRs | Spills | MFMA Eff. |
+|----------------------|--------|-------|--------|-----------|
+| v0_sliceN            |   4604 |   512 |     28 |    82.62% |
+| v1_sliceMN           |   4835 |   456 |      0 |    93.02% |
+

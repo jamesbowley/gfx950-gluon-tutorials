@@ -1,0 +1,6 @@
+[FMHA] B=32 HQ=8 HK=8 N=8192 D=128 non-causal bhsd torch.bfloat16: ✅ match  (max=7.84e-04 mean=4.03e-05)
+
+FMHA rotated-4cluster attention | B=32 HQ=8 HK=8 D=128 layout=bhsd dtype=bf16 non-causal
+fmha_v3-attn-B32-HQ8-HK8-D128-bhsd-bf16:
+    N_CTX  non-causal (TFLOPS)
+0  8192.0          1045.394808

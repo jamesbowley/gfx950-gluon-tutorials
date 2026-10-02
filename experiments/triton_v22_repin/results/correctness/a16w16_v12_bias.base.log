@@ -1,0 +1,28 @@
+[v12_persistant_overlap_lds] M=4096 N=4096 K=512 dtype='fp16': ✅ Triton and Torch match
+[v12_persistant_overlap_lds] M=4096 N=4096 K=1024 dtype='fp16': ✅ Triton and Torch match
+[v12_persistant_overlap_lds] M=4096 N=4096 K=2048 dtype='fp16': ✅ Triton and Torch match
+[v12_persistant_overlap_lds] M=4096 N=4096 K=3072 dtype='fp16': ✅ Triton and Torch match
+[v12_persistant_overlap_lds] M=4096 N=4096 K=4096 dtype='fp16': ✅ Triton and Torch match
+[v12_persistant_overlap_lds] M=4096 N=4096 K=8192 dtype='fp16': ✅ Triton and Torch match
+[v12_persistant_overlap_lds] M=4096 N=4096 K=16384 dtype='fp16': ✅ Triton and Torch match
+[v12_persistant_overlap_lds] M=4096 N=4096 K=32768 dtype='fp16': ✅ Triton and Torch match
+[v12_persistant_overlap_lds] M=4096 N=4096 K=512 dtype='bf16': ✅ Triton and Torch match
+[v12_persistant_overlap_lds] M=4096 N=4096 K=1024 dtype='bf16': ✅ Triton and Torch match
+[v12_persistant_overlap_lds] M=4096 N=4096 K=2048 dtype='bf16': ✅ Triton and Torch match
+[v12_persistant_overlap_lds] M=4096 N=4096 K=3072 dtype='bf16': ✅ Triton and Torch match
+[v12_persistant_overlap_lds] M=4096 N=4096 K=4096 dtype='bf16': ✅ Triton and Torch match
+[v12_persistant_overlap_lds] M=4096 N=4096 K=8192 dtype='bf16': ✅ Triton and Torch match
+[v12_persistant_overlap_lds] M=4096 N=4096 K=16384 dtype='bf16': ✅ Triton and Torch match
+[v12_persistant_overlap_lds] M=4096 N=4096 K=32768 dtype='bf16': ✅ Triton and Torch match
+
+v12_persistant_overlap_lds (bias):
+matmul-performance-v12_persistant_overlap_lds-bias:
+        M       N        K  fp16 (TFLOPS)  bf16 (TFLOPS)
+0  4096.0  4096.0    512.0     634.411726     661.782320
+1  4096.0  4096.0   1024.0     854.719886     884.648268
+2  4096.0  4096.0   2048.0    1014.743948    1061.140785
+3  4096.0  4096.0   3072.0    1072.836662    1131.731252
+4  4096.0  4096.0   4096.0    1106.950341    1170.689572
+5  4096.0  4096.0   8192.0    1178.309923    1249.209351
+6  4096.0  4096.0  16384.0    1209.309728    1287.357694
+7  4096.0  4096.0  32768.0    1229.431813    1309.339125
