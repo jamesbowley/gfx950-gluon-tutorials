@@ -126,7 +126,8 @@ def main():
     parser.add_argument("--orders", nargs="+", default=["v9", "split"], choices=["v9", "split"])
     parser.add_argument("--bias", nargs="+", type=int, default=[0, 1], choices=[0, 1])
     parser.add_argument(
-        "--policies", nargs="+", default=["one_tile", "two_tile"], choices=["dp", "one_tile", "two_tile", "spread", "auto", "capped"]
+        "--policies", nargs="+", default=["one_tile", "two_tile"],
+        choices=["dp", "one_tile", "two_tile", "spread", "auto", "capped", "split_rule"]
     )
     parser.add_argument("--fixups", nargs="+", default=["rs", "owner"], choices=["rs", "owner", "auto"])
     parser.add_argument("--stale-count", action="store_true", help="Preset a barrier count (must FAIL)")
@@ -149,8 +150,8 @@ def main():
     print("|---|---|---|---|---|---|---|---|")
     for M, N, K in shapes:
         for policy in args.policies:
-            # The fixup only applies to the tile-aligned one-tile path; capped picks its own.
-            fixups = {"two_tile": ["rs"], "spread": ["rs"], "capped": ["auto"]}.get(policy, args.fixups)
+            # The fixup only applies to the tile-aligned one-tile path; capped and split_rule pick their own.
+            fixups = {"two_tile": ["rs"], "spread": ["rs"], "capped": ["auto"], "split_rule": ["auto"]}.get(policy, args.fixups)
             for fixup in fixups:
                 for order in args.orders:
                     for bias in args.bias:

@@ -64,6 +64,8 @@ if os.environ.get("TRITON_AMDGCNAS_PLUGIN"):
 # `from common import get_pids` resolves to the shared helper.
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "utils"))
 
+from row_padding import empty_rows, padded_width  # noqa: E402
+
 VERSION_MAP = {
     0: "v0_naive",
     1: "v1_buffer_load",
@@ -86,6 +88,11 @@ VERSION_MAP = {
     18: "v18_streamk_chunk_major",
     19: "v19_streamk_two_tile_reversed",
     20: "v20_streamk_reduce_scatter",
+    21: "v21_streamk_l2_partials",
+    22: "v22_streamk_atomic_c",
+    23: "v23_streamk_rs_band",
+    24: "v24_streamk_combined",
+    "9t": "v9_tile",
 }
 
 DEVICE = triton.runtime.driver.active.get_active_torch_device()
@@ -151,10 +158,15 @@ def parse_args():
     )
     parser.add_argument(
         "--version",
-        type=int,
+        type=lambda s: int(s) if s.isdigit() else s,
         default=9,
-        choices=range(0, 21),
-        help="Kernel version to benchmark (default: 9, the final version)",
+        choices=list(VERSION_MAP),
+        help="Kernel version to benchmark (default: 9, the final version; 9t is v9_tile)",
+    )
+    parser.add_argument(
+        "--tile",
+        default=None,
+        help="v9_tile only: tile as BMxBN or BMxBNxBK (sets V9_TILE; default 256x256x64)",
     )
     parser.add_argument(
         "--rocprof",
@@ -172,12 +184,30 @@ def parse_args():
     parser.add_argument(
         "--bias",
         action="store_true",
-        help="Add a bias[N] to the output (v9-v20): correctness, do_bench and rocprof mode.",
+        help="Add a bias[N] to the output (v9-v21): correctness, do_bench and rocprof mode.",
+    )
+    parser.add_argument(
+        "--no-pad",
+        action="store_true",
+        help="Use contiguous B and C. By default a row of B (N, K) or C (M, N) that is a multiple "
+        "of 512 bytes gets 256 bytes of padding (kernels/gemm/utils/row_padding.py); otherwise "
+        "the time depends on where the buffers land in memory.",
     )
     return parser.parse_args()
 
 
-def test_correctness(matmul, dtype, gemm_sizes, version_dir, bias=False):
+def make_b(N, K, dtype, pad, init):
+    """B as the (K, N) transpose of an (N, K) tensor, filled by init (in place)."""
+    b = empty_rows(N, K, dtype, DEVICE, pad)
+    init(b)
+    return b.T
+
+
+def make_c(M, N, dtype, pad):
+    return empty_rows(M, N, dtype, DEVICE, pad)
+
+
+def test_correctness(matmul, dtype, gemm_sizes, version_dir, bias=False, pad=True):
     if dtype == "f8":
         torch_dtype = torch.float16
     else:
@@ -185,20 +215,23 @@ def test_correctness(matmul, dtype, gemm_sizes, version_dir, bias=False):
 
     for M, N, K in gemm_sizes:
         a = torch.rand((M, K), device=DEVICE, dtype=torch_dtype) - 0.5
-        b = torch.rand((N, K), device=DEVICE, dtype=torch_dtype).T - 0.5
         if dtype == "f8":
+            b = torch.rand((N, K), device=DEVICE, dtype=torch_dtype).T - 0.5
             a = a.to(torch.float8_e5m2)
             b = b.to(torch.float8_e5m2)
+        else:
+            b = make_b(N, K, torch_dtype, pad, lambda t: t.uniform_(-0.5, 0.5))
+        c = make_c(M, N, a.dtype if dtype != "f8" else torch_dtype, pad)
         if bias:
             bias_n = torch.rand((N,), device=DEVICE, dtype=torch_dtype) - 0.5
-            triton_output = matmul(a, b, bias=bias_n)
+            triton_output = matmul(a, b, c, bias=bias_n)
             # fp32 reference: the kernel adds the bias to its fp32 accumulator.
             torch_output = (torch.matmul(a.float(), b.float()) + bias_n.float()).to(torch_dtype)
         elif dtype == "f8":
             triton_output = matmul(a, b)
             torch_output = torch.matmul(a.to(torch.float16), b.to(torch.float16))
         else:
-            triton_output = matmul(a, b)
+            triton_output = matmul(a, b, c)
             torch_output = torch.matmul(a, b)
         # bf16 has an 8-bit mantissa: at large K the outputs are big enough that one ulp
         # exceeds atol, so allow a relative tolerance of a couple of ulps.
@@ -209,17 +242,17 @@ def test_correctness(matmul, dtype, gemm_sizes, version_dir, bias=False):
             print(f"[{version_dir}] {M=} {N=} {K=} {dtype=}: ❌ Triton and Torch differ")
 
 
-def gen_rotating_tensors(M, N, K, torch_dtype, rotating_buffer_size_mb=512):
+def gen_rotating_tensors(M, N, K, torch_dtype, rotating_buffer_size_mb=512, pad=True):
     """Allocate multiple copies of (a, b, c) tensors to exceed GPU cache size.
 
     Each iteration of the benchmark loop uses a different copy via i % block_count,
     so cached data from the previous iteration is useless and the kernel always
-    starts with cold caches.
+    starts with cold caches. B and C rows are padded as in make_b / make_c unless pad=False.
     """
     elem_bytes = torch.tensor([], dtype=torch_dtype).element_size()
     a_size = M * K * elem_bytes
-    b_size = K * N * elem_bytes
-    c_size = M * N * elem_bytes
+    b_size = N * (padded_width(K, torch_dtype) if pad else K) * elem_bytes
+    c_size = M * (padded_width(N, torch_dtype) if pad else N) * elem_bytes
     total_size = a_size + b_size + c_size
 
     block_count = max(1, rotating_buffer_size_mb * 1024 * 1024 // total_size)
@@ -227,14 +260,14 @@ def gen_rotating_tensors(M, N, K, torch_dtype, rotating_buffer_size_mb=512):
     a_list, b_list, c_list = [], [], []
     for _ in range(block_count):
         a_list.append(torch.randn((M, K), device=DEVICE, dtype=torch_dtype))
-        b_list.append(torch.randn((N, K), device=DEVICE, dtype=torch_dtype).T)
-        c_list.append(torch.empty((M, N), device=DEVICE, dtype=torch_dtype))
+        b_list.append(make_b(N, K, torch_dtype, pad, lambda t: t.normal_()))
+        c_list.append(make_c(M, N, torch_dtype, pad))
 
     return a_list, b_list, c_list, block_count
 
 
 def run_rocprof_iterations(
-    matmul, dtypes, gemm_sizes, version_dir, n_iters=1000, rotating_buffer_size_mb=512, bias=False
+    matmul, dtypes, gemm_sizes, version_dir, n_iters=1000, rotating_buffer_size_mb=512, bias=False, pad=True
 ):
     """Run the kernel n_iters times for each dtype/size combo using rotating tensors.
 
@@ -246,12 +279,13 @@ def run_rocprof_iterations(
         torch_dtype = name_to_torch_type[dtype]
         for M, N, K in gemm_sizes:
             a_list, b_list, c_list, block_count = gen_rotating_tensors(
-                M, N, K, torch_dtype, rotating_buffer_size_mb
+                M, N, K, torch_dtype, rotating_buffer_size_mb, pad
             )
+            copy_bytes = (M * K + N * b_list[0].stride(1) + M * c_list[0].stride(0)) * a_list[0].element_size()
             print(
                 f"[{version_dir}] {M=} {N=} {K=} {dtype=}: "
-                f"rotating tensors: {block_count} copies, "
-                f"{block_count * (M*K + K*N + M*N) * a_list[0].element_size() / 1024**2:.0f} MB"
+                f"rotating tensors: {block_count} copies, {block_count * copy_bytes / 1024**2:.0f} MB, "
+                f"B row stride {b_list[0].stride(1)}, C row stride {c_list[0].stride(0)}"
             )
             kwargs = {"bias": torch.randn((N,), device=DEVICE, dtype=torch_dtype)} if bias else {}
             # Warmup
@@ -266,17 +300,20 @@ def run_rocprof_iterations(
 
 def main():
     args = parse_args()
+    if args.tile:
+        os.environ["V9_TILE"] = args.tile
     version_dir = VERSION_MAP[args.version]
     module = importlib.import_module(f"{version_dir}.matmul_kernel")
     matmul = module.matmul
     if args.bias and "bias" not in inspect.signature(matmul).parameters:
-        sys.exit(f"{version_dir} has no bias option (v9-v20 do)")
+        sys.exit(f"{version_dir} has no bias option (v9-v21 do)")
 
     gemm_sizes = get_gemm_sizes(args.K, args.M, args.N)
     dtypes = get_dtypes(args.dtype)
 
+    pad = not args.no_pad
     for dtype in dtypes:
-        test_correctness(matmul, dtype, gemm_sizes, version_dir, bias=args.bias)
+        test_correctness(matmul, dtype, gemm_sizes, version_dir, bias=args.bias, pad=pad)
 
     if args.rocprof:
         run_rocprof_iterations(
@@ -286,6 +323,7 @@ def main():
             version_dir,
             rotating_buffer_size_mb=args.rotating_buffer_size,
             bias=args.bias,
+            pad=pad,
         )
         return
 
@@ -310,14 +348,15 @@ def main():
         else:
             torch_dtype = name_to_torch_type[dtype]
         a = torch.randn((M, K), device=DEVICE, dtype=torch_dtype)
-        b = torch.randn((N, K), device=DEVICE, dtype=torch_dtype).T
+        b = make_b(N, K, torch_dtype, pad, lambda t: t.normal_())
+        c = make_c(M, N, torch_dtype, pad)
         if dtype == "f8":
             a = a.to(torch.float8_e5m2)
             b = b.to(torch.float8_e5m2)
         kwargs = {"bias": torch.randn((N,), device=DEVICE, dtype=torch_dtype)} if args.bias else {}
         quantiles = [0.5, 0.2, 0.8]
         ms, min_ms, max_ms = triton.testing.do_bench(
-            lambda: matmul(a, b, **kwargs), quantiles=quantiles
+            lambda: matmul(a, b, c, **kwargs), quantiles=quantiles
         )
 
         def perf(ms):

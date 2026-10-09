@@ -25,6 +25,7 @@ a16w16/
 ├── v7_sliceN/            # N-slicing for register pressure reduction
 ├── v8_sliceMN/           # M+N slicing, buffer load throughput analysis
 ├── v9_beyond_hotloop/    # L2 cache locality via XCD-aware PID remapping
+├── v9_tile/              # v9 with the tile size as a parameter (256x128, 128x256, 128x128); tile-size study
 ├── v10_persistant/       # v9 as a persistent kernel (one program per CU loops over tiles)
 ├── v11_persistant_overlap_global/  # + next tile's first global->LDS loads in the epilogue
 ├── v12_persistant_overlap_lds/     # + next tile's first LDS reads in the epilogue
@@ -35,10 +36,14 @@ a16w16/
 ├── v17_streamk_tile_aligned/       # + tile-aligned cuts
 ├── v18_streamk_chunk_major/        # + chunk-major placement, rotating owner
 ├── v19_streamk_two_tile_reversed/  # + two-tile stream-K, segments in reversed order
-└── v20_streamk_reduce_scatter/     # + reduce-scatter ending, host policy rule, spread
+├── v20_streamk_reduce_scatter/     # + reduce-scatter ending, host policy rule, spread
+├── v21_streamk_l2_partials/        # + partials and flags through one XCD's L2 (STREAMK_PARTIALS)
+├── v22_streamk_atomic_c/           # v20 + an atomic ending: bf16 pk_add into C (STREAMK_FIXUP=atomic)
+├── v23_streamk_rs_band/            # v20 + band C store, power-of-two readers, opt-in bf16 partials
+└── v24_streamk_combined/           # v23 + v22's atomic_iz, v21's L2 exchange, v18's chunk-major placement (switches)
 ```
 
-v14-v20 balance a partly empty last wave with stream-K. [STREAMK.md](STREAMK.md) summarizes
+v14-v24 balance a partly empty last wave with stream-K. [STREAMK.md](STREAMK.md) summarizes
 what each version changes and what it measured.
 
 ## 2. How to Run
@@ -50,6 +55,22 @@ python bench.py --version 9 --K 8192 --dtype fp16
 ```
 
 This runs correctness checks against `torch.matmul` and reports TFLOPS. Use `--version` to select a kernel version (0–13) and `--rocprof` for accurate performance measurement.
+
+### Padded B and C rows (default)
+
+`bench.py` pads a row of B (stored (N, K)) or C (M, N) by 256 bytes when the row is a multiple of
+512 bytes, and runs on the (N, K) / (M, N) view, as AMD's MI300 / MI350 tuning guide and vLLM's
+ROCm weight padding do ([`../../utils/row_padding.py`](../../utils/row_padding.py)). Without it,
+power-of-two row strides camp on a few memory channels, and how badly depends on where the
+buffers land in physical memory: the same kernel moves by 4% (4096×4096×1024, warm) to 20%
+(256×32768×8192) between allocations. Why, and how it was measured:
+[PARTITION_CAMPING.md](../../../../experiments/placement_bimodality/PARTITION_CAMPING.md). `--no-pad`
+restores contiguous B and C; results recorded before 2026-10-06 used contiguous tensors. A stays
+contiguous because the kernels require it. `v20_streamk_reduce_scatter/rocprof_check.py` pads the
+same way (`--no-pad` to turn it off, `--warm` for one copy instead of the rotating 512 MB).
+
+v1, v3, v4 and v6 give wrong results under `TRITON_AMDGCNAS_PLUGIN=1` (padded or not): the
+peephole assumes AGPR-pinned accumulators, which start at v7. Run them without the plugins.
 
 ### Bias (v9–v13)
 

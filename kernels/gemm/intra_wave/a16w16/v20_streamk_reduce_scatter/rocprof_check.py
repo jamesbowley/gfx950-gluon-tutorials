@@ -26,9 +26,11 @@
     cd kernels/gemm/intra_wave/a16w16
     HIP_VISIBLE_DEVICES=4 python v20_streamk_reduce_scatter/rocprof_check.py 4352x4096x8192,3328x5120x8192 13,17,19,20
     HIP_VISIBLE_DEVICES=4 python v20_streamk_reduce_scatter/rocprof_check.py 4352x4096x8192 13,20 --no-l2
+    HIP_VISIBLE_DEVICES=4 python v20_streamk_reduce_scatter/rocprof_check.py 4096x4096x1024 9,13 --warm --no-pad
 
 - Kernel time: rocprofv3 --kernel-trace over `bench.py --rocprof` (1000 launches over a rotating
-  512 MB of inputs), median dispatch duration.
+  512 MB of inputs, or over one copy with --warm), median dispatch duration. B and C rows are
+  padded as bench.py does unless --no-pad.
 - L2: rocprofv3 --pmc TCC_HIT_sum TCC_MISS_sum TCC_EA0_RDREQ_sum over 10 launches on the same
   inputs (warm), median of launches 3-10; hit rate is HIT / (HIT + MISS).
 
@@ -38,6 +40,7 @@ one, v20 runs with whatever STREAMK_POLICY / STREAMK_FIXUP the environment sets.
 import csv
 import glob
 import os
+import re
 import subprocess
 import sys
 import tempfile
@@ -50,18 +53,30 @@ NAMES = {9: "v9_beyond_hotloop", 10: "v10_persistant", 11: "v11_persistant_overl
          12: "v12_persistant_overlap_lds", 13: "v13_persistant_peel_acc", 14: "v14_streamk",
          15: "v15_streamk_onetile", 16: "v16_streamk_lane_partials",
          17: "v17_streamk_tile_aligned", 18: "v18_streamk_chunk_major", 19: "v19_streamk_two_tile_reversed",
-         20: "v20_streamk_reduce_scatter"}
+         20: "v20_streamk_reduce_scatter", 22: "v22_streamk_atomic_c", 23: "v23_streamk_rs_band",
+         24: "v24_streamk_combined"}
+# v20-v24 hand data-parallel shapes of at most one wave to v9, so their traces can hold v9's kernel.
+DELEGATES = {20: (9,), 21: (9,), 22: (9,), 23: (9,), 24: (9,)}
+# Kernels a version launches before its GEMM in the same call (v22's atomic ending zeroes the
+# stream-K tiles of C first); cold_detail times the call from their start.
+PRE_KERNELS = {22: ("v22_zero_tiles",)}
+
+
+def kernel_regex(v):
+    """Kernel names version v can launch, as a regex for rocprofv3 and kernel_rows."""
+    return "|".join([NAMES[x] for x in (v, *DELEGATES.get(v, ()))] + list(PRE_KERNELS.get(v, ())))
 
 PMC_SCRIPT = r'''
 import sys, os
 sys.path.insert(0, "%s")
 import bench, torch, importlib
 mod = importlib.import_module(bench.VERSION_MAP[%d] + ".matmul_kernel")
-M, N, K = %d, %d, %d
+M, N, K, pad = %d, %d, %d, %s
 a = torch.rand((M, K), device="cuda", dtype=torch.bfloat16) - 0.5
-b = torch.rand((N, K), device="cuda", dtype=torch.bfloat16).T - 0.5
+b = bench.make_b(N, K, torch.bfloat16, pad, lambda t: t.uniform_(-0.5, 0.5))
+c = bench.make_c(M, N, torch.bfloat16, pad)
 for _ in range(10):
-    mod.matmul(a, b)
+    mod.matmul(a, b, c)
 torch.cuda.synchronize()
 '''
 
@@ -78,30 +93,57 @@ def kernel_rows(d, name):
     for f in glob.glob(os.path.join(d, "**", "*.csv"), recursive=True):
         with open(f) as fh:
             for r in csv.DictReader(fh):
-                if name in r.get("Kernel_Name", ""):
+                if re.search(name, r.get("Kernel_Name", "")):
                     rows.append(r)
     return rows
 
 
-def cold_us(v, M, N, K, env):
+def cold_detail(v, M, N, K, env, bench_flags=()):
+    """Medians over the dispatches, us: {"us": the call, "gemm_us": the GEMM kernel alone,
+    "pre_us": the kernels launched before it (PRE_KERNELS)}. With pre-kernels in the trace, a call
+    runs from the start of the pre-kernel dispatched just before the GEMM to the GEMM's end, so it
+    includes the gap between the two launches; otherwise it is the GEMM's duration."""
     d = tempfile.mkdtemp(prefix="rp_")
-    run(["rocprofv3", "--kernel-trace", "--kernel-include-regex", NAMES[v], "-d", d, "-o", "run",
+    run(["rocprofv3", "--kernel-trace", "--kernel-include-regex", kernel_regex(v), "-d", d, "-o", "run",
          "--output-format", "csv", "--", sys.executable, "bench.py", "--version", str(v), "--M", str(M),
-         "--N", str(N), "--K", str(K), "--dtype", "bf16", "--rocprof"], env)
-    rows = [r for r in kernel_rows(d, NAMES[v]) if "End_Timestamp" in r]
-    t = sorted((int(r["End_Timestamp"]) - int(r["Start_Timestamp"])) / 1e3 for r in rows)
-    return t[len(t) // 2] if t else float("nan")
+         "--N", str(N), "--K", str(K), "--dtype", "bf16", "--rocprof", *bench_flags], env)
+    rows = sorted((r for r in kernel_rows(d, kernel_regex(v)) if "End_Timestamp" in r),
+                  key=lambda r: int(r["Start_Timestamp"]))
+    pre_names = PRE_KERNELS.get(v, ())
+
+    def is_pre(r):
+        return any(p in r["Kernel_Name"] for p in pre_names)
+
+    def med(xs):
+        xs = sorted(xs)
+        return xs[len(xs) // 2] if xs else float("nan")
+
+    calls, gemm, pre, last_pre = [], [], [], None
+    for r in rows:
+        s, e = int(r["Start_Timestamp"]), int(r["End_Timestamp"])
+        if is_pre(r):
+            last_pre = s
+            pre.append((e - s) / 1e3)
+            continue
+        gemm.append((e - s) / 1e3)
+        calls.append((e - (last_pre if last_pre is not None else s)) / 1e3)
+        last_pre = None
+    return {"us": med(calls), "gemm_us": med(gemm), "pre_us": med(pre)}
 
 
-def l2(v, M, N, K, env):
+def cold_us(v, M, N, K, env, bench_flags=()):
+    return cold_detail(v, M, N, K, env, bench_flags)["us"]
+
+
+def l2(v, M, N, K, env, pad=True):
     d = tempfile.mkdtemp(prefix="rp_")
     script = os.path.join(d, "pmc.py")
     with open(script, "w") as f:
-        f.write(PMC_SCRIPT % (A16, v, M, N, K))
+        f.write(PMC_SCRIPT % (A16, v, M, N, K, pad))
     run(["rocprofv3", "--pmc", "TCC_HIT_sum", "TCC_MISS_sum", "TCC_EA0_RDREQ_sum", "--kernel-include-regex",
-         NAMES[v], "-d", d, "-o", "run", "--output-format", "csv", "--", sys.executable, script], env)
+         kernel_regex(v), "-d", d, "-o", "run", "--output-format", "csv", "--", sys.executable, script], env)
     by_disp = {}
-    for r in kernel_rows(d, NAMES[v]):
+    for r in kernel_rows(d, kernel_regex(v)):
         if "Counter_Name" in r:
             by_disp.setdefault(int(r["Dispatch_Id"]), {})[r["Counter_Name"]] = float(r["Counter_Value"])
     disp = sorted(by_disp)[2:]
@@ -115,15 +157,19 @@ def l2(v, M, N, K, env):
 def main():
     shapes = [tuple(int(x) for x in s.split("x")) for s in sys.argv[1].split(",")]
     versions = sys.argv[2].split(",")
-    with_l2 = "--no-l2" not in sys.argv[3:]
-    print("| shape | version | cold kernel time (us) | L2 hit rate | memory read requests |")
+    flags = sys.argv[3:]
+    with_l2 = "--no-l2" not in flags
+    pad = "--no-pad" not in flags
+    bench_flags = (["--rotating-buffer-size", "0"] if "--warm" in flags else []) + ([] if pad else ["--no-pad"])
+    cache = "warm" if "--warm" in flags else "cold"
+    print(f"| shape | version | {cache} kernel time (us) | L2 hit rate | memory read requests |")
     print("|---|---|---|---|---|")
     for M, N, K in shapes:
         for spec in versions:
             v, extra = version_spec.parse(spec)
             env = {**os.environ, **extra}
-            us = cold_us(v, M, N, K, env)
-            hit, reads = l2(v, M, N, K, env) if with_l2 else (float("nan"), float("nan"))
+            us = cold_us(v, M, N, K, env, bench_flags)
+            hit, reads = l2(v, M, N, K, env, pad) if with_l2 else (float("nan"), float("nan"))
             print(f"| {M}x{N}x{K} | {version_spec.label(spec)} | {us:.1f} | {100 * hit:.1f}% | {reads / 1e6:.2f}M |",
                   flush=True)
 

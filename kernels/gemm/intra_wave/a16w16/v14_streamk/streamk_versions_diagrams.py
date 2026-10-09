@@ -7,9 +7,12 @@ Every figure replays the work assignment of two versions on a small toy problem 
   labelled with its k-range; the owner's segment is hatched. Store, wait, read, refill, slice
   and C-store glyphs follow it.
 - below, one strip per XCD: the k-step each program of that XCD is reading at each moment. The
-  band around each line is the ~2 k-step L2 residency window on MI355X (128 KiB of L2 per CU
-  against 64 KiB of A/B read per k-step). Overlapping bands can share L2 lines, assuming the
-  tiles share A rows, as the leftover tiles of the real shapes do.
+  band around each line is the ~2 k-step L2 residency window on MI355X when an XCD's programs
+  share nothing (4 MB of L2 against 32 x 64 KiB of A/B per k-step); with data-parallel's 4 x 8
+  sharing it is about 10 (experiments/cu_drift_l2_reuse). Overlapping bands can share L2 lines,
+  assuming the tiles share A rows, as the leftover tiles of the real shapes do.
+
+F10 plots measured kernel times from experiments/streamk_split_count/results/sweep_b.jsonl.
 
 The partition, the peer walk and the tile-aligned split come from streamk_diagrams.py; the
 timeline adds a pipeline refill between segments, a C store and the reduce-scatter ending.
@@ -106,10 +109,19 @@ def end_to_end(S, variant):
     return work
 
 
-def tile_aligned(S, ending="owner", chunk_major=False):
-    """v17 (tile-major, chunk-0 owner), v18 (chunk-major, owner t % n) and v20 (reduce-scatter)."""
+def compact_pid(c, programs):
+    """streamk_compact_pid: active program c of `programs` runs on a pid chosen so that every
+    XCD keeps the same number of active programs."""
+    per_xcd = programs // NUM_XCDS
+    return (c // per_xcd) * PPX + c % per_xcd
+
+
+def tile_aligned(S, ending="owner", chunk_major=False, programs=P):
+    """v17 (tile-major, chunk-0 owner), v18 (chunk-major, owner t % n) and v20 (reduce-scatter).
+    `programs` < P caps the split (STREAMK_NUM_PROGRAMS); the others idle."""
+    assert programs % NUM_XCDS == 0
     items = []
-    for t, chunks in enumerate(aligned_split(S, P, IPT)):
+    for t, chunks in enumerate(aligned_split(S, programs, IPT)):
         k = 0
         for j, n in enumerate(chunks):
             items.append((t, j, k, k + n))
@@ -117,8 +129,8 @@ def tile_aligned(S, ending="owner", chunk_major=False):
     if chunk_major:
         items.sort(key=lambda it: (it[1], it[0]))
     by_tile = {}
-    for p, (t, j, k0, k1) in enumerate(items):
-        by_tile.setdefault(t, []).append((p, j, k0, k1))
+    for c, (t, j, k0, k1) in enumerate(items):
+        by_tile.setdefault(t, []).append((compact_pid(c, programs), j, k0, k1))
     work = {p: [] for p in range(P)}
     for t, members in by_tile.items():
         n = len(members)
@@ -518,6 +530,61 @@ def fig_f3(path):
     plt.close(fig)
 
 
+SWEEP_B = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "..", "..",
+                       "experiments", "streamk_split_count", "results", "sweep_b.jsonl")
+SWEEP_SHAPES = {4: "3328x5120x8192", 16: "4352x4096x8192", 38: "3584x5376x8192"}
+
+
+def fig_f10(path, K=8192):
+    """Measured kernel time against programs per leftover tile (rocprof, sweep B)."""
+    import json
+
+    rows = [json.loads(line) for line in open(SWEEP_B)]
+    fig, axes = plt.subplots(1, len(SWEEP_SHAPES), figsize=(15, 4.6), sharey=True)
+    best = {}
+    for ax, (S, shape) in zip(axes, SWEEP_SHAPES.items()):
+        sel = [r for r in rows if r["S"] == S and r["K"] == K]
+        default_n = 256 / S
+        for cfg, colour, label, dx in (("v20 owner", "#2166ac", "owner ending", -1),
+                                       ("v20 rs", "#1b7837", "reduce-scatter ending", 1)):
+            pts = sorted((default_n if r["n"] == "default" else int(r["n"]), r["us"])
+                         for r in sel if r["config"] == cfg)
+            assert len(pts) >= 5, (S, cfg)
+            xs, ys = zip(*pts)
+            ax.plot(xs, ys, marker="o", color=colour, label=label, lw=1.8)
+            n_best, t_best = min(pts, key=lambda p: p[1])
+            best[(S, cfg)] = n_best
+            ax.plot(n_best, t_best, marker="*", ms=15, color=colour, zorder=5)
+            ax.annotate(f"best n = {n_best:g}\n{t_best:.0f} us", (n_best, t_best), textcoords="offset points",
+                        xytext=(12 * dx, -26), ha="left" if dx > 0 else "right", fontsize=8, color=colour,
+                        bbox=dict(boxstyle="round,pad=0.15", fc="white", ec="none", alpha=0.9), zorder=6)
+        for cfg, style, label in (("v13", "--", "data-parallel (v13)"), ("v20 two_tile", ":", "two-tile (v19 path)")):
+            t = [r["us"] for r in sel if r["config"] == cfg]
+            assert len(t) == 1, (S, cfg)
+            ax.axhline(t[0], color="black", ls=style, lw=1.2, label=label)
+        ax.axvline(default_n, color="#b2182b", lw=1, alpha=0.6)
+        ax.text(default_n, 0.98, f" default\n n = {default_n:.3g}", transform=ax.get_xaxis_transform(),
+                va="top", fontsize=7.5, color="#b2182b")
+        ax.set_xscale("log", base=2)
+        ticks = [1, 2, 4, 8, 16, 32, 64]
+        ax.set_xticks([t for t in ticks if t <= max(default_n, 16)], [str(t) for t in ticks if t <= max(default_n, 16)])
+        ax.set_title(f"S = {S} ({shape}), {K // 64} k-steps per tile", fontsize=9.5, loc="left")
+        ax.set_xlabel("programs per leftover tile, n", fontsize=8.5)
+        ax.grid(color="#e5e5e5")
+    axes[0].set_ylabel("kernel time (us, rocprof)", fontsize=8.5)
+    axes[0].set_ylim(175, None)
+    handles, labels = axes[0].get_legend_handles_labels()
+    fig.legend(handles, labels, loc="lower center", ncol=4, fontsize=8.5, frameon=False)
+    assert best[(4, "v20 owner")] == 8 and best[(4, "v20 rs")] == 16, best
+    fig.tight_layout(rect=(0, 0.07, 1, title_top(fig)))
+    titles(fig, "F10. Measured: capping the split",
+           "One-tile stream-K, K = 8192. Few splits leave the tail long; many make the collection long. "
+           "Data from experiments/streamk_split_count (sweep B).", x=0.03)
+    fig.savefig(path, dpi=130)
+    plt.close(fig)
+    return best
+
+
 def summary_row(fig, panel, events):
     ks = [distinct_k(events, x) for x in range(NUM_XCDS)]
     return (f"| {fig} | {panel} | {finish(events):.1f} | "
@@ -612,6 +679,23 @@ def main():
              ("v17, tile-aligned: 4 tiles stay whole, so the tail is a full tile", al),
              ("v20 spread: 12 k-steps each, reversed order", sp))
     rows += [summary_row("F8", "v17 tile-aligned", al), summary_row("F8", "v20 spread", sp)]
+
+    # F9: one leftover tile, the owner ending at the default split (8 ways) and capped at 4.
+    full = timeline(check_work(tile_aligned(1), 1))
+    capw = check_work(tile_aligned(1, programs=4), 1)
+    assert sum(bool(ss) for ss in capw.values()) == 4
+    assert {xcd(p) for p, ss in capw.items() if ss} == set(range(NUM_XCDS)), "idle programs balanced"
+    cap = timeline(capw)
+    assert finish(cap) < finish(full)
+    fig_pair(out("f9_capped_split.png"), "F9. Capping the split: fewer programs per leftover tile",
+             f"1 leftover tile, owner ending, {TOY}. {COSTS}. The capped split idles 2 programs on each XCD.",
+             ("default: all 8 programs, 2 k-steps each, the owner reads 7 partials", full),
+             ("capped, n = 4: 4 k-steps each, the owner reads 3 partials", cap))
+    rows += [summary_row("F9", "default n = 8", full), summary_row("F9", "capped n = 4", cap)]
+
+    best = fig_f10(out("f10_split_count_measured.png"))
+    rows.append("| F10 | best n (owner, rs) | - | " + ", ".join(
+        f"S = {S}: {best[(S, 'v20 owner')]:g}, {best[(S, 'v20 rs')]:g}" for S in SWEEP_SHAPES) + " |")
 
     print("all checks passed\n")
     print("| figure | panel | tail (k-steps) | distinct k per XCD, mean / max |")

@@ -134,7 +134,8 @@ def worker(case):
     tflops = 2 * M * N * K * 1e-12 / (ms * 1e-3)
 
     files = glob.glob(os.path.join(os.environ["TRITON_CACHE_DIR"], "**", "*.amdgcn"), recursive=True)
-    named = [f for f in files if os.path.basename(f) == f"{version_dir}.amdgcn"]
+    # v20 and v21 hand one-wave data-parallel shapes to v9, whose kernel is then the only one.
+    named = [f for f in files if os.path.basename(f) == f"{version_dir}.amdgcn"] or files
     regs = parse_amdgcn(named[0]) if len(named) == 1 else {"error": f"{len(named)} .amdgcn files"}
 
     print(RESULT_TAG + json.dumps({"correct": correct, "tflops": tflops, **regs}), flush=True)

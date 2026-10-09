@@ -1,0 +1,34 @@
+{
+ "fitted_on": "sweep F (4096x8192xK, GEMM_TILE_LIMIT = 256 + S, S <= 128, K = 512-16384), every cell",
+ "tile": [
+  256,
+  256,
+  64
+ ],
+ "num_programs": 256,
+ "frozen": "2026-10-09 10:40",
+ "sha256": {
+  "sweep_f.jsonl": "8e29bf6acfb490d887c075c0f4132178f2dcc927794f072f07abefef9ac1c673",
+  "rules_f.py": "9a5f5d838708877b7ecece040a3ec3e936d73013a5d27c0c11ded55b54424985"
+ },
+ "rules": {
+  "one": {
+   "T": 12,
+   "E": 6,
+   "m": 4,
+   "P": 128,
+   "c0": 3.0,
+   "c1": null,
+   "A": null
+  },
+  "any": {
+   "T": 12,
+   "E": 3,
+   "m": 4,
+   "P": 192,
+   "c0": 1.5,
+   "c1": null,
+   "A": null
+  }
+ }
+}

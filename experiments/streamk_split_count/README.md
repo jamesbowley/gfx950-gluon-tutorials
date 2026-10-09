@@ -150,7 +150,116 @@ Points not covered: S between the measured values (an S = 24 or S = 96 shape wou
 thresholds), K = 16384 with capped splits, and bias. The trends are smooth, but the coefficients
 (2.2, 1/8, 20) are fits to these shapes.
 
+## 3. Sweep C: every S on one matrix
+
+Sweeps A and B change the shape to change S, and real shapes cannot give every S one full wave (257
+tiles is prime). Sweep C runs everything on 4096x8192xK (16 x 32 tiles) and computes only its first
+256 + S tile ids, through a test-only `GEMM_TILE_LIMIT` (a `TILE_LIMIT` constexpr in v13, v16, v19 and
+v20, 0 = off; the default builds' assembly is unchanged). The tail is the kernel time minus the same
+matrix's with 256 tiles. It also adds forward two-tile to v16 (`STREAMK_POLICY=two_tile`, host only).
+
+```bash
+# AITER's stack: Triton v2.2 + deepbind shim + LLVM_PASS_PLUGIN_PATH=plugins/llir_scheduler/libLlirSched.so,
+# TRITON_AMDGCNAS_PLUGIN unset
+HIP_VISIBLE_DEVICES=0 python experiments/streamk_split_count/check_tile_limit.py   # results/check_tile_limit.md
+HIP_VISIBLE_DEVICES=0 python experiments/streamk_split_count/check_tile_limit.py --versions 22 \
+    > experiments/streamk_split_count/results/check_tile_limit_v22.md
+HIP_VISIBLE_DEVICES=0 python experiments/streamk_split_count/atomic_accuracy.py > experiments/streamk_split_count/results/atomic_accuracy.md
+HIP_VISIBLE_DEVICES=0 python experiments/streamk_split_count/sweep.py c           # results/sweep_c.jsonl
+HIP_VISIBLE_DEVICES=0 python experiments/streamk_split_count/sweep.py l2          # results/l2_c.jsonl
+```
+
+- S = 1, 2, 3, 4, 6, 8, 12, 16, 24, 32, 38, 48, 64, 96, 128 at K = 2048-16384, n = 1-64 (`S * n <= 256`) and
+  the default, for v13, v16 (end-to-end), v20 `spread` (end-to-end reversed, all 256 programs and capped),
+  v20 `one_tile` owner and rs (tile-aligned), v22 `one_tile` atomic and atomic_iz (tile-aligned, bf16
+  `pk_add` into C, zeroed by a launch or inside the GEMM), v16 forward two-tile and v19; S = 160-255 at
+  K = 8192-32768 without the tile-aligned split; K = 512 and 1024 for v13, owner, rs and both atomic modes;
+  rs and both atomic modes packed onto few XCDs (`STREAMK_BALANCE_XCDS=0`) at S = 1-8. 4,314 cases.
+- v22's call is timed from its zeroing launch's start to the GEMM's end (`rocprof_check.cold_detail`, which
+  pairs the dispatches); the GEMM and the zeroing are also recorded separately (`gemm_us`, `pre_us`).
+- [check_tile_limit.md](results/check_tile_limit.md) (all 4,281 cases; the first v22 run alone is in
+  [check_tile_limit_v22.md](results/check_tile_limit_v22.md)): every case writes exactly the first T
+  tiles, matches torch and re-arms every flag and count. v22's stream-K tiles round once per program, so
+  they are held to an fp32 reference by their mean error instead (at most `1 + sqrt(n)` times one bf16
+  rounding; `streamk_tiles` finds them as the kernels do).
+- [atomic_accuracy.md](results/atomic_accuracy.md): v22's errors against an fp32 reference, by S, K and n.
+- Real shapes at S = 8, 16, 38, 128 and 192 run within 3% of the limited matrix, except forward two-tile.
+- A first run with the amdgcnas hook, before v22 and capped `spread`, is kept as `*_amdgcnas.*`; kernel
+  times without the hook are a median 0.1-1% longer, and no conclusion changed.
+
+The results, figures and the refitted split model are in
+[memory_model_litmus WRITEUP.md, section 8](../memory_model_litmus/WRITEUP.md#8-choosing-the-split-count)
+and [tail_variants.md](../memory_model_litmus/results/tail_variants.md). That report also replays the
+rule as v20 implements it (`capped_policy`, `STREAMK_POLICY=capped`) on every cell with S <= 128 and
+K = 512-16384, against the fastest measured configuration that rounds once
+([WRITEUP section 8, "The v20 host rule against these measurements"](../memory_model_litmus/WRITEUP.md#the-v20-host-rule-against-these-measurements)):
+- **Within 2% in most cells:** the median kernel ratio is 1.000 over 90 cells, 1.029 at the 90th percentile,
+  1.070 at worst.
+- **Reduce-scatter splits too little at S <= 4, K = 2048-8192 (1-7% of the kernel).** `max(8, ipt / 8)`
+  gives 8-16 where the measured best is about one pair per program, up to 64 per tile (16 at K = 2048,
+  16-32 at 4096, 32-64 at 8192).
+- **K = 1024 stays data-parallel, where reduce-scatter wins at S <= 4 (3-5%).** That contradicts sweep B
+  above (-4% at S = 4, K = 1024 on a real shape), so it needs confirming before the 20 k-step threshold
+  moves.
+- **Small misses at S = 24-38, K >= 8192 (1-2.4%)**, from the `128 // S` cap and the owner's sqrt rule.
+- **From S = 38 the rule's n reaches 256 // S, so it leaves STREAMK_NUM_PROGRAMS unset** and some tiles get 3
+  programs. Requesting S n would be faster (S = 96, K = 16384: 151 against 160 us).
+- **K = 2048 pays for every S up to 64** with the capped tile-aligned split (1.06-2.4x shorter tails).
+- **The owner ending wins from S = 38 to 128** at 2-4 programs per tile, as the rule has it.
+- **A possible fix** is reduce-scatter n = min(k / 2, max(4, P / S)), at most 64, with P about 64 at
+  K <= 4096 and 128 at K >= 8192. It is fitted to one matrix: validate it on this README's real shapes
+  first. Fit to measured tails, not to the litmus split model, whose choice of n costs up to 6%.
+- **Capped `spread` is no better than forward end-to-end cuts** (median 0.4% faster at the same n) and
+  8% slower than tile-aligned ones.
+- **v22's atomic ending** is the fastest tail in 50 of 60 cells, at reduce-scatter's n, by a median 5-17%,
+  at the cost of n bf16 roundings and bitwise reproducibility. With C zeroed inside the GEMM
+  (`atomic_iz`) it wins 54 of 60, and makes splitting pay at K = 1024 for S <= 32 (1.03-1.78x), where
+  sweep B found no single-rounding split pays (here reduce-scatter gains 1-19% at S <= 8 only).
+- **Packing the active programs onto few XCDs** (`STREAMK_BALANCE_XCDS=0`) helps only the atomic ending at
+  S <= 2; spreading them stays the right default.
+
 **Default behaviour is unchanged.** With `STREAMK_NUM_PROGRAMS` unset, `regress.py` on 4352x4096x8192 and
 4352x4352x8192 gives every version's earlier TFLOPS within noise. Register counts and spills are the
 same as before. For example v17 is at 1203 TFLOPS against 1213 earlier, with 492 VGPRs and no
 spills; v15 is at 941 against 932.
+
+## 4. Sweep E1: v23 against v20 and the atomic ending
+
+`sweep.py e1` (report: `sweep.py e1_report`, [results/e1_tails.md](results/e1_tails.md)): seven cells of
+sweep C's matrix where the atomic ending had won (S = 1-64, K = 4096-16384), each at the grid's best n
+and its neighbours. Configurations: v20's reduce-scatter and owner endings, v23's reduce-scatter
+(power-of-two or all readers; fp32, bf16 or bf16 pair partials) and owner with bf16 pairs, and v22's
+two atomic endings. Two interleaved rounds on one GPU; every case first passes
+`check_tile_limit.py --sweep e1`. `atomic_accuracy.py --v23`
+([results/atomic_accuracy_v23.md](results/atomic_accuracy_v23.md)) adds v23's bf16 partials to the
+accuracy table. Findings in [v23's WORKLOG](../../kernels/gemm/intra_wave/a16w16/v23_streamk_rs_band/WORKLOG.md):
+like for like, reduce-scatter with bf16 partials is as fast as the bf16 atomic ending or faster, at
+about 1.6 times one rounding's error whatever n.
+
+## 5. Sweep F: every ending, placement and partial type (v24)
+
+```bash
+# AITER's stack, as sweep C; GPU 0 in HIP numbering (rocm-smi GPU 3 in this container)
+python experiments/streamk_split_count/check_tile_limit.py --sweep f --versions 24 --jobs 3   # results/check_tile_limit_f.md
+experiments/streamk_split_count/run_f.sh start f noise aiter   # detached: sweep F, its second round, the AITER test
+python experiments/streamk_split_count/figures_f.py            # images/sweep_f_*.png
+python experiments/streamk_split_count/rules_f.py --freeze     # results/rules_f.md, rules_frozen.json
+```
+
+Sweep C's matrix and grid (S = 1-128 at K = 512-16384, every n, the default split; S = 160-255 at
+K = 8192-32768) with [v24](../../kernels/gemm/intra_wave/a16w16/v24_streamk_combined/WORKLOG.md), which has every
+ending, placement and partial type behind host switches: owner and reduce-scatter (fp32, tile- and chunk-major),
+reduce-scatter through one XCD's L2, both endings with bf16-pair partials, and the atomic ending (tile- and
+chunk-major); plus v13, v24's two-tile and spread, and v20's reduce-scatter as the link to sweep C. 6,434 cases.
+`run_f.sh` waits for the GPU to be idle before every 100 cases (another job held every GPU for a few hours).
+
+- [results/sweep_f.md](results/sweep_f.md): tails at each configuration's best n, the fastest per cell, and the
+  comparisons; findings in v24's WORKLOG entry 2. Figures: `images/sweep_f_winners.png` (fastest per cell, single
+  and any rounding), `sweep_f_ratios.png` (one map per comparison), `sweep_f_tail_vs_n_endings.png` and
+  `sweep_f_tail_vs_n_placement.png` (tail against n, the n within 2% of the best shaded).
+- `results/sweep_f_round2.jsonl`: the 501 most competitive choices timed again; kernel times repeat to 0.3%
+  (median) and 1.05% (90th percentile).
+- [results/rules_f.md](results/rules_f.md), `images/sweep_f_regret.png`: v24's `capped` rule and a small fitted
+  rule, by kernel-time regret, with leave-one-S-out and leave-one-K-out cross-validation.
+  [results/rules_frozen.json](results/rules_frozen.json) holds the fitted rule for held-out tests, with checksums of
+  what it was fitted on. The held-out test is [experiments/streamk_aiter_test](../streamk_aiter_test/README.md).

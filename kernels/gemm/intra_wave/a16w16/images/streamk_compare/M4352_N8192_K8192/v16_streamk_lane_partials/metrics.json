@@ -1,0 +1,50 @@
+{
+ "version": "v16_streamk_lane_partials",
+ "note": "one-tile, end-to-end split, lane-contiguous partials",
+ "ks_cycles": 2164.765625,
+ "shape": "4352x8192x8192 bf16",
+ "groups": [
+  {
+   "sig": "16-k-step partial",
+   "n": 72,
+   "n_dp": 2,
+   "segs": [
+    {
+     "ksteps": 16,
+     "role": "partial",
+     "mac": 16.157869284348045,
+     "transition": 5.0536648742285895,
+     "phases": {
+      "drain": 0.3621639178606229,
+      "partial store": 8.019343895485221,
+      "store drain": 1.5669132772745318,
+      "exit": 0.3612400303150601
+     }
+    }
+   ],
+   "dp_last": 128.01940163845683
+  },
+  {
+   "sig": "16-k-step owner",
+   "n": 8,
+   "n_dp": 2,
+   "segs": [
+    {
+     "ksteps": 16,
+     "role": "owner",
+     "mac": 18.477750911256273,
+     "transition": 5.046273773864087,
+     "phases": {
+      "drain": 0.42036883323108015,
+      "spin on flags": 13.39729329820636,
+      "collect": 26.34465336172363,
+      "exit": 0.47580208596484896
+     }
+    }
+   ],
+   "dp_last": 127.9131545707171
+  }
+ ],
+ "tail_median": 33.37174203327439,
+ "tail_max": 77.2868887365116
+}

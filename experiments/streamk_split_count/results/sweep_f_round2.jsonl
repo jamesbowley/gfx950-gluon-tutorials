@@ -1,0 +1,501 @@
+{"S": 0, "M": 4096, "N": 8192, "K": 512, "config": "v13 base", "n": "-", "snp": null, "us": 21.12, "limit": 256}
+{"S": 0, "M": 4096, "N": 8192, "K": 1024, "config": "v13 base", "n": "-", "snp": null, "us": 30.841, "limit": 256}
+{"S": 0, "M": 4096, "N": 8192, "K": 2048, "config": "v13 base", "n": "-", "snp": null, "us": 52.52, "limit": 256}
+{"S": 0, "M": 4096, "N": 8192, "K": 4096, "config": "v13 base", "n": "-", "snp": null, "us": 94.001, "limit": 256}
+{"S": 0, "M": 4096, "N": 8192, "K": 8192, "config": "v13 base", "n": "-", "snp": null, "us": 173.881, "limit": 256}
+{"S": 0, "M": 4096, "N": 8192, "K": 16384, "config": "v13 base", "n": "-", "snp": null, "us": 350.122, "limit": 256}
+{"S": 0, "M": 4096, "N": 8192, "K": 32768, "config": "v13 base", "n": "-", "snp": null, "us": 675.564, "limit": 256}
+{"S": 1, "M": 4096, "N": 8192, "K": 512, "config": "v24 rs l2", "n": "default", "snp": null, "us": 27.561, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 512, "config": "v24 rs l2", "n": 4, "snp": 4, "us": 27.44, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 512, "config": "v24 atomic_iz chunk", "n": "default", "snp": null, "us": 27.92, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 512, "config": "v13", "n": "-", "snp": null, "us": 28.6, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs bf16_pairs", "n": "default", "snp": null, "us": 39.2, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 1024, "config": "v24 atomic_iz chunk", "n": "default", "snp": null, "us": 39.16, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 1024, "config": "v24 atomic_iz", "n": "default", "snp": null, "us": 39.12, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs l2", "n": "default", "snp": null, "us": 39.72, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 1024, "config": "v20 rs", "n": "default", "snp": null, "us": 39.96, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs chunk", "n": "default", "snp": null, "us": 39.8, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs bf16_pairs", "n": "default", "snp": null, "us": 58.56, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 2048, "config": "v24 atomic_iz chunk", "n": "default", "snp": null, "us": 58.441, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 2048, "config": "v24 atomic_iz", "n": "default", "snp": null, "us": 58.56, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs l2", "n": 8, "snp": 8, "us": 60.401, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs", "n": "default", "snp": null, "us": 61.56, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs chunk", "n": "default", "snp": null, "us": 61.361, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 4096, "config": "v24 atomic_iz chunk", "n": "default", "snp": null, "us": 100.32, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 4096, "config": "v24 atomic_iz", "n": "default", "snp": null, "us": 100.801, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 4096, "config": "v24 atomic_iz", "n": 32, "snp": 32, "us": 101.48, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 4096, "config": "v20 rs", "n": 32, "snp": 32, "us": 103.24, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs", "n": 32, "snp": 32, "us": 103.44, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs l2", "n": 16, "snp": 16, "us": 103.561, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs bf16_pairs", "n": 64, "snp": 64, "us": 184.882, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs l2", "n": 16, "snp": 16, "us": 185.401, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs bf16_pairs", "n": 32, "snp": 32, "us": 186.321, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs chunk", "n": 64, "snp": 64, "us": 185.921, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 8192, "config": "v20 rs", "n": 64, "snp": 64, "us": 187.161, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs bf16_pairs", "n": 64, "snp": 64, "us": 359.042, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 16384, "config": "v24 atomic_iz chunk", "n": 64, "snp": 64, "us": 358.722, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 16384, "config": "v24 atomic_iz", "n": 64, "snp": 64, "us": 359.163, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 16384, "config": "v20 rs", "n": 64, "snp": 64, "us": 360.722, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs chunk", "n": 64, "snp": 64, "us": 360.323, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs", "n": 64, "snp": 64, "us": 360.403, "limit": 257}
+{"S": 2, "M": 4096, "N": 8192, "K": 512, "config": "v24 atomic_iz chunk", "n": "default", "snp": null, "us": 27.521, "limit": 258}
+{"S": 2, "M": 4096, "N": 8192, "K": 512, "config": "v24 atomic_iz", "n": "default", "snp": null, "us": 27.52, "limit": 258}
+{"S": 2, "M": 4096, "N": 8192, "K": 512, "config": "v24 rs bf16_pairs", "n": "default", "snp": null, "us": 27.92, "limit": 258}
+{"S": 2, "M": 4096, "N": 8192, "K": 512, "config": "v24 rs l2", "n": 4, "snp": 8, "us": 28.12, "limit": 258}
+{"S": 2, "M": 4096, "N": 8192, "K": 512, "config": "v24 rs l2", "n": "default", "snp": null, "us": 28.281, "limit": 258}
+{"S": 2, "M": 4096, "N": 8192, "K": 512, "config": "v13", "n": "-", "snp": null, "us": 29.201, "limit": 258}
+{"S": 2, "M": 4096, "N": 8192, "K": 1024, "config": "v24 atomic_iz chunk", "n": "default", "snp": null, "us": 39.2, "limit": 258}
+{"S": 2, "M": 4096, "N": 8192, "K": 1024, "config": "v24 atomic_iz", "n": "default", "snp": null, "us": 38.841, "limit": 258}
+{"S": 2, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs bf16_pairs", "n": "default", "snp": null, "us": 39.681, "limit": 258}
+{"S": 2, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs l2", "n": "default", "snp": null, "us": 39.721, "limit": 258}
+{"S": 2, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs l2", "n": 8, "snp": 16, "us": 39.8, "limit": 258}
+{"S": 2, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs l2", "n": 4, "snp": 8, "us": 39.68, "limit": 258}
+{"S": 2, "M": 4096, "N": 8192, "K": 2048, "config": "v24 atomic_iz chunk", "n": 16, "snp": 32, "us": 59.88, "limit": 258}
+{"S": 2, "M": 4096, "N": 8192, "K": 2048, "config": "v24 atomic_iz", "n": 16, "snp": 32, "us": 60.161, "limit": 258}
+{"S": 2, "M": 4096, "N": 8192, "K": 2048, "config": "v24 atomic_iz chunk", "n": "default", "snp": null, "us": 59.8, "limit": 258}
+{"S": 2, "M": 4096, "N": 8192, "K": 2048, "config": "v20 rs", "n": 16, "snp": 32, "us": 61.561, "limit": 258}
+{"S": 2, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs chunk", "n": 16, "snp": 32, "us": 62.001, "limit": 258}
+{"S": 2, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs", "n": 16, "snp": 32, "us": 62.08, "limit": 258}
+{"S": 2, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs bf16_pairs", "n": 32, "snp": 64, "us": 102.081, "limit": 258}
+{"S": 2, "M": 4096, "N": 8192, "K": 4096, "config": "v24 atomic_iz chunk", "n": 16, "snp": 32, "us": 103.641, "limit": 258}
+{"S": 2, "M": 4096, "N": 8192, "K": 4096, "config": "v24 atomic_iz", "n": 16, "snp": 32, "us": 103.44, "limit": 258}
+{"S": 2, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs", "n": 32, "snp": 64, "us": 104.161, "limit": 258}
+{"S": 2, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs chunk", "n": 32, "snp": 64, "us": 103.721, "limit": 258}
+{"S": 2, "M": 4096, "N": 8192, "K": 4096, "config": "v20 rs", "n": 32, "snp": 64, "us": 103.921, "limit": 258}
+{"S": 2, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs bf16_pairs", "n": 64, "snp": 128, "us": 184.401, "limit": 258}
+{"S": 2, "M": 4096, "N": 8192, "K": 8192, "config": "v24 atomic_iz", "n": 32, "snp": 64, "us": 185.081, "limit": 258}
+{"S": 2, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs bf16_pairs", "n": 32, "snp": 64, "us": 185.121, "limit": 258}
+{"S": 2, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs chunk", "n": 32, "snp": 64, "us": 187.601, "limit": 258}
+{"S": 2, "M": 4096, "N": 8192, "K": 8192, "config": "v20 rs", "n": 32, "snp": 64, "us": 187.521, "limit": 258}
+{"S": 2, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs", "n": 32, "snp": 64, "us": 187.321, "limit": 258}
+{"S": 2, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs bf16_pairs", "n": 64, "snp": 128, "us": 358.882, "limit": 258}
+{"S": 2, "M": 4096, "N": 8192, "K": 16384, "config": "v24 atomic_iz", "n": 32, "snp": 64, "us": 360.523, "limit": 258}
+{"S": 2, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs bf16_pairs", "n": 32, "snp": 64, "us": 361.003, "limit": 258}
+{"S": 2, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs", "n": 32, "snp": 64, "us": 363.082, "limit": 258}
+{"S": 2, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs chunk", "n": 32, "snp": 64, "us": 364.243, "limit": 258}
+{"S": 2, "M": 4096, "N": 8192, "K": 16384, "config": "v20 rs", "n": 32, "snp": 64, "us": 363.722, "limit": 258}
+{"S": 3, "M": 4096, "N": 8192, "K": 512, "config": "v24 atomic_iz", "n": "default", "snp": null, "us": 27.76, "limit": 259}
+{"S": 3, "M": 4096, "N": 8192, "K": 512, "config": "v24 atomic_iz chunk", "n": "default", "snp": null, "us": 27.72, "limit": 259}
+{"S": 3, "M": 4096, "N": 8192, "K": 512, "config": "v24 rs bf16_pairs", "n": "default", "snp": null, "us": 28.56, "limit": 259}
+{"S": 3, "M": 4096, "N": 8192, "K": 512, "config": "v24 rs l2", "n": 4, "snp": 12, "us": 28.241, "limit": 259}
+{"S": 3, "M": 4096, "N": 8192, "K": 512, "config": "v24 rs l2", "n": "default", "snp": null, "us": 28.4, "limit": 259}
+{"S": 3, "M": 4096, "N": 8192, "K": 512, "config": "v13", "n": "-", "snp": null, "us": 29.161, "limit": 259}
+{"S": 3, "M": 4096, "N": 8192, "K": 1024, "config": "v24 atomic_iz", "n": "default", "snp": null, "us": 39.24, "limit": 259}
+{"S": 3, "M": 4096, "N": 8192, "K": 1024, "config": "v24 atomic_iz chunk", "n": 8, "snp": 24, "us": 39.88, "limit": 259}
+{"S": 3, "M": 4096, "N": 8192, "K": 1024, "config": "v24 atomic_iz chunk", "n": "default", "snp": null, "us": 39.84, "limit": 259}
+{"S": 3, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs l2", "n": 4, "snp": 12, "us": 39.84, "limit": 259}
+{"S": 3, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs l2", "n": 8, "snp": 24, "us": 40.36, "limit": 259}
+{"S": 3, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs l2", "n": "default", "snp": null, "us": 40.441, "limit": 259}
+{"S": 3, "M": 4096, "N": 8192, "K": 2048, "config": "v24 atomic_iz chunk", "n": 16, "snp": 48, "us": 60.56, "limit": 259}
+{"S": 3, "M": 4096, "N": 8192, "K": 2048, "config": "v24 atomic_iz", "n": 16, "snp": 48, "us": 60.4, "limit": 259}
+{"S": 3, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs bf16_pairs", "n": 16, "snp": 48, "us": 60.721, "limit": 259}
+{"S": 3, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs", "n": 16, "snp": 48, "us": 62.641, "limit": 259}
+{"S": 3, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs chunk", "n": 16, "snp": 48, "us": 62.48, "limit": 259}
+{"S": 3, "M": 4096, "N": 8192, "K": 2048, "config": "v20 rs", "n": 16, "snp": 48, "us": 62.321, "limit": 259}
+{"S": 3, "M": 4096, "N": 8192, "K": 4096, "config": "v24 atomic_iz", "n": 16, "snp": 48, "us": 103.321, "limit": 259}
+{"S": 3, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs bf16_pairs", "n": 32, "snp": 96, "us": 102.961, "limit": 259}
+{"S": 3, "M": 4096, "N": 8192, "K": 4096, "config": "v24 atomic_iz chunk", "n": 16, "snp": 48, "us": 103.721, "limit": 259}
+{"S": 3, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs", "n": 16, "snp": 48, "us": 105.401, "limit": 259}
+{"S": 3, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs chunk", "n": 32, "snp": 96, "us": 105.681, "limit": 259}
+{"S": 3, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs", "n": 32, "snp": 96, "us": 105.761, "limit": 259}
+{"S": 3, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs bf16_pairs", "n": 32, "snp": 96, "us": 185.722, "limit": 259}
+{"S": 3, "M": 4096, "N": 8192, "K": 8192, "config": "v24 atomic_iz", "n": 32, "snp": 96, "us": 185.962, "limit": 259}
+{"S": 3, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs bf16_pairs", "n": 64, "snp": 192, "us": 187.881, "limit": 259}
+{"S": 3, "M": 4096, "N": 8192, "K": 8192, "config": "v20 rs", "n": 32, "snp": 96, "us": 189.161, "limit": 259}
+{"S": 3, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs chunk", "n": 32, "snp": 96, "us": 188.081, "limit": 259}
+{"S": 3, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs", "n": 32, "snp": 96, "us": 187.801, "limit": 259}
+{"S": 3, "M": 4096, "N": 8192, "K": 16384, "config": "v24 atomic_iz", "n": 32, "snp": 96, "us": 361.763, "limit": 259}
+{"S": 3, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs bf16_pairs", "n": 32, "snp": 96, "us": 361.763, "limit": 259}
+{"S": 3, "M": 4096, "N": 8192, "K": 16384, "config": "v24 atomic_iz chunk", "n": 32, "snp": 96, "us": 363.362, "limit": 259}
+{"S": 3, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs", "n": 32, "snp": 96, "us": 365.962, "limit": 259}
+{"S": 3, "M": 4096, "N": 8192, "K": 16384, "config": "v20 rs", "n": 32, "snp": 96, "us": 367.203, "limit": 259}
+{"S": 3, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs chunk", "n": 32, "snp": 96, "us": 367.162, "limit": 259}
+{"S": 4, "M": 4096, "N": 8192, "K": 512, "config": "v24 atomic_iz chunk", "n": "default", "snp": null, "us": 28.2, "limit": 260}
+{"S": 4, "M": 4096, "N": 8192, "K": 512, "config": "v24 atomic_iz", "n": "default", "snp": null, "us": 29.68, "limit": 260}
+{"S": 4, "M": 4096, "N": 8192, "K": 512, "config": "v24 rs l2", "n": 4, "snp": 16, "us": 28.681, "limit": 260}
+{"S": 4, "M": 4096, "N": 8192, "K": 512, "config": "v24 rs l2", "n": "default", "snp": null, "us": 28.56, "limit": 260}
+{"S": 4, "M": 4096, "N": 8192, "K": 512, "config": "v13", "n": "-", "snp": null, "us": 29.161, "limit": 260}
+{"S": 4, "M": 4096, "N": 8192, "K": 1024, "config": "v24 atomic_iz chunk", "n": 8, "snp": 32, "us": 40.36, "limit": 260}
+{"S": 4, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs bf16_pairs", "n": 8, "snp": 32, "us": 40.24, "limit": 260}
+{"S": 4, "M": 4096, "N": 8192, "K": 1024, "config": "v24 atomic_iz", "n": "default", "snp": null, "us": 40.04, "limit": 260}
+{"S": 4, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs l2", "n": 4, "snp": 16, "us": 40.041, "limit": 260}
+{"S": 4, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs l2", "n": 8, "snp": 32, "us": 41.16, "limit": 260}
+{"S": 4, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs l2", "n": "default", "snp": null, "us": 40.921, "limit": 260}
+{"S": 4, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs bf16_pairs", "n": 16, "snp": 64, "us": 60.641, "limit": 260}
+{"S": 4, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs bf16_pairs", "n": 12, "snp": 48, "us": 61.72, "limit": 260}
+{"S": 4, "M": 4096, "N": 8192, "K": 2048, "config": "v24 atomic_iz chunk", "n": 12, "snp": 48, "us": 61.16, "limit": 260}
+{"S": 4, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs", "n": 16, "snp": 64, "us": 63.041, "limit": 260}
+{"S": 4, "M": 4096, "N": 8192, "K": 2048, "config": "v20 rs", "n": 16, "snp": 64, "us": 63.08, "limit": 260}
+{"S": 4, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs chunk", "n": 16, "snp": 64, "us": 62.8, "limit": 260}
+{"S": 4, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs bf16_pairs", "n": 16, "snp": 64, "us": 103.96, "limit": 260}
+{"S": 4, "M": 4096, "N": 8192, "K": 4096, "config": "v24 atomic_iz", "n": 16, "snp": 64, "us": 103.16, "limit": 260}
+{"S": 4, "M": 4096, "N": 8192, "K": 4096, "config": "v24 atomic_iz chunk", "n": 16, "snp": 64, "us": 104.0, "limit": 260}
+{"S": 4, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs", "n": 16, "snp": 64, "us": 105.24, "limit": 260}
+{"S": 4, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs chunk", "n": 16, "snp": 64, "us": 105.521, "limit": 260}
+{"S": 4, "M": 4096, "N": 8192, "K": 4096, "config": "v20 rs", "n": 16, "snp": 64, "us": 106.721, "limit": 260}
+{"S": 4, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs bf16_pairs", "n": 32, "snp": 128, "us": 186.322, "limit": 260}
+{"S": 4, "M": 4096, "N": 8192, "K": 8192, "config": "v24 atomic_iz", "n": 32, "snp": 128, "us": 186.281, "limit": 260}
+{"S": 4, "M": 4096, "N": 8192, "K": 8192, "config": "v24 atomic_iz", "n": 16, "snp": 64, "us": 187.841, "limit": 260}
+{"S": 4, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs chunk", "n": 32, "snp": 128, "us": 189.761, "limit": 260}
+{"S": 4, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs", "n": 16, "snp": 64, "us": 191.201, "limit": 260}
+{"S": 4, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs chunk", "n": 16, "snp": 64, "us": 190.721, "limit": 260}
+{"S": 4, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs bf16_pairs", "n": 32, "snp": 128, "us": 364.002, "limit": 260}
+{"S": 4, "M": 4096, "N": 8192, "K": 16384, "config": "v24 atomic_iz", "n": 32, "snp": 128, "us": 366.482, "limit": 260}
+{"S": 4, "M": 4096, "N": 8192, "K": 16384, "config": "v24 atomic_iz chunk", "n": 32, "snp": 128, "us": 367.763, "limit": 260}
+{"S": 4, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs", "n": 32, "snp": 128, "us": 368.243, "limit": 260}
+{"S": 4, "M": 4096, "N": 8192, "K": 16384, "config": "v20 rs", "n": 32, "snp": 128, "us": 369.122, "limit": 260}
+{"S": 4, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs chunk", "n": 32, "snp": 128, "us": 369.963, "limit": 260}
+{"S": 6, "M": 4096, "N": 8192, "K": 512, "config": "v24 atomic_iz", "n": 4, "snp": 24, "us": 28.6, "limit": 262}
+{"S": 6, "M": 4096, "N": 8192, "K": 512, "config": "v24 rs l2", "n": 4, "snp": 24, "us": 28.88, "limit": 262}
+{"S": 6, "M": 4096, "N": 8192, "K": 512, "config": "v24 atomic_iz chunk", "n": "default", "snp": null, "us": 30.4, "limit": 262}
+{"S": 6, "M": 4096, "N": 8192, "K": 512, "config": "v24 rs l2", "n": "default", "snp": null, "us": 28.8, "limit": 262}
+{"S": 6, "M": 4096, "N": 8192, "K": 512, "config": "v13", "n": "-", "snp": null, "us": 29.48, "limit": 262}
+{"S": 6, "M": 4096, "N": 8192, "K": 1024, "config": "v24 atomic_iz chunk", "n": 8, "snp": 48, "us": 39.92, "limit": 262}
+{"S": 6, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs bf16_pairs", "n": 8, "snp": 48, "us": 39.76, "limit": 262}
+{"S": 6, "M": 4096, "N": 8192, "K": 1024, "config": "v24 atomic_iz", "n": 8, "snp": 48, "us": 39.6, "limit": 262}
+{"S": 6, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs l2", "n": 4, "snp": 24, "us": 40.281, "limit": 262}
+{"S": 6, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs chunk", "n": 8, "snp": 48, "us": 42.04, "limit": 262}
+{"S": 6, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs", "n": 8, "snp": 48, "us": 41.68, "limit": 262}
+{"S": 6, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs bf16_pairs", "n": 8, "snp": 48, "us": 61.72, "limit": 262}
+{"S": 6, "M": 4096, "N": 8192, "K": 2048, "config": "v24 atomic_iz chunk", "n": 8, "snp": 48, "us": 61.481, "limit": 262}
+{"S": 6, "M": 4096, "N": 8192, "K": 2048, "config": "v24 atomic_iz", "n": 8, "snp": 48, "us": 61.561, "limit": 262}
+{"S": 6, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs", "n": 8, "snp": 48, "us": 63.721, "limit": 262}
+{"S": 6, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs chunk", "n": 8, "snp": 48, "us": 63.56, "limit": 262}
+{"S": 6, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs l2", "n": 8, "snp": 48, "us": 63.92, "limit": 262}
+{"S": 6, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs bf16_pairs", "n": 16, "snp": 96, "us": 104.601, "limit": 262}
+{"S": 6, "M": 4096, "N": 8192, "K": 4096, "config": "v24 atomic_iz", "n": 12, "snp": 72, "us": 106.081, "limit": 262}
+{"S": 6, "M": 4096, "N": 8192, "K": 4096, "config": "v24 atomic_iz", "n": 8, "snp": 48, "us": 106.601, "limit": 262}
+{"S": 6, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs chunk", "n": 16, "snp": 96, "us": 107.401, "limit": 262}
+{"S": 6, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs", "n": 16, "snp": 96, "us": 107.36, "limit": 262}
+{"S": 6, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs chunk", "n": 12, "snp": 72, "us": 108.681, "limit": 262}
+{"S": 6, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs bf16_pairs", "n": 32, "snp": 192, "us": 187.922, "limit": 262}
+{"S": 6, "M": 4096, "N": 8192, "K": 8192, "config": "v24 atomic_iz", "n": 16, "snp": 96, "us": 188.081, "limit": 262}
+{"S": 6, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs bf16_pairs", "n": 16, "snp": 96, "us": 188.841, "limit": 262}
+{"S": 6, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs", "n": 16, "snp": 96, "us": 190.882, "limit": 262}
+{"S": 6, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs chunk", "n": 16, "snp": 96, "us": 191.161, "limit": 262}
+{"S": 6, "M": 4096, "N": 8192, "K": 8192, "config": "v20 rs", "n": 16, "snp": 96, "us": 191.801, "limit": 262}
+{"S": 6, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs bf16_pairs", "n": 32, "snp": 192, "us": 369.522, "limit": 262}
+{"S": 6, "M": 4096, "N": 8192, "K": 16384, "config": "v24 atomic_iz", "n": 16, "snp": 96, "us": 371.602, "limit": 262}
+{"S": 6, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs bf16_pairs", "n": 16, "snp": 96, "us": 371.962, "limit": 262}
+{"S": 6, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs l2", "n": 16, "snp": 96, "us": 374.963, "limit": 262}
+{"S": 6, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs", "n": 16, "snp": 96, "us": 375.562, "limit": 262}
+{"S": 6, "M": 4096, "N": 8192, "K": 16384, "config": "v20 rs", "n": 16, "snp": 96, "us": 375.883, "limit": 262}
+{"S": 8, "M": 4096, "N": 8192, "K": 512, "config": "v24 atomic_iz chunk", "n": 4, "snp": 32, "us": 28.72, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 512, "config": "v24 atomic_iz", "n": 4, "snp": 32, "us": 28.8, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 512, "config": "v13", "n": "-", "snp": null, "us": 29.24, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 512, "config": "v24 rs l2", "n": 4, "snp": 32, "us": 28.96, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 512, "config": "v24 rs l2", "n": "default", "snp": null, "us": 29.2, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 1024, "config": "v24 atomic_iz chunk", "n": 6, "snp": 48, "us": 40.161, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 1024, "config": "v24 atomic_iz chunk", "n": 4, "snp": 32, "us": 40.72, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs bf16_pairs", "n": 8, "snp": 64, "us": 40.6, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs l2", "n": 4, "snp": 32, "us": 40.321, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs l2", "n": "default", "snp": null, "us": 42.4, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs", "n": 4, "snp": 32, "us": 42.2, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs bf16_pairs", "n": 8, "snp": 64, "us": 62.12, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 2048, "config": "v24 atomic_iz chunk", "n": 8, "snp": 64, "us": 63.08, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs bf16_pairs", "n": 16, "snp": 128, "us": 63.0, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs", "n": 8, "snp": 64, "us": 64.401, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs chunk", "n": 8, "snp": 64, "us": 63.921, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs l2", "n": 4, "snp": 32, "us": 64.4, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs bf16_pairs", "n": 8, "snp": 64, "us": 107.401, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs bf16_pairs", "n": 12, "snp": 96, "us": 107.32, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs bf16_pairs", "n": 16, "snp": 128, "us": 107.241, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs", "n": 8, "snp": 64, "us": 109.841, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs chunk", "n": 8, "snp": 64, "us": 109.801, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs", "n": 12, "snp": 96, "us": 109.76, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs bf16_pairs", "n": 16, "snp": 128, "us": 188.362, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v24 atomic_iz", "n": 12, "snp": 96, "us": 190.882, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v24 atomic_iz", "n": 16, "snp": 128, "us": 190.401, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs chunk", "n": 16, "snp": 128, "us": 192.641, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs", "n": 16, "snp": 128, "us": 192.761, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v20 rs", "n": 16, "snp": 128, "us": 193.642, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 16384, "config": "v24 atomic_iz", "n": 16, "snp": 128, "us": 373.963, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs bf16_pairs", "n": 16, "snp": 128, "us": 373.763, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 16384, "config": "v24 atomic_iz chunk", "n": 16, "snp": 128, "us": 374.883, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs l2", "n": 16, "snp": 128, "us": 378.243, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs", "n": 16, "snp": 128, "us": 380.643, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs chunk", "n": 16, "snp": 128, "us": 380.802, "limit": 264}
+{"S": 12, "M": 4096, "N": 8192, "K": 512, "config": "v13", "n": "-", "snp": null, "us": 29.361, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 512, "config": "v24 atomic_iz", "n": 4, "snp": 48, "us": 30.52, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 512, "config": "v24 rs l2", "n": 2, "snp": 24, "us": 31.76, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 512, "config": "v24 rs l2", "n": 1, "snp": 12, "us": 31.44, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 1024, "config": "v24 atomic_iz chunk", "n": 4, "snp": 48, "us": 41.521, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 1024, "config": "v24 atomic_iz", "n": 4, "snp": 48, "us": 40.8, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 1024, "config": "v24 atomic_iz chunk", "n": 3, "snp": 36, "us": 41.801, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs l2", "n": 4, "snp": 48, "us": 42.76, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs chunk", "n": 4, "snp": 48, "us": 43.12, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs", "n": 4, "snp": 48, "us": 43.4, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs bf16_pairs", "n": 8, "snp": 96, "us": 64.0, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 2048, "config": "v24 atomic_iz", "n": 4, "snp": 48, "us": 64.72, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 2048, "config": "v24 atomic_iz chunk", "n": 4, "snp": 48, "us": 65.0, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs chunk", "n": 4, "snp": 48, "us": 66.08, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs chunk", "n": 8, "snp": 96, "us": 65.521, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs chunk", "n": 6, "snp": 72, "us": 66.841, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 4096, "config": "v24 atomic_iz chunk", "n": 8, "snp": 96, "us": 110.28, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 4096, "config": "v24 atomic_iz chunk", "n": 6, "snp": 72, "us": 110.6, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs bf16_pairs", "n": 16, "snp": 192, "us": 110.28, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs chunk", "n": 8, "snp": 96, "us": 111.52, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs", "n": 8, "snp": 96, "us": 112.72, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 4096, "config": "v20 rs", "n": 8, "snp": 96, "us": 112.761, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs bf16_pairs", "n": 16, "snp": 192, "us": 192.962, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v24 atomic_iz", "n": 12, "snp": 144, "us": 195.321, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs bf16_pairs", "n": 12, "snp": 144, "us": 194.561, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs", "n": 12, "snp": 144, "us": 196.202, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs chunk", "n": 16, "snp": 192, "us": 196.082, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs chunk", "n": 12, "snp": 144, "us": 197.242, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs bf16_pairs", "n": 16, "snp": 192, "us": 380.442, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 16384, "config": "v24 atomic_iz chunk", "n": 12, "snp": 144, "us": 381.402, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs bf16_pairs", "n": 12, "snp": 144, "us": 382.363, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs l2", "n": "default", "snp": null, "us": 387.043, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs", "n": 12, "snp": 144, "us": 387.362, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs chunk", "n": 16, "snp": 192, "us": 386.962, "limit": 268}
+{"S": 16, "M": 4096, "N": 8192, "K": 512, "config": "v13", "n": "-", "snp": null, "us": 28.961, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 512, "config": "v24 rs l2", "n": 1, "snp": 16, "us": 30.241, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 512, "config": "v20 rs", "n": 1, "snp": 16, "us": 31.48, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 1024, "config": "v24 atomic_iz chunk", "n": 4, "snp": 64, "us": 42.401, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs bf16_pairs", "n": 4, "snp": 64, "us": 42.12, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 1024, "config": "v24 atomic_iz chunk", "n": 3, "snp": 48, "us": 42.681, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs", "n": 4, "snp": 64, "us": 43.16, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs chunk", "n": 4, "snp": 64, "us": 43.76, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs l2", "n": 4, "snp": 64, "us": 43.72, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs bf16_pairs", "n": 8, "snp": 128, "us": 65.04, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs bf16_pairs", "n": 4, "snp": 64, "us": 66.32, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 2048, "config": "v24 atomic_iz chunk", "n": 4, "snp": 64, "us": 65.64, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs chunk", "n": 4, "snp": 64, "us": 66.56, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs", "n": 4, "snp": 64, "us": 66.4, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs chunk", "n": 8, "snp": 128, "us": 68.44, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs bf16_pairs", "n": 8, "snp": 128, "us": 111.6, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 4096, "config": "v24 atomic_iz chunk", "n": 6, "snp": 96, "us": 111.12, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 4096, "config": "v24 atomic_iz chunk", "n": 8, "snp": 128, "us": 112.641, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs", "n": 6, "snp": 96, "us": 115.08, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs chunk", "n": 8, "snp": 128, "us": 114.121, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs chunk", "n": 6, "snp": 96, "us": 115.601, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs bf16_pairs", "n": 12, "snp": 192, "us": 194.081, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v24 atomic_iz chunk", "n": 8, "snp": 128, "us": 194.121, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs bf16_pairs", "n": "default", "snp": null, "us": 195.561, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs", "n": 8, "snp": 128, "us": 198.881, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs chunk", "n": 8, "snp": 128, "us": 199.481, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs", "n": 12, "snp": 192, "us": 202.881, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 16384, "config": "v24 atomic_iz chunk", "n": 12, "snp": 192, "us": 384.643, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs bf16_pairs", "n": "default", "snp": null, "us": 384.843, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs bf16_pairs", "n": 16, "snp": 256, "us": 385.002, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs chunk", "n": 12, "snp": 192, "us": 393.603, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs l2", "n": 12, "snp": 192, "us": 393.243, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs l2", "n": "default", "snp": null, "us": 394.523, "limit": 272}
+{"S": 24, "M": 4096, "N": 8192, "K": 512, "config": "v13", "n": "-", "snp": null, "us": 29.72, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 512, "config": "v24 rs l2", "n": 1, "snp": 24, "us": 30.96, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 512, "config": "v24 rs bf16_pairs", "n": 1, "snp": 24, "us": 32.24, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 512, "config": "v20 rs", "n": 1, "snp": 24, "us": 31.72, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs bf16_pairs", "n": 4, "snp": 96, "us": 43.8, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 1024, "config": "v24 atomic_iz", "n": 3, "snp": 72, "us": 44.52, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 1024, "config": "v24 atomic_iz chunk", "n": 3, "snp": 72, "us": 44.681, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs chunk", "n": 4, "snp": 96, "us": 45.48, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 1024, "config": "v13", "n": "-", "snp": null, "us": 46.4, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs l2", "n": 2, "snp": 48, "us": 46.48, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs bf16_pairs", "n": 4, "snp": 96, "us": 68.56, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs bf16_pairs", "n": 8, "snp": 192, "us": 69.681, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs chunk", "n": 4, "snp": 96, "us": 68.48, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs chunk", "n": 6, "snp": 144, "us": 71.241, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs", "n": 4, "snp": 96, "us": 71.361, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs bf16_pairs", "n": 8, "snp": 192, "us": 116.64, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 4096, "config": "v24 atomic_iz", "n": 4, "snp": 96, "us": 116.881, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 4096, "config": "v24 atomic_iz chunk", "n": 4, "snp": 96, "us": 115.321, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs chunk", "n": 4, "snp": 96, "us": 118.281, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs", "n": 4, "snp": 96, "us": 118.56, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs chunk", "n": 6, "snp": 144, "us": 119.481, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v24 atomic_iz chunk", "n": 8, "snp": 192, "us": 199.521, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs bf16_pairs", "n": 8, "snp": 192, "us": 202.442, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v24 atomic_iz chunk", "n": 6, "snp": 144, "us": 201.762, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs chunk", "n": 8, "snp": 192, "us": 204.962, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs chunk", "n": 6, "snp": 144, "us": 206.401, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs", "n": 6, "snp": 144, "us": 207.642, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 16384, "config": "v24 atomic_iz chunk", "n": "default", "snp": null, "us": 399.883, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 16384, "config": "v24 atomic_iz chunk", "n": 8, "snp": 192, "us": 401.643, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs bf16_pairs", "n": "default", "snp": null, "us": 402.083, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs chunk", "n": "default", "snp": null, "us": 407.003, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs l2", "n": "default", "snp": null, "us": 407.603, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs l2", "n": 8, "snp": 192, "us": 408.563, "limit": 280}
+{"S": 32, "M": 4096, "N": 8192, "K": 512, "config": "v13", "n": "-", "snp": null, "us": 29.72, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 512, "config": "v20 rs", "n": 1, "snp": 32, "us": 31.761, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 512, "config": "v24 rs l2", "n": 1, "snp": 32, "us": 32.24, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs bf16_pairs", "n": 4, "snp": 128, "us": 45.2, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 1024, "config": "v24 atomic_iz", "n": 2, "snp": 64, "us": 45.96, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 1024, "config": "v13", "n": "-", "snp": null, "us": 46.88, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs chunk", "n": 4, "snp": 128, "us": 46.961, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs chunk", "n": 2, "snp": 64, "us": 47.88, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs bf16_pairs", "n": 4, "snp": 128, "us": 69.881, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 2048, "config": "v24 atomic_iz chunk", "n": 3, "snp": 96, "us": 70.88, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 2048, "config": "v24 atomic_iz", "n": 3, "snp": 96, "us": 71.201, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs chunk", "n": 4, "snp": 128, "us": 70.88, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs", "n": 4, "snp": 128, "us": 74.801, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs", "n": 3, "snp": 96, "us": 74.48, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs bf16_pairs", "n": 4, "snp": 128, "us": 119.761, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v24 atomic_iz chunk", "n": 3, "snp": 96, "us": 119.92, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v24 atomic_iz chunk", "n": 4, "snp": 128, "us": 122.081, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs chunk", "n": 4, "snp": 128, "us": 121.561, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs", "n": 4, "snp": 128, "us": 121.801, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs chunk", "n": 6, "snp": 192, "us": 122.92, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 8192, "config": "v24 atomic_iz chunk", "n": 6, "snp": 192, "us": 204.282, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 8192, "config": "v24 atomic_iz chunk", "n": "default", "snp": null, "us": 204.761, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 8192, "config": "v24 atomic_iz chunk", "n": 8, "snp": 256, "us": 205.202, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs chunk", "n": 6, "snp": 192, "us": 209.041, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs", "n": 6, "snp": 192, "us": 211.961, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs l2", "n": 6, "snp": 192, "us": 213.361, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 16384, "config": "v24 atomic_iz chunk", "n": "default", "snp": null, "us": 406.922, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 16384, "config": "v24 atomic_iz chunk", "n": 8, "snp": 256, "us": 407.643, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs bf16_pairs", "n": "default", "snp": null, "us": 408.282, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs chunk", "n": 8, "snp": 256, "us": 415.802, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs l2", "n": 8, "snp": 256, "us": 416.923, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs chunk", "n": "default", "snp": null, "us": 415.563, "limit": 288}
+{"S": 38, "M": 4096, "N": 8192, "K": 512, "config": "v13", "n": "-", "snp": null, "us": 30.32, "limit": 294}
+{"S": 38, "M": 4096, "N": 8192, "K": 512, "config": "v24 rs l2", "n": 1, "snp": 38, "us": 31.24, "limit": 294}
+{"S": 38, "M": 4096, "N": 8192, "K": 512, "config": "v20 rs", "n": 1, "snp": 38, "us": 32.04, "limit": 294}
+{"S": 38, "M": 4096, "N": 8192, "K": 1024, "config": "v13", "n": "-", "snp": null, "us": 47.32, "limit": 294}
+{"S": 38, "M": 4096, "N": 8192, "K": 1024, "config": "v24 atomic_iz chunk", "n": 3, "snp": 114, "us": 48.641, "limit": 294}
+{"S": 38, "M": 4096, "N": 8192, "K": 1024, "config": "v24 atomic_iz", "n": 2, "snp": 76, "us": 47.44, "limit": 294}
+{"S": 38, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs l2", "n": 1, "snp": 38, "us": 48.44, "limit": 294}
+{"S": 38, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs chunk", "n": 2, "snp": 76, "us": 48.841, "limit": 294}
+{"S": 38, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs bf16_pairs", "n": 4, "snp": 152, "us": 74.361, "limit": 294}
+{"S": 38, "M": 4096, "N": 8192, "K": 2048, "config": "v24 atomic_iz chunk", "n": 3, "snp": 114, "us": 72.521, "limit": 294}
+{"S": 38, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs bf16_pairs", "n": 2, "snp": 76, "us": 74.68, "limit": 294}
+{"S": 38, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs chunk", "n": 4, "snp": 152, "us": 73.04, "limit": 294}
+{"S": 38, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs chunk", "n": 2, "snp": 76, "us": 74.96, "limit": 294}
+{"S": 38, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs", "n": 2, "snp": 76, "us": 75.841, "limit": 294}
+{"S": 38, "M": 4096, "N": 8192, "K": 4096, "config": "v24 atomic_iz chunk", "n": 3, "snp": 114, "us": 122.16, "limit": 294}
+{"S": 38, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs bf16_pairs", "n": 4, "snp": 152, "us": 122.881, "limit": 294}
+{"S": 38, "M": 4096, "N": 8192, "K": 4096, "config": "v24 atomic_iz chunk", "n": 4, "snp": 152, "us": 124.881, "limit": 294}
+{"S": 38, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs chunk", "n": 4, "snp": 152, "us": 125.08, "limit": 294}
+{"S": 38, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs chunk", "n": 3, "snp": 114, "us": 127.24, "limit": 294}
+{"S": 38, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs chunk", "n": 6, "snp": 228, "us": 127.721, "limit": 294}
+{"S": 38, "M": 4096, "N": 8192, "K": 8192, "config": "v24 atomic_iz chunk", "n": 6, "snp": 228, "us": 211.442, "limit": 294}
+{"S": 38, "M": 4096, "N": 8192, "K": 8192, "config": "v24 atomic_iz chunk", "n": 4, "snp": 152, "us": 211.722, "limit": 294}
+{"S": 38, "M": 4096, "N": 8192, "K": 8192, "config": "v24 atomic_iz chunk", "n": "default", "snp": null, "us": 210.802, "limit": 294}
+{"S": 38, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs chunk", "n": 4, "snp": 152, "us": 216.081, "limit": 294}
+{"S": 38, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs chunk", "n": 6, "snp": 228, "us": 216.642, "limit": 294}
+{"S": 38, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs chunk", "n": "default", "snp": null, "us": 218.202, "limit": 294}
+{"S": 38, "M": 4096, "N": 8192, "K": 16384, "config": "v24 atomic_iz chunk", "n": 6, "snp": 228, "us": 414.803, "limit": 294}
+{"S": 38, "M": 4096, "N": 8192, "K": 16384, "config": "v24 atomic_iz chunk", "n": "default", "snp": null, "us": 416.643, "limit": 294}
+{"S": 38, "M": 4096, "N": 8192, "K": 16384, "config": "v24 atomic_iz", "n": 6, "snp": 228, "us": 419.202, "limit": 294}
+{"S": 38, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs l2", "n": 6, "snp": 228, "us": 423.082, "limit": 294}
+{"S": 38, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs l2", "n": "default", "snp": null, "us": 423.843, "limit": 294}
+{"S": 38, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs chunk", "n": 6, "snp": 228, "us": 425.602, "limit": 294}
+{"S": 48, "M": 4096, "N": 8192, "K": 512, "config": "v13", "n": "-", "snp": null, "us": 30.4, "limit": 304}
+{"S": 48, "M": 4096, "N": 8192, "K": 512, "config": "v24 rs l2", "n": 1, "snp": 48, "us": 32.361, "limit": 304}
+{"S": 48, "M": 4096, "N": 8192, "K": 512, "config": "v24 rs bf16_pairs", "n": 1, "snp": 48, "us": 32.64, "limit": 304}
+{"S": 48, "M": 4096, "N": 8192, "K": 512, "config": "v24 rs", "n": 1, "snp": 48, "us": 32.4, "limit": 304}
+{"S": 48, "M": 4096, "N": 8192, "K": 1024, "config": "v13", "n": "-", "snp": null, "us": 47.44, "limit": 304}
+{"S": 48, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs l2", "n": 1, "snp": 48, "us": 48.72, "limit": 304}
+{"S": 48, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs bf16_pairs", "n": 2, "snp": 96, "us": 47.88, "limit": 304}
+{"S": 48, "M": 4096, "N": 8192, "K": 1024, "config": "v20 rs", "n": 1, "snp": 48, "us": 49.64, "limit": 304}
+{"S": 48, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs bf16_pairs", "n": 2, "snp": 96, "us": 75.401, "limit": 304}
+{"S": 48, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs bf16_pairs", "n": 4, "snp": 192, "us": 75.56, "limit": 304}
+{"S": 48, "M": 4096, "N": 8192, "K": 2048, "config": "v24 atomic_iz chunk", "n": 3, "snp": 144, "us": 75.24, "limit": 304}
+{"S": 48, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs chunk", "n": 2, "snp": 96, "us": 75.281, "limit": 304}
+{"S": 48, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs", "n": 2, "snp": 96, "us": 76.4, "limit": 304}
+{"S": 48, "M": 4096, "N": 8192, "K": 2048, "config": "v24 owner chunk", "n": 2, "snp": 96, "us": 76.521, "limit": 304}
+{"S": 48, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs bf16_pairs", "n": 4, "snp": 192, "us": 124.361, "limit": 304}
+{"S": 48, "M": 4096, "N": 8192, "K": 4096, "config": "v24 owner bf16_pairs", "n": 3, "snp": 144, "us": 128.321, "limit": 304}
+{"S": 48, "M": 4096, "N": 8192, "K": 4096, "config": "v24 atomic_iz chunk", "n": 3, "snp": 144, "us": 125.801, "limit": 304}
+{"S": 48, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs chunk", "n": 4, "snp": 192, "us": 127.161, "limit": 304}
+{"S": 48, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs chunk", "n": "default", "snp": null, "us": 129.001, "limit": 304}
+{"S": 48, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs chunk", "n": 3, "snp": 144, "us": 129.641, "limit": 304}
+{"S": 48, "M": 4096, "N": 8192, "K": 8192, "config": "v24 atomic_iz chunk", "n": "default", "snp": null, "us": 213.562, "limit": 304}
+{"S": 48, "M": 4096, "N": 8192, "K": 8192, "config": "v24 atomic_iz chunk", "n": 4, "snp": 192, "us": 214.602, "limit": 304}
+{"S": 48, "M": 4096, "N": 8192, "K": 8192, "config": "v24 atomic_iz", "n": 4, "snp": 192, "us": 216.402, "limit": 304}
+{"S": 48, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs l2", "n": "default", "snp": null, "us": 221.562, "limit": 304}
+{"S": 48, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs chunk", "n": 4, "snp": 192, "us": 222.322, "limit": 304}
+{"S": 48, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs l2", "n": 4, "snp": 192, "us": 222.162, "limit": 304}
+{"S": 48, "M": 4096, "N": 8192, "K": 16384, "config": "v24 atomic_iz chunk", "n": "default", "snp": null, "us": 421.563, "limit": 304}
+{"S": 48, "M": 4096, "N": 8192, "K": 16384, "config": "v24 atomic_iz", "n": "default", "snp": null, "us": 426.603, "limit": 304}
+{"S": 48, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs bf16_pairs", "n": "default", "snp": null, "us": 432.163, "limit": 304}
+{"S": 48, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs l2", "n": "default", "snp": null, "us": 432.683, "limit": 304}
+{"S": 48, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs l2", "n": 4, "snp": 192, "us": 440.603, "limit": 304}
+{"S": 48, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs chunk", "n": "default", "snp": null, "us": 440.483, "limit": 304}
+{"S": 64, "M": 4096, "N": 8192, "K": 512, "config": "v13", "n": "-", "snp": null, "us": 31.16, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 512, "config": "v24 rs l2", "n": 1, "snp": 64, "us": 33.08, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 512, "config": "v20 rs", "n": 1, "snp": 64, "us": 32.92, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 1024, "config": "v13", "n": "-", "snp": null, "us": 48.48, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs bf16_pairs", "n": 2, "snp": 128, "us": 49.24, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs l2", "n": 1, "snp": 64, "us": 49.601, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 1024, "config": "v20 rs", "n": 1, "snp": 64, "us": 50.2, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 2048, "config": "v24 owner bf16_pairs", "n": 2, "snp": 128, "us": 76.201, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs bf16_pairs", "n": 2, "snp": 128, "us": 76.88, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 2048, "config": "v24 owner chunk", "n": 2, "snp": 128, "us": 77.481, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 2048, "config": "v24 owner", "n": 2, "snp": 128, "us": 78.4, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs chunk", "n": 2, "snp": 128, "us": 78.961, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs bf16_pairs", "n": 4, "snp": 256, "us": 129.881, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs bf16_pairs", "n": 3, "snp": 192, "us": 129.761, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs bf16_pairs", "n": "default", "snp": null, "us": 130.001, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs chunk", "n": 4, "snp": 256, "us": 134.641, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs chunk", "n": "default", "snp": null, "us": 134.281, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 4096, "config": "v24 owner", "n": 3, "snp": 192, "us": 136.12, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v24 atomic_iz chunk", "n": 4, "snp": 256, "us": 222.882, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v24 atomic_iz chunk", "n": "default", "snp": null, "us": 222.722, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v24 atomic_iz", "n": "default", "snp": null, "us": 224.722, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs l2", "n": "default", "snp": null, "us": 229.602, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v24 owner", "n": 3, "snp": 192, "us": 233.962, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v24 owner chunk", "n": 4, "snp": 256, "us": 232.602, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 16384, "config": "v24 atomic_iz chunk", "n": 4, "snp": 256, "us": 445.523, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs bf16_pairs", "n": 4, "snp": 256, "us": 445.403, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 16384, "config": "v24 atomic_iz chunk", "n": "default", "snp": null, "us": 445.883, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs l2", "n": 4, "snp": 256, "us": 451.283, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs l2", "n": "default", "snp": null, "us": 451.443, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 16384, "config": "v24 owner", "n": 4, "snp": 256, "us": 454.603, "limit": 320}
+{"S": 96, "M": 4096, "N": 8192, "K": 512, "config": "v13", "n": "-", "snp": null, "us": 33.52, "limit": 352}
+{"S": 96, "M": 4096, "N": 8192, "K": 512, "config": "v24 rs l2", "n": 1, "snp": 96, "us": 34.88, "limit": 352}
+{"S": 96, "M": 4096, "N": 8192, "K": 512, "config": "v20 rs", "n": 1, "snp": 96, "us": 34.96, "limit": 352}
+{"S": 96, "M": 4096, "N": 8192, "K": 1024, "config": "v13", "n": "-", "snp": null, "us": 51.001, "limit": 352}
+{"S": 96, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs l2", "n": 1, "snp": 96, "us": 51.96, "limit": 352}
+{"S": 96, "M": 4096, "N": 8192, "K": 1024, "config": "v20 rs", "n": 1, "snp": 96, "us": 52.44, "limit": 352}
+{"S": 96, "M": 4096, "N": 8192, "K": 2048, "config": "v24 owner bf16_pairs", "n": 2, "snp": 192, "us": 81.841, "limit": 352}
+{"S": 96, "M": 4096, "N": 8192, "K": 2048, "config": "v24 owner bf16_pairs", "n": "default", "snp": null, "us": 82.401, "limit": 352}
+{"S": 96, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs bf16_pairs", "n": 2, "snp": 192, "us": 83.561, "limit": 352}
+{"S": 96, "M": 4096, "N": 8192, "K": 2048, "config": "v24 owner", "n": 2, "snp": 192, "us": 85.521, "limit": 352}
+{"S": 96, "M": 4096, "N": 8192, "K": 2048, "config": "v24 owner", "n": "default", "snp": null, "us": 86.041, "limit": 352}
+{"S": 96, "M": 4096, "N": 8192, "K": 2048, "config": "v24 owner chunk", "n": 2, "snp": 192, "us": 85.321, "limit": 352}
+{"S": 96, "M": 4096, "N": 8192, "K": 4096, "config": "v24 owner bf16_pairs", "n": "default", "snp": null, "us": 139.641, "limit": 352}
+{"S": 96, "M": 4096, "N": 8192, "K": 4096, "config": "v24 owner bf16_pairs", "n": 2, "snp": 192, "us": 141.241, "limit": 352}
+{"S": 96, "M": 4096, "N": 8192, "K": 4096, "config": "v24 rs bf16_pairs", "n": "default", "snp": null, "us": 141.201, "limit": 352}
+{"S": 96, "M": 4096, "N": 8192, "K": 4096, "config": "v24 owner", "n": "default", "snp": null, "us": 143.641, "limit": 352}
+{"S": 96, "M": 4096, "N": 8192, "K": 4096, "config": "v24 owner chunk", "n": 2, "snp": 192, "us": 144.121, "limit": 352}
+{"S": 96, "M": 4096, "N": 8192, "K": 4096, "config": "v24 owner chunk", "n": "default", "snp": null, "us": 144.761, "limit": 352}
+{"S": 96, "M": 4096, "N": 8192, "K": 8192, "config": "v24 atomic_iz", "n": "default", "snp": null, "us": 244.082, "limit": 352}
+{"S": 96, "M": 4096, "N": 8192, "K": 8192, "config": "v24 owner bf16_pairs", "n": "default", "snp": null, "us": 247.002, "limit": 352}
+{"S": 96, "M": 4096, "N": 8192, "K": 8192, "config": "v24 rs bf16_pairs", "n": "default", "snp": null, "us": 249.161, "limit": 352}
+{"S": 96, "M": 4096, "N": 8192, "K": 8192, "config": "v24 owner", "n": "default", "snp": null, "us": 252.682, "limit": 352}
+{"S": 96, "M": 4096, "N": 8192, "K": 8192, "config": "v24 owner chunk", "n": 2, "snp": 192, "us": 255.682, "limit": 352}
+{"S": 96, "M": 4096, "N": 8192, "K": 8192, "config": "v24 owner", "n": 2, "snp": 192, "us": 255.601, "limit": 352}
+{"S": 96, "M": 4096, "N": 8192, "K": 16384, "config": "v24 atomic_iz chunk", "n": 2, "snp": 192, "us": 497.963, "limit": 352}
+{"S": 96, "M": 4096, "N": 8192, "K": 16384, "config": "v24 atomic_iz chunk", "n": "default", "snp": null, "us": 499.324, "limit": 352}
+{"S": 96, "M": 4096, "N": 8192, "K": 16384, "config": "v24 owner bf16_pairs", "n": "default", "snp": null, "us": 501.403, "limit": 352}
+{"S": 96, "M": 4096, "N": 8192, "K": 16384, "config": "v24 owner chunk", "n": 2, "snp": 192, "us": 503.203, "limit": 352}
+{"S": 96, "M": 4096, "N": 8192, "K": 16384, "config": "v24 owner", "n": 2, "snp": 192, "us": 507.203, "limit": 352}
+{"S": 96, "M": 4096, "N": 8192, "K": 16384, "config": "v24 owner chunk", "n": "default", "snp": null, "us": 506.524, "limit": 352}
+{"S": 128, "M": 4096, "N": 8192, "K": 512, "config": "v13", "n": "-", "snp": null, "us": 33.12, "limit": 384}
+{"S": 128, "M": 4096, "N": 8192, "K": 512, "config": "v24 rs l2", "n": 1, "snp": 128, "us": 34.88, "limit": 384}
+{"S": 128, "M": 4096, "N": 8192, "K": 512, "config": "v24 rs chunk", "n": 1, "snp": 128, "us": 35.48, "limit": 384}
+{"S": 128, "M": 4096, "N": 8192, "K": 1024, "config": "v13", "n": "-", "snp": null, "us": 51.08, "limit": 384}
+{"S": 128, "M": 4096, "N": 8192, "K": 1024, "config": "v24 rs l2", "n": 1, "snp": 128, "us": 52.601, "limit": 384}
+{"S": 128, "M": 4096, "N": 8192, "K": 1024, "config": "v20 rs", "n": 1, "snp": 128, "us": 53.081, "limit": 384}
+{"S": 128, "M": 4096, "N": 8192, "K": 2048, "config": "v24 owner bf16_pairs", "n": "default", "snp": null, "us": 85.12, "limit": 384}
+{"S": 128, "M": 4096, "N": 8192, "K": 2048, "config": "v13", "n": "-", "snp": null, "us": 86.8, "limit": 384}
+{"S": 128, "M": 4096, "N": 8192, "K": 2048, "config": "v24 owner bf16_pairs", "n": 2, "snp": 256, "us": 84.76, "limit": 384}
+{"S": 128, "M": 4096, "N": 8192, "K": 2048, "config": "v24 owner chunk", "n": 2, "snp": 256, "us": 86.72, "limit": 384}
+{"S": 128, "M": 4096, "N": 8192, "K": 2048, "config": "v24 rs l2", "n": 1, "snp": 128, "us": 88.2, "limit": 384}
+{"S": 128, "M": 4096, "N": 8192, "K": 4096, "config": "v24 owner bf16_pairs", "n": "default", "snp": null, "us": 146.841, "limit": 384}
+{"S": 128, "M": 4096, "N": 8192, "K": 4096, "config": "v24 owner bf16_pairs", "n": 2, "snp": 256, "us": 146.921, "limit": 384}
+{"S": 128, "M": 4096, "N": 8192, "K": 4096, "config": "v24 owner chunk", "n": "default", "snp": null, "us": 149.321, "limit": 384}
+{"S": 128, "M": 4096, "N": 8192, "K": 4096, "config": "v24 owner chunk", "n": 2, "snp": 256, "us": 149.841, "limit": 384}
+{"S": 128, "M": 4096, "N": 8192, "K": 4096, "config": "v24 owner", "n": 2, "snp": 256, "us": 151.081, "limit": 384}
+{"S": 128, "M": 4096, "N": 8192, "K": 8192, "config": "v24 atomic_iz", "n": 2, "snp": 256, "us": 269.362, "limit": 384}
+{"S": 128, "M": 4096, "N": 8192, "K": 8192, "config": "v24 owner bf16_pairs", "n": 2, "snp": 256, "us": 263.402, "limit": 384}
+{"S": 128, "M": 4096, "N": 8192, "K": 8192, "config": "v24 atomic_iz chunk", "n": 2, "snp": 256, "us": 264.842, "limit": 384}
+{"S": 128, "M": 4096, "N": 8192, "K": 8192, "config": "v24 owner chunk", "n": "default", "snp": null, "us": 268.202, "limit": 384}
+{"S": 128, "M": 4096, "N": 8192, "K": 8192, "config": "v24 owner", "n": "default", "snp": null, "us": 267.121, "limit": 384}
+{"S": 128, "M": 4096, "N": 8192, "K": 8192, "config": "v24 owner chunk", "n": 2, "snp": 256, "us": 267.082, "limit": 384}
+{"S": 128, "M": 4096, "N": 8192, "K": 16384, "config": "v24 owner bf16_pairs", "n": "default", "snp": null, "us": 532.483, "limit": 384}
+{"S": 128, "M": 4096, "N": 8192, "K": 16384, "config": "v24 owner bf16_pairs", "n": 2, "snp": 256, "us": 532.044, "limit": 384}
+{"S": 128, "M": 4096, "N": 8192, "K": 16384, "config": "v24 rs bf16_pairs", "n": "default", "snp": null, "us": 538.523, "limit": 384}
+{"S": 128, "M": 4096, "N": 8192, "K": 16384, "config": "v24 owner", "n": 2, "snp": 256, "us": 536.684, "limit": 384}
+{"S": 128, "M": 4096, "N": 8192, "K": 16384, "config": "v24 owner", "n": "default", "snp": null, "us": 538.084, "limit": 384}
+{"S": 128, "M": 4096, "N": 8192, "K": 16384, "config": "v24 owner chunk", "n": "default", "snp": null, "us": 537.483, "limit": 384}

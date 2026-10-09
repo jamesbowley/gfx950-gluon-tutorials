@@ -1,0 +1,35 @@
+| input | llc options | accvgpr_mov | s_nop | accvgpr_read | accvgpr_write | vgpr_count | agpr_count | spills |
+|---|---|---|---|---|---|---|---|---|
+| v13.llir | baseline | 312 | 217 | 320 | 64 | 496 | 256 | 0 |
+| v13.llir | enable-local-reassign | 312 | 217 | 320 | 64 | 496 | 256 | 0 |
+| v13.llir | greedy-reverse-local-assignment | 496 | 185 | 320 | 64 | 492 | 256 | 0 |
+| v13.llir | greedy-regclass-priority-trumps-globalness | 312 | 194 | 320 | 64 | 500 | 256 | 0 |
+| v13.llir | exhaustive-register-search | 312 | 217 | 320 | 64 | 496 | 256 | 0 |
+| v13.llir | lcr-max-depth=20,lcr-max-interf=64 | 312 | 217 | 320 | 64 | 496 | 256 | 0 |
+| v13.llir | split-spill-mode=size | 312 | 217 | 320 | 64 | 496 | 256 | 0 |
+| v13.llir | split-spill-mode=speed | 312 | 217 | 320 | 64 | 496 | 256 | 0 |
+| v13.llir | amdgpu-mfma-vgpr-form=0 | 0 | 92 | 320 | 64 | 480 | 256 | 0 |
+| v13.llir | amdgpu-mfma-vgpr-form=1 | 312 | 217 | 320 | 64 | 496 | 256 | 0 |
+| v13.llir | enable-misched=0 | 424 | 221 | 324 | 68 | 472 | 256 | 0 |
+| v12.llir | baseline | 0 | 104 | 256 | 256 | 440 | 256 | 0 |
+| v12.llir | enable-local-reassign | 0 | 104 | 256 | 256 | 440 | 256 | 0 |
+| v12.llir | greedy-reverse-local-assignment | 0 | 80 | 256 | 256 | 444 | 256 | 0 |
+| v12.llir | greedy-regclass-priority-trumps-globalness | 0 | 95 | 256 | 256 | 440 | 256 | 0 |
+| v12.llir | exhaustive-register-search | 0 | 104 | 256 | 256 | 440 | 256 | 0 |
+| v12.llir | lcr-max-depth=20,lcr-max-interf=64 | 0 | 104 | 256 | 256 | 440 | 256 | 0 |
+| v12.llir | split-spill-mode=size | 0 | 104 | 256 | 256 | 440 | 256 | 0 |
+| v12.llir | split-spill-mode=speed | 0 | 104 | 256 | 256 | 440 | 256 | 0 |
+| v12.llir | amdgpu-mfma-vgpr-form=0 | 0 | 67 | 300 | 300 | 468 | 256 | 0 |
+| v12.llir | amdgpu-mfma-vgpr-form=1 | 0 | 104 | 256 | 256 | 440 | 256 | 0 |
+| v12.llir | enable-misched=0 | 0 | 60 | 256 | 256 | 436 | 256 | 0 |
+| v10.llir | baseline | 128 | 98 | 288 | 288 | 476 | 256 | 0 |
+| v10.llir | enable-local-reassign | 128 | 98 | 288 | 288 | 476 | 256 | 0 |
+| v10.llir | greedy-reverse-local-assignment | 0 | 98 | 256 | 256 | 444 | 256 | 0 |
+| v10.llir | greedy-regclass-priority-trumps-globalness | 128 | 76 | 288 | 288 | 476 | 256 | 0 |
+| v10.llir | exhaustive-register-search | 128 | 98 | 288 | 288 | 476 | 256 | 0 |
+| v10.llir | lcr-max-depth=20,lcr-max-interf=64 | 128 | 98 | 288 | 288 | 476 | 256 | 0 |
+| v10.llir | split-spill-mode=size | 128 | 98 | 288 | 288 | 476 | 256 | 0 |
+| v10.llir | split-spill-mode=speed | 128 | 98 | 288 | 288 | 476 | 256 | 0 |
+| v10.llir | amdgpu-mfma-vgpr-form=0 | 0 | 95 | 280 | 280 | 452 | 256 | 0 |
+| v10.llir | amdgpu-mfma-vgpr-form=1 | 128 | 98 | 288 | 288 | 476 | 256 | 0 |
+| v10.llir | enable-misched=0 | 0 | 58 | 256 | 256 | 444 | 256 | 0 |

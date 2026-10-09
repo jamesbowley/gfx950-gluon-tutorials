@@ -286,12 +286,15 @@ class Instruction:
                 self.uses |= flatten_regs(reg)
             return
 
-        # Normal case
+        # Normal case: operand 0 is the destination. When it names no tracked register
+        # (`v_cmp_* vcc, 0, v25`), every register is a source; taking the first one as the
+        # def would make liveness think v25 dies there and hand it out as free.
         if self.regs_by_operand:
-            self.defs |= flatten_regs(self.regs_by_operand[0])
-            if len(self.regs_by_operand) > 1:
-                for reg in self.regs_by_operand[1:]:
-                    self.uses |= flatten_regs(reg)
+            num_dst = len(extract_registers(self.operands[0]))
+            for reg in self.regs_by_operand[:num_dst]:
+                self.defs |= flatten_regs(reg)
+            for reg in self.regs_by_operand[num_dst:]:
+                self.uses |= flatten_regs(reg)
 
 
 class BasicBlock:

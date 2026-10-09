@@ -31,6 +31,13 @@ import torch
 from common import init_acc
 from triton.experimental import gluon
 from triton.experimental.gluon import language as gl
+from v9_beyond_hotloop.matmul_kernel import matmul as v9_matmul
+
+# Extra fp32 elements after each program's partial slot in P (STREAMK_P_PAD bytes, default 0).
+# Unpadded, every slot starts at a multiple of 256 KB, so the n partials one reduce-scatter
+# lane reads are 256 KB apart. Read once at import: the kernel and the workspace must agree.
+P_SLOT_PAD = gl.constexpr(int(os.environ.get("STREAMK_P_PAD", "0")) // 4)
+
 
 @gluon.jit
 def get_group_m_tile_ids(
@@ -354,11 +361,19 @@ def _one():
 @gluon.jit
 def drain_and_barrier():
     """Every wave waits for all its vector memory ops (stores and async copies alike: vmcnt is
-    one counter), then a workgroup barrier. A release flag store after this orders all four
-    waves' partial stores before the flag."""
+    one counter), then a workgroup barrier. A flag or counter set after this is ordered after
+    all four waves' partial stores."""
     gl.inline_asm_elementwise(
         "s_waitcnt vmcnt(0)\ns_barrier\nv_mov_b32 $0, $1", "=v,v,~{memory}", [_one()],
         dtype=gl.int32, is_pure=False, pack=1,
+    )
+
+
+@gluon.jit
+def asm_fence(code: gl.constexpr):
+    """Inline asm with a memory clobber: the compiler moves no memory access across it."""
+    gl.inline_asm_elementwise(
+        code + "\nv_mov_b32 $0, $1", "=v,v,~{memory}", [_one()], dtype=gl.int32, is_pure=False, pack=1,
     )
 
 
@@ -424,18 +439,19 @@ def fixup_quadrant(
     are summed in VGPRs and added in once.
     """
     QUAD: gl.constexpr = HALF_M * HALF_N
+    SLOT: gl.constexpr = 4 * QUAD + P_SLOT_PAD
     offs_pn = gl.arange(0, HALF_N, gl.SliceLayout(0, mfmaLayout))
     p_offsets = lane_contiguous_offsets(HALF_M, HALF_N, mfmaLayout)
     if is_partial != 0:
         gl.amd.cdna3.buffer_store(
-            stored_value=acc, ptr=p_ptr + (spid.to(gl.int64) * 4 + q) * QUAD, offsets=p_offsets,
+            stored_value=acc, ptr=p_ptr + spid.to(gl.int64) * SLOT + q * QUAD, offsets=p_offsets,
             cache=".wt",
         )
     psum = gl.zeros((HALF_M, HALF_N), gl.float32, mfmaLayout)
     for j in range(n_peers):
         peer = (spid + PEER_STEP * (1 + j)).to(gl.int64)
         psum += gl.amd.cdna3.buffer_load(
-            ptr=p_ptr + (peer * 4 + q) * QUAD, offsets=p_offsets, cache=".cv"
+            ptr=p_ptr + peer * SLOT + q * QUAD, offsets=p_offsets, cache=".cv"
         )
     if is_partial == 0:
         if ADD_BIAS:
@@ -483,22 +499,25 @@ def tile_barrier(sync_ptr, b, n):
     resets the count and bumps the generation, so the barrier is re-armed for the next launch
     without host state. Scalar atomics run once per workgroup and broadcast their result.
 
-    The generation is read before arriving (the acq_rel arrival keeps that read ahead of it),
-    so it is always the old one. The arrival releases this program's partial; the last arriver
-    acquires every earlier arrival through the counter's RMW chain and releases them all with
-    the generation. Waiters poll relaxed and acquire once, as the owner does in v17.
+    Every atomic is relaxed, so no buffer_wbl2 / buffer_inv sc1 is emitted. The caller wrote
+    its partial through (.wt) and drained, so it is in memory before the arrival; the slice
+    reads it with .cv loads, which miss L1. s_waitcnt keeps the generation read ahead of the
+    arrival, so it is always the old one.
     """
     cnt_ptr = sync_ptr + 2 * b
     gen_ptr = cnt_ptr + 1
     g0 = gl.atomic_add(gen_ptr, 0, sem="relaxed", scope="gpu")
-    arrived = gl.atomic_add(cnt_ptr, 1, sem="acq_rel", scope="gpu")
+    # If the last arrival and the bump overtook this read, the program would wait for a
+    # generation that never comes.
+    asm_fence("s_waitcnt vmcnt(0)")
+    arrived = gl.atomic_add(cnt_ptr, 1, sem="relaxed", scope="gpu")
     if arrived == n - 1:
         gl.atomic_xchg(cnt_ptr, 0, sem="relaxed", scope="gpu")
-        gl.atomic_xchg(gen_ptr, g0 + 1, sem="release", scope="gpu")
+        gl.atomic_xchg(gen_ptr, g0 + 1, sem="relaxed", scope="gpu")
     else:
         while gl.atomic_add(gen_ptr, 0, sem="relaxed", scope="gpu") == g0:
             pass
-        gl.atomic_add(gen_ptr, 0, sem="acquire", scope="gpu")
+    asm_fence("s_nop 0")  # no partial read moves above the wait
 
 
 @gluon.jit
@@ -526,8 +545,12 @@ def reduce_scatter_slice(
     blocks [64 j / n, 64 (j + 1) / n), NB at a time, and reads U partials of each group per
     trip, so NB * U 16-byte loads per lane are in flight together.
     """
-    L3: gl.constexpr = gl.BlockedLayout([1, 1, 4], [1, 16, 4], [1, 2, 2], [2, 1, 0])
-    SLOT: gl.constexpr = 4 * 128 * 128
+    # Rows before columns in lane order: lane l gets row l % 16 and columns 4 (l // 16) .. + 3,
+    # which in_blk puts at 4 l .. 4 l + 3, so each 4-lane group reads 64 contiguous bytes. Columns
+    # first, lanes 0-3 hit 4 lines 256 bytes apart and the L1 stalls on tag conflicts (reads
+    # take twice as long). The C store pays a little for this: 4 lanes write 4 rows.
+    L3: gl.constexpr = gl.BlockedLayout([1, 1, 4], [1, 16, 4], [1, 2, 2], [1, 2, 0])
+    SLOT: gl.constexpr = 4 * 128 * 128 + P_SLOT_PAD
     i = gl.arange(0, NB, gl.SliceLayout(1, gl.SliceLayout(2, L3)))[:, None, None]
     r = gl.arange(0, 32, gl.SliceLayout(0, gl.SliceLayout(2, L3)))[None, :, None]
     c = gl.arange(0, 32, gl.SliceLayout(0, gl.SliceLayout(1, L3)))[None, None, :]
@@ -686,7 +709,7 @@ def streamk_segment(
             PEER_STEP, BLOCK_N, BLOCK_M // 2, BLOCK_N // 2, ADD_BIAS, out_dtype, gStoreLayoutC, mfmaLayout,
         )
         if n_tile > 1:
-            # Release: the arrival may only become visible after all four waves' partial stores.
+            # The arrival may only become visible after all four waves' partial stores have completed.
             drain_and_barrier()
             tile_barrier(sync_ptr, spid - j, n_tile)
             reduce_scatter_slice(
@@ -694,13 +717,14 @@ def streamk_segment(
                 pid_n, stride_cm, stride_cn, BLOCK_N, ADD_BIAS, RS_NB, RS_U, out_dtype,
             )
     else:
-        # Owner: every peer's flag before the first partial read. Poll relaxed and acquire once:
-        # a GPU-scope acquire invalidates the XCD's L2 under the neighbours' K loops.
+        # Owner: every peer's flag before the first partial read. The partials are written
+        # through, so the drain before each relaxed flag waited for them to reach memory, and
+        # the .cv reads miss L1: no acquire, only a compiler fence so no read moves up.
         for pj in range(n_peers):
             while gl.atomic_add(locks_ptr + spid + PEER_STEP * (1 + pj), 0, sem="relaxed", scope="gpu") == 0:
                 pass
         if n_peers > 0:
-            gl.atomic_add(locks_ptr + spid, 0, sem="acquire", scope="gpu")
+            asm_fence("s_nop 0")
 
         fixup_quadrant(
             acc_tl, 0, p_ptr, bias_ptr, spid, pid_n, is_partial, n_peers, c_tl_base, c_offsets,
@@ -720,9 +744,9 @@ def streamk_segment(
         )
 
         if is_partial != 0:
-            # Release: the flag may only become visible after all four waves' partial stores.
+            # The flag may only become visible after all four waves' partial stores have completed.
             drain_and_barrier()
-            gl.atomic_xchg(locks_ptr + spid, 1, sem="release", scope="gpu")
+            gl.atomic_xchg(locks_ptr + spid, 1, sem="relaxed", scope="gpu")
         # Each partial has exactly one reader, so the owner re-arms its peers' flags for the next
         # launch; the kernel boundary orders these stores against it.
         for pj in range(n_peers):
@@ -980,6 +1004,7 @@ def v20_streamk_reduce_scatter(
     RS_NB: gl.constexpr,
     RS_U: gl.constexpr,
     END_TO_END: gl.constexpr,
+    TILE_LIMIT: gl.constexpr = 0,
 ):
     """
     v14 with TensorAtlas's one-tile stream-K tail (DP + one-tile SK). The persistent loop
@@ -987,7 +1012,7 @@ def v20_streamk_reduce_scatter(
     laid end to end and split evenly over all NUM_PROGRAMS programs, in units of 2 k-steps so
     every segment fits the pair pipeline. The program that computes a tile's k-step 0 owns it:
     it adds its peers' partials (the next consecutive pids) and the bias, and stores C. Every
-    other segment stores its fp32 partial to P[pid] and raises locks[pid] with a release.
+    other segment stores its fp32 partial to P[pid] and raises locks[pid] (relaxed).
     STREAMK_NUM_PROGRAMS programs take part in the stream-K phase and the rest idle
     (streamk_compact_pid; spread evenly over the XCDs if BALANCE_XCDS).
 
@@ -1018,6 +1043,9 @@ def v20_streamk_reduce_scatter(
     END_TO_END selects v19's end-to-end reversed path for the stream-K tiles; without it they
     get the tile-aligned split. The host sets it for two-tile, and for STREAMK_POLICY=spread,
     which runs the same path on the one-tile tiles (an experiment for S > 128).
+
+    TILE_LIMIT (an experiment, 0 = off): run as a GEMM of the grid's first TILE_LIMIT tile ids,
+    with the tile positions still taken from the full grid; the other tiles of C are not written.
     """
 
     # Programs step through virtual pids start, start + NUM_PROGRAMS, ...; persistent_tile_id
@@ -1028,7 +1056,10 @@ def v20_streamk_reduce_scatter(
         start = get_logical_chiplet_mapped_pids(NUM_PROGRAMS, NUM_XCDS)
     num_tiles_m = gl.cdiv(M, BLOCK_M)
     num_tiles_n = gl.cdiv(N, BLOCK_N)
-    total_tiles = num_tiles_m * num_tiles_n
+    if TILE_LIMIT > 0:
+        total_tiles = num_tiles_m * 0 + TILE_LIMIT
+    else:
+        total_tiles = num_tiles_m * num_tiles_n
     # pid_m, pid_n = get_pids(M, N, BLOCK_M, BLOCK_N, GRID_MN, NUM_XCDS, GROUP_SIZE_M)
 
     # Half-M global load layout
@@ -1256,7 +1287,8 @@ def streamk_workspace(device, num_programs, block_m, block_n):
     key = (str(device), num_programs, block_m, block_n)
     if key not in _WORKSPACE:
         # Every partial fully overwrites its slot before its flag goes up, so P needs no init.
-        P = torch.empty(num_programs * block_m * block_n, device=device, dtype=torch.float32)
+        P = torch.empty(num_programs * (block_m * block_n + P_SLOT_PAD.value), device=device,
+                        dtype=torch.float32)
         locks = torch.zeros(num_programs, device=device, dtype=torch.int32)
         tile_sync = torch.zeros(2 * num_programs, device=device, dtype=torch.int32)
         _WORKSPACE[key] = (P, locks, tile_sync)
@@ -1274,7 +1306,8 @@ def reduce_scatter_shape(streamk_tiles, num_programs, pairs_per_tile, loads_in_f
 
 
 def streamk_policy(total_tiles, iters_per_tile, num_programs, streamk_programs=None):
-    """(policy, fixup) for STREAMK_POLICY=auto and STREAMK_FIXUP=auto (v20 WORKLOG entry 2).
+    """(policy, fixup) for STREAMK_POLICY=auto (v20 WORKLOG entry 2; the default until entry 7)
+    and its STREAMK_FIXUP=auto.
 
     With S = total_tiles % num_programs leftover tiles, n = num_programs // S programs per
     tile in the one-tile split, and d = iters_per_tile * S / num_programs k-steps of two-tile
@@ -1299,9 +1332,9 @@ def streamk_policy(total_tiles, iters_per_tile, num_programs, streamk_programs=N
 
 
 def capped_policy(total_tiles, iters_per_tile, num_programs):
-    """(policy, fixup, streamk_programs) for STREAMK_POLICY=capped (v20 WORKLOG entry 5): no
-    two-tile, and the one-tile split capped to n programs per leftover tile. streamk_programs
-    is S * n, or None for all programs.
+    """(policy, fixup, streamk_programs) for STREAMK_POLICY=capped, the default (v20 WORKLOG
+    entries 5 and 7): no two-tile, and the one-tile split capped to n programs per leftover
+    tile. streamk_programs is S * n, or None for all programs.
 
     With S = total_tiles % num_programs and k = iters_per_tile:
     - S = 0: data-parallel.
@@ -1311,6 +1344,8 @@ def capped_policy(total_tiles, iters_per_tile, num_programs):
     - num_programs // S >= 8: one-tile reduce-scatter with n = min(128 // S, max(8, k // 8)).
     - Otherwise one-tile owner with n = round(sqrt(k / c)), c = max(2.2, S / 5) k-steps per
       serial partial read, at most num_programs // S.
+    - n = 1 runs data-parallel: one program per leftover tile is the data-parallel last wave's
+      work plus stream-K's overhead, and it lost on every measured shape (entry 7).
     The coefficients are fits to the split-count sweeps (experiments/streamk_split_count and
     experiments/streamk_version_tables).
     """
@@ -1326,12 +1361,105 @@ def capped_policy(total_tiles, iters_per_tile, num_programs):
     else:
         fixup = "owner"
         n = max(1, min(num_programs // s, round(math.sqrt(iters_per_tile / max(2.2, s / 5)))))
+    if n == 1:
+        return "dp", "rs", None
+    return "one_tile", fixup, (None if n >= num_programs // s else s * n)
+
+
+# STREAMK_POLICY=split_rule (v20 WORKLOG entry 9): the fastest configuration of each cell of the
+# experiments/streamk_split_rule grid (cold rocprof, 256 programs), by full-wave class (0, 1-3,
+# 4 or more), leftover tiles S (SPLIT_RULE_S) and k-tiles (SPLIT_RULE_K, one column each).
+# dp: data-parallel; 2T: two-tile; rsN / owN: one-tile on N programs per leftover tile with the
+# reduce-scatter / owner ending. Not the default: it beat capped on off-grid shapes timed cold but
+# lost on the real-model shapes timed back to back.
+SPLIT_RULE_S = (1, 2, 4, 6, 8, 12, 16, 20, 24, 28, 32, 40, 48, 64, 96, 128)
+SPLIT_RULE_K = (16, 20, 24, 28, 32, 40, 48, 64, 96, 128, 192, 256)
+SPLIT_RULE_TABLE = {
+    0: {
+        1: " rs8  rs8 rs12  rs8 rs16 rs16 rs24 rs16 rs32 rs32 rs32 rs32",
+        2: " rs8  rs8 rs12  rs8 rs16 rs16 rs24 rs16 rs32 rs32 rs32 rs32",
+        4: " rs8  rs8 rs12  rs8 rs16 rs12 rs24 rs16 rs16 rs16 rs32 rs32",
+        6: " rs8  rs5 rs12  rs8 rs16 rs12  rs8 rs16 rs16 rs16 rs16 rs16",
+        8: " rs8  rs6 rs12  rs8  rs8  rs8  rs8 rs16 rs16 rs16 rs16 rs16",
+        12: " rs8  rs5  rs8  rs8  rs8  rs8  rs8  rs8 rs12  rs8 rs12 rs16",
+        16: "  dp  rs5  rs6  rs8  rs8  rs5  rs8  rs8  rs8  rs8 rs12 rs12",
+        20: "  dp  rs5  rs6  rs5  rs5  rs5  rs8  rs8  rs8  rs8  rs8  rs8",
+        24: "  dp  rs5  rs4  rs5  rs4  rs5  rs6  rs8  rs8  rs8  rs8  rs8",
+        28: "  dp  ow3  rs4  rs5  rs4  rs5  rs4  rs5  rs8  rs8  rs8  rs8",
+        32: "  dp  ow3  rs4  rs4  rs4  rs5  rs4  rs5  rs6  rs6  rs8  rs8",
+        40: "  dp  ow3  ow3  ow2  ow3  rs4  rs4  ow4  rs6  rs5  rs6  rs6",
+        48: "  dp  ow3  ow3  ow2  ow3  ow4  ow4  ow4  ow4  ow4  ow5  ow5",
+        64: "  dp  ow3  ow2  ow2  ow3  ow2  ow3  ow3  ow3  ow4  ow4  ow4",
+        96: "  dp   dp  ow2  ow2  ow2  ow2  ow2  ow2  ow2  ow2  ow2  ow2",
+        128: "  dp   dp   dp   dp   dp  ow2  ow2  ow2  ow2  ow2  ow2  ow2",
+    },
+    1: {
+        1: "  2T  rs8 rs12   2T rs16 rs16 rs24 rs32 rs12 rs32 rs32 rs32",
+        2: "  2T  rs8 rs12 rs12 rs16 rs16 rs16 rs32 rs32 rs32 rs32 rs32",
+        4: "  dp  rs8 rs12  rs8 rs16 rs16 rs16 rs16 rs16 rs12 rs32 rs32",
+        6: " rs8  rs8 rs12  rs8 rs16  rs8  rs8 rs16  rs6 rs16 rs16 rs12",
+        8: "  dp  rs8  rs8  rs8  rs8  rs8  rs8  rs8  rs8  rs8  rs8 rs16",
+        12: "  dp   dp  rs8  rs8  rs8  rs6  rs8  rs5  rs8  rs8 rs12 rs12",
+        16: "  dp   dp  rs4  rs5  rs4  rs5  rs6  rs6  rs6  rs8  rs6  rs8",
+        20: "  dp   dp  rs4  ow3  rs4  rs4  rs4   2T  rs8  rs6  rs6  rs8",
+        24: "  dp   dp  ow3  rs4  rs4  rs4  rs4   2T  rs4  rs5  rs6  rs8",
+        28: "  dp   dp   dp  ow2   2T  rs4  rs4  rs4  rs5  ow4  rs6  rs8",
+        32: "  dp   dp  ow3  rs4  ow3  ow3  rs4   2T  rs4  rs5  ow5  rs8",
+        40: "  dp   dp   dp  ow2  ow3  ow2  ow3  ow3  rs4  ow3  rs6  rs6",
+        48: "  dp   dp  ow2  ow2  ow2  ow3  ow3  ow3  ow4  ow4  ow4  ow5",
+        64: "  dp   dp  ow2  ow2  ow3  ow2  ow3  ow3  ow3  ow3  ow4  ow4",
+        96: "  dp   dp   dp   dp   dp  ow2  ow2  ow2  ow2  ow2  ow2  ow2",
+        128: "  dp   dp   dp   dp   dp   dp   dp  ow2  ow2  ow2  ow2  ow2",
+    },
+    4: {
+        1: "  2T   2T   2T   2T   2T   2T  rs8 rs32 rs32 rs32 rs32 rs32",
+        2: "  2T  rs8 rs12   2T   2T rs16 rs24 rs32 rs32 rs32 rs32 rs32",
+        4: " rs8  rs8 rs12 rs12  rs8  rs8  rs5 rs16 rs16 rs16 rs32 rs32",
+        6: "  2T  rs6 rs12  rs8  rs5  rs5 rs16 rs16 rs16 rs16 rs16 rs24",
+        8: " rs8  rs8  rs8  rs8  rs8  rs8 rs16 rs16 rs16 rs16 rs16 rs16",
+        12: " rs8  rs8  rs8  rs8  rs6  rs8  rs8  rs4  rs8  rs8 rs12  rs8",
+        16: " rs4  rs8  rs4  rs5  rs4  rs4  rs6  rs8  rs8  rs8  rs8  rs8",
+        20: "  dp  rs4  rs4  rs4  rs4  rs4  rs4  ow4  rs8   2T  rs8   2T",
+        24: "  dp   dp   dp  rs5  rs5  rs5  rs4  rs8  rs8  rs8   2T   2T",
+        28: "  dp   dp   dp  rs4  ow3  rs5  ow6  rs5  rs6  rs6  rs8  rs6",
+        32: "  dp  ow3  rs4  rs4  ow3  rs4  rs4  ow4  ow3  rs6  rs6  rs6",
+        40: "  dp   dp  ow3  ow2  ow3  ow3  ow3  rs4  ow4  rs5  rs5  rs5",
+        48: "  dp   dp   dp  ow3  ow3  ow3  ow4  rs4  ow4  rs4  rs4  rs5",
+        64: "  dp   dp   dp   dp  ow2  ow2  ow2  ow2  ow2  ow3  ow4  rs4",
+        96: "  dp   dp   dp   dp   dp  ow2  ow2  ow2  ow2  ow2  ow2  ow2",
+        128: "  dp   dp   dp   dp   dp  ow2   dp  ow2  ow2  ow2  ow2  ow2",
+    },
+}
+
+
+def split_rule_policy(total_tiles, iters_per_tile, num_programs):
+    """(policy, fixup, streamk_programs) for STREAMK_POLICY=split_rule: the SPLIT_RULE_TABLE cell
+    at or below S and k-tiles (the smallest if there is none below). S = 0 is data-parallel and
+    S > num_programs / 2 follows capped_policy."""
+    s = total_tiles % num_programs
+    waves = total_tiles // num_programs
+    if s == 0:
+        return "dp", "rs", None
+    if 2 * s > num_programs:
+        return capped_policy(total_tiles, iters_per_tile, num_programs)
+    wclass = 0 if waves == 0 else (1 if waves < 4 else 4)
+    s_cell = max((x for x in SPLIT_RULE_S if x <= s), default=SPLIT_RULE_S[0])
+    k_col = max((i for i, x in enumerate(SPLIT_RULE_K) if x <= iters_per_tile), default=0)
+    cell = SPLIT_RULE_TABLE[wclass][s_cell].split()[k_col]
+    if cell == "dp" or (cell == "2T" and waves == 0):
+        return "dp", "rs", None
+    if cell == "2T":
+        return "two_tile", "rs", None
+    fixup = "rs" if cell.startswith("rs") else "owner"
+    n = min(int(cell[2:]), num_programs // s, iters_per_tile // 2)
+    if n < 2:
+        return "dp", "rs", None
     return "one_tile", fixup, (None if n >= num_programs // s else s * n)
 
 
 def matmul(a, b, c=None, bias=None):
     assert a.shape[1] == b.shape[0], "Incompatible dimensions"
-    assert a.is_contiguous(), "Matrix A must be contiguous"
+    assert a.stride(1) == 1, "Matrix A must be row-major (its row stride may be padded)"
     M, K = a.shape
     K, N = b.shape
     assert bias is None or (bias.shape == (N,) and bias.is_contiguous()), "bias must be contiguous (N,)"
@@ -1358,24 +1486,34 @@ def matmul(a, b, c=None, bias=None):
     # STREAMK_POLICY: dp is data-parallel only (the persistent loop also runs the partial last
     # wave); one_tile is DP + one-tile SK with v17's tile-aligned split; two_tile moves one full
     # wave into stream-K as well, when there is one to borrow; spread (an experiment) runs
-    # two-tile's end-to-end reversed split on the one-tile tiles; auto (default) is
-    # streamk_policy's choice; capped is capped_policy's choice, which also sets the program
-    # count unless STREAMK_NUM_PROGRAMS is given. STREAMK_FIXUP picks the one-tile split's
-    # ending: rs reduce-scatters the partials, owner is v17's serial collection on chunk 0, auto
-    # (default) is the policy rule's choice.
+    # two-tile's end-to-end reversed split on the one-tile tiles; capped (default) is
+    # capped_policy's choice, which also sets the program count unless STREAMK_NUM_PROGRAMS is
+    # given; split_rule is split_rule_policy's table, likewise; auto is streamk_policy's choice.
+    # When one of these rules picks dp and the tiles fit in one wave, the call goes to v9, which
+    # gains nothing from being persistent there; an explicit dp stays on the persistent loop.
+    # STREAMK_FIXUP picks the one-tile split's ending: rs reduce-scatters the partials, owner is
+    # v17's serial collection on chunk 0, auto (default) is the policy rule's choice.
     total_tiles = triton.cdiv(M, BLOCK_M) * triton.cdiv(N, BLOCK_N)
-    policy = os.environ.get("STREAMK_POLICY", "auto")
+    # GEMM_TILE_LIMIT (an experiment): compute only the first T tile ids, as a T-tile GEMM.
+    TILE_LIMIT = int(os.environ.get("GEMM_TILE_LIMIT", "0"))
+    assert 0 <= TILE_LIMIT <= total_tiles
+    total_tiles = TILE_LIMIT or total_tiles
+    requested = os.environ.get("STREAMK_POLICY", "capped")
+    policy = requested
     fixup = os.environ.get("STREAMK_FIXUP", "auto")
-    assert policy in ("dp", "one_tile", "two_tile", "spread", "auto", "capped"), policy
+    assert policy in ("dp", "one_tile", "two_tile", "spread", "auto", "capped", "split_rule"), policy
     assert fixup in ("rs", "owner", "auto"), fixup
-    if policy == "capped":
-        policy, rule_fixup, capped_programs = capped_policy(total_tiles, K // BLOCK_K, NUM_PROGRAMS)
+    if policy in ("capped", "split_rule"):
+        rule = capped_policy if policy == "capped" else split_rule_policy
+        policy, rule_fixup, capped_programs = rule(total_tiles, K // BLOCK_K, NUM_PROGRAMS)
         if env_programs is None and capped_programs is not None:
             STREAMK_NUM_PROGRAMS = capped_programs
     else:
         auto_policy, rule_fixup = streamk_policy(total_tiles, K // BLOCK_K, NUM_PROGRAMS, STREAMK_NUM_PROGRAMS)
         policy = auto_policy if policy == "auto" else policy
     fixup = rule_fixup if fixup == "auto" else fixup
+    if requested != "dp" and policy == "dp" and total_tiles <= NUM_PROGRAMS and not TILE_LIMIT:
+        return v9_matmul(a, b, c, bias)
     STREAMK_TILES = 0 if policy == "dp" else total_tiles % NUM_PROGRAMS
     if policy == "two_tile" and STREAMK_TILES > 0 and total_tiles >= NUM_PROGRAMS:
         STREAMK_TILES += NUM_PROGRAMS
@@ -1425,6 +1563,7 @@ def matmul(a, b, c=None, bias=None):
         END_TO_END=END_TO_END,
         RS_NB=RS_NB,
         RS_U=RS_U,
+        TILE_LIMIT=TILE_LIMIT,
         num_warps=num_warps,
     )
     return c

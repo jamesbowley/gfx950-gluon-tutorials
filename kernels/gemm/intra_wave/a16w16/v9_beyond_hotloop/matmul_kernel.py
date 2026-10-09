@@ -368,30 +368,30 @@ def v9_beyond_hotloop(
     gl.amd.cdna4.async_copy.wait_group(0)
     b_right = smemB_right.index(g_idx).load(dotOpLayoutB)
 
-    c_tl = acc_tl.to(a_ptr.dtype.element_ty)
+    c_tl = acc_tl.to(c_ptr.dtype.element_ty)
     c_tl = gl.convert_layout(c_tl, layout=gStoreLayoutC)
     gl.amd.cdna3.buffer_store(ptr=c_base, offsets=c_tl_offsets, stored_value=c_tl)
 
     acc_tr = gl.amd.cdna3.mfma(a_top, b_right, acc_tr, cd_regclass="a")
 
-    c_bl = acc_bl.to(a_ptr.dtype.element_ty)
+    c_bl = acc_bl.to(c_ptr.dtype.element_ty)
     c_bl = gl.convert_layout(c_bl, layout=gStoreLayoutC)
     gl.amd.cdna3.buffer_store(ptr=c_base, offsets=c_bl_offsets, stored_value=c_bl)
 
     acc_br = gl.amd.cdna3.mfma(a_bot, b_right, acc_br, cd_regclass="a")
 
-    c_tr = acc_tr.to(a_ptr.dtype.element_ty)
+    c_tr = acc_tr.to(c_ptr.dtype.element_ty)
     c_tr = gl.convert_layout(c_tr, layout=gStoreLayoutC)
     gl.amd.cdna3.buffer_store(ptr=c_base, offsets=c_tr_offsets, stored_value=c_tr)
 
-    c_br = acc_br.to(a_ptr.dtype.element_ty)
+    c_br = acc_br.to(c_ptr.dtype.element_ty)
     c_br = gl.convert_layout(c_br, layout=gStoreLayoutC)
     gl.amd.cdna3.buffer_store(ptr=c_base, offsets=c_br_offsets, stored_value=c_br)
 
 
 def matmul(a, b, c=None, bias=None):
     assert a.shape[1] == b.shape[0], "Incompatible dimensions"
-    assert a.is_contiguous(), "Matrix A must be contiguous"
+    assert a.stride(1) == 1, "Matrix A must be row-major (its row stride may be padded)"
     M, K = a.shape
     K, N = b.shape
     assert bias is None or (bias.shape == (N,) and bias.is_contiguous()), "bias must be contiguous (N,)"

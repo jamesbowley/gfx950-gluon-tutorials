@@ -1,0 +1,29 @@
+{
+  "v20": {
+    "torch": "2.10.0+rocm7.2.4.git3d3aa833",
+    "hip": "7.2.53211",
+    "gpu_pci_bus": 117,
+    "gpu": "gfx950:sramecc+:xnack-",
+    "triton": "3.8.0 @ /home/jbowley/repos/triton_gfx950-tutorial-v2.2/python/triton",
+    "llir_plugin": "/home/jbowley/repos/gfx950-gluon-tutorials/plugins/llir_scheduler/libLlirSched_linked.so",
+    "amdgcnas": "1",
+    "v20_snapshot": "/home/jbowley/repos/gfx950-gluon-tutorials/experiments/aiter_lixun_shapes/v20_snapshot_ws_realloc/matmul_kernel.py",
+    "v20_snapshot_sha256": "f563f81a322bc754",
+    "v20_p_slot_pad_elems": 0
+  },
+  "run": {
+    "headline": "capped",
+    "rotating_mb": 0,
+    "rounds": 5,
+    "v20_snapshot_sha256": "f563f81a322bc754",
+    "v20_snapshot_from": "ws_base",
+    "v20_worklog_latest": "## 11. Padded row strides accepted; fp32 C stays off v9 (2026-10-06)",
+    "v20_live_sha256_at_start": "f563f81a322bc754",
+    "v9_live_sha256_at_start": "505b5e31f5d2099e",
+    "pad512": true,
+    "pad_bytes": 256,
+    "realloc": true,
+    "realloc_workspace": true,
+    "streamk_p_pad": 0
+  }
+}

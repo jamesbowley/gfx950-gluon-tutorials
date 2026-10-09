@@ -1,0 +1,40 @@
+{
+  "aiter": {
+    "torch": "2.10.0+rocm7.2.4.git3d3aa833",
+    "hip": "7.2.53211",
+    "gpu_pci_bus": 117,
+    "gpu": "gfx950:sramecc+:xnack-",
+    "hipblaslt": "100202 (dabb6df2b9)",
+    "hipblaslt_path": "/home/jbowley/rocm724_env/root/opt/rocm-7.2.4/lib/libhipblaslt.so.1.2.70204",
+    "triton": "3.8.0 @ /home/jbowley/repos/triton_gfx950-tutorial-v2.2/python/triton",
+    "aiter": "/home/jbowley/repos/aiter_llirsched_wt/aiter",
+    "aiter_commit": "e2c7aa0aa [Triton/Gluon] gfx950 a16w16: skip the Gluon kernel on Triton without cd_regclass",
+    "aiter_base": "a1455f1c4 2026-10-02 [CK] [FlyDSL] add mxfp8 a8w8 blockscale for gfx950 (#4951)",
+    "aiter_jit_dir": "/home/jbowley/repos/gfx950-gluon-tutorials/experiments/aiter_lixun_shapes/jit/rocm724_main",
+    "llir_sched": "/root/.aiter/llir_sched/ccf9a789cf3f11ab/libLlirSched.so"
+  },
+  "v20": {
+    "torch": "2.10.0+rocm7.2.4.git3d3aa833",
+    "hip": "7.2.53211",
+    "gpu_pci_bus": 117,
+    "gpu": "gfx950:sramecc+:xnack-",
+    "triton": "3.8.0 @ /home/jbowley/repos/triton_gfx950-tutorial-v2.2/python/triton",
+    "llir_plugin": "/home/jbowley/repos/gfx950-gluon-tutorials/plugins/llir_scheduler/libLlirSched_linked.so",
+    "amdgcnas": "1",
+    "v20_snapshot": "/home/jbowley/repos/gfx950-gluon-tutorials/experiments/aiter_lixun_shapes/v20_snapshot_v9fb_pad_rot2048/matmul_kernel.py",
+    "v20_snapshot_sha256": "56e1e2af1bb77dfa"
+  },
+  "run": {
+    "headline": "capped",
+    "rotating_mb": 2048,
+    "rounds": 3,
+    "v20_snapshot_sha256": "56e1e2af1bb77dfa",
+    "v20_snapshot_from": "v9fb_pad",
+    "v20_worklog_latest": "## 11. Padded row strides accepted; fp32 C stays off v9 (2026-10-06)",
+    "v20_live_sha256_at_start": "56e1e2af1bb77dfa",
+    "v9_live_sha256_at_start": "505b5e31f5d2099e",
+    "pad512": true,
+    "pad_bytes": 256,
+    "realloc": true
+  }
+}

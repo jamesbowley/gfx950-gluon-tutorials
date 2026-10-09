@@ -1,0 +1,36 @@
+{
+  "v20": {
+    "torch": "2.10.0+rocm7.2.4.git3d3aa833",
+    "hip": "7.2.53211",
+    "hip_device": "3",
+    "gpu_pci_bus": 21,
+    "gpu": "gfx950:sramecc+:xnack-",
+    "triton": "3.8.0 @ /home/jbowley/repos/triton_gfx950-tutorial-v2.2/python/triton",
+    "v20_sched": "aiter",
+    "llir_plugin": "/root/.aiter/llir_sched/ccf9a789cf3f11ab/libLlirSched.so",
+    "llir_opts": "{'llvm_fn_attrs': (('aiter-llir-sched', 'ccf9a789cf3f11ab'),)}",
+    "amdgcnas": null,
+    "v20_snapshot": "/home/jbowley/repos/gfx950-gluon-tutorials/experiments/aiter_lixun_shapes/v20_snapshot_v20ctl/matmul_kernel.py",
+    "v20_snapshot_sha256": "03957ee906733825",
+    "v20_p_slot_pad_elems": 0
+  },
+  "run": {
+    "headline": "capped",
+    "rotating_mb": 0,
+    "rounds": 3,
+    "v20_snapshot_sha256": "03957ee906733825",
+    "v20_snapshot_from": "aisched",
+    "v20_worklog_latest": "## 14. Write-through partials with relaxed flags and barrier (2026-10-08)",
+    "v20_live_sha256_at_start": "38dabb896e08c8c7",
+    "v9_live_sha256_at_start": "7b4e246a4877a02c",
+    "pad512": false,
+    "pad_bytes": 0,
+    "realloc": true,
+    "realloc_workspace": false,
+    "streamk_p_pad": 0,
+    "v20_sched": "aiter",
+    "kernel": "v20",
+    "kernel_name": "v20_streamk_reduce_scatter",
+    "hip_device": "3"
+  }
+}

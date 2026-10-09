@@ -95,7 +95,7 @@ SHAPES = [
 ]
 
 V20 = {
-    "v20 auto": {},
+    "v20 auto": {"STREAMK_POLICY": "auto"},
     "v20 rs": {"STREAMK_POLICY": "one_tile", "STREAMK_FIXUP": "rs"},
     "v20 owner": {"STREAMK_POLICY": "one_tile", "STREAMK_FIXUP": "owner"},
     "v20 two_tile": {"STREAMK_POLICY": "two_tile"},
@@ -154,13 +154,13 @@ def run(cmd, env):
     return p.returncode, out
 
 
-def cold(c, env):
-    name = rocprof_check.NAMES[c["v"]]
+def cold(c, env, rotating_mb=512):
+    name = rocprof_check.kernel_regex(c["v"])
     d = tempfile.mkdtemp(prefix="rp_")
     rc, out = run(["rocprofv3", "--kernel-trace", "--kernel-include-regex", name, "-d", d, "-o", "run",
                    "--output-format", "csv", "--", sys.executable, "bench.py", "--version", str(c["v"]),
                    "--M", str(c["M"]), "--N", str(c["N"]), "--K", str(c["K"]), "--dtype", "bf16",
-                   "--rocprof"], env)
+                   "--rocprof", "--rotating-buffer-size", str(rotating_mb)], env)
     correct = True if "Triton and Torch match" in out else False if "Triton and Torch differ" in out else None
     rows = [r for r in rocprof_check.kernel_rows(d, name) if "End_Timestamp" in r]
     us = [(int(r["End_Timestamp"]) - int(r["Start_Timestamp"])) / 1e3 for r in rows]
@@ -169,7 +169,7 @@ def cold(c, env):
 
 
 def l2(c, env):
-    name = rocprof_check.NAMES[c["v"]]
+    name = rocprof_check.kernel_regex(c["v"])
     d = tempfile.mkdtemp(prefix="rp_")
     script = os.path.join(d, "pmc.py")
     with open(script, "w") as f:

@@ -202,3 +202,22 @@ amd-smi energy counter):
   lower.
 
 So spreading work raises power draw, and it saves energy only when it also shortens the kernel.
+
+## 4. Write-through partials with relaxed flags (2026-10-08)
+
+The same change as v15 entry 4: the partials stay write-through (`.wt`) and drained in every
+wave, the contributor's flag becomes a relaxed `gpu` swap instead of a release (`buffer_wbl2 sc1`),
+and the owner's acquire after its relaxed poll becomes a compiler-only fence
+(`asm_fence("s_nop 0")`), which keeps the `.cv` reads below the poll. This is recommendation 1 of
+[memory_model_litmus](../../../../../experiments/memory_model_litmus/WRITEUP.md). The compiled
+kernel has no `buffer_wbl2` or `buffer_inv` left.
+
+Old and new code on GPU 0 without the amdgcnas hook, two interleaved rounds
+([results/sync_wt.md](results/sync_wt.md)):
+- **Correct:** `check_streamk.py`, 36 configurations, and `check_all.py`, 24, with no wrong
+  result and every flag re-armed.
+- **Cold kernel time:** 2.6 and 2.7 us faster on 4352x4096x8192 and 4352x4352x8192 (1.1%);
+  3328x5120x8192, 64 peers per owner, is 0.9 us slower (+0.3%), within its spread.
+- **do_bench:** +1.9-2.0% at K = 4096 in both rounds; the registers and spills are unchanged.
+
+The earlier entries were measured with release/acquire flags, on GPU 2 with the amdgcnas hook.

@@ -1,4 +1,4 @@
-# Stream-K on gfx950: summary of v15-v20
+# Stream-K on gfx950: summary of v15-v24
 
 This is the short version. The kernel mechanics, memory ordering, the cost experiments and the full measurements are in [v14_streamk/STREAMK_EXPLAINED.md](v14_streamk/STREAMK_EXPLAINED.md), and each version's numbers are in its `WORKLOG.md`. Paper references are to Osama et al., [Stream-K](https://arxiv.org/html/2301.03598v1) (2023).
 
@@ -190,6 +190,7 @@ The owner, or every program under reduce-scatter, then waits for the flags and c
   - staggered publishes, which two-tile gets for free: 1.5 k-steps per store instead of 4-11.
 
   Halving the bytes would cut a reduce-scatter ending from about 24 to about 12 k-steps (an estimate). That would bring K = 1024 shapes with small S to about break-even. Atomics are not the answer: fp32 atomics are slower than a store and a read, and bf16 `pk_add` into C helps only with a single peer ([experiments/streamk_atomics](../../../../experiments/streamk_atomics/README.md)).
+  - Measured in v23 (opt-in `STREAMK_PARTIALS=bf16`): publish 30-46% and the slice reads 17-44% shorter, tails 12-19% shorter at the best n, at about 1.6 times one rounding's error.
 - **Cache bits.** The partials are stored with `gl.amd.cdna3.buffer_store(..., cache=".wt")` and read with `cache=".cv"`.
   - **Encoding.** On gfx950 both lower to SC1 = 1, SC0 = 1, NT = 0: system scope, no non-temporal hint (Triton's `getCtrlBitsForCacheModifierOn_CDNA3_CDNA4`).
   - **What is needed.** Device-wide coherence needs only SC1 (agent scope in LLVM's gfx942 memory model), and no Gluon store modifier gives SC1 alone.
@@ -254,8 +255,9 @@ Around these four: data-parallel (no split) is right when the split would recove
 | how much work goes to stream-K | none; the leftover tiles (one-tile); the leftover tiles plus a full wave (two-tile); end to end over the leftover tiles (`spread`) | v15-v20 | two-tile needs more waves before the tail; `spread` only for S > 128 at K >= 32768 |
 | programs per leftover tile | all 256; capped at n, with the idle programs spread over the XCDs | split-count experiment | the largest single gain: up to 39% at S = 4 |
 | where the cuts go, and in what order | end to end or tile-aligned; forward or reversed | v16-v19 | aligned cuts or reversed order keep L2 |
-| the ending | serial owner; reduce-scatter; atomics or bf16 `pk_add` into C | v17, v20, atomics experiment | reduce-scatter from 8 programs per tile; atomics do not pay |
-| partial format | row-major or lane-contiguous; fp32 or bf16; own slice kept in registers | v16 | lane-contiguous halves the cost; bf16 not tried |
+| the ending | serial owner; reduce-scatter; atomics or bf16 `pk_add` into C | v17, v20, v22, v23, atomics experiment | reduce-scatter from 8 programs per tile; fp32 atomics do not pay; bf16 `pk_add` into C (v22) beat fp32 reduce-scatter, but reduce-scatter with bf16 partials is as fast or faster and rounds about 1.6 times instead of `0.5 + 0.75 sqrt(n)` (v23) |
+| partial format | row-major or lane-contiguous; fp32 or bf16; own slice kept in registers | v16, v23 | lane-contiguous halves the cost; bf16 partials cut the tail 12-19% (v23, opt-in) |
+| reduce-scatter slice | store layout; who reads | v20, v23 | band C store and power-of-two readers: 2-8% shorter tails (v23) |
 | placement on the XCDs | tile-major or chunk-major; which chunk owns; which programs idle | v18, split-count experiment | spread the owners (up to 8%) and the idle programs (11-15%) |
 | which tiles are left over | tile order; grouping leftover tiles that share B | v9 against split order only | the tail's MAC phase is bandwidth-bound on unique B |
 
@@ -438,6 +440,125 @@ The default gives n = 256 / S, which is 64 at S = 4, far past either optimum.
 
 So two-tile's measured advantage now rests on shapes with several full waves before the tail, which section 3 explains. Two shapes are not enough to decide whether it stays (section 10).
 
+### v21: partials and flags through one XCD's L2 ([worklog](v21_streamk_l2_partials/WORKLOG.md))
+
+**Change.** `STREAMK_PARTIALS` picks how the reduce-scatter partials are exchanged:
+- `mem` is v20 as it was until 2026-10-08 (write-through partials, an acquire-release barrier);
+- `wt` keeps the partials written through but replaces the acquire-release barrier with relaxed atomics. It is the default since 2026-10-08, and v15-v20 and v22 now sync the same way (below);
+- `l2` puts every program of a tile on one XCD (an XCD-local split, checked on the host) and keeps the partials and the flags in that XCD's L2. That means default-policy stores, an epoch flag per program polled with `.cg` (`sc0 nt`) loads and no atomics, and `.cg` slice loads, which always miss L1. [SYNC_REVIEW.md](v21_streamk_l2_partials/SYNC_REVIEW.md) shows the code, the assembly and the hardware assumptions of each mode.
+
+[experiments/streamk_l2_partials](../../../../experiments/streamk_l2_partials/README.md) tested it first on a synthetic ending.
+
+**Result.**
+- **Correctness.** `l2` is exact in every stress configuration. Spread over XCDs, the same code hangs.
+- **The ending.** It gets 2-6 us shorter, almost all of it from the barrier: v20's 3-9 us becomes about 1 us.
+- **The store** is up to 2.4 us faster.
+- **The slice** (8-11 us) does not change: it is limited by its own code, and a read of a line written into L2 still fetches the line from memory.
+  - The code limit turned out to be lane order. The slice's layout sent the 4 lanes the L1 handles per cycle to 4 lines 256 bytes apart. Putting rows first in lane order (one line, in v20 and v21) halves the slice's reads under `mem` (about 8 us to 4.5-5). That makes v20 and v21 2-4.5 us faster on the shapes that use the slice ([v21 WORKLOG entry 2](v21_streamk_l2_partials/WORKLOG.md)).
+- **Write-back.** The dirty partials are written back at kernel end.
+- **Kernel time.** Under cold rocprof it is 1-2.4% faster than v20 at K = 8192 on S = 8-32, and within 0.6% at S = 4. Two-tile (v19) is still ahead on some of these shapes.
+- **`wt`** gets about half of the gain with no placement constraint.
+- **Default.** `mem` stayed the default at first; since 2026-10-08 it is `wt`, as below.
+
+**Write-through partials with relaxed flags in every version (2026-10-08).** [memory_model_litmus](../../../../experiments/memory_model_litmus/WRITEUP.md) found `wt`'s sequence correct for any placement and the fastest measured, so v15-v20 and v22 drop the compiler's release and acquire too. The partials stay `.wt` with a drain in every wave, and the owner flags and the reduce-scatter barrier become relaxed `gpu`-scope atomics, with compiler fences where the acquires were. No `buffer_wbl2` or `buffer_inv` is left in any version's kernel. Old against new code on GPU 0 without the amdgcnas hook, in two interleaved rounds (each version's `results/sync_wt.md`):
+- every version's stress check passes;
+- the reduce-scatter barrier wait falls by 4-7 us and the owner's flag wait by 2-5 us;
+- cold kernel time drops 0.4-2.1% for the owner-ending versions (v15-v19); under v20-v22's capped rule it moves within about 1 us;
+- do_bench gains 1-3% at K = 4096 (7% for v19, whose mid-range release met do_bench's dirty L2).
+
+### v22: an atomic ending, bf16 `pk_add` into C ([worklog](v22_streamk_atomic_c/WORKLOG.md))
+
+**Change.** v20 with a third ending for the tile-aligned one-tile split, `STREAMK_FIXUP=atomic`. Every
+program of a split tile adds its whole partial into C with `buffer_atomic_pk_add_bf16` (two packed bf16
+per lane), after a `convert_layout` that gives a wave's 64 lanes one 256-byte row; chunk 0 adds the bias.
+There is no workspace, flag, barrier or slice. The host zeroes the stream-K tiles of C in a launch of its
+own first. 16-bit C only.
+
+**Result** (sweep C on one matrix, AITER's stack,
+[memory_model_litmus WRITEUP section 8](../../../../experiments/memory_model_litmus/WRITEUP.md#8-choosing-the-split-count)):
+- The fastest tail in 50 of 60 (S, K) cells for S <= 128, zeroing included: a median 10% shorter than
+  reduce-scatter at S <= 16, 17% at S = 24-32, and 5% shorter than the owner ending at S = 38-128, at the
+  same n. It loses where tails are shortest (S = 2-4 and 64-128 at K <= 4096).
+- C is rounded once per program: the mean error is about `0.5 + 0.75 sqrt(n)` times one rounding's, and
+  results are not bitwise reproducible. At n <= 8 it stays inside the repository's check tolerance up to
+  K = 4096.
+- 484-496 VGPRs, no spills.
+
+This reverses the atomics experiment's verdict for many peers: there, an isolated bf16 `pk_add` cost
+4.8 us against a 2 us bar, but in the GEMM it replaces the partial store, the barrier and the slice read.
+
+`STREAMK_FIXUP=atomic_iz` zeroes C inside the GEMM instead (each program zeroes 1/n of its tile before
+its K loop, behind a per-tile counter): a median 3.2 us shorter than the zeroing launch, the fastest tail
+in 54 of 60 cells (the best single-rounding tail is a median 1.12-1.39x as long), and it makes splitting
+pay at K = 1024 for S <= 32 (1.03-1.78x).
+
+That comparison put bf16 adds against fp32 partials. v23 measures the two endings like for like and
+rules the atomic ending out.
+
+### v23: band C store, power-of-two readers, and the like-for-like test against atomics ([worklog](v23_streamk_rs_band/WORKLOG.md))
+
+**Change.** v20's reduce-scatter ending with what
+[experiments/rs_slice_layout](../../../../experiments/rs_slice_layout/README.md) found:
+- **Band C store.** Each group of aligned blocks is reshaped to its 2-D band and converted to a row store
+  layout (2 LDS rounds, as the owner's store) before the C store: 16 bytes per lane along a C row instead
+  of 8 bytes with 4 lanes on 4 rows.
+- **Power-of-two readers** (`STREAMK_RS_READERS=pow2`, default). Only the largest power of two of a tile's
+  n programs reduce, so every slice is whole aligned groups; the rest publish and finish.
+- **bf16 partials** (`STREAMK_PARTIALS=bf16 | bf16_pairs`, opt-in, both endings), for a fair comparison
+  with the bf16 atomic ending: v20's map with bf16 values (8 B per lane), or a lane's registers of two
+  blocks paired into 16 bytes. Sums stay fp32. The default stays fp32, one rounding.
+
+**Result** (sweep E1: seven cells where atomics had won, rocprof tails, each configuration at its best n):
+
+| S | K | v20 rs | v23 rs | v23 rs, bf16 partials | atomic, zeroed in the GEMM (v22) |
+|---|---|---|---|---|---|
+| 1 | 16384 | 9.7 | 8.9 | **7.2** | 9.1 |
+| 8 | 8192 | 22.6 | 22.1 | **17.8** | 19.0 |
+| 16 | 8192 | 30.7 | 29.6 | **25.5** | 25.8 |
+| 32 | 4096 | 32.7 | 30.4 | **26.1** | 27.1 |
+| 64 | 8192 | 67.5 | 63.1 | **54.6** | 54.9 |
+| 12 | 8192 | 28.7 | 27.8 | **23.4** | 25.2 |
+| 24 | 8192 | 42.1 | 39.7 | 34.8 | **34.7** |
+
+- **v23 is 0.5-4.4 us (2-8%) faster than v20 on every cell.** The band store cuts the C store from up to
+  3.6 us to 0.4-1.0; power-of-two readers save 1.6-4.4 us where n is not a power of two.
+- **Like for like, reduce-scatter wins.** With bf16 partials it is as fast as the atomic ending or faster on
+  all seven cells (level within 0.3 us on three), and faster than the launch-zeroed atomic ending
+  everywhere. Its error is about 1.6 times one rounding whatever n, against `0.5 + 0.75 sqrt(n)` for
+  atomics (3.4 at n = 16, 6.2 at 64), and it is bitwise reproducible. The atomic ending's lead in v22
+  came from comparing bf16 adds with fp32 partials.
+- **Phases** (stamped): bf16 partials cut publish by 30-46% and the slice reads by 17-44%. The GEMM's reads
+  and C store match the synthetic split sweep at the same CU count to within 0.8 us, so the GEMM adds no
+  slice cost of its own.
+- 444-480 VGPRs, no spills.
+
+### v24: every ending, placement and partial type in one kernel, and a held-out test ([worklog](v24_streamk_combined/WORKLOG.md))
+
+**Change.** v23 with three earlier options behind host switches, so that one sweep can change one thing at a
+time: v22's atomic ending with the zeroing inside the GEMM (`STREAMK_FIXUP=atomic_iz`), v21's partials through
+one XCD's L2 (`STREAMK_EXCHANGE=l2`, with its XCD-local split) and v18's chunk-major placement with a rotating
+owner (`STREAMK_PLACEMENT=chunk`). Every program carries a role and a workspace slot (`streamk_slot`), so the
+endings read the same slots and barriers whatever the placement. With the switches off it compiles to v23's TTGIR.
+Porting the atomic ending found a bug in v22: its zero counts shared the reduce-scatter barrier's
+ever-increasing generation word, which can hang a process that runs both endings; v24 gives them their own words.
+
+**Result** (sweep F: 6,434 cases on sweep C's matrix, S <= 128, K = 512-16384; tails at each one's best n, median
+over 90 cells):
+- **bf16 partials** take 14% off reduce-scatter's tail and 7% off the owner's; they are the largest lever.
+- **The atomic ending** is 3.8% behind bf16 reduce-scatter (shorter in 25 of 90 cells): ruled out, as in v23.
+- **Chunk-major placement** is neutral (0.99-1.01). **l2** wins at K <= 1024 and loses by 20-47% at S = 2-8 for
+  K >= 4096, where its XCD-local split puts each tile on one XCD.
+- **v24's reduce-scatter** is 3% faster than v20's; **two-tile** is 1.5x slower than one-tile.
+- **Host rules.** `capped` is within 4.4% of the best choice in 90% of cells (worst 11%); a small rule fitted to
+  sweep F is no better once cross-validated.
+
+**Held-out test on AITER's shapes** ([experiments/streamk_aiter_test](../../../../experiments/streamk_aiter_test/README.md)),
+every single-rounding choice timed per shape, kernel time / the per-shape best:
+- with a full wave (126 shapes): `capped` 1.003 median, 1.012 at the 90th percentile, 1.040 worst;
+- with less than one wave (314 shapes): `capped` 1.029, 1.161, 1.264. Most of it is the ending switch: from S = 33
+  `capped` picks the owner ending, while up to S = 64 reduce-scatter at n = 4-6 is up to 26% faster. Sweep F, where every tail
+  follows a full wave, never measured this regime.
+
 ## 7. The host rules (v20 `STREAMK_POLICY=auto` and `capped`)
 
 ### `auto` (the default)
@@ -482,6 +603,17 @@ flowchart TD
 - **Reduce-scatter's n:** its ending costs about the same at any n, so it wants more splits. In practice that is 16 for S = 1-4 at K = 8192, and 8 for S = 7-16.
 
 The coefficients are fits to the sweeps in section 9 and in [experiments/streamk_split_count](../../../../experiments/streamk_split_count/README.md). It is measured against `auto` in section 9.
+
+**Replayed against sweep C** (one matrix, S = 1-128, K = 512-16384, AITER's stack;
+[memory_model_litmus WRITEUP section 8](../../../../experiments/memory_model_litmus/WRITEUP.md#the-v20-host-rule-against-these-measurements)):
+- Within 2% of the best measured single-rounding kernel time in most cells (median 1.000, 90th
+  percentile 1.029).
+- Reduce-scatter's `max(8, k / 8)` splits too little at S <= 4, K = 2048-8192: up to 7%. About one pair
+  per program, up to 64 per tile, is best there.
+- The 20 k-step threshold keeps K = 1024 data-parallel where reduce-scatter wins at S <= 4 (3-5%).
+  This contradicts the real-shape sweep and needs confirming.
+- From S = 38 its n reaches 256 // S, so it leaves the program count unset and gets the default split.
+  Requesting S n is faster (S = 96, K = 16384: 151 against 160 us).
 
 ## 8. Observations
 
@@ -637,7 +769,7 @@ To do (extended benchmarks):
 - **The tail's MAC phase.** It is now the largest part of the S = 16 tail. Ordering the leftover tiles so that tiles sharing B are split together, or prefetching deeper, could shorten it.
 - **Two-tile's sensitivity to a dirty memory system.** Publishing its head piece later may remove the do_bench loss.
 - **`capped` on held-out shapes.** Its coefficients are fit to section 9's shapes. To test it, and whether two-tile can go: 8-16 full waves, S = 8, 24, 48 and 96, K = 3072 and 6144, and real model GEMMs, with bias.
-- **Process-to-process variation on skinny shapes.** On 256x32768x8192 and 256x49152x8192 the same kernel runs 13-30% faster or slower depending on the process (section 9). v13 on 256x32768x8192 alternates between about 710 and 800 TFLOPS. Buffer placement is the first suspect.
+- **Process-to-process variation on skinny shapes.** On 256x32768x8192 and 256x49152x8192 the same kernel runs 13-30% faster or slower depending on the process (section 9). v13 on 256x32768x8192 alternates between about 710 and 800 TFLOPS. On 256x32768x8192 the cause is where B lands ([experiments/placement_bimodality](../../../../experiments/placement_bimodality/README.md)): with B at different offsets of one buffer v13 runs at 650-789 TFLOPS, the same offset gives the same time in every process, and C's position does not matter. Padding B's rows by 256-1024 elements removes it (784-809 TFLOPS at every offset). 256x49152x8192 is not tested yet.
 - **Tile size against stream-K, on one code base.** The tile-size comparison in section 4 uses library kernels for the smaller tile. A 256x128 variant of v13, plus a smaller tile for the leftover tiles only (section 5), would separate the tile effect from kernel quality.
 - **Fewer partial bytes.** bf16 partials and keeping each program's own slice in registers. If halving the bytes halves the ending, the threshold of about 20 k-steps should fall to about 12.
 - **Stream-K first.** The paper's order for two-tile, with the fixups overlapping data-parallel tiles.

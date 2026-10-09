@@ -517,3 +517,302 @@ A's dtype when none is passed.
 
 This is for the comparison against AITER's picks on the 630 shapes in
 `experiments/aiter_lixun_shapes/` (32 of them have an fp32 output).
+
+## 7. `capped` becomes the default (2026-10-02)
+
+Host-only change. Full write-up:
+[experiments/streamk_capped_vs_auto](../../../../../experiments/streamk_capped_vs_auto/README.md).
+- `STREAMK_POLICY` now defaults to `capped`. `auto` (entry 2's rule) and every other policy stay
+  selectable.
+- `capped_policy` runs data-parallel where its owner split comes out at n = 1.
+
+**The test** entry 5 asked for, on shapes `capped` was not fit to:
+- **A held-out grid of 32 shapes**: S = 8-10, 24-26, 48-52 and 96, with 1, 4, 8 and 16 full waves and
+  K = 3072, 6144 and 8192. Timed with cold rocprof, median of 3 processes, with every policy and
+  every split count n.
+- **The 630 real-model shapes** of `experiments/aiter_lixun_shapes`, with `do_bench_cudagraph`, v20 only.
+- **Hybrid rules**: capped, but two-tile from W full waves when `256 // S >= 7` and the lag
+  `d <= D`. These were scored from the same measurements, with W and D fit on the grid and reported on
+  the real-model set.
+
+| rule | held-out: within 1.5% of the best | geomean | real-model: within 1.5% | geomean |
+|---|---:|---:|---:|---:|
+| auto | 24 of 32 | -1.56% | 457 of 630 | -4.50% |
+| capped | 27 | -0.90% | 609 | -0.15% |
+| best hybrid, hybrid(8, 12) | 28 | -0.82% | 609 | -0.15% |
+| best of capped and two-tile per shape | 30 | -0.52% | 613 | -0.14% |
+
+1. **`capped` beats `auto` on both sets.** Most of the gain is at small K and with no full wave:
+   - on the 49 real-model shapes with K < 2048 where auto splits, that split is 22% slower than
+     data-parallel at the median;
+   - capped runs data-parallel on 41 of them.
+2. **No hybrid is worth its branch.** Two-tile can only be picked on 12 of the 630 real-model shapes.
+   On the held-out grid, hybrid(8, 12)'s two-tile region averages +0.3% over capped (-0.9% to +1.6%).
+   The four-wave advantage entry 5 saw does not carry over to 8-16 waves.
+3. **Between launches** (22 close calls, `between_launches.py`), two-tile only leads with an idle gap:
+   - sleep 100 us: ahead by more than 1% on 12 shapes, median +1.8%;
+   - back to back or clean: level;
+   - do_bench's dirty 256 MB: capped ahead on 8 shapes.
+
+   Entry 2 chose two-tile from the clean-cache column; with the split capped, that column is level.
+4. **n = 1 runs data-parallel.** One program per leftover tile is the data-parallel last wave's work
+   plus stream-K's overhead. Capped picked it on 6 real-model shapes (S = 96-128 at 32-56 k-tiles),
+   and data-parallel was 0.8-5.6% faster on all of them. With the change, capped goes from 604 to 609
+   real-model shapes within 1.5%.
+
+**Correctness.**
+- `check_streamk.py --policies capped`: 36 configurations (9 shapes covering every branch, including
+  two that now run data-parallel; both orders; with and without bias) are correct, with every flag
+  and count re-armed (`experiments/streamk_capped_vs_auto/results/check_streamk.md`).
+- All 630 real-model shapes match the reference, and so do all held-out runs.
+- The default with `STREAMK_POLICY` unset times the same as `capped`: median +0.01% over the grid.
+
+**Still open** (not refit, to keep this a held-out test):
+- The reduce-scatter cap `n = min(128 // S, ...)` gives n = 4 at S = 28-32. On 11 real-model shapes
+  that is 1.5-6% behind the default 8-way split, although at the median over the S = 32 shapes it
+  ties.
+- The minimum-K cut `(256 - S) * k < 20 * 256` lets 5 small shapes at 24 k-tiles split, where
+  data-parallel is 2-11% faster.
+
+## 8. Slice reads in lane order (2026-10-04)
+
+Found in v21 ([v21 WORKLOG entry 2](../v21_streamk_l2_partials/WORKLOG.md)); `reduce_scatter_slice` is
+the same code here.
+- **The cause.** The slice's layout put columns first in lane order. Lane `l` read float
+  `4 (l // 4) + 64 (l % 4)` of each 1 KiB block, so the 4 lanes the L1 takes per cycle hit 4
+  lines 256 bytes apart, with tag-RAM set conflicts.
+- **The fix.** Order `[1, 2, 0]` instead of `[2, 1, 0]`: lane `l` reads `4 l .. 4 l + 3`.
+- **Slice reads:** about 8 us down to 4.5-5 us. The C store is 0.3-1.3 us slower (4 lanes now
+  write 4 rows).
+- **Kernel time:** 2-4.5 us (1-3%) faster on the six shapes that use the slice, on GPU 1, with cold
+  rocprof, in two runs in opposite orders
+  ([results](../v21_streamk_l2_partials/results/rocprof_lane_order.md)).
+- **Correctness:** `check_streamk.py` (108 configurations) passes.
+- **Still open:** the `auto`/`capped` choice between reduce-scatter and owner, and the
+  reduce-scatter cap `n`, were fit with the slower slice.
+
+## 9. A split rule from a systematic grid: not adopted (2026-10-04)
+
+Full write-up:
+[experiments/streamk_split_rule](../../../../../experiments/streamk_split_rule/README.md).
+- New host policy `STREAMK_POLICY=split_rule` (`split_rule_policy`, `SPLIT_RULE_TABLE`), host code
+  only.
+- The default stays `capped`.
+
+**The grid.** 576 shapes, timed on GPU 0 with cold rocprof (1000 launches, 2048 MB rotating buffer):
+- S = 1-128 (16 values), 16-256 k-tiles (12 values), and 0, 1-3 or 4-7 full waves;
+- every configuration on each: dp, two-tile, reduce-scatter at n = 2-32, the owner ending at
+  n = 2-8, and capped and auto;
+- 9,021 cases in 13.3 h, then each shape's top 3 plus capped and auto to 3-process medians (6.8 h).
+
+**Entry 8's slice change landed during the repeats** (about 14:50 UTC on Oct 4). Only the
+reduce-scatter ending runs it, so those rows were retimed on the current kernel:
+- 2,169 reduce-scatter rows within 5% of their shape's best;
+- then all 1,111 remaining reduce-scatter rows without a full wave, plus 11 others in reach. The new
+  slice is 0.5-3% faster with full waves but 7-12% (up to 18%) faster without one.
+- Then the repeats, the fit and the validation again. The numbers below are after the retime.
+
+**What it shows** (`results/maps.md`):
+- **Where splitting pays:**
+  - from 16-24 k-tiles (from 16 for S <= 12 with no full wave), later for S = 96-128;
+  - by up to +55% at 1-3 waves.
+- **Reduce-scatter's best n** grows with K (8, then 16, then 32 at small S) and falls with S (4-5 at
+  S = 20-32 and short K). Capped's `n <= 128 // S` cap leaves 13-23% at S = 20-32 with no full wave
+  at long K.
+- **With no full wave, the owner ending wins only from S = 48** (and S = 28-40 at 20 k-tiles).
+- **Two-tile wins only at S <= 2 with a full wave and short K,** by 1-6%.
+- **Capped is 2.5% behind the best on the grid** (5.9% with no full wave). Its worst misses: 16-20
+  k-tiles, where its minimum-K cut runs dp (10-40%); S <= 6 at 32-96 k-tiles; the reduce-scatter cap;
+  and S = 96, where n = 1 runs dp.
+
+**The rule and its validation:**
+
+| rule | grid, cross-validated geomean | off-grid (49): within 1.5% | geomean | real-model (630): within 1.5% | geomean |
+|---|---:|---:|---:|---:|---:|
+| capped | -2.49% (measured) | 38 | -1.72% | 581 | -0.33% |
+| table of the grid's winners (`split_rule`) | -1.22% | 41 | -1.17% | 567 | -0.58% |
+| capped's formula, refit | -1.78% | - | - | - | - |
+| the first table (old slice) | -1.16% | 35 | -1.94% | 552 | -0.73% |
+
+1. **The table wins off-grid under the grid's own timing** (cold rocprof): ahead with no full wave
+   and with 4-7 waves, slightly behind with 1-3 waves.
+2. **It loses on the real-model set, timed back to back.**
+   - It is ahead of capped by more than 1.5% on 45 shapes, 40 of them at 64 k-tiles or more.
+   - It is behind on 60. Of those, 18 are at 32 k-tiles or fewer, and 15 split where capped runs dp.
+   - The worst are 80-112 leftover tiles at 20-28 k-tiles, where an owner split is 9-25% behind dp.
+   - The cold grid favours those short-K splits; back-to-back launches do not.
+3. **The bar was both sets, so `capped` stays.** Its leave-one-k-out score (-1.65%, against -0.10%
+   in sample) shows that the table is weakest at predicting across k.
+4. **The first table (fit on the old slice) lost on both sets**: 35 off-grid and 552 real-model
+   shapes within 1.5%.
+
+**Correctness.**
+- `check_streamk.py --policies split_rule`: 52 configurations (13 shapes covering every kind of pick;
+  both orders; with and without bias) are correct with the first table, with every flag and count
+  re-armed. The second table uses the same code paths.
+- Every timed grid, retime and off-grid run, and all 630 real-model shapes of both real-model runs
+  (`details_split_rule.csv`, `details_split_rule_v2.csv`), match the reference.
+
+**Next.**
+- A back-to-back (cudagraph) grid would give the maps for that cache state.
+- The table's long-K splits combined with capped's dp at short K is the obvious candidate, but these
+  validation sets suggested it, so it needs new shapes to test on.
+- **Re-check every rule now that reduce-scatter has changed**
+  ([README](../../../../../experiments/streamk_split_rule/README.md#re-check-the-rules-reduce-scatter-has-changed)).
+  - capped's crossover `F = 8`, its split counts and its minimum-K cut were all fitted to the
+    ending before entry 8's slice change;
+  - v21's barrier and slice work will move them again;
+  - refit once the endings settle.
+- **Measure the ending's phases instead of refitting to a grid**
+  ([README](../../../../../experiments/streamk_split_rule/README.md#next-a-cost-model-from-measured-phase-costs)).
+  - ATT cycles per phase (store, drain, flag, barrier, slice, reduce, C store) on one CU per XCD;
+  - cross-checked with `fixup_timing.py` stamps;
+  - combined into a tail model, plus the kernel-end write-back, and validated against the grid's
+    9,021 kernel times.
+- **The real-model validation ran with fully warm caches**
+  ([README](../../../../../experiments/streamk_split_rule/README.md#fitting-and-validation)).
+  `do_bench_cudagraph` replays the same tensors with no flush, so its verdict against the table is
+  optimistic for weights. Retime those shapes with a rotating buffer before relying on it.
+
+## 10. One-wave data-parallel calls v9 (2026-10-06)
+
+Host-only change, the same in v21 (its entry 3).
+- **The rule.** When `capped`, `split_rule` or `auto` picks dp and `total_tiles <= NUM_PROGRAMS`,
+  `matmul` returns `v9_beyond_hotloop`'s `matmul` instead of launching this kernel.
+- **Why.** With one tile or fewer per program the persistent loop has nothing to overlap: its
+  epilogue still prefetches a (clamped) next tile, and the grid launches 256 programs, some of them
+  idle. v9 launches one program per tile and needs no workspace.
+- **What stays.** An explicit `STREAMK_POLICY=dp` still runs the persistent loop, so `v20 dp`
+  remains the copy of v13 the version tables check against. Shapes with more than one wave
+  (4352x4096x1024, 272 tiles) keep it too.
+- **Tracing.** The delegated launches show up as `v9_beyond_hotloop` in rocprof. `rocprof_check.py`
+  has a `kernel_regex(v)` that matches v9's kernel for v20 and v21, and `kernel_rows` now matches
+  with `re.search`. `experiments/streamk_version_tables/sweep.py` uses it. Other scripts that filter
+  on `NAMES[v]` alone (for example `experiments/peel_acc_copies/time_fix.py`) miss these launches.
+
+**Kernel time** ([results/v9_fallback.md](results/v9_fallback.md)): cold rocprof, three processes
+on three GPUs, ratios per GPU and then the median; old is `STREAMK_POLICY=dp`, new is the default.
+
+| shape | tiles | k-tiles | v20 new vs old | v20 new vs v9 | v21 new vs old |
+|---|---:|---:|---:|---:|---:|
+| 4096x4096x8192 | 256 | 128 | -0.3% | -0.6% | -1.1% |
+| 3840x4096x8192 | 240 | 128 | -0.5% | +0.1% | -0.5% |
+| 256x49152x8192 | 192 | 128 | -0.2% | -0.1% | +0.6% |
+| 3840x4096x1024 | 240 | 16 | -2.6% | +0.3% | -2.9% |
+| 2048x2048x1024 | 64 | 16 | -2.3% | +0.4% | -2.7% |
+
+- At 16 k-tiles v9 saves 0.7-1.0 us of a 25-31 us kernel, 2.3-2.9%.
+- At 128 k-tiles the change is within the 0.1-0.6% run-to-run spread.
+- On 256x49152x8192, where v20 `capped` (then the persistent loop) was the fastest configuration in
+  [STREAMK.md](../STREAMK.md) section 9, v9 is level, so the rule needs no extra condition.
+
+**Correctness.**
+- `check_v9_fallback.py` ([results/check_v9_fallback.md](results/check_v9_fallback.md)): 7 shapes
+  (the five above, plus 4352x4096x8192 and 4352x4096x1024, which do not switch), each policy, with
+  and without bias. All 98 v20 and v21 cases match torch and run the kernel the rule says.
+- `check_streamk.py` with its default configurations: 108 pass, with every flag and count re-armed.
+- `regress.py --versions 9 20 21 --extra 3840x4096x1024 --bias`: all correct.
+  - On the delegated shapes it reports v9's registers (448 VGPRs, against 488).
+  - It falls back to the only `.amdgcn` in the case's cache when none has the version's name.
+  - Its do_bench is host-bound at 16 k-tiles: 123 us per call against a 30 us kernel. So v20's extra
+    host work shows there as -4.2% against v9 on the same kernel.
+
+**Stale numbers.** Earlier results for `capped`, `split_rule` and `auto` on shapes of at most one
+wave where they pick dp ran the persistent loop. In [STREAMK.md](../STREAMK.md) section 9 those are
+the 4096x4096x8192, 3840x4096x8192 and 256x49152x8192 rows; the same holds for such shapes in
+`experiments/streamk_capped_vs_auto`, `experiments/streamk_split_rule` and
+`experiments/aiter_lixun_shapes`.
+
+## 11. Padded row strides accepted; fp32 C stays off v9 (2026-10-06)
+
+Host-only changes.
+- **Padded strides.** Here and in v9's `matmul`, `assert a.is_contiguous()` becomes
+  `assert a.stride(1) == 1`. Both kernels already index A, B and C only through their strides, so
+  a row stride padded past K (or N for C) is accepted. The reason is the MI300 tuning note that a
+  GEMM stride that is a multiple of 512 bytes causes Tagram channel hotspotting; to test that,
+  `experiments/aiter_lixun_shapes` (`--pad512`) gives every such stride 256 extra bytes. Kernel
+  code and launches are unchanged for contiguous inputs.
+- **Entry 10's v9 call broke fp32 output.** v9 converts the accumulator to A's dtype before its
+  `buffer_store`, so with an fp32 C it fails to compile (`'amdg.buffer_store' op failed to verify
+  that value element type matches the pointed type of ptr`). Found on 1024x6144x2048 with fp32
+  output; 6 of the 124 shapes in `aiter_lixun_shapes` that entry 10 delegates have fp32 output.
+  `matmul` now hands a launch to v9 only when `c.dtype == a.dtype`; otherwise it runs the
+  persistent loop as before entry 10. v21 has the same call and still needs this fix.
+
+## 12. Experiment: P slot padding (2026-10-06): not adopted
+
+- **Question.** With 512-byte-padded A, B and C, stream-K split shapes still varied between
+  fresh-buffer rounds more than data-parallel ones. Each program's slot in `P` is 256 KB, so the
+  n partials one reduce-scatter lane reads are 256 KB apart; and `P`, `locks` and `tile_sync` are
+  allocated once per process.
+- **Knob.** `P_SLOT_PAD` (`STREAMK_P_PAD` bytes, default 0) adds fp32 elements after each slot in
+  the slot stride of `partial_quadrant` and `reduce_scatter_slice` and in `streamk_workspace`.
+  With 0 the kernel is as before. `check_streamk.py` passes with 0 and with 256.
+- **Test.** `experiments/aiter_lixun_shapes`, 306 stream-K split shapes, warm, 5 fresh-buffer
+  rounds, three variants: workspace fixed per process; a fresh workspace every round
+  (`--realloc-workspace`); fresh and padded 256 B (`--p-pad 256`).
+- **Result: neither placement nor alignment of `P` matters.**
+  - Contiguous A/B/C, shapes whose rounds differ by more than 2%: 19, 19 and 36; median spread
+    0.63%, 0.64% and 0.69%.
+  - Median time against the fixed workspace: -0.0% (fresh) and +0.1% (fresh and padded).
+  - The data-parallel loop on the same shapes, which does not use `P`, has about half the spread
+    (0.34%). The extra spread of split launches comes with splitting itself, not with where `P`
+    is.
+
+## 13. v9 writes C in C's dtype; fp32 C goes to v9 too (2026-10-06)
+
+- **v9.** Its four epilogue stores convert the accumulator to `c_ptr.dtype.element_ty` instead of
+  A's dtype, as v20's `store_c` does. For bf16 C the code is unchanged; fp32 C now compiles.
+- **v20.** Entry 11's `c.dtype == a.dtype` condition on the v9 hand-off is removed, so one-wave
+  data-parallel launches with fp32 output go to v9 as well (6 shapes in `aiter_lixun_shapes`).
+- **Same code as AITER's v9.** Compiled with AITER's opt-in llirSched copy and no amdgcnas hook
+  (`aiter_lixun_shapes --v20-sched aiter`), v9's code is that of AITER's
+  `_gemm_a16w16_compute_bound_kernel`: the same 2291 instructions in 99.8-99.9% the same order
+  for bf16 C (448 VGPRs), and identical for fp32 C (2001 instructions, 472 VGPRs). With the
+  tutorial's llirSched plugin and amdgcnas hook, about 13% of the order differs and v9 is 4-6%
+  slower at 32 k-steps or fewer.
+
+## 13. v9 writes C in C's dtype; fp32 C goes to v9 too (2026-10-06)
+
+- **v9.** Its four epilogue stores convert the accumulator to `c_ptr.dtype.element_ty` instead of
+  A's dtype, as v20's `store_c` does. For bf16 C the code is unchanged; fp32 C now compiles.
+- **v20.** Entry 11's `c.dtype == a.dtype` condition on the v9 hand-off is removed, so one-wave
+  data-parallel launches with fp32 output go to v9 as well (6 shapes in `aiter_lixun_shapes`).
+- **Same code as AITER's v9.** Compiled with AITER's opt-in llirSched copy and no amdgcnas hook
+  (`aiter_lixun_shapes --v20-sched aiter`), v9's code is that of AITER's
+  `_gemm_a16w16_compute_bound_kernel`: the same 2291 instructions in 99.8-99.9% the same order
+  for bf16 C (448 VGPRs), and identical for fp32 C (2001 instructions, 472 VGPRs). With the
+  tutorial's llirSched plugin and amdgcnas hook, about 13% of the order differs and v9 is 4-6%
+  slower at 32 k-steps or fewer.
+
+## 14. Write-through partials with relaxed flags and barrier (2026-10-08)
+
+Both endings keep their write-through (`.wt`) partials, the drain in every wave and the `.cv`
+reads, and drop the compiler's GPU-scope release and acquire, as recommended by
+[memory_model_litmus](../../../../../experiments/memory_model_litmus/WRITEUP.md)
+(recommendation 1; this is v21's `STREAMK_PARTIALS=wt`):
+- **Owner:** the contributor's flag is a relaxed `gpu` swap (was a release, `buffer_wbl2 sc1`);
+  after its relaxed poll the owner passes a compiler-only fence (`asm_fence("s_nop 0")`) instead
+  of an acquire load (`buffer_inv sc1`).
+- **Reduce-scatter:** `tile_barrier`'s arrival, reset, generation bump and poll are all relaxed
+  (were `acq_rel`, `release` and `acquire`). An `s_waitcnt vmcnt(0)` between the generation read
+  and the arrival keeps that read ahead of the arrival, which the `acq_rel` arrival used to do;
+  a compiler fence after the wait keeps the slice reads below it.
+
+The compiled kernel has no `buffer_wbl2` or `buffer_inv` left. `fixup_timing.py`'s stamp anchors
+follow the new code; `--two-tile --flags release` now times the old release as the control.
+
+Old and new code on GPU 0 without the amdgcnas hook, two interleaved rounds
+([results/sync_wt.md](results/sync_wt.md)):
+- **Correct:** `check_streamk.py`, 108 configurations and 36 more with `--policies capped`;
+  `check_all.py`, 138. No wrong result, every flag and count re-armed. The `--stale-count`
+  negative control still hangs in all 24 one-tile reduce-scatter configurations, as it must.
+- **The ending** (`fixup_timing.py`, six shapes): the reduce-scatter barrier wait falls from
+  7-16 us to 3-10 us, and the owner's wait for its last flag by 2-5 us. The tails gain less:
+  reduce-scatter's moves by -6 to +1.5 us and the owner's by -0.6 to -4.3 us.
+- **Cold kernel time** under the default capped rule: -0.9, -0.6 and +0.3 us on
+  4352x4096x8192, 4352x4352x8192 and 3328x5120x8192, within the rounds' spread.
+- **do_bench:** +2.2-3.1% at 4352x4096x4096 in both rounds; other shapes within the noise.
+
+The earlier entries were measured with release/acquire synchronisation, mostly on GPU 2 with the
+amdgcnas hook.

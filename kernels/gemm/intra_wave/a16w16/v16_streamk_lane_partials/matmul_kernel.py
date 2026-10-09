@@ -353,11 +353,19 @@ def _one():
 @gluon.jit
 def drain_and_barrier():
     """Every wave waits for all its vector memory ops (stores and async copies alike: vmcnt is
-    one counter), then a workgroup barrier. A release flag store after this orders all four
-    waves' partial stores before the flag."""
+    one counter), then a workgroup barrier. A flag or counter set after this is ordered after
+    all four waves' partial stores."""
     gl.inline_asm_elementwise(
         "s_waitcnt vmcnt(0)\ns_barrier\nv_mov_b32 $0, $1", "=v,v,~{memory}", [_one()],
         dtype=gl.int32, is_pure=False, pack=1,
+    )
+
+
+@gluon.jit
+def asm_fence(code: gl.constexpr):
+    """Inline asm with a memory clobber: the compiler moves no memory access across it."""
+    gl.inline_asm_elementwise(
+        code + "\nv_mov_b32 $0, $1", "=v,v,~{memory}", [_one()], dtype=gl.int32, is_pure=False, pack=1,
     )
 
 
@@ -543,13 +551,14 @@ def streamk_segment(
     c_bl_base = c_tl_base + BLOCK_M * stride_cm // 2
     c_br_base = c_bl_base + BLOCK_N * stride_cn // 2
 
-    # Owner: every peer's flag before the first partial read. Poll relaxed and acquire once:
-    # a GPU-scope acquire invalidates the XCD's L2 under the neighbours' K loops.
+    # Owner: every peer's flag before the first partial read. The partials are written
+    # through, so the drain before each relaxed flag waited for them to reach memory, and
+    # the .cv reads miss L1: no acquire, only a compiler fence so no read moves up.
     for j in range(n_peers):
         while gl.atomic_add(locks_ptr + spid + 1 + j, 0, sem="relaxed", scope="gpu") == 0:
             pass
     if n_peers > 0:
-        gl.atomic_add(locks_ptr + spid, 0, sem="acquire", scope="gpu")
+        asm_fence("s_nop 0")
 
     fixup_quadrant(
         acc_tl, 0, p_ptr, bias_ptr, spid, pid_n, is_partial, n_peers, c_tl_base, c_offsets,
@@ -569,9 +578,9 @@ def streamk_segment(
     )
 
     if is_partial != 0:
-        # Release: the flag may only become visible after all four waves' partial stores.
+        # The flag may only become visible after all four waves' partial stores have completed.
         drain_and_barrier()
-        gl.atomic_xchg(locks_ptr + spid, 1, sem="release", scope="gpu")
+        gl.atomic_xchg(locks_ptr + spid, 1, sem="relaxed", scope="gpu")
     # Each partial has exactly one reader, so the owner re-arms its peers' flags for the next
     # launch; the kernel boundary orders these stores against it.
     for j in range(n_peers):
@@ -824,6 +833,7 @@ def v16_streamk_lane_partials(
     TILE_ORDER_V9: gl.constexpr,
     MASK_TAIL_PREFETCH: gl.constexpr,
     ADD_BIAS: gl.constexpr,
+    TILE_LIMIT: gl.constexpr = 0,
 ):
     """
     v14 with TensorAtlas's one-tile stream-K tail (DP + one-tile SK). The persistent loop
@@ -831,12 +841,15 @@ def v16_streamk_lane_partials(
     laid end to end and split evenly over all NUM_PROGRAMS programs, in units of 2 k-steps so
     every segment fits the pair pipeline. The program that computes a tile's k-step 0 owns it:
     it adds its peers' partials (the next consecutive pids) and the bias, and stores C. Every
-    other segment stores its fp32 partial to P[pid] and raises locks[pid] with a release.
+    other segment stores its fp32 partial to P[pid] and raises locks[pid] (relaxed).
     STREAMK_NUM_PROGRAMS programs take part in the stream-K phase and the rest idle
     (streamk_compact_pid; spread evenly over the XCDs if BALANCE_XCDS).
 
     v16: as v15, with the partials laid out lane-contiguous in P instead of row-major
     (lane_contiguous_offsets).
+
+    TILE_LIMIT (an experiment, 0 = off): run as a GEMM of the grid's first TILE_LIMIT tile ids,
+    with the tile positions still taken from the full grid; the other tiles of C are not written.
     """
 
     # Programs step through virtual pids start, start + NUM_PROGRAMS, ...; persistent_tile_id
@@ -847,7 +860,10 @@ def v16_streamk_lane_partials(
         start = get_logical_chiplet_mapped_pids(NUM_PROGRAMS, NUM_XCDS)
     num_tiles_m = gl.cdiv(M, BLOCK_M)
     num_tiles_n = gl.cdiv(N, BLOCK_N)
-    total_tiles = num_tiles_m * num_tiles_n
+    if TILE_LIMIT > 0:
+        total_tiles = num_tiles_m * 0 + TILE_LIMIT
+    else:
+        total_tiles = num_tiles_m * num_tiles_n
     # pid_m, pid_n = get_pids(M, N, BLOCK_M, BLOCK_N, GRID_MN, NUM_XCDS, GROUP_SIZE_M)
 
     # Half-M global load layout
@@ -1063,11 +1079,19 @@ def matmul(a, b, c=None, bias=None):
     # every program resident at once, so the grid must fit in one wave.
     STREAMK_NUM_PROGRAMS = int(os.environ.get("STREAMK_NUM_PROGRAMS", NUM_PROGRAMS))
     BALANCE_XCDS = os.environ.get("STREAMK_BALANCE_XCDS", "1") == "1"
-    # DP + one-tile SK: the partial last wave. Two-tile SK + DP would add NUM_PROGRAMS when
-    # there are at least two full waves.
+    # DP + one-tile SK: the partial last wave. STREAMK_POLICY=two_tile (an experiment: forward
+    # two-tile, as two_tile_check.py) moves one full wave into stream-K as well, when there is one.
     total_tiles = triton.cdiv(M, BLOCK_M) * triton.cdiv(N, BLOCK_N)
+    # GEMM_TILE_LIMIT (an experiment): compute only the first T tile ids, as a T-tile GEMM.
+    TILE_LIMIT = int(os.environ.get("GEMM_TILE_LIMIT", "0"))
+    assert 0 <= TILE_LIMIT <= total_tiles
+    total_tiles = TILE_LIMIT or total_tiles
     STREAMK_TILES = total_tiles % NUM_PROGRAMS
-    assert 0 <= STREAMK_TILES <= STREAMK_NUM_PROGRAMS <= NUM_PROGRAMS
+    two_tile = os.environ.get("STREAMK_POLICY") == "two_tile"
+    if two_tile and STREAMK_TILES > 0 and total_tiles >= NUM_PROGRAMS:
+        STREAMK_TILES += NUM_PROGRAMS
+    assert 0 <= STREAMK_NUM_PROGRAMS <= NUM_PROGRAMS
+    assert STREAMK_TILES <= STREAMK_NUM_PROGRAMS or STREAMK_TILES > NUM_PROGRAMS
     assert (total_tiles - STREAMK_TILES) % NUM_PROGRAMS == 0
     P, locks = streamk_workspace(a.device, NUM_PROGRAMS, BLOCK_M, BLOCK_N)
     grid = (NUM_PROGRAMS, 1)
@@ -1104,6 +1128,7 @@ def matmul(a, b, c=None, bias=None):
         # so the last trip loads the clamped tile unmasked.
         MASK_TAIL_PREFETCH=False,
         ADD_BIAS=bias is not None,
+        TILE_LIMIT=TILE_LIMIT,
         num_warps=num_warps,
     )
     return c

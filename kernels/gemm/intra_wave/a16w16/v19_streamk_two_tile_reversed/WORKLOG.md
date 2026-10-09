@@ -198,3 +198,26 @@ K = 4096, and never for S >= 64.
 
 Reduce-scatter in v17 would cut that collection to about one partial's read, which removes
 the case for two-tile. It is the next thing to test before fixing a host rule.
+
+## 3. Write-through partials with relaxed flags (2026-10-08)
+
+The same change as v15 entry 4: the partials stay write-through (`.wt`) and drained in every
+wave, the contributor's flag becomes a relaxed `gpu` swap instead of a release (`buffer_wbl2 sc1`),
+and the owner's acquire after its relaxed poll becomes a compiler-only fence
+(`asm_fence("s_nop 0")`), which keeps the `.cv` reads below the poll. This is recommendation 1 of
+[memory_model_litmus](../../../../../experiments/memory_model_litmus/WRITEUP.md). The compiled
+kernel has no `buffer_wbl2` or `buffer_inv` left.
+
+Old and new code on GPU 0 without the amdgcnas hook, two interleaved rounds
+([results/sync_wt.md](results/sync_wt.md)):
+- **Correct:** `check_streamk.py`, 36 configurations, and `check_all.py`, 24, with no wrong
+  result and every flag re-armed.
+- **Cold kernel time:** 4.6, 2.4 and 2.3 us faster on 4352x4096x8192, 4352x4352x8192 and
+  3328x5120x8192 (1.1-2.1%), the largest gain of the owner-ending versions.
+- **do_bench:** +7.1-7.7% at 4352x4096x4096 in both rounds. Here every program publishes its head
+  piece in the middle of its range, so the release's `buffer_wbl2 sc1` landed on the critical path,
+  and under do_bench, which zeroes 256 MB before every launch, it had a dirty L2 to write back
+  (v20 entry 1 found that do_bench's dirty flush hurts two-tile most). Other shapes move within
+  the noise.
+
+The earlier entries were measured with release/acquire flags, on GPU 2 with the amdgcnas hook.

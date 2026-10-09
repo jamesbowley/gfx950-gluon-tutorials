@@ -94,3 +94,22 @@ revisiting.
   explainer) makes general.
 - So the next candidate is the reversed two-tile order, on v17's mapping and pipeline, compared
   against v17 on all shapes. Capping the programs per tile is the fallback.
+
+## 2. Write-through partials with relaxed flags (2026-10-08)
+
+The same change as v15 entry 4: the partials stay write-through (`.wt`) and drained in every
+wave, the contributor's flag becomes a relaxed `gpu` swap instead of a release (`buffer_wbl2 sc1`),
+and the owner's acquire after its relaxed poll of `streamk_peer(...)`'s flags becomes a
+compiler-only fence (`asm_fence("s_nop 0")`), which keeps the `.cv` reads below the poll. This is
+recommendation 1 of [memory_model_litmus](../../../../../experiments/memory_model_litmus/WRITEUP.md).
+The compiled kernel has no `buffer_wbl2` or `buffer_inv` left.
+
+Old and new code on GPU 0 without the amdgcnas hook, two interleaved rounds
+([results/sync_wt.md](results/sync_wt.md)):
+- **Correct:** `check_streamk.py`, 36 configurations, and `check_all.py`, 24, with no wrong
+  result and every flag re-armed.
+- **Cold kernel time:** 2.8, 4.9 and 1.4 us faster on 4352x4096x8192, 4352x4352x8192 and
+  3328x5120x8192 (0.4-2.1%).
+- **do_bench:** +1.0-1.3% at K = 4096 in both rounds; the registers and spills are unchanged.
+
+Entry 1 was measured with release/acquire flags, on GPU 2 with the amdgcnas hook.

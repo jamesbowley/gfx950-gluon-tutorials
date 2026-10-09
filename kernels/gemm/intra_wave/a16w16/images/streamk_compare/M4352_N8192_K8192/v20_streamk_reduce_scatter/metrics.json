@@ -1,0 +1,32 @@
+{
+ "version": "v20_streamk_reduce_scatter",
+ "note": "one-tile, tile-aligned split, reduce-scatter ending (STREAMK_POLICY=one_tile STREAMK_FIXUP=rs)",
+ "ks_cycles": 2153.328125,
+ "shape": "4352x8192x8192 bf16",
+ "groups": [
+  {
+   "sig": "16-k-step rs",
+   "n": 80,
+   "n_dp": 2,
+   "segs": [
+    {
+     "ksteps": 16,
+     "role": "rs",
+     "mac": 16.34214479040439,
+     "transition": 4.2798865128834,
+     "phases": {
+      "drain": 0.30928867378258945,
+      "partial store": 7.96441554860572,
+      "store drain": 2.1046490534274707,
+      "barrier wait": 7.152648879278443,
+      "slice": 10.011479323431026,
+      "exit": 0.10402501941036042
+     }
+    }
+   ],
+   "dp_last": 128.0
+  }
+ ],
+ "tail_median": 49.425816142163654,
+ "tail_max": 55.16483931124059
+}

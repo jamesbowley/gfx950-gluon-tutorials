@@ -125,3 +125,22 @@ results are unchanged by the fix. `check_streamk.py` passes all 36 configuration
 - **Two-tile** (`results/two_tile.md`): 3328x5120x8192 goes from 914 to 1160 TFLOPS, 17% above
   v13's 996, because its offsets drift by only 2 k-steps per program. The other shapes get
   6-12% slower, for example 4352x4096x8192 from 915 to 801. See v15 entry 3.
+
+## 3. Write-through partials with relaxed flags (2026-10-08)
+
+The same change as v15 entry 4: the partials stay write-through (`.wt`) and drained in every
+wave, the contributor's flag becomes a relaxed `gpu` swap instead of a release (`buffer_wbl2 sc1`),
+and the owner's acquire after its relaxed poll becomes a compiler-only fence
+(`asm_fence("s_nop 0")`), which keeps the `.cv` reads below the poll. This is recommendation 1 of
+[memory_model_litmus](../../../../../experiments/memory_model_litmus/WRITEUP.md). The compiled
+kernel has no `buffer_wbl2` or `buffer_inv` left.
+
+Old and new code on GPU 0 without the amdgcnas hook, two interleaved rounds
+([results/sync_wt.md](results/sync_wt.md)):
+- **Correct:** `check_streamk.py`, 36 configurations, and `check_all.py`, 24, with no wrong
+  result and every flag re-armed.
+- **Cold kernel time:** 1.8, 5.4 and 1.8 us faster on 4352x4096x8192, 4352x4352x8192 and
+  3328x5120x8192 (0.5-2.1%).
+- **do_bench:** +2.0-2.1% at K = 4096 in both rounds; the registers and spills are unchanged.
+
+The earlier entries were measured with release/acquire flags, on GPU 2 with the amdgcnas hook.

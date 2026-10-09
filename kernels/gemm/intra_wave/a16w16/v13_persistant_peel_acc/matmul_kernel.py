@@ -271,12 +271,16 @@ def v13_persistant_peel_acc(
     TILE_ORDER_V9: gl.constexpr,
     MASK_TAIL_PREFETCH: gl.constexpr,
     ADD_BIAS: gl.constexpr,
+    TILE_LIMIT: gl.constexpr = 0,
 ):
     """
     v12_persistant_overlap_lds plus a peeled first iteration: K-steps 0-1 of every tile run
     outside the K loop with a constant zero accumulator, so the first MFMA of each output
     block uses an inline-0 C operand and no AGPRs are zeroed per tile. With ADD_BIAS the
     accumulators start from the bias instead, so those first MFMAs read it from AGPRs.
+
+    TILE_LIMIT (an experiment, 0 = off): run as a GEMM of the grid's first TILE_LIMIT tile ids,
+    with the tile positions still taken from the full grid; the other tiles of C are not written.
     """
 
     # Programs step through virtual pids start, start + NUM_PROGRAMS, ...; persistent_tile_id
@@ -287,7 +291,10 @@ def v13_persistant_peel_acc(
         start = get_logical_chiplet_mapped_pids(NUM_PROGRAMS, NUM_XCDS)
     num_tiles_m = gl.cdiv(M, BLOCK_M)
     num_tiles_n = gl.cdiv(N, BLOCK_N)
-    total_tiles = num_tiles_m * num_tiles_n
+    if TILE_LIMIT > 0:
+        total_tiles = num_tiles_m * 0 + TILE_LIMIT
+    else:
+        total_tiles = num_tiles_m * num_tiles_n
     # pid_m, pid_n = get_pids(M, N, BLOCK_M, BLOCK_N, GRID_MN, NUM_XCDS, GROUP_SIZE_M)
 
     # Half-M global load layout
@@ -619,6 +626,9 @@ def matmul(a, b, c=None, bias=None):
     assert fits(BLOCK_M * c.stride(0), N * c.stride(1), t=c), "C strides too large"
     # GRID_MN means the same thing as NUM_PROGRAMS, change when using persistant.
     GRID_MN = 256# triton.cdiv(M, BLOCK_M) * triton.cdiv(N, BLOCK_N)
+    # GEMM_TILE_LIMIT (an experiment): compute only the first T tile ids, as a T-tile GEMM.
+    TILE_LIMIT = int(os.environ.get("GEMM_TILE_LIMIT", "0"))
+    assert 0 <= TILE_LIMIT <= triton.cdiv(M, BLOCK_M) * triton.cdiv(N, BLOCK_N)
     grid = (GRID_MN, 1)
     NUM_XCDS = 8
     GROUP_SIZE_M = 4
@@ -648,6 +658,7 @@ def matmul(a, b, c=None, bias=None):
         # so the last trip loads the clamped tile unmasked.
         MASK_TAIL_PREFETCH=False,
         ADD_BIAS=bias is not None,
+        TILE_LIMIT=TILE_LIMIT,
         num_warps=num_warps,
     )
     return c

@@ -281,3 +281,27 @@ v13 column is from its own run.
 does any aligned two-tile scheme (the reversed order in `STREAMK_EXPLAINED.md` section 8 keeps
 offsets within a fixed lag). The losses above are on a partition whose L2 behaviour is poor
 under either mapping.
+
+## 4. Write-through partials with relaxed flags (2026-10-08)
+
+The partials were already written through (`.wt`) and read with `.cv`, so the compiler's
+GPU-scope release and acquire on the flags only added cache maintenance. Following
+[memory_model_litmus](../../../../../experiments/memory_model_litmus/WRITEUP.md) (recommendation
+1), they are gone:
+- the contributor still drains its stores in every wave and meets the other waves at
+  `s_barrier`, then raises its flag with a relaxed `gpu` swap (was `sem="release"`, which emitted
+  `buffer_wbl2 sc1`);
+- the owner still polls each peer flag with relaxed `gpu` atomic loads, then passes
+  `asm_fence("s_nop 0")`, a compiler-only fence that keeps the `.cv` reads below the poll, instead
+  of an acquire load (`buffer_inv sc1`).
+
+The compiled kernel has no `buffer_wbl2` or `buffer_inv` left. Old and new code were measured on
+GPU 0 without the amdgcnas hook, in two interleaved rounds ([results/sync_wt.md](results/sync_wt.md)):
+- **Correct:** `check_streamk.py`, 36 configurations, and `check_all.py`, 24, with no wrong
+  result and every flag re-armed.
+- **Cold kernel time:** 1.4, 3.5 and 3.2 us faster on 4352x4096x8192, 4352x4352x8192 and
+  3328x5120x8192 (0.4-1.2%); the rounds agree within 1.6 us.
+- **do_bench:** +0.5-1.0% at K = 4096 in both rounds; other shapes move within the run-to-run noise.
+
+The other entries in this log were measured with release/acquire flags, on GPU 2 with the
+amdgcnas hook.

@@ -1,0 +1,6 @@
+# Regenerable scratch: compiled builds, llc output, MIR dumps and decoded thread traces.
+builds/
+llc/
+mir/
+att/
+variants/

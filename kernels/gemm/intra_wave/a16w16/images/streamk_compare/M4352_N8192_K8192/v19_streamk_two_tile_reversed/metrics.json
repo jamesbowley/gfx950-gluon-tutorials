@@ -1,0 +1,264 @@
+{
+ "version": "v19_streamk_two_tile_reversed",
+ "note": "two-tile, end-to-end split, reversed order",
+ "ks_cycles": 2145.4375,
+ "shape": "4352x8192x8192 bf16",
+ "groups": [
+  {
+   "sig": "64-k-step partial + 80-k-step owner",
+   "n": 13,
+   "n_dp": 1,
+   "segs": [
+    {
+     "ksteps": 64,
+     "role": "partial",
+     "mac": 65.68170827628397,
+     "transition": 4.142744778162962,
+     "phases": {
+      "drain": 0.36356221050485044,
+      "partial store": 4.077490022431323,
+      "store drain": 0.9359396393509483,
+      "exit": 0.35610452413552013
+     }
+    },
+    {
+     "ksteps": 80,
+     "role": "owner",
+     "mac": 80.67538672182248,
+     "transition": 1.7413697672386168,
+     "phases": {
+      "drain": 0.451190025344481,
+      "spin on flags": 0.36169778891251786,
+      "collect": 14.971305386430506,
+      "exit": 0.3449179945815247
+     }
+    }
+   ],
+   "dp_last": 127.85457511579806
+  },
+  {
+   "sig": "48-k-step partial + 96-k-step owner",
+   "n": 12,
+   "n_dp": 1,
+   "segs": [
+    {
+     "ksteps": 48,
+     "role": "partial",
+     "mac": 49.04827104028899,
+     "transition": 4.038337168992339,
+     "phases": {
+      "drain": 0.3644944213010167,
+      "partial store": 4.229440382206427,
+      "store drain": 1.3125528010021266,
+      "exit": 0.35610452413552013
+     }
+    },
+    {
+     "ksteps": 96,
+     "role": "owner",
+     "mac": 97.222128353774,
+     "transition": 1.7171322865382934,
+     "phases": {
+      "drain": 0.4502578145483147,
+      "spin on flags": 0.3421213621930259,
+      "collect": 15.162408599644595,
+      "exit": 0.35144347015468874
+     }
+    }
+   ],
+   "dp_last": 127.76787951175459
+  },
+  {
+   "sig": "112-k-step partial + 32-k-step owner",
+   "n": 11,
+   "n_dp": 1,
+   "segs": [
+    {
+     "ksteps": 112,
+     "role": "partial",
+     "mac": 115.95397209193929,
+     "transition": 4.034608325807674,
+     "phases": {
+      "drain": 0.36729105368951553,
+      "partial store": 4.4000349579048565,
+      "store drain": 1.1335683281382003,
+      "exit": 0.35610452413552013
+     }
+    },
+    {
+     "ksteps": 32,
+     "role": "owner",
+     "mac": 31.805167943601248,
+     "transition": 1.797302415008594,
+     "phases": {
+      "drain": 0.451190025344481,
+      "spin on flags": 0.3822064264281761,
+      "collect": 14.676726774841962,
+      "exit": 0.3467824161738573
+     }
+    }
+   ],
+   "dp_last": 128.00932210796165
+  },
+  {
+   "sig": "128-k-step whole + 16-k-step owner",
+   "n": 11,
+   "n_dp": 1,
+   "segs": [
+    {
+     "ksteps": 128,
+     "role": "whole",
+     "mac": 133.3695341859178,
+     "transition": 4.099863081539313,
+     "phases": {
+      "drain": 3.7717248812887814,
+      "C store": 4.437323389751508,
+      "exit": 0.33746030821219447
+     }
+    },
+    {
+     "ksteps": 16,
+     "role": "owner",
+     "mac": 15.789786465464504,
+     "transition": 1.6257756285139977,
+     "phases": {
+      "drain": 0.45305444693681357,
+      "spin on flags": 0.3150872491042037,
+      "collect": 11.201444926734057,
+      "exit": 0.33932472980452705
+     }
+    }
+   ],
+   "dp_last": 127.92728755789904
+  },
+  {
+   "sig": "16-k-step partial + 128-k-step whole",
+   "n": 9,
+   "n_dp": 1,
+   "segs": [
+    {
+     "ksteps": 16,
+     "role": "partial",
+     "mac": 16.207416902147,
+     "transition": 4.034608325807674,
+     "phases": {
+      "drain": 0.36729105368951553,
+      "partial store": 4.103591924723978,
+      "store drain": 1.155941387246191,
+      "exit": 0.35424010254318755
+     }
+    },
+    {
+     "ksteps": 128,
+     "role": "whole",
+     "mac": 130.1757799982521,
+     "transition": 1.8234043173012497,
+     "phases": {
+      "drain": 4.418679173828182,
+      "C store": 3.9861333644070265,
+      "exit": 0.15847583534826812
+     }
+    }
+   ],
+   "dp_last": 128.14728930579426
+  },
+  {
+   "sig": "32-k-step partial + 112-k-step owner",
+   "n": 8,
+   "n_dp": 1,
+   "segs": [
+    {
+     "ksteps": 32,
+     "role": "partial",
+     "mac": 32.4894106679873,
+     "transition": 3.907827657529059,
+     "phases": {
+      "drain": 0.36635884289334925,
+      "partial store": 3.9954554723686893,
+      "store drain": 1.2995018498557989,
+      "exit": 0.35610452413552013
+     }
+    },
+    {
+     "ksteps": 112,
+     "role": "owner",
+     "mac": 113.74276808343288,
+     "transition": 1.6649284819529817,
+     "phases": {
+      "drain": 0.4502578145483147,
+      "spin on flags": 0.3961895883706703,
+      "collect": 15.334867596935357,
+      "exit": 0.3421213621930259
+     }
+    }
+   ],
+   "dp_last": 128.3896641127975
+  },
+  {
+   "sig": "80-k-step partial + 64-k-step owner",
+   "n": 8,
+   "n_dp": 1,
+   "segs": [
+    {
+     "ksteps": 80,
+     "role": "partial",
+     "mac": 82.23777201619717,
+     "transition": 3.9991843155533546,
+     "phases": {
+      "drain": 0.36729105368951553,
+      "partial store": 4.1632534156786205,
+      "store drain": 0.977889125178431,
+      "exit": 0.35610452413552013
+     }
+    },
+    {
+     "ksteps": 64,
+     "role": "owner",
+     "mac": 64.25729017974189,
+     "transition": 2.2969674017537214,
+     "phases": {
+      "drain": 0.451190025344481,
+      "spin on flags": 0.3411891513968596,
+      "collect": 14.801643021528243,
+      "exit": 0.33932472980452705
+     }
+    }
+   ],
+   "dp_last": 128.05313601538148
+  },
+  {
+   "sig": "96-k-step partial + 48-k-step owner",
+   "n": 8,
+   "n_dp": 1,
+   "segs": [
+    {
+     "ksteps": 96,
+     "role": "partial",
+     "mac": 99.02688845515192,
+     "transition": 4.069100125265826,
+     "phases": {
+      "drain": 0.36542663209718296,
+      "partial store": 4.315203775453725,
+      "store drain": 1.0226352433944126,
+      "exit": 0.35610452413552013
+     }
+    },
+    {
+     "ksteps": 48,
+     "role": "owner",
+     "mac": 48.04241559122556,
+     "transition": 1.9716258338916888,
+     "phases": {
+      "drain": 0.4521222361406473,
+      "spin on flags": 0.3812742156320098,
+      "collect": 13.913246132781776,
+      "exit": 0.34025694060069334
+     }
+    }
+   ],
+   "dp_last": 128.17991668366008
+  }
+ ],
+ "tail_median": 174.40638564395374,
+ "tail_max": 179.71159728493606
+}

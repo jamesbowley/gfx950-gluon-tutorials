@@ -21,7 +21,8 @@ All figures and tables come from [`streamk_diagrams.py`](streamk_diagrams.py). I
   - The data-parallel last wave costs much less than this note first assumed. Its few tiles run on otherwise idle CUs at about 0.76 us per k-step, against 1.21 us when all 256 CUs are busy. On 4352x4096x8192 it takes 97 us (80 k-steps), not 128 contended k-steps, and at K=4096 only 36 us. The tables in section 9 now use the measured value in their "measured" column.
   - v15's one-tile tail follows the model with row-major costs, 10-30% above it, and loses to data-parallel wherever the owners collect many partials.
   - Long stream-K ranges lose their L2 reuse. Each program starts at its own k offset, so the programs of an XCD stop sharing A/B k-slices (76% L2 hits fall to 10% on 3840x4096x8192). Tile-aligned cuts (v17) restore data-parallel's hit rate.
-  - Reduce-scatter (v20) makes the one-tile fixup about 25 k-steps at any split count, but reversed two-tile (v19) still wins with short lags when caches are clean. v20's host rule picks among data-parallel, two-tile and one-tile with either ending (finding 9).
+  - Reduce-scatter (v20) makes the one-tile fixup about 25 k-steps at any split count, but at the default split reversed two-tile (v19) still wins with short lags when caches are clean (finding 9).
+  - Splitting each leftover tile fewer ways closes that gap (finding 11). v20's default rule is now capped one-tile with no two-tile; on held-out and real-model shapes, adding two-tile back gains less than 0.1%.
 - The reversed order (the last-k-step program reduces, segments processed last-to-first) is an exact mirror of the original. It keeps every correctness and latency-hiding property, but in this one-tile regime it changes little for A/B reuse (section 8).
 - The reference kernel has a **lock-reset bug** and no formal release/acquire; the Gluon port must not copy either (sections 11 and 13).
 
@@ -407,7 +408,7 @@ The single-leftover-tile case (257 tiles) is the extreme. Today's one-tile polic
   - The lane-contiguous layout, `[16 register vectors][4 warps][64 lanes][4 fp32]`, is a bit permutation of the accumulator's layout, so each wave writes 1 KiB contiguously.
   - The port should use that layout.
 - **Caching.** `.wt` / `.cv` and default caching cost the same.
-- **Flag polling** costs nothing measurable, provided the owner polls with relaxed atomics and acquires once. An acquire in the spin loop invalidates the XCD's L2 under the neighbours' K loops, and it doubled the fixup intercept.
+- **Flag polling** costs nothing measurable, provided the owner polls with relaxed atomics and acquires once. An acquire in the spin loop doubled the fixup intercept. The explanation given at the time, that it invalidates the XCD's L2 under the neighbours' K loops, does not hold: [memory_model_litmus](../../../../../experiments/memory_model_litmus/README.md) found that `buffer_inv sc1` leaves this memory's L2 lines in place. Each `buffer_inv sc1` costs 0.5 us alone and about 6.4 us when 32 CUs issue one at once, so repeated acquires are expensive in themselves.
 
 ### Rounding `L` to a divisor is split-K of the tail
 
@@ -471,14 +472,15 @@ v14's tile body also assumes at least 4 k-steps, so short segments need their ow
 
 ## 10. Caches
 
-**The partial exchange is designed to skip L2.** Contributors write `P` with `.wt` (write-through), so the data reaches the memory side, and the owner reads with `.cv`, which forces the load past L2. This is needed for correctness, not only as an optimisation:
+**The partial exchange was designed to skip L2.** Contributors write `P` with `.wt` (write-through), so the data reaches the memory side, and the owner reads with `.cv`, which was meant to force the load past L2. The litmus tests in [experiments/memory_model_litmus](../../../../../experiments/memory_model_litmus/README.md) show that the sequence is correct, but for a different reason:
 
-- **The flag spin must bypass L2.** If the spin load could hit L2, the first stale "0" could stay cached in the reader's L2, and the loop would never exit.
-- **L2 is per-XCD and not coherent across XCDs**, and there is no "same XCD" memory scope to rely on, even though v14's pid mapping puts most of a tile's peers on one XCD. A peer's partial written into its own XCD's L2 is invisible to an owner on another XCD.
-- **The alternative is a GPU-scope acquire after the flag**, which on multi-XCD parts invalidates the reader's L2. That is heavier, and it throws away lines other programs on that XCD are using. Per-access bypass (`.cv` on the reads, `.wt` on the writer's stores) is the cheapest correct option.
-- Not polluting L2 with data read exactly once is a welcome side effect, not the reason. Whether `.cv` loads also allocate lines in L2 depends on the cache policy, and I have not checked it on gfx950.
+- **`.cv` (`sc0 sc1`) loads do not bypass L2.** On this memory they are served from the reader's own L2 (77 ns) whenever it holds the line, stale or not, and they allocate there. What they do guarantee is an L1 miss, as `.cg` (`sc0 nt`) loads also do.
+- **Coherence across XCDs comes from the writer's side.** A write that reaches memory (a `.wt` / `sc1` store, a `buffer_wbl2 sc1`, or an eviction) invalidates the other XCDs' L2 copies of the line. LLVM's gfx942 memory model describes this as the "cache probe caused by the PTE C-bit". A default store stays dirty in the writer's L2, invisible to every other XCD whatever the reader does. Even an acquire on the reader does not help: the stale copy is still served at 79 ns 5 us later.
+- **So the cross-XCD rule is: write-through (or release) on the writer, an L1-missing load on the reader.** `.wt` + `.cv` qualifies, and so does `.wt` + `.cg`. Default loads do not: they return the reader's L1 copy whenever another CU wrote the line.
+- **The flag spin must miss L1**, not L2. A `gpu`-scope atomic load (`sc1`) does, and sees another XCD's atomic. A `cta`-scope one (`sc0`) hits L1 and never exits, even on one XCD. When writer and reader share an XCD, its L2 is their coherence point, and v21 polls flags there (section 14, finding 13). The memory model has no "same XCD" scope, so that relies on a checked placement.
+- **The alternative, a GPU-scope release on the writer and acquire on the reader,** is correct but costs more in a burst. Its `buffer_inv sc1` turned out to be effectively an L1 invalidate on this memory: it does not throw away the neighbours' L2 lines. The release's `buffer_wbl2 sc1` writes back the whole XCD's dirty L2. With 16 contributors per XCD publishing 256 KiB each at once, the handshake takes 22 us against 10 us for write-through (the litmus README, section 5).
 
-Within one launch, a plain load of `P` would probably return the right data, because nothing on the reader's XCD has cached that slot. That is luck, not a guarantee.
+Within one launch, a plain load of `P` returns the right data only if nothing on the reader's CU has cached that slot. The litmus tests show it returning the stale L1 copy every time it was cached.
 
 **Last-level cache.** The partials should stay resident. The workspace is 64 MiB (256 x 256 KiB) and MI355X has 256 MB of Infinity Cache; it is memory-side, so whether a line hits depends on its address, not on which XCD asked for it. The pressure is real, though: 4352x4352x8192 bf16 is about 71 MB of A, 71 MB of B and 38 MB of C, and the redundant zero-init of `P` (section 13) pushes another 64 MiB of writes through just before the stream-K phase. That can evict A/B lines the stream-K tiles would otherwise reuse from the persistent phase.
 
@@ -534,7 +536,7 @@ A release on the writer paired with an acquire on the reader gives exactly the g
 
 - A release waits for this wave's earlier memory operations to complete (`s_waitcnt vmcnt(0)`). `vmcnt` is per wave and covers global loads, global stores *and* the `buffer_load_to_shared` async copies that feed v14's pipeline. It cannot pick out just the stores to `P`, so it also drains any prefetch in flight (section 9).
 - A release also writes back dirty L2 lines (`buffer_wbl2`), so other XCDs can see them on the memory side.
-- An acquire waits for the flag load and then invalidates the reader's L1, and L2 lines another XCD could have written (`buffer_inv`), so later reads cannot hit stale copies. Every other program on that XCD loses those L2 lines too.
+- An acquire waits for the flag load and then invalidates the reader's L1, and the "non-local" L2 lines (`buffer_inv sc1`), so later reads cannot hit stale copies. On `torch` memory no line counts as non-local, so in practice it invalidates L1 only. Stale L2 copies are instead removed by the writer's write-back (measured in [memory_model_litmus](../../../../../experiments/memory_model_litmus/README.md); the neighbours' L2 lines survive).
 
 Triton's atomics default to `sem="acq_rel", scope="gpu"` (`_str_to_sem` / `_str_to_scope` in `triton/language/semantic.py`, lines 970-996 in the tutorial checkout), so a plain `gl.atomic_xchg(locks + pid, 1)` is already a full GPU-scope acquire-release, with both costs. Gluon also has `gl.amd.cdna4.buffer_atomic_xchg(..., sem=, scope=)`.
 
@@ -561,7 +563,7 @@ sequenceDiagram
 
 ![Where the release cost lands](images/release_crossing.png)
 
-**The reference kernel** does `.wt` stores to `P`, then `tl.debug_barrier()`, then a `.wt` store of the flag, and the reader uses volatile `.cv` loads. That approximates release/acquire with per-access cache hints: `.wt` stands in for the L2 writeback and `.cv` for the L2 invalidate. It is missing a guaranteed "wait until my stores completed" before the flag: whether `debug_barrier`'s workgroup-scope fence includes a `vmcnt(0)` is an implementation detail, not promised at GPU scope.
+**The reference kernel** does `.wt` stores to `P`, then `tl.debug_barrier()`, then a `.wt` store of the flag, and the reader uses volatile `.cv` loads. That approximates release/acquire with per-access cache hints: `.wt` stands in for the L2 writeback, and `.cv` for the L2 invalidate. As measured, `.cv` only skips L1; the `.wt` store's own invalidation of other L2 copies covers the rest. It is missing a guaranteed "wait until my stores completed" before the flag: whether `debug_barrier`'s workgroup-scope fence includes a `vmcnt(0)` is an implementation detail, not promised at GPU scope.
 
 **Options for the Gluon port.**
 
@@ -569,6 +571,15 @@ sequenceDiagram
 - **Targeted, cheaper, hand-rolled:** `.wt` stores of `P` issued *before* the next segment's prefetch; a per-wave partial wait (`vmcnt(N)`, N covering only the later prefetch); a barrier; a relaxed GPU-scope flag store. On the reader, a relaxed spin and `.cv` loads of `P`. This keeps the prefetch in flight and avoids the L2 writeback and invalidate, but it leans on hardware behaviour the memory model does not formally promise (the reference kernel leans on the same things). It needs a stress test: many launches with rotating inputs, checked against a reference result.
 
 Start with the simple version, measure the switch cost, and only move to the targeted one if the drain shows up.
+
+**Measured since** ([experiments/memory_model_litmus](../../../../../experiments/memory_model_litmus/README.md)): both options are correct, and the targeted one now has its stress test.
+- The targeted sequence is `.wt` stores, `s_waitcnt vmcnt(0)`, a barrier and a relaxed `gpu` flag; on the reader, a relaxed `gpu` spin and `.cv` or `.cg` loads. With a flag and no time gap it gave 0 stale values in 4.9M line reads, from readers that held stale copies in their L1 and L2. That includes runs with 2 MiB of other stores queued ahead of the partial, and runs with the drain left out.
+- Keep the drain anyway: the memory model requires it, and the wait costs little after write-through stores.
+- One thing it relies on is observed, not documented: the probe that drops other XCDs' copies is complete when the store is acknowledged.
+- What the simple version needs is a release on the writer. An acquire on the reader alone gave 100% stale reads.
+- In a 16-contributor burst the simple version's handshake takes 22 us against 10 us, because the `buffer_wbl2 sc1` serialise.
+- The minimal sequence for each placement is in that README, section 6.
+- **Adopted (2026-10-08).** Every version, v15-v22, now uses the targeted sequence: write-through partials drained in every wave, relaxed `gpu` flags and counters, and `.cv` reads behind a compiler fence. See section 14, finding 14.
 
 ## 12. Gluon port: the pipeline
 
@@ -621,7 +632,7 @@ If odd lengths ever become unavoidable, add a one-step ending variant behind the
 
 [v15_streamk_onetile](../v15_streamk_onetile/WORKLOG.md) is this note's algorithm ported to v14's pipeline with only the forced changes:
 - work is handed out in pairs of k-steps (section 12);
-- release/acquire flags (section 11);
+- release/acquire flags (section 11), replaced by write-through partials with relaxed flags in every version since 2026-10-08 (finding 14);
 - owners re-arm the flags, and `P` is not zero-filled (section 13).
 
 Partials are row-major, as in TensorAtlas, and every segment starts with a fresh prologue. Raw numbers are in `v15_streamk_onetile/results/`; k-steps below are 1.21 us.
@@ -710,12 +721,14 @@ Against v17, reduce-scatter gains 64% at S = 2-4 and 11-19% at S = 16. Against v
 - **do_bench** zeroes 256 MB before every launch, and the dirty lines' write-back costs v19 14% and v20 2%. Under it v20 ties or beats v19.
 - **With clean or mildly dirty caches** (read 256 MB, zero 64 MB, idle or back-to-back), two-tile still wins by 3-15% wherever `n >= 7` and the lag `d = iters_per_tile * S / 256 <= 18` (+1-2% with four waves before the tail). Cold rocprof agrees.
 
-So reduce-scatter does not remove the case for two-tile. v20's host rule (`STREAMK_POLICY=auto`) is:
+So, at the default split, reduce-scatter does not remove the case for two-tile. v20's first host rule (`STREAMK_POLICY=auto`) is:
 - data-parallel for S > 128;
 - two-tile with a full wave to borrow, `n >= 7` and `d <= 18`;
 - otherwise one-tile, with reduce-scatter if every tile has at least 8 programs and the owner's ending below that.
 
 Reduce-scatter's place is then one-tile tails with long lags (S <= 32 at K = 16384: +5.7% over v17, +10% over v19) or no full wave to borrow.
+
+This rule is no longer the default. Once the split count is capped, one-tile ties two-tile, and the capped rule replaces it (finding 11).
 
 **10. For S > 128, an even split beats data-parallel at large K** (v20 WORKLOG entry 3). The tile-aligned split cannot help when S > 128: most tiles keep one program and run whole. The end-to-end split of v15/v16 gives every program `S / 256` of a tile instead (at S = 192, each 3 tiles to 4 programs). v20's `STREAMK_POLICY=spread` runs it in reversed order, which keeps an XCD's programs on about 2 distinct k-steps.
 - **S = 192, clean caches, against data-parallel:** -4% at K = 8192, level at 16384, +7% at 32768, +10% at 65536 (the ideal is 12.5%).
@@ -732,6 +745,26 @@ The proposed rule, spread for S > 128 when K >= 32768, waits for a wider sweep.
 - **Capped one-tile ties or beats two-tile.** Most of two-tile's advantage in finding 9 was the over-split default. Fewer programs only slow two-tile down.
 - **Small K:** at 16 k-steps per tile or fewer (K <= 1024), data-parallel beats every split. At K = 2048 only small S gains, with 2-3 splits.
 - **Threshold that fits:** split when `(256 - S) / 256 * iters_per_tile` is at least about 20 k-steps.
+- **The capped rule** (v20 entries 5 and 7, [experiments/streamk_capped_vs_auto](../../../../../experiments/streamk_capped_vs_auto/README.md)). `STREAMK_POLICY=capped` turns these fits into v20's default host rule:
+  - data-parallel below that threshold, or for S > 128 (`spread` there at K >= 32768);
+  - reduce-scatter with `n = min(128 // S, max(8, iters_per_tile // 8))` when `256 // S >= 8`;
+  - otherwise the owner's ending with `n = round(sqrt(iters_per_tile / max(2.2, S / 5)))`, and data-parallel where that comes out at n = 1.
+- **Held-out test of that rule.** It was scored on 32 shapes it was not fit to (S = 8-96, 1-16 full waves) and on 630 real-model GEMMs.
+  - Against the previous rule (finding 9), it is within 1.5% of the best configuration on 27 of the 32 shapes against 24, and on 609 of the 630 against 457.
+  - Adding two-tile back, for any wave count and lag threshold tried, gains at most 0.1% geomean.
+  - Two-tile only leads, by a median 1.8%, when the GPU idles between launches. Back to back, or with clean or dirty caches, the two are level or capped is ahead.
+- **A full grid does not give a better rule** (v20 entry 9, [experiments/streamk_split_rule](../../../../../experiments/streamk_split_rule/README.md)). Every configuration was timed on 576 shapes: S = 1-128, 16-256 k-tiles, and 0-7 full waves.
+  - The maps:
+    - splitting pays from about 20-24 k-tiles;
+    - reduce-scatter's best n grows with K (8, 16, then 32);
+    - the owner ending takes over from S = 20-40;
+    - two-tile only wins at S <= 2 and short K.
+  - Capped is 2.5% behind the best on the grid. A lookup table of the winners cuts that to 1.2% under cross-validation (after retiming the reduce-scatter rows on v20 entry 8's faster slice).
+  - The table beats capped on off-grid shapes timed the same way (-1.17% against -1.72%). It loses on the 630 real-model GEMMs timed back to back (-0.58% against -0.33%), so capped stays.
+  - The difference is at short K. There the cold grid favours splitting and back-to-back launches favour data-parallel; at long K the table's larger splits win under both.
+- **The rules need refitting once the endings settle** ([experiments/streamk_split_rule](../../../../../experiments/streamk_split_rule/README.md#re-check-the-rules-reduce-scatter-has-changed)).
+  - Capped's constants were fitted to the reduce-scatter ending before v20 entry 8 made its slice faster: the crossover with the owner ending, the split counts and the minimum-K cut. v21's barrier and slice work will move them again.
+  - The planned method is ATT cycles for each phase of the ending, cross-checked with `s_memrealtime` stamps, combined into a model of the tail, and validated against the grid's kernel times ([the cost-model section](../../../../../experiments/streamk_split_rule/README.md#next-a-cost-model-from-measured-phase-costs)).
 
 **12. Atomic endings do not pay** ([experiments/streamk_atomics](../../../../../experiments/streamk_atomics/README.md)). A synthetic 256x256 accumulator in v14's MFMA layout, with each ending timed per program:
 - **fp32 atomics lose outright.**
@@ -745,6 +778,33 @@ The proposed rule, spread for S > 128 when K >= 32768, waits for a wider sweep.
   - For v19 that is about 1% of the kernel. The cost is an extra bf16 rounding of the partial, and it needs bf16 or fp16 C.
   - It failed the experiment's pre-set bar (`pk_add` under the read alone, about 2 us; measured 4.8 us), so it has not been prototyped.
 - **Several writers on one tile cost nothing extra** (1-4 writers on different XCDs). Device-scope atomics on coarse-grained memory summed correctly across XCDs.
+
+**13. Partials through one XCD's L2 (v21)** ([experiments/streamk_l2_partials](../../../../../experiments/streamk_l2_partials/README.md), [v21_streamk_l2_partials](../v21_streamk_l2_partials/WORKLOG.md)). Section 10's L2 bypass is only needed across XCDs. With every program of a reduce-scatter tile on one XCD (an XCD-local split, checked on the host and with `HW_REG_XCC_ID`), v21's `STREAMK_PARTIALS=l2` keeps the partials and the flags in that XCD's L2:
+- default-policy partial stores;
+- a flag per program holding the launch's epoch, polled with `.cg` (`sc0 nt`) loads, with no atomics;
+- `.cg` slice loads, which always miss L1 (CDNA4 ISA Table 49), so no L1 invalidate is needed. (`buffer_inv sc0`, tried at first, is a NOP outside TG-split mode, ISA Table 52.)
+
+What it measured:
+- **Correctness.** It is exact in every stress configuration. Spread over XCDs, the same code hangs or gives wrong results.
+- **The ending.** It gets 2-6 us shorter, mostly because the flag barrier replaces v20's 3-9 us acquire-release counter with about 1 us.
+- **The store** is up to 2.4 us faster.
+- **The slice does not get faster.**
+  - A read of a line written into L2 without being read first still fetches it from memory.
+  - The slice is limited by its own code anyway: 8-11 us in every mode. That limit was lane order. The 4 lanes the L1 handles per cycle read 4 lines 256 bytes apart. With rows first in lane order (v20 and v21), the slice's reads take 4.5-5 us under `mem` instead of about 8.
+- **Write-back.** The dirty partials are written back at kernel end.
+- **Kernel time.** Under cold rocprof it is 1-2.4% faster on the S = 8-32 shapes at K = 8192. Two-tile (v19) still wins on some of them.
+- **`wt`** (write-through partials, relaxed atomics, no placement constraint) gets about half of the gain.
+
+**14. Write-through partials with relaxed flags, in every version** (2026-10-08; each version's `results/sync_wt.md`, [v21 WORKLOG entry 4](../v21_streamk_l2_partials/WORKLOG.md)). [memory_model_litmus](../../../../../experiments/memory_model_litmus/WRITEUP.md) recommends `wt`'s sequence for any placement, so v15-v22 now all use it:
+- the partials stay `.wt`, with a drain in every wave and a workgroup barrier;
+- the owner flags and the reduce-scatter barrier use relaxed `gpu` atomics; v21's default is `wt`;
+- compiler-only fences replace the acquires. `buffer_wbl2` and `buffer_inv` are gone from every kernel.
+
+Old against new code, on GPU 0 without the amdgcnas hook, in two interleaved rounds:
+- **Correctness.** Every version's stress check passes. A preset barrier count still hangs the reduce-scatter check, as it must.
+- **The ending.** The reduce-scatter barrier wait falls by 4-7 us, and the owner's wait for its last flag by 2-5 us. Section 11 measured 5-6.5 us in the synthetic exchange.
+- **Kernel time, cold.** The owner-ending versions (v15-v19) get 0.4-2.1% faster. Under v20-v22's capped rule the change is within about 1 us: the reduce-scatter tail itself moves by only -6 to +1.5 us, as the slice after the barrier gets up to 2 us slower on some shapes.
+- **do_bench.** 1-3% faster at K = 4096. v19 gains 7%, because its contributors publish mid-range, where the release's `buffer_wbl2` had do_bench's dirty L2 to write back.
 
 **What this changes in the plan.**
 - The fixup cost (lane-contiguous partials, the split options of section 9) matters for one-tile.
