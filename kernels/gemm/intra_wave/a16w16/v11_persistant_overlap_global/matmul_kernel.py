@@ -550,7 +550,7 @@ def v11_persistant_overlap_global(
     gl.amd.cdna4.async_copy.wait_group(0)
 
 
-def matmul(a, b, c=None, bias=None):
+def matmul(a, b, c=None, bias=None, schedule_hint="mfma-schedule"):
     assert a.shape[1] == b.shape[0], "Incompatible dimensions"
     assert a.is_contiguous(), "Matrix A must be contiguous"
     M, K = a.shape
@@ -600,6 +600,7 @@ def matmul(a, b, c=None, bias=None):
         TILE_ORDER_V9=os.environ.get("PERSISTENT_TILE_ORDER", "v9") == "v9",
         MASK_TAIL_PREFETCH=True,
         ADD_BIAS=bias is not None,
+        schedule_hint=schedule_hint,
         num_warps=num_warps,
     )
     return c

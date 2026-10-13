@@ -1123,7 +1123,7 @@ def streamk_workspace(device, num_programs, block_m, block_n):
     return _WORKSPACE[key]
 
 
-def matmul(a, b, c=None, bias=None):
+def matmul(a, b, c=None, bias=None, schedule_hint="mfma-schedule"):
     assert a.shape[1] == b.shape[0], "Incompatible dimensions"
     assert a.is_contiguous(), "Matrix A must be contiguous"
     M, K = a.shape
@@ -1201,6 +1201,7 @@ def matmul(a, b, c=None, bias=None):
         MASK_TAIL_PREFETCH=False,
         ADD_BIAS=bias is not None,
         TILE_LIMIT=TILE_LIMIT,
+        schedule_hint=schedule_hint,
         num_warps=num_warps,
     )
     return c

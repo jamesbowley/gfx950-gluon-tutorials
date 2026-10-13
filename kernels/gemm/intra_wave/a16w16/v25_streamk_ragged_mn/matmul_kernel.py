@@ -2209,7 +2209,7 @@ def split_rule_policy(total_tiles, iters_per_tile, num_programs):
     return "one_tile", fixup, (None if n >= num_programs // s else s * n)
 
 
-def matmul(a, b, c=None, bias=None):
+def matmul(a, b, c=None, bias=None, schedule_hint="mfma-schedule"):
     assert a.shape[1] == b.shape[0], "Incompatible dimensions"
     assert a.stride(1) == 1, "Matrix A must be row-major (its row stride may be padded)"
     M, K = a.shape
@@ -2290,7 +2290,7 @@ def matmul(a, b, c=None, bias=None):
     # nothing.
     EDGE_M = EDGE_N = os.environ.get("STREAMK_FORCE_EDGE") == "1" or M % BLOCK_M != 0 or N % BLOCK_N != 0
     if requested != "dp" and policy == "dp" and total_tiles <= NUM_PROGRAMS and not TILE_LIMIT:
-        return v9_matmul(a, b, c, bias)
+        return v9_matmul(a, b, c, bias, schedule_hint=schedule_hint)
     STREAMK_TILES = 0 if policy == "dp" else total_tiles % NUM_PROGRAMS
     if policy == "two_tile" and STREAMK_TILES > 0 and total_tiles >= NUM_PROGRAMS:
         STREAMK_TILES += NUM_PROGRAMS
@@ -2384,6 +2384,7 @@ def matmul(a, b, c=None, bias=None):
         CHUNK_MAJOR=CHUNK_MAJOR,
         EDGE_M=EDGE_M,
         EDGE_N=EDGE_N,
+        schedule_hint=schedule_hint,
         num_warps=num_warps,
     )
     return c

@@ -48,14 +48,17 @@ python bench_ext.py --version 20 --K 8192 --dtype bf16 --M 8192 --N 8192
 | `--M`, `--N` | `4096` | Problem size; an explicit `--K` outside the default sweep runs as given |
 | `--tile` | `256x256x64` | v9_tile only: BMxBN or BMxBNxBK (sets `V9_TILE`) |
 | `--bias` | off | Add a `bias[N]` (versions whose `matmul()` takes `bias`) |
+| `--schedule-hint` | the kernel's | As `bench.py`: `""` turns the MFMA scheduler off |
 | `--pad` | off | Pad B and C rows (below); `--no-pad` is the default, contiguous as in `bench.py` |
 
 Scripts under the version directories and `experiments/` import it as `import bench_ext as bench`
 for its plugin hooks, the path to `kernels/gemm/utils/`, and the tensor helpers (`make_b`,
 `make_c`, `gen_rotating_tensors`).
 
-Once the branch is on main's `gfx950-tutorial-v3.0` pin, check whether `bench_ext.py` needs
-main's `--schedule-hint` option (see the TODO at the top of the script).
+Like main's v5-v9, v9_tile, v9_ragged and v10 on pass `schedule_hint="mfma-schedule"` to their
+GEMM launch (`matmul()` in each `matmul_kernel.py`), the MFMA scheduler that was the `llir` plugin
+before `gfx950-tutorial-v3.0`; the stream-K versions forward it to their `v9_ragged` fallback.
+`scripts/benchmark_prepared_ext.py` compiles with the same default (`--schedule-hint` there too).
 
 ### Padded B and C rows (`--pad`)
 

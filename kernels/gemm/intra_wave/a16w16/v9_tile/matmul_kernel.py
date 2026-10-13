@@ -972,7 +972,7 @@ def small_pin_pads(km, kn, bk, w):
     return dict(zip(("PAD0", "PAD1", "PAD2"), pads))
 
 
-def matmul_small(a, b, c, bias, bm, bn, bk, w, pin, mfma4=False, waves_per_eu=0):
+def matmul_small(a, b, c, bias, bm, bn, bk, w, pin, mfma4=False, waves_per_eu=0, schedule_hint="mfma-schedule"):
     M, K = a.shape
     N = b.shape[1]
     km, kn, bk, w, swap = small_config(bm, bn, bk, w)
@@ -1001,13 +1001,14 @@ def matmul_small(a, b, c, bias, bm, bn, bk, w, pin, mfma4=False, waves_per_eu=0)
         MFMA4=mfma4,
         num_warps=w,
         waves_per_eu=waves_per_eu,
+        schedule_hint=schedule_hint,
         **(small_pin_pads(km, kn, bk, w) if pin else {}),
     )
     LAST_LAUNCH.update(kernel="v9_tile_small", shared=k.metadata.shared, tile=(km, kn, bk, w), swap=swap,
                        pin=pin, mfma4=mfma4, waves_per_eu=waves_per_eu)
 
 
-def matmul(a, b, c=None, bias=None, tile=None):
+def matmul(a, b, c=None, bias=None, tile=None, schedule_hint="mfma-schedule"):
     assert a.shape[1] == b.shape[0], "Incompatible dimensions"
     assert a.stride(1) == 1, "Matrix A must be row-major (its row stride may be padded)"
     M, K = a.shape
@@ -1022,7 +1023,7 @@ def matmul(a, b, c=None, bias=None, tile=None):
     else:
         (BLOCK_M, BLOCK_N, BLOCK_K, regions), w, pin = tile_config(tile), None, False
     if is_small(BLOCK_M, BLOCK_N, regions):
-        matmul_small(a, b, c, bias, BLOCK_M, BLOCK_N, BLOCK_K, w, pin, **opts)
+        matmul_small(a, b, c, bias, BLOCK_M, BLOCK_N, BLOCK_K, w, pin, schedule_hint=schedule_hint, **opts)
         return c
     # The pipeline consumes K-steps in pairs, at least two pairs; other K run over K rounded up to a
     # pair (EDGE_K). K must keep 16-byte rows: Triton only knows a stride is aligned when it is a
@@ -1066,6 +1067,7 @@ def matmul(a, b, c=None, bias=None, tile=None):
         EDGE_M=EDGE_M,
         EDGE_N=EDGE_N,
         EDGE_K=EDGE_K,
+        schedule_hint=schedule_hint,
         num_warps=num_warps,
     )
     return c

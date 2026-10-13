@@ -496,7 +496,7 @@ def v10_persistant(
         gl.amd.cdna3.buffer_store(ptr=c_base, offsets=c_br_offsets, stored_value=c_br)
 
 
-def matmul(a, b, c=None, bias=None):
+def matmul(a, b, c=None, bias=None, schedule_hint="mfma-schedule"):
     assert a.shape[1] == b.shape[0], "Incompatible dimensions"
     assert a.is_contiguous(), "Matrix A must be contiguous"
     M, K = a.shape
@@ -545,6 +545,7 @@ def matmul(a, b, c=None, bias=None):
         # Tiles are walked in v9's order; PERSISTENT_TILE_ORDER=split selects the split order.
         TILE_ORDER_V9=os.environ.get("PERSISTENT_TILE_ORDER", "v9") == "v9",
         ADD_BIAS=bias is not None,
+        schedule_hint=schedule_hint,
         num_warps=num_warps,
     )
     return c

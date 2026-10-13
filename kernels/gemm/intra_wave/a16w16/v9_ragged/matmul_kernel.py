@@ -501,7 +501,7 @@ def init_acc_edge(bias_ptr, pid_n, cols_left, BLOCK_M: gl.constexpr, BLOCK_N: gl
     return tl, bl, tr, br
 
 
-def matmul(a, b, c=None, bias=None):
+def matmul(a, b, c=None, bias=None, schedule_hint="mfma-schedule"):
     assert a.shape[1] == b.shape[0], "Incompatible dimensions"
     assert a.stride(1) == 1, "Matrix A must be row-major (its row stride may be padded)"
     M, K = a.shape
@@ -554,6 +554,7 @@ def matmul(a, b, c=None, bias=None):
         EDGE_N=EDGE_N,
         EDGE_K=EDGE_K,
         TILE_LIMIT=TILE_LIMIT,
+        schedule_hint=schedule_hint,
         num_warps=num_warps,
     )
     return c

@@ -24,28 +24,16 @@
 
 """bench.py extended for the versions beyond the tutorial: v10-v26, v9_tile (--version 9t) and
 v9_ragged (9r), with --M / --N, --tile, --bias and optionally padded B / C rows (--pad).
-bench.py itself stays as on main, the baseline. See BENCH_EXT.md.
-
-TODO after rebasing onto main's gfx950-tutorial-v3.0 pin: main's bench.py dropped the
-LLVM_PASS_PLUGIN_PATH hook below and takes --schedule-hint instead, which it forwards to kernels
-whose matmul() has a schedule_hint parameter (v5-v9 default to "mfma-schedule"). Decide whether
-this script needs the same option once v9_tile, v9_ragged and v10-v26 pass schedule_hint.
+bench.py itself stays as on main, the baseline. See BENCH_EXT.md. As in bench.py, --schedule-hint
+overrides the schedule_hint the kernel's matmul() passes to its launch (v5 on: "mfma-schedule").
 """
 
 import argparse
+import functools
 import importlib
 import inspect
-
-# The out-of-tree LLIR scheduler ships as an LLVM pass plugin (see ../../../../plugins/).
-# Loaded via LLVM_PASS_PLUGIN_PATH, it resolves LLVM symbols from libtriton at
-# dlopen time, which requires libtriton in the *global* symbol scope. CPython
-# loads C-extensions RTLD_LOCAL by default, so opt into RTLD_GLOBAL before the
-# first `import triton`. Only takes effect when the plugin is in use.
 import os
 import sys
-
-if os.environ.get("LLVM_PASS_PLUGIN_PATH"):
-    sys.setdlopenflags(os.RTLD_NOW | os.RTLD_GLOBAL)
 
 import triton
 import torch
@@ -195,6 +183,12 @@ def parse_args():
         "Should exceed GPU cache (L2+MALL) size. (default: 512)",
     )
     parser.add_argument(
+        "--schedule-hint",
+        default=None,
+        help='Triton schedule_hint compile option for the kernel ("" turns the MFMA scheduler '
+        "off; default: the kernel's own choice, see matmul() in matmul_kernel.py; ignored by v0-v4)",
+    )
+    parser.add_argument(
         "--bias",
         action="store_true",
         help="Add a bias[N] to the output (versions whose matmul() takes bias): correctness, "
@@ -320,6 +314,13 @@ def main():
     version_dir = VERSION_MAP[args.version]
     module = importlib.import_module(f"{version_dir}.matmul_kernel")
     matmul = module.matmul
+    if args.schedule_hint is not None:
+        # v0-v4 predate the MFMA scheduler and take no schedule_hint; the option only
+        # applies to the kernels that use it (v5 and later).
+        if "schedule_hint" in inspect.signature(matmul).parameters:
+            matmul = functools.partial(matmul, schedule_hint=args.schedule_hint)
+        else:
+            print(f"[{version_dir}] does not use the MFMA scheduler; --schedule-hint ignored")
     if args.bias and "bias" not in inspect.signature(matmul).parameters:
         sys.exit(f"{version_dir} has no bias option")
 
