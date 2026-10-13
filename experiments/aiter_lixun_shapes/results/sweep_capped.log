@@ -1,0 +1,639 @@
+GPU 0000:75:00.0 busy (2%), waiting
+GPU 0000:75:00.0 busy (2%), waiting
+GPU 0000:75:00.0 busy (1%), waiting
+GPU 0000:75:00.0 busy (3%), waiting
+GPU 0000:75:00.0 busy (1%), waiting
+GPU 0000:75:00.0 busy (1%), waiting
+GPU 0000:75:00.0 idle at 2026-10-02T18:53:06Z
+v20: torch=2.13.0+rocm7.14.0 hip=7.14.60850 gpu_pci_bus=117 gpu=gfx950:sramecc+:xnack- triton=3.8.0 @ /home/jbowley/repos/triton_gfx950-tutorial-v2.2/python/triton llir_plugin=/home/jbowley/repos/gfx950-gluon-tutorials/plugins/llir_scheduler/libLlirSched_linked.so amdgcnas=1 v20_snapshot=/home/jbowley/repos/gfx950-gluon-tutorials/experiments/aiter_lixun_shapes/v20_snapshot_capped/matmul_kernel.py v20_snapshot_sha256=93847ce6674f120e
+[1/630      1s] 1024x3072x512 bfloat16 S= 48 pick=           nan v9=    nan v20=  103.7 (one_tile owner, dp 213.5) capped: data-parallel
+[2/630      2s] 1024x4096x512 bfloat16 S= 64 pick=           nan v9=    nan v20=  133.5 (one_tile owner, dp 267.9) capped: data-parallel
+[3/630      2s] 1024x7168x512 bfloat16 S=112 pick=           nan v9=    nan v20=  261.5 (one_tile owner, dp 439.3) capped: data-parallel
+[4/630      2s] 2048x2048x512 bfloat16 S= 64 pick=           nan v9=    nan v20=  133.6 (one_tile owner, dp 273.5) capped: data-parallel
+[5/630      2s] 2048x4096x512 bfloat16 S=128 pick=           nan v9=    nan v20=  305.9 (one_tile owner, dp 485.2) capped: data-parallel
+[6/630      3s] 4096x2048x512 bfloat16 S=128 pick=           nan v9=    nan v20=  306.4 (one_tile owner, dp 484.5) capped: data-parallel
+[7/630      3s] 4096x4096x512 bfloat16 S=  0 pick=           nan v9=    nan v20=  793.1 (dp ) capped: data-parallel
+[8/630      3s] 4096x7168x512 bfloat16 S=192 pick=           nan v9=    nan v20=  883.5 (dp ) capped: data-parallel
+[9/630      3s] 8192x2048x512 bfloat16 S=  0 pick=           nan v9=    nan v20=  796.6 (dp ) capped: data-parallel
+[10/630      3s] 8192x4096x512 bfloat16 S=  0 pick=           nan v9=    nan v20=  923.5 (dp ) capped: data-parallel
+[11/630      3s] 16384x2048x512 bfloat16 S=  0 pick=           nan v9=    nan v20=  920.1 (dp ) capped: data-parallel
+[12/630      3s] 16384x4096x512 bfloat16 S=  0 pick=           nan v9=    nan v20= 1004.3 (dp ) capped: data-parallel
+[13/630      4s] 16384x7168x512 bfloat16 S=  0 pick=           nan v9=    nan v20= 1048.9 (dp ) capped: data-parallel
+[14/630      4s] 32768x2048x512 bfloat16 S=  0 pick=           nan v9=    nan v20= 1005.4 (dp ) capped: data-parallel
+[15/630      4s] 1024x5120x640 bfloat16 S= 80 pick=           nan v9=    nan v20=  207.1 (one_tile owner, dp 365.0) capped: data-parallel
+[16/630      4s] 2048x5120x640 bfloat16 S=160 pick=           nan v9=    nan v20=  650.8 (dp ) capped: data-parallel
+[17/630      5s] 4096x5120x640 bfloat16 S= 64 pick=           nan v9=    nan v20=  519.1 (one_tile owner, dp 782.5) capped: data-parallel
+[18/630      5s] 8192x5120x640 bfloat16 S=128 pick=           nan v9=    nan v20=  819.6 (one_tile owner, dp 953.6) capped: data-parallel
+[19/630      5s] 16384x5120x640 bfloat16 S=  0 pick=           nan v9=    nan v20= 1104.1 (dp ) capped: data-parallel
+[20/630      6s] 32768x5120x640 bfloat16 S=  0 pick=           nan v9=    nan v20= 1124.0 (dp ) capped: data-parallel
+[21/630      6s] 1024x7168x768 bfloat16 S=112 pick=           nan v9=    nan v20=  361.1 (one_tile owner, dp 525.0) capped: data-parallel
+[22/630      6s] 10240x7168x768 bfloat16 S= 96 pick=           nan v9=    nan v20=  986.8 (one_tile owner, dp 1095.9) capped: data-parallel
+[23/630      7s] 512x4096x1024 bfloat16 S= 32 pick=           nan v9=    nan v20=  109.0 (one_tile rs, dp 196.1) capped: data-parallel
+[24/630      7s] 512x6144x1024 bfloat16 S= 48 pick=           nan v9=    nan v20=  170.6 (one_tile owner, dp 289.1) capped: data-parallel
+[25/630      7s] 512x7168x1024 bfloat16 S= 56 pick=           nan v9=    nan v20=  203.4 (one_tile owner, dp 327.5) capped: data-parallel
+[26/630      7s] 512x8192x1024 bfloat16 S= 64 pick=           nan v9=    nan v20=  247.0 (one_tile owner, dp 369.4) capped: data-parallel
+[27/630      8s] 1024x4096x1024 bfloat16 S= 64 pick=           nan v9=    nan v20=  247.1 (one_tile owner, dp 366.1) capped: data-parallel
+[28/630      8s] 1024x7168x1024 bfloat16 S=112 pick=           nan v9=    nan v20=  461.1 (one_tile owner, dp 595.2) capped: data-parallel
+[29/630      8s] 1024x8192x1024 bfloat16 S=128 pick=           nan v9=    nan v20=  516.0 (one_tile owner, dp 659.6) capped: data-parallel
+[30/630      8s] 2048x4096x1024 bfloat16 S=128 pick=           nan v9=    nan v20=  518.3 (one_tile owner, dp 660.2) capped: data-parallel
+[31/630      8s] 2048x7168x1024 bfloat16 S=224 pick=           nan v9=    nan v20= 1017.2 (dp ) capped: data-parallel
+[32/630      8s] 2048x8192x1024 bfloat16 S=  0 pick=           nan v9=    nan v20= 1069.6 (dp ) capped: data-parallel
+[33/630      9s] 3072x4096x1024 bfloat16 S=192 pick=           nan v9=    nan v20=  915.2 (dp ) capped: data-parallel
+[34/630      9s] 4096x4096x1024 bfloat16 S=  0 pick=           nan v9=    nan v20= 1087.6 (dp ) capped: data-parallel
+[35/630      9s] 4096x7168x1024 bfloat16 S=192 pick=           nan v9=    nan v20= 1129.7 (dp ) capped: data-parallel
+[36/630      9s] 4096x8192x1024 bfloat16 S=  0 pick=           nan v9=    nan v20= 1181.9 (dp ) capped: data-parallel
+[37/630      9s] 5120x4096x1024 bfloat16 S= 64 pick=           nan v9=    nan v20=  704.5 (one_tile owner, dp 914.0) capped: data-parallel
+[38/630     10s] 7680x4096x1024 bfloat16 S=224 pick=           nan v9=    nan v20= 1162.1 (dp ) capped: data-parallel
+[39/630     10s] 8192x7168x1024 bfloat16 S=128 pick=           nan v9=    nan v20= 1092.0 (one_tile owner, dp 1168.8) capped: data-parallel
+[40/630     11s] 8192x8192x1024 bfloat16 S=  0 pick=           nan v9=    nan v20= 1261.2 (dp ) capped: data-parallel
+[41/630     11s] 16384x4096x1024 bfloat16 S=  0 pick=           nan v9=    nan v20= 1267.4 (dp ) capped: data-parallel
+[42/630     11s] 16384x7168x1024 bfloat16 S=  0 pick=           nan v9=    nan v20= 1297.7 (dp ) capped: data-parallel
+[43/630     12s] 16384x8192x1024 bfloat16 S=  0 pick=           nan v9=    nan v20= 1283.3 (dp ) capped: data-parallel
+[44/630     12s] 32768x7168x1024 bfloat16 S=  0 pick=           nan v9=    nan v20= 1269.2 (dp ) capped: data-parallel
+[45/630     13s] 32768x8192x1024 bfloat16 S=  0 pick=           nan v9=    nan v20= 1276.1 (dp ) capped: data-parallel
+[46/630     13s] 512x5120x1280 bfloat16 S= 40 pick=           nan v9=    nan v20=  162.2 (one_tile owner, dp 256.4) capped: data-parallel
+[47/630     13s] 1024x5120x1280 bfloat16 S= 80 pick=           nan v9=    nan v20=  369.3 (one_tile owner, dp 474.7) capped: data-parallel
+[48/630     13s] 2048x5120x1280 bfloat16 S=160 pick=           nan v9=    nan v20=  848.6 (dp ) capped: data-parallel
+[49/630     14s] 4096x5120x1280 bfloat16 S= 64 pick=           nan v9=    nan v20=  798.3 (one_tile owner, dp 961.0) capped: data-parallel
+[50/630     14s] 8192x5120x1280 bfloat16 S=128 pick=           nan v9=    nan v20= 1113.1 (one_tile owner, dp 1198.4) capped: data-parallel
+[51/630     15s] 16384x5120x1280 bfloat16 S=  0 pick=           nan v9=    nan v20= 1350.8 (dp ) capped: data-parallel
+[52/630     15s] 32768x5120x1280 bfloat16 S=  0 pick=           nan v9=    nan v20= 1311.8 (dp ) capped: data-parallel
+[53/630     17s] 512x1536x1536 bfloat16 S= 12 pick=           nan v9=    nan v20=   66.0 (one_tile rs, dp 83.6) capped: one-tile rs, n = 8 capped 89.6
+[54/630     19s] 512x2048x1536 bfloat16 S= 16 pick=           nan v9=    nan v20=   87.0 (one_tile rs, dp 112.6) capped: one-tile rs, n = 8 capped 115.7
+[55/630     20s] 512x2304x1536 bfloat16 S= 18 pick=           nan v9=    nan v20=   97.0 (one_tile rs, dp 126.2) capped: one-tile rs, n = 7 capped 115.3
+[56/630     22s] 512x4096x1536 bfloat16 S= 32 pick=           nan v9=    nan v20=  165.1 (one_tile rs, dp 222.9) capped: one-tile rs, n = 4 capped 193.2
+[57/630     23s] 512x6144x1536 bfloat16 S= 48 pick=           nan v9=    nan v20=  240.5 (one_tile owner, dp 323.5) capped: data-parallel
+[58/630     23s] 512x7168x1536 bfloat16 S= 56 pick=           nan v9=    nan v20=  286.3 (one_tile owner, dp 366.1) capped: data-parallel
+[59/630     25s] 1024x1536x1536 bfloat16 S= 24 pick=           nan v9=    nan v20=  121.4 (one_tile rs, dp 163.4) capped: one-tile rs, n = 5 capped 157.7
+[60/630     25s] 1024x2048x1536 bfloat16 S= 32 pick=           nan v9=    nan v20=  163.5 (one_tile rs, dp 218.8) capped: one-tile rs, n = 4 capped 194.6
+[61/630     27s] 1024x2304x1536 bfloat16 S= 36 pick=           nan v9=    nan v20=  165.8 (one_tile owner, dp 244.8) capped: one-tile owner, n = 2 capped 240.6
+[62/630     27s] 1024x3072x1536 bfloat16 S= 48 pick=           nan v9=    nan v20=  239.1 (one_tile owner, dp 320.9) capped: data-parallel
+[63/630     27s] 1024x4096x1536 bfloat16 S= 64 pick=           nan v9=    nan v20=  336.4 (one_tile owner, dp 413.5) capped: data-parallel
+[64/630     28s] 1024x7168x1536 bfloat16 S=112 pick=           nan v9=    nan v20=  586.8 (one_tile owner, dp 676.8) capped: data-parallel
+[65/630     28s] 2048x1536x1536 bfloat16 S= 48 pick=           nan v9=    nan v20=  239.3 (one_tile owner, dp 323.3) capped: data-parallel
+[66/630     28s] 2048x2048x1536 bfloat16 S= 64 pick=           nan v9=    nan v20=  338.7 (one_tile owner, dp 416.9) capped: data-parallel
+[67/630     29s] 2048x4096x1536 bfloat16 S=128 pick=           nan v9=    nan v20=  651.9 (one_tile owner, dp 753.4) capped: data-parallel
+[68/630     29s] 3072x2048x1536 bfloat16 S= 96 pick=           nan v9=    nan v20=  513.7 (one_tile owner, dp 591.1) capped: data-parallel
+[69/630     29s] 3072x4096x1536 bfloat16 S=192 pick=           nan v9=    nan v20= 1039.0 (dp ) capped: data-parallel
+[70/630     29s] 4096x1536x1536 bfloat16 S= 96 pick=           nan v9=    nan v20=  509.5 (one_tile owner, dp 598.4) capped: data-parallel
+[71/630     29s] 4096x2048x1536 bfloat16 S=128 pick=           nan v9=    nan v20=  655.6 (one_tile owner, dp 751.0) capped: data-parallel
+[72/630     30s] 4096x3072x1536 bfloat16 S=192 pick=           nan v9=    nan v20= 1037.1 (dp ) capped: data-parallel
+[73/630     30s] 4096x4096x1536 bfloat16 S=  0 pick=           nan v9=    nan v20= 1223.0 (dp ) capped: data-parallel
+[74/630     30s] 5120x2048x1536 bfloat16 S=160 pick=           nan v9=    nan v20=  906.4 (dp ) capped: data-parallel
+[75/630     30s] 5120x4096x1536 bfloat16 S= 64 pick=           nan v9=    nan v20=  873.8 (one_tile owner, dp 1010.0) capped: data-parallel
+[76/630     30s] 7680x2048x1536 bfloat16 S=240 pick=           nan v9=    nan v20= 1160.8 (dp ) capped: data-parallel
+[77/630     31s] 7680x4096x1536 bfloat16 S=224 pick=           nan v9=    nan v20= 1258.7 (dp ) capped: data-parallel
+[78/630     31s] 8192x1536x1536 bfloat16 S=192 pick=           nan v9=    nan v20= 1029.3 (dp ) capped: data-parallel
+[79/630     32s] 10240x7168x1536 bfloat16 S= 96 pick=           nan v9=    nan v20= 1241.1 (one_tile owner, dp 1288.7) capped: data-parallel
+[80/630     32s] 16384x1536x1536 bfloat16 S=128 pick=           nan v9=    nan v20= 1027.6 (one_tile owner, dp 1154.9) capped: data-parallel
+[81/630     32s] 16384x2048x1536 bfloat16 S=  0 pick=           nan v9=    nan v20= 1306.3 (dp ) capped: data-parallel
+[82/630     33s] 16384x3072x1536 bfloat16 S=  0 pick=           nan v9=    nan v20= 1347.4 (dp ) capped: data-parallel
+[83/630     33s] 16384x4096x1536 bfloat16 S=  0 pick=           nan v9=    nan v20= 1377.6 (dp ) capped: data-parallel
+[84/630     33s] 32768x1536x1536 bfloat16 S=  0 pick=           nan v9=    nan v20= 1349.6 (dp ) capped: data-parallel
+[85/630     35s] 512x7168x1792 bfloat16 S= 56 pick=           nan v9=    nan v20=  335.3 (one_tile owner, dp 386.3) capped: one-tile owner, n = 2 capped 404.6
+[86/630     36s] 1024x7168x1792 bfloat16 S=112 pick=           nan v9=    nan v20=  651.7 (one_tile owner, dp 706.9) capped: data-parallel
+[87/630     36s] 2048x7168x1792 bfloat16 S=224 pick=           nan v9=    nan v20= 1201.7 (dp ) capped: data-parallel
+[88/630     36s] 4096x7168x1792 bfloat16 S=192 pick=           nan v9=    nan v20= 1271.3 (dp ) capped: data-parallel
+[89/630     37s] 8192x7168x1792 bfloat16 S=128 pick=           nan v9=    nan v20= 1298.1 (one_tile owner, dp 1322.2) capped: data-parallel
+[90/630     37s] 16384x7168x1792 bfloat16 S=  0 pick=           nan v9=    nan v20= 1412.7 (dp ) capped: data-parallel
+[91/630     38s] 32768x7168x1792 bfloat16 S=  0 pick=           nan v9=    nan v20= 1410.0 (dp ) capped: data-parallel
+[92/630     40s] 512x4096x2048 bfloat16 S= 32 pick=           nan v9=    nan v20=  215.4 (one_tile rs, dp 237.5) capped: one-tile rs, n = 4 capped 255.3
+[93/630     42s] 512x6144x2048 float32  S= 48 pick=           nan v9=    nan v20=  293.3 (one_tile owner, dp 308.4) capped: one-tile owner, n = 2 capped 344.5
+[94/630     44s] 512x6144x2048 bfloat16 S= 48 pick=           nan v9=    nan v20=  316.3 (one_tile owner, dp 351.5) capped: one-tile owner, n = 2 capped 382.0
+[95/630     46s] 512x8192x2048 bfloat16 S= 64 pick=           nan v9=    nan v20=  430.1 (one_tile owner, dp 453.4) capped: one-tile owner, n = 2 capped 495.6
+[96/630     46s] 512x16384x2048 bfloat16 S=128 pick=           nan v9=    nan v20=  792.4 (one_tile owner, dp 836.4) capped: data-parallel
+[97/630     46s] 1024x4096x2048 bfloat16 S= 64 pick=           nan v9=    nan v20=  430.5 (one_tile owner, dp 455.0) capped: one-tile owner, n = 2 capped 493.7
+[98/630     48s] 1024x6144x2048 float32  S= 96 pick=           nan v9=    nan v20=  548.4 (one_tile owner, dp 582.4) capped: one-tile owner, n = 1 capped 551.4
+[99/630     50s] 1024x6144x2048 bfloat16 S= 96 pick=           nan v9=    nan v20=  615.2 (one_tile owner, dp 644.4) capped: one-tile owner, n = 1 capped 611.0
+[100/630     50s] 1024x8192x2048 bfloat16 S=128 pick=           nan v9=    nan v20=  793.9 (one_tile owner, dp 816.5) capped: data-parallel
+[101/630     51s] 1024x16384x2048 bfloat16 S=  0 pick=           nan v9=    nan v20= 1326.6 (dp ) capped: data-parallel
+[102/630     51s] 2048x4096x2048 bfloat16 S=128 pick=           nan v9=    nan v20=  796.5 (one_tile owner, dp 823.1) capped: data-parallel
+[103/630     51s] 2048x6144x2048 float32  S=192 pick=           nan v9=    nan v20= 1018.4 (dp ) capped: data-parallel
+[104/630     51s] 2048x6144x2048 bfloat16 S=192 pick=           nan v9=    nan v20= 1130.8 (dp ) capped: data-parallel
+[105/630     51s] 2048x8192x2048 bfloat16 S=  0 pick=           nan v9=    nan v20= 1301.9 (dp ) capped: data-parallel
+[106/630     52s] 2048x16384x2048 bfloat16 S=  0 pick=           nan v9=    nan v20= 1409.2 (dp ) capped: data-parallel
+[107/630     52s] 3072x4096x2048 bfloat16 S=192 pick=           nan v9=    nan v20= 1137.4 (dp ) capped: data-parallel
+[108/630     52s] 4096x4096x2048 bfloat16 S=  0 pick=           nan v9=    nan v20= 1328.9 (dp ) capped: data-parallel
+[109/630     53s] 4096x6144x2048 float32  S=128 pick=           nan v9=    nan v20= 1018.2 (one_tile owner, dp 1083.7) capped: data-parallel
+[110/630     53s] 4096x6144x2048 bfloat16 S=128 pick=           nan v9=    nan v20= 1144.8 (one_tile owner, dp 1235.6) capped: data-parallel
+[111/630     53s] 4096x8192x2048 bfloat16 S=  0 pick=           nan v9=    nan v20= 1402.2 (dp ) capped: data-parallel
+[112/630     54s] 4096x16384x2048 bfloat16 S=  0 pick=           nan v9=    nan v20= 1454.2 (dp ) capped: data-parallel
+[113/630     55s] 5120x4096x2048 bfloat16 S= 64 pick=           nan v9=    nan v20=  996.1 (one_tile owner, dp 1072.0) capped: one-tile owner, n = 2 capped 1093.1
+[114/630     55s] 7680x4096x2048 bfloat16 S=224 pick=           nan v9=    nan v20= 1367.4 (dp ) capped: data-parallel
+[115/630     55s] 8192x6144x2048 float32  S=  0 pick=           nan v9=    nan v20= 1258.9 (dp ) capped: data-parallel
+[116/630     56s] 8192x6144x2048 bfloat16 S=  0 pick=           nan v9=    nan v20= 1444.7 (dp ) capped: data-parallel
+[117/630     56s] 8192x8192x2048 bfloat16 S=  0 pick=           nan v9=    nan v20= 1457.8 (dp ) capped: data-parallel
+[118/630     57s] 8192x16384x2048 bfloat16 S=  0 pick=           nan v9=    nan v20= 1396.6 (dp ) capped: data-parallel
+[119/630     57s] 16384x4096x2048 bfloat16 S=  0 pick=           nan v9=    nan v20= 1450.6 (dp ) capped: data-parallel
+[120/630     58s] 16384x6144x2048 float32  S=  0 pick=           nan v9=    nan v20= 1241.4 (dp ) capped: data-parallel
+[121/630     58s] 16384x6144x2048 bfloat16 S=  0 pick=           nan v9=    nan v20= 1442.0 (dp ) capped: data-parallel
+[122/630     58s] 16384x8192x2048 bfloat16 S=  0 pick=           nan v9=    nan v20= 1441.9 (dp ) capped: data-parallel
+[123/630     59s] 16384x16384x2048 bfloat16 S=  0 pick=           nan v9=    nan v20= 1405.4 (dp ) capped: data-parallel
+[124/630     59s] 32768x6144x2048 bfloat16 S=  0 pick=           nan v9=    nan v20= 1435.1 (dp ) capped: data-parallel
+[125/630     60s] 32768x8192x2048 bfloat16 S=  0 pick=           nan v9=    nan v20= 1437.9 (dp ) capped: data-parallel
+[126/630     60s] 32768x16384x2048 bfloat16 S=  0 pick=           nan v9=    nan v20= 1418.6 (dp ) capped: data-parallel
+[127/630     62s] 512x6144x3072 float32  S= 48 pick=           nan v9=    nan v20=  394.6 (one_tile owner, dp 339.2) capped: one-tile owner, n = 2 capped 428.5
+[128/630     64s] 512x6144x3072 bfloat16 S= 48 pick=           nan v9=    nan v20=  427.9 (one_tile owner, dp 380.8) capped: one-tile owner, n = 2 capped 467.2
+[129/630     65s] 1024x6144x3072 float32  S= 96 pick=           nan v9=    nan v20=  688.8 (one_tile owner, dp 672.6) capped: one-tile owner capped 687.0
+[130/630     65s] 1024x6144x3072 bfloat16 S= 96 pick=           nan v9=    nan v20=  747.3 (one_tile owner, dp 699.3) capped: one-tile owner capped 747.1
+[131/630     65s] 2048x6144x3072 float32  S=192 pick=           nan v9=    nan v20= 1153.2 (dp ) capped: data-parallel
+[132/630     66s] 2048x6144x3072 bfloat16 S=192 pick=           nan v9=    nan v20= 1249.4 (dp ) capped: data-parallel
+[133/630     68s] 4096x6144x3072 float32  S=128 pick=           nan v9=    nan v20= 1181.5 (one_tile owner, dp 1191.3) capped: one-tile owner, n = 1 capped 1158.4
+[134/630     71s] 4096x6144x3072 bfloat16 S=128 pick=           nan v9=    nan v20= 1291.8 (one_tile owner, dp 1298.9) capped: one-tile owner, n = 1 capped 1240.4
+[135/630     71s] 8192x6144x3072 float32  S=  0 pick=           nan v9=    nan v20= 1369.4 (dp ) capped: data-parallel
+[136/630     72s] 8192x6144x3072 bfloat16 S=  0 pick=           nan v9=    nan v20= 1502.9 (dp ) capped: data-parallel
+[137/630     72s] 16384x6144x3072 float32  S=  0 pick=           nan v9=    nan v20= 1338.4 (dp ) capped: data-parallel
+[138/630     72s] 16384x6144x3072 bfloat16 S=  0 pick=           nan v9=    nan v20= 1506.0 (dp ) capped: data-parallel
+[139/630     73s] 32768x6144x3072 bfloat16 S=  0 pick=           nan v9=    nan v20= 1518.5 (dp ) capped: data-parallel
+[140/630     75s] 512x5120x3200 bfloat16 S= 40 pick=           nan v9=    nan v20=  362.9 (one_tile owner, dp 319.1) capped: one-tile owner, n = 2 capped 410.3
+[141/630     77s] 1024x5120x3200 bfloat16 S= 80 pick=           nan v9=    nan v20=  702.2 (one_tile owner, dp 604.4) capped: one-tile owner, n = 2 capped 741.8
+[142/630     77s] 2048x5120x3200 bfloat16 S=160 pick=           nan v9=    nan v20= 1130.1 (dp ) capped: data-parallel
+[143/630     80s] 4096x5120x3200 bfloat16 S= 64 pick=           nan v9=    nan v20= 1159.4 (one_tile owner, dp 1124.9) capped: one-tile owner, n = 2 capped 1192.8
+[144/630     83s] 8192x5120x3200 bfloat16 S=128 pick=           nan v9=    nan v20= 1409.5 (one_tile owner, dp 1382.5) capped: one-tile owner, n = 1 capped 1371.8
+[145/630     83s] 16384x5120x3200 bfloat16 S=  0 pick=           nan v9=    nan v20= 1532.3 (dp ) capped: data-parallel
+[146/630     84s] 32768x5120x3200 bfloat16 S=  0 pick=           nan v9=    nan v20= 1520.7 (dp ) capped: data-parallel
+[147/630     86s] 512x7168x3584 bfloat16 S= 56 pick=           nan v9=    nan v20=  557.2 (one_tile owner, dp 448.1) capped: one-tile owner, n = 2 capped 574.7
+[148/630     88s] 512x8192x3584 bfloat16 S= 64 pick=           nan v9=    nan v20=  626.6 (one_tile owner, dp 506.1) capped: one-tile owner, n = 2 capped 650.6
+[149/630     88s] 1024x7168x3584 bfloat16 S=112 pick=           nan v9=    nan v20=  912.3 (one_tile owner, dp 864.8) capped: one-tile owner capped 906.1
+[150/630     90s] 1024x8192x3584 bfloat16 S=128 pick=           nan v9=    nan v20= 1028.1 (one_tile owner, dp 954.6) capped: one-tile owner, n = 1 capped 908.4
+[151/630     91s] 2048x8192x3584 bfloat16 S=  0 pick=           nan v9=    nan v20= 1467.1 (dp ) capped: data-parallel
+[152/630     91s] 4096x8192x3584 bfloat16 S=  0 pick=           nan v9=    nan v20= 1523.7 (dp ) capped: data-parallel
+[153/630     91s] 8192x8192x3584 bfloat16 S=  0 pick=           nan v9=    nan v20= 1549.9 (dp ) capped: data-parallel
+[154/630     93s] 10240x7168x3584 bfloat16 S= 96 pick=           nan v9=    nan v20= 1463.6 (one_tile owner, dp 1446.0) capped: one-tile owner capped 1464.9
+[155/630     93s] 16384x8192x3584 bfloat16 S=  0 pick=           nan v9=    nan v20= 1547.2 (dp ) capped: data-parallel
+[156/630     94s] 32768x8192x3584 bfloat16 S=  0 pick=           nan v9=    nan v20= 1553.9 (dp ) capped: data-parallel
+[157/630     96s] 512x1024x4096 bfloat16 S=  8 pick=           nan v9=    nan v20=  106.7 (one_tile rs, dp 66.9) capped: one-tile rs, n = 8 capped 153.4
+[158/630     96s] 512x2048x4096 bfloat16 S= 16 pick=           nan v9=    nan v20=  212.1 (one_tile rs, dp 134.0) capped: one-tile rs, n = 8 capped 260.3
+[159/630     98s] 512x4096x4096 bfloat16 S= 32 pick=           nan v9=    nan v20=  377.1 (one_tile rs, dp 266.9) capped: one-tile rs, n = 4 capped 411.8
+[160/630    100s] 512x8192x4096 bfloat16 S= 64 pick=           nan v9=    nan v20=  688.8 (one_tile owner, dp 520.6) capped: one-tile owner, n = 2 capped 690.3
+[161/630    103s] 512x8704x4096 bfloat16 S= 68 pick=           nan v9=    nan v20=  702.2 (one_tile owner, dp 547.4) capped: one-tile owner, n = 2 capped 719.6
+[162/630    105s] 512x10240x4096 bfloat16 S= 80 pick=           nan v9=    nan v20=  806.4 (one_tile owner, dp 640.9) capped: one-tile owner, n = 2 capped 821.2
+[163/630    105s] 512x16384x4096 bfloat16 S=128 pick=           nan v9=    nan v20= 1076.2 (one_tile owner, dp 975.1) capped: one-tile owner capped 1084.5
+[164/630    106s] 512x129280x4096 bfloat16 S=242 pick=           nan v9=    nan v20= 1382.6 (dp ) capped: data-parallel
+[165/630    108s] 768x1024x4096 bfloat16 S= 12 pick=           nan v9=    nan v20=  162.2 (one_tile rs, dp 100.3) capped: one-tile rs, n = 8 capped 216.7
+[166/630    110s] 768x2048x4096 bfloat16 S= 24 pick=           nan v9=    nan v20=  291.2 (one_tile rs, dp 200.2) capped: one-tile rs, n = 5 capped 337.4
+[167/630    112s] 768x4096x4096 bfloat16 S= 48 pick=           nan v9=    nan v20=  523.2 (one_tile owner, dp 395.5) capped: one-tile owner, n = 3 capped 592.0
+[168/630    113s] 768x8192x4096 bfloat16 S= 96 pick=           nan v9=    nan v20=  841.2 (one_tile owner, dp 753.5) capped: one-tile owner capped 846.9
+[169/630    113s] 768x8704x4096 bfloat16 S=102 pick=           nan v9=    nan v20=  891.0 (one_tile owner, dp 807.7) capped: one-tile owner capped 890.2
+[170/630    114s] 768x10240x4096 bfloat16 S=120 pick=           nan v9=    nan v20= 1021.3 (one_tile owner, dp 940.4) capped: one-tile owner capped 1028.9
+[171/630    114s] 768x129280x4096 bfloat16 S=235 pick=           nan v9=    nan v20= 1446.6 (dp ) capped: data-parallel
+[172/630    115s] 1024x512x4096 bfloat16 S=  8 pick=           nan v9=    nan v20=  105.6 (one_tile rs, dp 66.1) capped: one-tile rs, n = 8 capped 153.1
+[173/630    115s] 1024x1024x4096 bfloat16 S= 16 pick=           nan v9=    nan v20=  211.6 (one_tile rs, dp 134.5) capped: one-tile rs, n = 8 capped 261.9
+[174/630    116s] 1024x2048x4096 bfloat16 S= 32 pick=           nan v9=    nan v20=  374.7 (one_tile rs, dp 266.3) capped: one-tile rs, n = 4 capped 403.9
+[175/630    116s] 1024x4096x4096 bfloat16 S= 64 pick=           nan v9=    nan v20=  687.9 (one_tile owner, dp 522.2) capped: one-tile owner, n = 2 capped 687.8
+[176/630    117s] 1024x8192x4096 bfloat16 S=128 pick=           nan v9=    nan v20= 1078.5 (one_tile owner, dp 976.5) capped: one-tile owner capped 1069.5
+[177/630    117s] 1024x8704x4096 bfloat16 S=136 pick=           nan v9=    nan v20= 1049.3 (dp ) capped: data-parallel
+[178/630    117s] 1024x10240x4096 bfloat16 S=160 pick=           nan v9=    nan v20= 1159.9 (dp ) capped: data-parallel
+[179/630    118s] 1024x16384x4096 bfloat16 S=  0 pick=           nan v9=    nan v20= 1498.9 (dp ) capped: data-parallel
+[180/630    118s] 1024x129280x4096 bfloat16 S=228 pick=           nan v9=    nan v20= 1470.7 (dp ) capped: data-parallel
+[181/630    120s] 1280x512x4096 bfloat16 S= 10 pick=           nan v9=    nan v20=  129.6 (one_tile rs, dp 83.8) capped: one-tile rs, n = 8 capped 185.1
+[182/630    122s] 1280x1024x4096 bfloat16 S= 20 pick=           nan v9=    nan v20=  244.9 (one_tile rs, dp 167.3) capped: one-tile rs, n = 6 capped 292.7
+[183/630    124s] 1280x2048x4096 bfloat16 S= 40 pick=           nan v9=    nan v20=  428.0 (one_tile owner, dp 328.7) capped: one-tile owner, n = 3 capped 500.8
+[184/630    125s] 1280x129280x4096 bfloat16 S=221 pick=           nan v9=    nan v20= 1443.7 (dp ) capped: data-parallel
+[185/630    125s] 1536x512x4096 bfloat16 S= 12 pick=           nan v9=    nan v20=  160.1 (one_tile rs, dp 100.7) capped: one-tile rs, n = 8 capped 215.6
+[186/630    126s] 1536x1024x4096 bfloat16 S= 24 pick=           nan v9=    nan v20=  290.8 (one_tile rs, dp 201.2) capped: one-tile rs, n = 5 capped 339.1
+[187/630    126s] 1536x2048x4096 bfloat16 S= 48 pick=           nan v9=    nan v20=  519.4 (one_tile owner, dp 395.7) capped: one-tile owner, n = 3 capped 583.7
+[188/630    127s] 1536x129280x4096 bfloat16 S=214 pick=           nan v9=    nan v20= 1469.0 (dp ) capped: data-parallel
+[189/630    129s] 1792x512x4096 bfloat16 S= 14 pick=           nan v9=    nan v20=  188.9 (one_tile rs, dp 117.6) capped: one-tile rs, n = 8 capped 239.9
+[190/630    131s] 1792x1024x4096 bfloat16 S= 28 pick=           nan v9=    nan v20=  333.1 (one_tile rs, dp 233.4) capped: one-tile rs, n = 4 capped 370.8
+[191/630    133s] 1792x2048x4096 bfloat16 S= 56 pick=           nan v9=    nan v20=  615.1 (one_tile owner, dp 459.7) capped: one-tile owner, n = 2 capped 606.9
+[192/630    133s] 1792x129280x4096 bfloat16 S=207 pick=           nan v9=    nan v20= 1492.1 (dp ) capped: data-parallel
+[193/630    134s] 2048x512x4096 bfloat16 S= 16 pick=           nan v9=    nan v20=  210.0 (one_tile rs, dp 133.6) capped: one-tile rs, n = 8 capped 259.9
+[194/630    134s] 2048x1024x4096 bfloat16 S= 32 pick=           nan v9=    nan v20=  373.4 (one_tile rs, dp 265.1) capped: one-tile rs, n = 4 capped 403.4
+[195/630    135s] 2048x2048x4096 bfloat16 S= 64 pick=           nan v9=    nan v20=  691.1 (one_tile owner, dp 522.1) capped: one-tile owner, n = 2 capped 699.3
+[196/630    135s] 2048x4096x4096 bfloat16 S=128 pick=           nan v9=    nan v20= 1089.4 (one_tile owner, dp 982.5) capped: one-tile owner capped 1089.9
+[197/630    136s] 2048x8192x4096 bfloat16 S=  0 pick=           nan v9=    nan v20= 1491.2 (dp ) capped: data-parallel
+[198/630    137s] 2048x8704x4096 bfloat16 S= 16 pick=           nan v9=    nan v20= 1223.4 (two_tile rs, dp 989.2) capped: one-tile rs, n = 8 capped 1230.9
+[199/630    138s] 2048x10240x4096 bfloat16 S= 64 pick=           nan v9=    nan v20= 1260.7 (one_tile owner, dp 1153.1) capped: one-tile owner, n = 2 capped 1290.2
+[200/630    138s] 2048x16384x4096 bfloat16 S=  0 pick=           nan v9=    nan v20= 1550.1 (dp ) capped: data-parallel
+[201/630    139s] 2048x129280x4096 bfloat16 S=200 pick=           nan v9=    nan v20= 1521.2 (dp ) capped: data-parallel
+[202/630    141s] 2304x512x4096 bfloat16 S= 18 pick=           nan v9=    nan v20=  220.0 (one_tile rs, dp 150.5) capped: one-tile rs, n = 7 capped 266.7
+[203/630    143s] 2304x1024x4096 bfloat16 S= 36 pick=           nan v9=    nan v20=  378.2 (one_tile owner, dp 297.9) capped: one-tile owner, n = 3 capped 455.5
+[204/630    145s] 2304x2048x4096 bfloat16 S= 72 pick=           nan v9=    nan v20=  731.4 (one_tile owner, dp 579.3) capped: one-tile owner, n = 2 capped 755.0
+[205/630    146s] 2560x512x4096 bfloat16 S= 20 pick=           nan v9=    nan v20=  243.8 (one_tile rs, dp 167.3) capped: one-tile rs, n = 6 capped 292.0
+[206/630    146s] 2560x1024x4096 bfloat16 S= 40 pick=           nan v9=    nan v20=  428.1 (one_tile owner, dp 329.7) capped: one-tile owner, n = 3 capped 505.6
+[207/630    147s] 2560x2048x4096 bfloat16 S= 80 pick=           nan v9=    nan v20=  801.8 (one_tile owner, dp 646.1) capped: one-tile owner, n = 2 capped 821.2
+[208/630    149s] 2816x512x4096 bfloat16 S= 22 pick=           nan v9=    nan v20=  270.0 (one_tile rs, dp 184.7) capped: one-tile rs, n = 5 capped 312.9
+[209/630    151s] 2816x1024x4096 bfloat16 S= 44 pick=           nan v9=    nan v20=  476.9 (one_tile owner, dp 365.9) capped: one-tile owner, n = 3 capped 548.9
+[210/630    152s] 2816x2048x4096 bfloat16 S= 88 pick=           nan v9=    nan v20=  809.0 (one_tile owner, dp 683.6) capped: one-tile owner capped 817.7
+[211/630    152s] 3072x512x4096 bfloat16 S= 24 pick=           nan v9=    nan v20=  287.4 (one_tile rs, dp 201.3) capped: one-tile rs, n = 5 capped 339.7
+[212/630    153s] 3072x1024x4096 bfloat16 S= 48 pick=           nan v9=    nan v20=  520.7 (one_tile owner, dp 392.6) capped: one-tile owner, n = 3 capped 588.7
+[213/630    153s] 3072x2048x4096 bfloat16 S= 96 pick=           nan v9=    nan v20=  839.9 (one_tile owner, dp 761.8) capped: one-tile owner capped 842.6
+[214/630    155s] 3328x512x4096 bfloat16 S= 26 pick=           nan v9=    nan v20=  309.6 (one_tile rs, dp 217.6) capped: one-tile rs, n = 4 capped 351.4
+[215/630    158s] 3328x1024x4096 bfloat16 S= 52 pick=           nan v9=    nan v20=  564.4 (one_tile owner, dp 427.2) capped: one-tile owner, n = 2 capped 571.0
+[216/630    158s] 3328x2048x4096 bfloat16 S=104 pick=           nan v9=    nan v20=  904.0 (one_tile owner, dp 816.0) capped: one-tile owner capped 907.9
+[217/630    159s] 3584x512x4096 bfloat16 S= 28 pick=           nan v9=    nan v20=  332.2 (one_tile rs, dp 233.4) capped: one-tile rs, n = 4 capped 370.9
+[218/630    159s] 3584x1024x4096 bfloat16 S= 56 pick=           nan v9=    nan v20=  613.5 (one_tile owner, dp 460.9) capped: one-tile owner, n = 2 capped 617.4
+[219/630    160s] 3584x2048x4096 bfloat16 S=112 pick=           nan v9=    nan v20=  967.7 (one_tile owner, dp 860.0) capped: one-tile owner capped 974.6
+[220/630    162s] 3840x512x4096 bfloat16 S= 30 pick=           nan v9=    nan v20=  349.1 (one_tile rs, dp 249.3) capped: one-tile rs, n = 4 capped 391.1
+[221/630    164s] 3840x1024x4096 bfloat16 S= 60 pick=           nan v9=    nan v20=  652.9 (one_tile owner, dp 490.1) capped: one-tile owner, n = 2 capped 654.0
+[222/630    165s] 3840x2048x4096 bfloat16 S=120 pick=           nan v9=    nan v20= 1027.0 (one_tile owner, dp 925.0) capped: one-tile owner capped 1025.3
+[223/630    165s] 4096x512x4096 bfloat16 S= 32 pick=           nan v9=    nan v20=  373.7 (one_tile rs, dp 263.9) capped: one-tile rs, n = 4 capped 401.8
+[224/630    166s] 4096x1024x4096 bfloat16 S= 64 pick=           nan v9=    nan v20=  688.2 (one_tile owner, dp 517.5) capped: one-tile owner, n = 2 capped 692.7
+[225/630    166s] 4096x2048x4096 bfloat16 S=128 pick=           nan v9=    nan v20= 1090.1 (one_tile owner, dp 986.6) capped: one-tile owner capped 1095.7
+[226/630    166s] 4096x4096x4096 bfloat16 S=  0 pick=           nan v9=    nan v20= 1499.3 (dp ) capped: data-parallel
+[227/630    167s] 4096x8192x4096 bfloat16 S=  0 pick=           nan v9=    nan v20= 1543.9 (dp ) capped: data-parallel
+[228/630    168s] 4096x8704x4096 bfloat16 S= 32 pick=           nan v9=    nan v20= 1402.3 (two_tile rs, dp 1240.7) capped: one-tile rs, n = 4 capped 1370.1
+[229/630    170s] 4096x10240x4096 bfloat16 S=128 pick=           nan v9=    nan v20= 1460.7 (one_tile owner, dp 1414.1) capped: one-tile owner capped 1459.4
+[230/630    170s] 4096x16384x4096 bfloat16 S=  0 pick=           nan v9=    nan v20= 1560.9 (dp ) capped: data-parallel
+[231/630    171s] 4096x129280x4096 bfloat16 S=144 pick=           nan v9=    nan v20= 1541.4 (dp ) capped: data-parallel
+[232/630    173s] 4352x512x4096 bfloat16 S= 34 pick=           nan v9=    nan v20=  353.7 (one_tile owner, dp 282.8) capped: one-tile owner, n = 3 capped 431.7
+[233/630    173s] 4352x1024x4096 bfloat16 S= 68 pick=           nan v9=    nan v20=  707.1 (one_tile owner, dp 546.7) capped: one-tile owner, n = 2 capped 718.1
+[234/630    173s] 4352x2048x4096 bfloat16 S=136 pick=           nan v9=    nan v20= 1035.4 (dp ) capped: data-parallel
+[235/630    174s] 5120x512x4096 bfloat16 S= 40 pick=           nan v9=    nan v20=  428.6 (one_tile owner, dp 332.0) capped: one-tile owner, n = 3 capped 501.9
+[236/630    174s] 5120x1024x4096 bfloat16 S= 80 pick=           nan v9=    nan v20=  802.5 (one_tile owner, dp 639.6) capped: one-tile owner, n = 2 capped 815.5
+[237/630    175s] 5120x2048x4096 bfloat16 S=160 pick=           nan v9=    nan v20= 1155.5 (dp ) capped: data-parallel
+[238/630    175s] 6144x512x4096 bfloat16 S= 48 pick=           nan v9=    nan v20=  513.5 (one_tile owner, dp 395.4) capped: one-tile owner, n = 3 capped 583.0
+[239/630    176s] 6144x1024x4096 bfloat16 S= 96 pick=           nan v9=    nan v20=  836.8 (one_tile owner, dp 764.0) capped: one-tile owner capped 843.8
+[240/630    176s] 6144x2048x4096 bfloat16 S=192 pick=           nan v9=    nan v20= 1280.3 (dp ) capped: data-parallel
+[241/630    177s] 6144x129280x4096 bfloat16 S= 88 pick=           nan v9=    nan v20= 1523.8 (one_tile owner, dp 1522.0) capped: one-tile owner capped 1527.8
+[242/630    180s] 6400x512x4096 bfloat16 S= 50 pick=           nan v9=    nan v20=  535.4 (one_tile owner, dp 411.8) capped: one-tile owner, n = 3 capped 604.7
+[243/630    180s] 6400x1024x4096 bfloat16 S=100 pick=           nan v9=    nan v20=  871.1 (one_tile owner, dp 786.4) capped: one-tile owner capped 870.4
+[244/630    180s] 6400x2048x4096 bfloat16 S=200 pick=           nan v9=    nan v20= 1301.5 (dp ) capped: data-parallel
+[245/630    183s] 6912x512x4096 bfloat16 S= 54 pick=           nan v9=    nan v20=  589.5 (one_tile owner, dp 444.8) capped: one-tile owner, n = 2 capped 593.7
+[246/630    183s] 6912x1024x4096 bfloat16 S=108 pick=           nan v9=    nan v20=  918.1 (one_tile owner, dp 859.6) capped: one-tile owner capped 915.0
+[247/630    183s] 6912x2048x4096 bfloat16 S=216 pick=           nan v9=    nan v20= 1357.4 (dp ) capped: data-parallel
+[248/630    184s] 7168x512x4096 bfloat16 S= 56 pick=           nan v9=    nan v20=  606.6 (one_tile owner, dp 454.7) capped: one-tile owner, n = 2 capped 611.5
+[249/630    185s] 7168x1024x4096 bfloat16 S=112 pick=           nan v9=    nan v20=  977.7 (one_tile owner, dp 886.6) capped: one-tile owner capped 976.3
+[250/630    185s] 7168x2048x4096 bfloat16 S=224 pick=           nan v9=    nan v20= 1355.9 (dp ) capped: data-parallel
+[251/630    187s] 7424x512x4096 bfloat16 S= 58 pick=           nan v9=    nan v20=  630.1 (one_tile owner, dp 474.1) capped: one-tile owner, n = 2 capped 624.7
+[252/630    187s] 7424x1024x4096 bfloat16 S=116 pick=           nan v9=    nan v20= 1002.0 (one_tile owner, dp 897.2) capped: one-tile owner capped 998.8
+[253/630    188s] 7424x2048x4096 bfloat16 S=232 pick=           nan v9=    nan v20= 1416.0 (dp ) capped: data-parallel
+[254/630    188s] 7680x512x4096 bfloat16 S= 60 pick=           nan v9=    nan v20=  622.8 (one_tile owner, dp 488.7) capped: one-tile owner, n = 2 capped 653.8
+[255/630    189s] 7680x1024x4096 bfloat16 S=120 pick=           nan v9=    nan v20= 1010.4 (one_tile owner, dp 922.5) capped: one-tile owner capped 1012.3
+[256/630    189s] 7680x2048x4096 bfloat16 S=240 pick=           nan v9=    nan v20= 1439.1 (dp ) capped: data-parallel
+[257/630    191s] 7936x512x4096 bfloat16 S= 62 pick=           nan v9=    nan v20=  667.4 (one_tile owner, dp 506.9) capped: one-tile owner, n = 2 capped 672.4
+[258/630    192s] 7936x1024x4096 bfloat16 S=124 pick=           nan v9=    nan v20= 1039.3 (one_tile owner, dp 914.5) capped: one-tile owner capped 1055.7
+[259/630    192s] 7936x2048x4096 bfloat16 S=248 pick=           nan v9=    nan v20= 1467.7 (dp ) capped: data-parallel
+[260/630    193s] 8192x512x4096 bfloat16 S= 64 pick=           nan v9=    nan v20=  689.0 (one_tile owner, dp 518.5) capped: one-tile owner, n = 2 capped 698.2
+[261/630    193s] 8192x1024x4096 bfloat16 S=128 pick=           nan v9=    nan v20= 1095.1 (one_tile owner, dp 972.4) capped: one-tile owner capped 1076.5
+[262/630    194s] 8192x2048x4096 bfloat16 S=  0 pick=           nan v9=    nan v20= 1495.0 (dp ) capped: data-parallel
+[263/630    194s] 8192x4096x4096 bfloat16 S=  0 pick=           nan v9=    nan v20= 1551.7 (dp ) capped: data-parallel
+[264/630    194s] 8192x8192x4096 bfloat16 S=  0 pick=           nan v9=    nan v20= 1569.8 (dp ) capped: data-parallel
+[265/630    196s] 8192x8704x4096 bfloat16 S= 64 pick=           nan v9=    nan v20= 1466.0 (one_tile owner, dp 1437.7) capped: one-tile owner, n = 2 capped 1482.2
+[266/630    196s] 8192x10240x4096 bfloat16 S=  0 pick=           nan v9=    nan v20= 1549.9 (dp ) capped: data-parallel
+[267/630    197s] 8192x16384x4096 bfloat16 S=  0 pick=           nan v9=    nan v20= 1542.3 (dp ) capped: data-parallel
+[268/630    198s] 8192x129280x4096 bfloat16 S= 32 pick=           nan v9=    nan v20= 1574.2 (two_tile rs, dp 1559.7) capped: one-tile rs, n = 4 capped 1570.9
+[269/630    199s] 10240x512x4096 bfloat16 S= 80 pick=           nan v9=    nan v20=  807.7 (one_tile owner, dp 642.2) capped: one-tile owner, n = 2 capped 814.9
+[270/630    199s] 10240x1024x4096 bfloat16 S=160 pick=           nan v9=    nan v20= 1157.3 (dp ) capped: data-parallel
+[271/630    200s] 10240x2048x4096 bfloat16 S= 64 pick=           nan v9=    nan v20= 1255.4 (one_tile owner, dp 1155.6) capped: one-tile owner, n = 2 capped 1279.6
+[272/630    200s] 10240x129280x4096 bfloat16 S=232 pick=           nan v9=    nan v20= 1523.9 (dp ) capped: data-parallel
+[273/630    201s] 12288x512x4096 bfloat16 S= 96 pick=           nan v9=    nan v20=  843.3 (one_tile owner, dp 756.5) capped: one-tile owner capped 840.0
+[274/630    201s] 12288x1024x4096 bfloat16 S=192 pick=           nan v9=    nan v20= 1269.4 (dp ) capped: data-parallel
+[275/630    202s] 12288x2048x4096 bfloat16 S=128 pick=           nan v9=    nan v20= 1375.0 (one_tile owner, dp 1331.4) capped: one-tile owner capped 1374.4
+[276/630    203s] 12288x129280x4096 bfloat16 S=176 pick=           nan v9=    nan v20= 1555.2 (dp ) capped: data-parallel
+[277/630    204s] 14336x512x4096 bfloat16 S=112 pick=           nan v9=    nan v20=  972.1 (one_tile owner, dp 867.9) capped: one-tile owner capped 970.4
+[278/630    204s] 14336x1024x4096 bfloat16 S=224 pick=           nan v9=    nan v20= 1378.5 (dp ) capped: data-parallel
+[279/630    204s] 14336x2048x4096 bfloat16 S=192 pick=           nan v9=    nan v20= 1422.1 (dp ) capped: data-parallel
+[280/630    206s] 14336x129280x4096 bfloat16 S=120 pick=           nan v9=    nan v20= 1531.2 (one_tile owner, dp 1537.3) capped: one-tile owner capped 1536.0
+[281/630    207s] 16384x512x4096 bfloat16 S=128 pick=           nan v9=    nan v20= 1073.7 (one_tile owner, dp 978.9) capped: one-tile owner capped 1084.2
+[282/630    207s] 16384x1024x4096 bfloat16 S=  0 pick=           nan v9=    nan v20= 1493.7 (dp ) capped: data-parallel
+[283/630    208s] 16384x2048x4096 bfloat16 S=  0 pick=           nan v9=    nan v20= 1529.9 (dp ) capped: data-parallel
+[284/630    208s] 16384x16384x4096 bfloat16 S=  0 pick=           nan v9=    nan v20= 1555.2 (dp ) capped: data-parallel
+[285/630    211s] 16384x129280x4096 bfloat16 S= 64 pick=           nan v9=    nan v20= 1564.3 (one_tile owner, dp 1552.6) capped: one-tile owner, n = 2 capped 1575.8
+[286/630    212s] 32768x16384x4096 bfloat16 S=  0 pick=           nan v9=    nan v20= 1560.3 (dp ) capped: data-parallel
+[287/630    214s] 512x7168x4224 bfloat16 S= 56 pick=           nan v9=    nan v20=  630.7 (one_tile owner, dp 461.3) capped: one-tile owner, n = 2 capped 628.3
+[288/630    214s] 1024x7168x4224 bfloat16 S=112 pick=           nan v9=    nan v20=  996.9 (one_tile owner, dp 878.2) capped: one-tile owner capped 997.5
+[289/630    216s] 10240x7168x4224 bfloat16 S= 96 pick=           nan v9=    nan v20= 1488.4 (one_tile owner, dp 1443.5) capped: one-tile owner capped 1491.4
+[290/630    218s] 512x6144x4608 bfloat16 S= 48 pick=           nan v9=    nan v20=  567.7 (one_tile owner, dp 402.8) capped: one-tile owner, n = 3 capped 600.5
+[291/630    218s] 1024x6144x4608 bfloat16 S= 96 pick=           nan v9=    nan v20=  877.7 (one_tile owner, dp 775.1) capped: one-tile owner capped 876.1
+[292/630    219s] 2048x6144x4608 bfloat16 S=192 pick=           nan v9=    nan v20= 1299.1 (dp ) capped: data-parallel
+[293/630    220s] 4096x6144x4608 bfloat16 S=128 pick=           nan v9=    nan v20= 1413.3 (one_tile owner, dp 1330.8) capped: one-tile owner capped 1413.8
+[294/630    220s] 8192x6144x4608 bfloat16 S=  0 pick=           nan v9=    nan v20= 1575.6 (dp ) capped: data-parallel
+[295/630    221s] 16384x6144x4608 bfloat16 S=  0 pick=           nan v9=    nan v20= 1567.8 (dp ) capped: data-parallel
+[296/630    221s] 32768x6144x4608 bfloat16 S=  0 pick=           nan v9=    nan v20= 1576.6 (dp ) capped: data-parallel
+[297/630    223s] 512x1024x5120 float32  S=  8 pick=           nan v9=    nan v20=  130.8 (one_tile rs, dp 65.8) capped: one-tile rs, n = 10 capped 176.4
+[298/630    225s] 512x5120x5120 bfloat16 S= 40 pick=           nan v9=    nan v20=  515.3 (one_tile owner, dp 336.4) capped: one-tile owner, n = 3 capped 569.8
+[299/630    228s] 512x6400x5120 bfloat16 S= 50 pick=           nan v9=    nan v20=  620.7 (one_tile owner, dp 420.9) capped: one-tile owner, n = 3 capped 662.8
+[300/630    228s] 512x12800x5120 bfloat16 S=100 pick=           nan v9=    nan v20=  947.6 (one_tile owner, dp 821.4) capped: one-tile owner capped 942.4
+[301/630    230s] 512x37888x5120 bfloat16 S= 40 pick=           nan v9=    nan v20= 1102.9 (one_tile owner, dp 983.5) capped: one-tile owner, n = 3 capped 1163.8
+[302/630    230s] 512x51200x5120 bfloat16 S=144 pick=           nan v9=    nan v20= 1212.2 (dp ) capped: data-parallel
+[303/630    232s] 768x1024x5120 float32  S= 12 pick=           nan v9=    nan v20=  193.6 (one_tile rs, dp 98.1) capped: one-tile rs, n = 10 capped 240.2
+[304/630    233s] 768x37888x5120 bfloat16 S=188 pick=           nan v9=    nan v20= 1341.3 (dp ) capped: data-parallel
+[305/630    235s] 1024x1024x5120 float32  S= 16 pick=           nan v9=    nan v20=  256.5 (one_tile rs, dp 130.7) capped: one-tile rs, n = 8 capped 300.9
+[306/630    237s] 1024x5120x5120 bfloat16 S= 80 pick=           nan v9=    nan v20=  906.2 (one_tile owner, dp 663.4) capped: one-tile owner, n = 2 capped 900.3
+[307/630    238s] 1024x6400x5120 bfloat16 S=100 pick=           nan v9=    nan v20=  948.9 (one_tile owner, dp 817.2) capped: one-tile owner capped 940.1
+[308/630    238s] 1024x12800x5120 bfloat16 S=200 pick=           nan v9=    nan v20= 1344.4 (dp ) capped: data-parallel
+[309/630    239s] 1024x37888x5120 bfloat16 S= 80 pick=           nan v9=    nan v20= 1357.0 (one_tile owner, dp 1268.2) capped: one-tile owner, n = 2 capped 1331.4
+[310/630    242s] 1024x51200x5120 bfloat16 S= 32 pick=           nan v9=    nan v20= 1366.9 (two_tile rs, dp 1283.5) capped: one-tile rs, n = 4 capped 1373.6
+[311/630    244s] 1536x1024x5120 float32  S= 24 pick=           nan v9=    nan v20=  340.2 (one_tile rs, dp 194.0) capped: one-tile rs, n = 5 capped 381.9
+[312/630    246s] 1536x37888x5120 bfloat16 S=120 pick=           nan v9=    nan v20= 1409.2 (one_tile owner, dp 1359.4) capped: one-tile owner capped 1408.2
+[313/630    248s] 2048x1024x5120 float32  S= 32 pick=           nan v9=    nan v20=  436.7 (one_tile rs, dp 257.4) capped: one-tile rs, n = 4 capped 450.8
+[314/630    248s] 2048x5120x5120 bfloat16 S=160 pick=           nan v9=    nan v20= 1204.9 (dp ) capped: data-parallel
+[315/630    248s] 2048x6400x5120 bfloat16 S=200 pick=           nan v9=    nan v20= 1353.0 (dp ) capped: data-parallel
+[316/630    249s] 2048x12800x5120 bfloat16 S=144 pick=           nan v9=    nan v20= 1389.2 (dp ) capped: data-parallel
+[317/630    249s] 2048x37888x5120 bfloat16 S=160 pick=           nan v9=    nan v20= 1469.8 (dp ) capped: data-parallel
+[318/630    252s] 2048x51200x5120 bfloat16 S= 64 pick=           nan v9=    nan v20= 1477.4 (one_tile owner, dp 1429.1) capped: one-tile owner, n = 2 capped 1480.5
+[319/630    254s] 4096x1024x5120 float32  S= 64 pick=           nan v9=    nan v20=  711.0 (one_tile owner, dp 492.3) capped: one-tile owner, n = 2 capped 700.2
+[320/630    255s] 4096x5120x5120 bfloat16 S= 64 pick=           nan v9=    nan v20= 1338.6 (one_tile owner, dp 1171.8) capped: one-tile owner, n = 2 capped 1323.6
+[321/630    256s] 4096x6400x5120 bfloat16 S=144 pick=           nan v9=    nan v20= 1396.7 (dp ) capped: data-parallel
+[322/630    257s] 4096x12800x5120 bfloat16 S= 32 pick=           nan v9=    nan v20= 1442.9 (two_tile rs, dp 1359.3) capped: one-tile rs, n = 4 capped 1458.0
+[323/630    259s] 4096x51200x5120 bfloat16 S=128 pick=           nan v9=    nan v20= 1544.8 (one_tile owner, dp 1525.8) capped: one-tile owner capped 1548.2
+[324/630    259s] 8192x1024x5120 float32  S=128 pick=           nan v9=    nan v20= 1095.5 (one_tile owner, dp 947.0) capped: one-tile owner capped 1091.4
+[325/630    261s] 8192x5120x5120 bfloat16 S=128 pick=           nan v9=    nan v20= 1491.2 (one_tile owner, dp 1419.5) capped: one-tile owner capped 1492.4
+[326/630    262s] 8192x6400x5120 bfloat16 S= 32 pick=           nan v9=    nan v20= 1451.7 (two_tile rs, dp 1368.4) capped: one-tile rs, n = 4 capped 1472.9
+[327/630    263s] 8192x12800x5120 bfloat16 S= 64 pick=           nan v9=    nan v20= 1509.8 (one_tile owner, dp 1473.4) capped: one-tile owner, n = 2 capped 1514.5
+[328/630    264s] 8192x51200x5120 bfloat16 S=  0 pick=           nan v9=    nan v20= 1584.7 (dp ) capped: data-parallel
+[329/630    264s] 16384x1024x5120 float32  S=  0 pick=           nan v9=    nan v20= 1441.3 (dp ) capped: data-parallel
+[330/630    264s] 16384x5120x5120 bfloat16 S=  0 pick=           nan v9=    nan v20= 1559.8 (dp ) capped: data-parallel
+[331/630    266s] 16384x6400x5120 bfloat16 S= 64 pick=           nan v9=    nan v20= 1499.5 (one_tile owner, dp 1459.7) capped: one-tile owner, n = 2 capped 1501.2
+[332/630    267s] 16384x12800x5120 bfloat16 S=128 pick=           nan v9=    nan v20= 1536.8 (one_tile owner, dp 1532.9) capped: one-tile owner capped 1548.4
+[333/630    267s] 16384x51200x5120 bfloat16 S=  0 pick=           nan v9=    nan v20= 1571.5 (dp ) capped: data-parallel
+[334/630    268s] 32768x5120x5120 bfloat16 S=  0 pick=           nan v9=    nan v20= 1552.2 (dp ) capped: data-parallel
+[335/630    269s] 32768x6400x5120 bfloat16 S=128 pick=           nan v9=    nan v20= 1535.3 (one_tile owner, dp 1525.4) capped: one-tile owner capped 1534.4
+[336/630    270s] 32768x12800x5120 bfloat16 S=  0 pick=           nan v9=    nan v20= 1567.0 (dp ) capped: data-parallel
+[337/630    270s] 32768x51200x5120 bfloat16 S=  0 pick=           nan v9=    nan v20= 1566.3 (dp ) capped: data-parallel
+[338/630    272s] 512x1280x6144 bfloat16 S= 10 pick=           nan v9=    nan v20=  185.5 (one_tile rs, dp 87.2) capped: one-tile rs, n = 12 capped 230.7
+[339/630    274s] 512x1536x6144 bfloat16 S= 12 pick=           nan v9=    nan v20=  218.8 (one_tile rs, dp 104.7) capped: one-tile rs, n = 10 capped 275.1
+[340/630    277s] 512x2048x6144 float32  S= 16 pick=           nan v9=    nan v20=  289.4 (one_tile rs, dp 134.2) capped: one-tile rs, n = 8 capped 341.9
+[341/630    279s] 512x2304x6144 bfloat16 S= 18 pick=           nan v9=    nan v20=  298.1 (one_tile rs, dp 156.4) capped: one-tile rs, n = 7 capped 347.2
+[342/630    281s] 512x2560x6144 bfloat16 S= 20 pick=           nan v9=    nan v20=  340.1 (one_tile rs, dp 173.2) capped: one-tile rs, n = 6 capped 384.3
+[343/630    283s] 512x3072x6144 float32  S= 24 pick=           nan v9=    nan v20=  398.7 (one_tile rs, dp 200.4) capped: one-tile rs, n = 5 capped 437.1
+[344/630    285s] 512x3072x6144 bfloat16 S= 24 pick=           nan v9=    nan v20=  402.4 (one_tile rs, dp 209.1) capped: one-tile rs, n = 5 capped 441.2
+[345/630    288s] 512x6144x6144 bfloat16 S= 48 pick=           nan v9=    nan v20=  682.8 (one_tile owner, dp 414.7) capped: one-tile owner, n = 3 capped 693.7
+[346/630    288s] 512x9216x6144 bfloat16 S= 72 pick=           nan v9=    nan v20=  878.2 (one_tile owner, dp 611.5) capped: one-tile owner capped 879.5
+[347/630    290s] 1024x2048x6144 float32  S= 32 pick=           nan v9=    nan v20=  494.7 (one_tile rs, dp 266.3) capped: one-tile rs, n = 4 capped 501.0
+[348/630    293s] 1024x2304x6144 bfloat16 S= 36 pick=           nan v9=    nan v20=  504.5 (one_tile owner, dp 310.1) capped: one-tile owner, n = 4 capped 570.6
+[349/630    295s] 1024x2560x6144 bfloat16 S= 40 pick=           nan v9=    nan v20=  570.4 (one_tile owner, dp 345.5) capped: one-tile owner, n = 3 capped 616.5
+[350/630    297s] 1024x3072x6144 float32  S= 48 pick=           nan v9=    nan v20=  633.9 (one_tile owner, dp 386.9) capped: one-tile owner, n = 3 capped 649.9
+[351/630    298s] 1024x6144x6144 bfloat16 S= 96 pick=           nan v9=    nan v20=  982.9 (one_tile owner, dp 792.0) capped: one-tile owner capped 976.6
+[352/630    298s] 1024x9216x6144 bfloat16 S=144 pick=           nan v9=    nan v20= 1151.5 (dp ) capped: data-parallel
+[353/630    300s] 2048x2048x6144 float32  S= 64 pick=           nan v9=    nan v20=  796.4 (one_tile owner, dp 515.5) capped: one-tile owner, n = 3 capped 810.3
+[354/630    301s] 2048x2304x6144 bfloat16 S= 72 pick=           nan v9=    nan v20=  890.9 (one_tile owner, dp 610.0) capped: one-tile owner capped 886.4
+[355/630    303s] 2048x2560x6144 bfloat16 S= 80 pick=           nan v9=    nan v20=  971.0 (one_tile owner, dp 676.5) capped: one-tile owner, n = 2 capped 932.3
+[356/630    304s] 2048x3072x6144 float32  S= 96 pick=           nan v9=    nan v20=  926.1 (one_tile owner, dp 772.6) capped: one-tile owner capped 926.5
+[357/630    304s] 2048x6144x6144 bfloat16 S=192 pick=           nan v9=    nan v20= 1334.1 (dp ) capped: data-parallel
+[358/630    307s] 2048x9216x6144 bfloat16 S= 32 pick=           nan v9=    nan v20= 1348.9 (two_tile rs, dp 1069.2) capped: one-tile rs, n = 4 capped 1324.6
+[359/630    308s] 4096x2048x6144 float32  S=128 pick=           nan v9=    nan v20= 1165.0 (one_tile owner, dp 972.4) capped: one-tile owner capped 1163.8
+[360/630    308s] 4096x2304x6144 bfloat16 S=144 pick=           nan v9=    nan v20= 1146.8 (dp ) capped: data-parallel
+[361/630    309s] 4096x2560x6144 bfloat16 S=160 pick=           nan v9=    nan v20= 1231.7 (dp ) capped: data-parallel
+[362/630    309s] 4096x3072x6144 float32  S=192 pick=           nan v9=    nan v20= 1297.7 (dp ) capped: data-parallel
+[363/630    310s] 4096x6144x6144 bfloat16 S=128 pick=           nan v9=    nan v20= 1469.3 (one_tile owner, dp 1379.9) capped: one-tile owner capped 1473.8
+[364/630    314s] 4096x9216x6144 bfloat16 S= 64 pick=           nan v9=    nan v20= 1455.1 (one_tile owner, dp 1342.7) capped: one-tile owner, n = 3 capped 1480.5
+[365/630    314s] 8192x2048x6144 float32  S=  0 pick=           nan v9=    nan v20= 1477.9 (dp ) capped: data-parallel
+[366/630    315s] 8192x2304x6144 bfloat16 S= 32 pick=           nan v9=    nan v20= 1351.5 (two_tile rs, dp 1075.9) capped: one-tile rs, n = 4 capped 1315.2
+[367/630    317s] 8192x2560x6144 bfloat16 S= 64 pick=           nan v9=    nan v20= 1387.0 (one_tile owner, dp 1185.7) capped: one-tile owner, n = 3 capped 1393.6
+[368/630    318s] 8192x3072x6144 float32  S=128 pick=           nan v9=    nan v20= 1384.3 (one_tile owner, dp 1294.8) capped: one-tile owner capped 1381.7
+[369/630    318s] 8192x6144x6144 bfloat16 S=  0 pick=           nan v9=    nan v20= 1597.6 (dp ) capped: data-parallel
+[370/630    320s] 8192x9216x6144 bfloat16 S=128 pick=           nan v9=    nan v20= 1535.1 (one_tile owner, dp 1489.0) capped: one-tile owner capped 1536.5
+[371/630    320s] 16384x2048x6144 float32  S=  0 pick=           nan v9=    nan v20= 1429.5 (dp ) capped: data-parallel
+[372/630    322s] 16384x2304x6144 bfloat16 S= 64 pick=           nan v9=    nan v20= 1421.4 (one_tile owner, dp 1328.9) capped: one-tile owner, n = 3 capped 1432.0
+[373/630    323s] 16384x2560x6144 bfloat16 S=128 pick=           nan v9=    nan v20= 1481.8 (one_tile owner, dp 1426.5) capped: one-tile owner capped 1476.3
+[374/630    323s] 16384x3072x6144 float32  S=  0 pick=           nan v9=    nan v20= 1441.0 (dp ) capped: data-parallel
+[375/630    324s] 16384x6144x6144 bfloat16 S=  0 pick=           nan v9=    nan v20= 1575.3 (dp ) capped: data-parallel
+[376/630    324s] 16384x9216x6144 bfloat16 S=  0 pick=           nan v9=    nan v20= 1569.1 (dp ) capped: data-parallel
+[377/630    325s] 32768x2304x6144 bfloat16 S=128 pick=           nan v9=    nan v20= 1479.6 (one_tile owner, dp 1435.2) capped: one-tile owner capped 1486.9
+[378/630    326s] 32768x2560x6144 bfloat16 S=  0 pick=           nan v9=    nan v20= 1529.1 (dp ) capped: data-parallel
+[379/630    326s] 32768x6144x6144 bfloat16 S=  0 pick=           nan v9=    nan v20= 1583.6 (dp ) capped: data-parallel
+[380/630    327s] 32768x9216x6144 bfloat16 S=  0 pick=           nan v9=    nan v20= 1572.1 (dp ) capped: data-parallel
+[381/630    329s] 512x5120x6400 bfloat16 S= 40 pick=           nan v9=    nan v20=  594.8 (one_tile owner, dp 347.6) capped: one-tile owner, n = 4 capped 649.2
+[382/630    331s] 1024x5120x6400 bfloat16 S= 80 pick=           nan v9=    nan v20=  984.3 (one_tile owner, dp 683.8) capped: one-tile owner, n = 2 capped 965.9
+[383/630    332s] 2048x5120x6400 bfloat16 S=160 pick=           nan v9=    nan v20= 1229.9 (dp ) capped: data-parallel
+[384/630    335s] 4096x5120x6400 bfloat16 S= 64 pick=           nan v9=    nan v20= 1400.9 (one_tile owner, dp 1182.6) capped: one-tile owner, n = 3 capped 1403.6
+[385/630    336s] 8192x5120x6400 bfloat16 S=128 pick=           nan v9=    nan v20= 1514.5 (one_tile owner, dp 1447.2) capped: one-tile owner capped 1521.7
+[386/630    336s] 16384x5120x6400 bfloat16 S=  0 pick=           nan v9=    nan v20= 1576.4 (dp ) capped: data-parallel
+[387/630    337s] 32768x5120x6400 bfloat16 S=  0 pick=           nan v9=    nan v20= 1580.9 (dp ) capped: data-parallel
+[388/630    338s] 512x16384x6656 bfloat16 S=128 pick=           nan v9=    nan v20= 1159.8 (one_tile owner, dp 1038.5) capped: one-tile owner capped 1169.7
+[389/630    338s] 1024x16384x6656 bfloat16 S=  0 pick=           nan v9=    nan v20= 1534.9 (dp ) capped: data-parallel
+[390/630    339s] 2048x16384x6656 bfloat16 S=  0 pick=           nan v9=    nan v20= 1538.2 (dp ) capped: data-parallel
+[391/630    339s] 4096x16384x6656 bfloat16 S=  0 pick=           nan v9=    nan v20= 1574.3 (dp ) capped: data-parallel
+[392/630    339s] 8192x16384x6656 bfloat16 S=  0 pick=           nan v9=    nan v20= 1586.0 (dp ) capped: data-parallel
+[393/630    340s] 16384x16384x6656 bfloat16 S=  0 pick=           nan v9=    nan v20= 1602.9 (dp ) capped: data-parallel
+[394/630    340s] 32768x16384x6656 bfloat16 S=  0 pick=           nan v9=    nan v20= 1609.0 (dp ) capped: data-parallel
+[395/630    342s] 512x1024x7168 bfloat16 S=  8 pick=           nan v9=    nan v20=  177.9 (one_tile rs, dp 70.5) capped: one-tile rs, n = 14 capped 219.1
+[396/630    345s] 512x1536x7168 bfloat16 S= 12 pick=           nan v9=    nan v20=  250.0 (one_tile rs, dp 106.1) capped: one-tile rs, n = 10 capped 307.5
+[397/630    347s] 512x2048x7168 bfloat16 S= 16 pick=           nan v9=    nan v20=  335.7 (one_tile rs, dp 141.2) capped: one-tile rs, n = 8 capped 380.7
+[398/630    349s] 512x3584x7168 bfloat16 S= 28 pick=           nan v9=    nan v20=  503.7 (one_tile rs, dp 245.2) capped: one-tile rs, n = 4 capped 490.1
+[399/630    351s] 512x6144x7168 bfloat16 S= 48 pick=           nan v9=    nan v20=  751.0 (one_tile owner, dp 420.0) capped: one-tile owner, n = 3 capped 758.0
+[400/630    354s] 512x8192x7168 bfloat16 S= 64 pick=           nan v9=    nan v20=  922.1 (one_tile owner, dp 556.0) capped: one-tile owner, n = 3 capped 947.8
+[401/630    354s] 512x8448x7168 bfloat16 S= 66 pick=           nan v9=    nan v20=  903.4 (one_tile owner, dp 569.3) capped: one-tile owner capped 900.8
+[402/630    355s] 512x20480x7168 bfloat16 S=160 pick=           nan v9=    nan v20= 1102.5 (dp ) capped: data-parallel
+[403/630    355s] 768x1024x7168 bfloat16 S= 12 pick=           nan v9=    nan v20=  253.4 (one_tile rs, dp 106.0) capped: one-tile rs, n = 10 capped 307.8
+[404/630    358s] 768x2048x7168 bfloat16 S= 24 pick=           nan v9=    nan v20=  430.8 (one_tile rs, dp 211.7) capped: one-tile rs, n = 5 capped 468.6
+[405/630    358s] 1024x512x7168 bfloat16 S=  8 pick=           nan v9=    nan v20=  177.8 (one_tile rs, dp 70.8) capped: one-tile rs, n = 14 capped 220.5
+[406/630    359s] 1024x1024x7168 bfloat16 S= 16 pick=           nan v9=    nan v20=  333.6 (one_tile rs, dp 140.3) capped: one-tile rs, n = 8 capped 381.7
+[407/630    359s] 1024x1536x7168 bfloat16 S= 24 pick=           nan v9=    nan v20=  426.9 (one_tile rs, dp 211.1) capped: one-tile rs, n = 5 capped 465.7
+[408/630    362s] 1024x2048x7168 bfloat16 S= 32 pick=           nan v9=    nan v20=  550.2 (one_tile rs, dp 281.2) capped: one-tile rs, n = 4 capped 541.5
+[409/630    364s] 1024x3584x7168 bfloat16 S= 56 pick=           nan v9=    nan v20=  837.3 (one_tile owner, dp 486.7) capped: one-tile owner, n = 3 capped 860.3
+[410/630    365s] 1024x6144x7168 bfloat16 S= 96 pick=           nan v9=    nan v20= 1037.1 (one_tile owner, dp 813.3) capped: one-tile owner capped 1033.6
+[411/630    366s] 1024x8192x7168 bfloat16 S=128 pick=           nan v9=    nan v20= 1275.8 (one_tile owner, dp 1062.3) capped: one-tile owner capped 1280.0
+[412/630    366s] 1024x8448x7168 bfloat16 S=132 pick=           nan v9=    nan v20= 1087.0 (dp ) capped: data-parallel
+[413/630    367s] 1024x20480x7168 bfloat16 S= 64 pick=           nan v9=    nan v20= 1333.0 (one_tile owner, dp 1131.6) capped: one-tile owner, n = 3 capped 1326.2
+[414/630    370s] 1280x512x7168 bfloat16 S= 10 pick=           nan v9=    nan v20=  206.9 (one_tile rs, dp 88.3) capped: one-tile rs, n = 12 capped 258.1
+[415/630    372s] 1280x1024x7168 bfloat16 S= 20 pick=           nan v9=    nan v20=  371.1 (one_tile rs, dp 175.7) capped: one-tile rs, n = 6 capped 417.1
+[416/630    374s] 1280x2048x7168 bfloat16 S= 40 pick=           nan v9=    nan v20=  616.0 (one_tile owner, dp 349.1) capped: one-tile owner, n = 4 capped 670.7
+[417/630    375s] 1536x512x7168 bfloat16 S= 12 pick=           nan v9=    nan v20=  249.1 (one_tile rs, dp 106.0) capped: one-tile rs, n = 10 capped 307.7
+[418/630    375s] 1536x1024x7168 bfloat16 S= 24 pick=           nan v9=    nan v20=  433.9 (one_tile rs, dp 210.8) capped: one-tile rs, n = 5 capped 462.4
+[419/630    376s] 1536x2048x7168 bfloat16 S= 48 pick=           nan v9=    nan v20=  745.8 (one_tile owner, dp 416.0) capped: one-tile owner, n = 3 capped 760.7
+[420/630    378s] 1792x512x7168 bfloat16 S= 14 pick=           nan v9=    nan v20=  283.3 (one_tile rs, dp 123.5) capped: one-tile rs, n = 9 capped 342.5
+[421/630    379s] 1792x1024x7168 bfloat16 S= 28 pick=           nan v9=    nan v20=  482.3 (one_tile rs, dp 245.7) capped: one-tile rs, n = 4 capped 495.0
+[422/630    380s] 1792x2048x7168 bfloat16 S= 56 pick=           nan v9=    nan v20=  838.2 (one_tile owner, dp 485.9) capped: one-tile owner, n = 3 capped 865.2
+[423/630    380s] 2048x512x7168 bfloat16 S= 16 pick=           nan v9=    nan v20=  335.7 (one_tile rs, dp 141.1) capped: one-tile rs, n = 8 capped 379.8
+[424/630    381s] 2048x1024x7168 bfloat16 S= 32 pick=           nan v9=    nan v20=  552.5 (one_tile rs, dp 279.4) capped: one-tile rs, n = 4 capped 547.6
+[425/630    381s] 2048x2048x7168 bfloat16 S= 64 pick=           nan v9=    nan v20=  923.6 (one_tile owner, dp 557.0) capped: one-tile owner, n = 3 capped 940.2
+[426/630    382s] 2048x3584x7168 bfloat16 S=112 pick=           nan v9=    nan v20= 1173.5 (one_tile owner, dp 942.4) capped: one-tile owner capped 1175.3
+[427/630    383s] 2048x8192x7168 bfloat16 S=  0 pick=           nan v9=    nan v20= 1576.9 (dp ) capped: data-parallel
+[428/630    384s] 2048x20480x7168 bfloat16 S=128 pick=           nan v9=    nan v20= 1486.3 (one_tile owner, dp 1396.3) capped: one-tile owner capped 1478.9
+[429/630    385s] 4096x512x7168 bfloat16 S= 32 pick=           nan v9=    nan v20=  551.4 (one_tile rs, dp 279.4) capped: one-tile rs, n = 4 capped 545.6
+[430/630    385s] 4096x1024x7168 bfloat16 S= 64 pick=           nan v9=    nan v20=  918.2 (one_tile owner, dp 555.1) capped: one-tile owner, n = 3 capped 940.6
+[431/630    386s] 4096x2048x7168 bfloat16 S=128 pick=           nan v9=    nan v20= 1269.3 (one_tile owner, dp 1064.9) capped: one-tile owner capped 1281.1
+[432/630    387s] 4096x3584x7168 bfloat16 S=224 pick=           nan v9=    nan v20= 1451.4 (dp ) capped: data-parallel
+[433/630    387s] 4096x8192x7168 bfloat16 S=  0 pick=           nan v9=    nan v20= 1605.3 (dp ) capped: data-parallel
+[434/630    388s] 4096x20480x7168 bfloat16 S=  0 pick=           nan v9=    nan v20= 1590.6 (dp ) capped: data-parallel
+[435/630    388s] 6144x512x7168 bfloat16 S= 48 pick=           nan v9=    nan v20=  720.1 (one_tile owner, dp 420.8) capped: one-tile owner, n = 3 capped 760.3
+[436/630    389s] 6144x1024x7168 bfloat16 S= 96 pick=           nan v9=    nan v20= 1041.0 (one_tile owner, dp 815.8) capped: one-tile owner capped 1039.6
+[437/630    389s] 6144x2048x7168 bfloat16 S=192 pick=           nan v9=    nan v20= 1358.4 (dp ) capped: data-parallel
+[438/630    390s] 8192x512x7168 bfloat16 S= 64 pick=           nan v9=    nan v20=  923.0 (one_tile owner, dp 557.6) capped: one-tile owner, n = 3 capped 945.4
+[439/630    391s] 8192x1024x7168 bfloat16 S=128 pick=           nan v9=    nan v20= 1285.7 (one_tile owner, dp 1053.2) capped: one-tile owner capped 1286.8
+[440/630    391s] 8192x2048x7168 bfloat16 S=  0 pick=           nan v9=    nan v20= 1584.3 (dp ) capped: data-parallel
+[441/630    392s] 8192x3584x7168 bfloat16 S=192 pick=           nan v9=    nan v20= 1503.9 (dp ) capped: data-parallel
+[442/630    392s] 8192x8192x7168 bfloat16 S=  0 pick=           nan v9=    nan v20= 1601.9 (dp ) capped: data-parallel
+[443/630    393s] 8192x20480x7168 bfloat16 S=  0 pick=           nan v9=    nan v20= 1609.1 (dp ) capped: data-parallel
+[444/630    393s] 10240x512x7168 bfloat16 S= 80 pick=           nan v9=    nan v20= 1018.2 (one_tile owner, dp 690.5) capped: one-tile owner capped 1012.5
+[445/630    394s] 10240x1024x7168 bfloat16 S=160 pick=           nan v9=    nan v20= 1234.1 (dp ) capped: data-parallel
+[446/630    395s] 10240x2048x7168 bfloat16 S= 64 pick=           nan v9=    nan v20= 1410.1 (one_tile owner, dp 1194.2) capped: one-tile owner, n = 3 capped 1418.7
+[447/630    396s] 10240x8448x7168 bfloat16 S= 40 pick=           nan v9=    nan v20= 1490.8 (one_tile owner, dp 1437.4) capped: one-tile owner, n = 4 capped 1507.6
+[448/630    398s] 10240x20480x7168 bfloat16 S=128 pick=           nan v9=    nan v20= 1518.9 (one_tile owner, dp 1515.1) capped: one-tile owner capped 1536.8
+[449/630    398s] 12288x512x7168 bfloat16 S= 96 pick=           nan v9=    nan v20=  991.7 (one_tile owner, dp 815.3) capped: one-tile owner capped 991.6
+[450/630    399s] 12288x1024x7168 bfloat16 S=192 pick=           nan v9=    nan v20= 1358.0 (dp ) capped: data-parallel
+[451/630    400s] 12288x2048x7168 bfloat16 S=128 pick=           nan v9=    nan v20= 1481.1 (one_tile owner, dp 1356.9) capped: one-tile owner capped 1476.5
+[452/630    401s] 14336x512x7168 bfloat16 S=112 pick=           nan v9=    nan v20= 1093.2 (one_tile owner, dp 946.2) capped: one-tile owner capped 1094.6
+[453/630    401s] 14336x1024x7168 bfloat16 S=224 pick=           nan v9=    nan v20= 1460.0 (dp ) capped: data-parallel
+[454/630    402s] 14336x2048x7168 bfloat16 S=192 pick=           nan v9=    nan v20= 1467.2 (dp ) capped: data-parallel
+[455/630    403s] 16384x512x7168 bfloat16 S=128 pick=           nan v9=    nan v20= 1174.2 (one_tile owner, dp 1052.0) capped: one-tile owner capped 1174.8
+[456/630    403s] 16384x1024x7168 bfloat16 S=  0 pick=           nan v9=    nan v20= 1520.8 (dp ) capped: data-parallel
+[457/630    404s] 16384x2048x7168 bfloat16 S=  0 pick=           nan v9=    nan v20= 1534.0 (dp ) capped: data-parallel
+[458/630    405s] 16384x3584x7168 bfloat16 S=128 pick=           nan v9=    nan v20= 1517.9 (one_tile owner, dp 1459.7) capped: one-tile owner capped 1520.0
+[459/630    405s] 16384x8192x7168 bfloat16 S=  0 pick=           nan v9=    nan v20= 1590.5 (dp ) capped: data-parallel
+[460/630    406s] 16384x20480x7168 bfloat16 S=  0 pick=           nan v9=    nan v20= 1611.6 (dp ) capped: data-parallel
+[461/630    406s] 32768x512x7168 bfloat16 S=  0 pick=           nan v9=    nan v20= 1380.8 (dp ) capped: data-parallel
+[462/630    407s] 32768x1024x7168 bfloat16 S=  0 pick=           nan v9=    nan v20= 1496.5 (dp ) capped: data-parallel
+[463/630    407s] 32768x2048x7168 bfloat16 S=  0 pick=           nan v9=    nan v20= 1557.1 (dp ) capped: data-parallel
+[464/630    408s] 32768x3584x7168 bfloat16 S=  0 pick=           nan v9=    nan v20= 1562.4 (dp ) capped: data-parallel
+[465/630    408s] 32768x8192x7168 bfloat16 S=  0 pick=           nan v9=    nan v20= 1598.6 (dp ) capped: data-parallel
+[466/630    409s] 32768x20480x7168 bfloat16 S=  0 pick=           nan v9=    nan v20= 1611.0 (dp ) capped: data-parallel
+[467/630    411s] 512x1280x8192 bfloat16 S= 10 pick=           nan v9=    nan v20=  234.7 (one_tile rs, dp 89.1) capped: one-tile rs, n = 12 capped 282.1
+[468/630    413s] 512x2560x8192 bfloat16 S= 20 pick=           nan v9=    nan v20=  411.2 (one_tile rs, dp 178.0) capped: one-tile rs, n = 6 capped 466.5
+[469/630    415s] 512x4096x8192 bfloat16 S= 32 pick=           nan v9=    nan v20=  623.0 (one_tile rs, dp 283.7) capped: one-tile rs, n = 4 capped 588.6
+[470/630    418s] 512x4608x8192 bfloat16 S= 36 pick=           nan v9=    nan v20=  628.4 (one_tile owner, dp 318.6) capped: one-tile owner, n = 4 capped 664.5
+[471/630    420s] 512x7168x8192 bfloat16 S= 56 pick=           nan v9=    nan v20=  888.1 (one_tile owner, dp 490.3) capped: one-tile owner, n = 3 capped 893.7
+[472/630    423s] 512x8192x8192 bfloat16 S= 64 pick=           nan v9=    nan v20=  978.8 (one_tile owner, dp 556.1) capped: one-tile owner, n = 3 capped 988.7
+[473/630    423s] 512x10240x8192 bfloat16 S= 80 pick=           nan v9=    nan v20= 1083.6 (one_tile owner, dp 698.3) capped: one-tile owner capped 1081.8
+[474/630    424s] 512x14336x8192 bfloat16 S=112 pick=           nan v9=    nan v20= 1125.0 (one_tile owner, dp 951.7) capped: one-tile owner capped 1128.0
+[475/630    425s] 512x16384x8192 bfloat16 S=128 pick=           nan v9=    nan v20= 1192.6 (one_tile owner, dp 995.7) capped: one-tile owner capped 1195.1
+[476/630    426s] 512x57344x8192 bfloat16 S=192 pick=           nan v9=    nan v20= 1351.0 (dp ) capped: data-parallel
+[477/630    428s] 768x4096x8192 bfloat16 S= 48 pick=           nan v9=    nan v20=  799.1 (one_tile owner, dp 420.1) capped: one-tile owner, n = 4 capped 821.4
+[478/630    430s] 1024x512x8192 bfloat16 S=  8 pick=           nan v9=    nan v20=  195.7 (one_tile rs, dp 71.5) capped: one-tile rs, n = 16 capped 269.7
+[479/630    431s] 1024x1280x8192 bfloat16 S= 20 pick=           nan v9=    nan v20=  405.9 (one_tile rs, dp 177.6) capped: one-tile rs, n = 6 capped 467.5
+[480/630    433s] 1024x2560x8192 bfloat16 S= 40 pick=           nan v9=    nan v20=  688.1 (one_tile owner, dp 352.8) capped: one-tile owner, n = 4 capped 723.0
+[481/630    434s] 1024x4096x8192 bfloat16 S= 64 pick=           nan v9=    nan v20=  986.4 (one_tile owner, dp 560.6) capped: one-tile owner, n = 3 capped 986.8
+[482/630    435s] 1024x4608x8192 bfloat16 S= 72 pick=           nan v9=    nan v20=  989.3 (one_tile owner, dp 628.5) capped: one-tile owner capped 989.5
+[483/630    436s] 1024x7168x8192 bfloat16 S=112 pick=           nan v9=    nan v20= 1219.8 (one_tile owner, dp 947.8) capped: one-tile owner capped 1221.0
+[484/630    437s] 1024x8192x8192 bfloat16 S=128 pick=           nan v9=    nan v20= 1316.3 (one_tile owner, dp 1067.9) capped: one-tile owner capped 1318.7
+[485/630    437s] 1024x10240x8192 bfloat16 S=160 pick=           nan v9=    nan v20= 1253.2 (dp ) capped: data-parallel
+[486/630    438s] 1024x14336x8192 bfloat16 S=224 pick=           nan v9=    nan v20= 1423.2 (dp ) capped: data-parallel
+[487/630    438s] 1024x16384x8192 bfloat16 S=  0 pick=           nan v9=    nan v20= 1499.1 (dp ) capped: data-parallel
+[488/630    439s] 1024x57344x8192 bfloat16 S=128 pick=           nan v9=    nan v20= 1500.3 (one_tile owner, dp 1437.3) capped: one-tile owner capped 1504.9
+[489/630    441s] 2048x512x8192 bfloat16 S= 16 pick=           nan v9=    nan v20=  366.3 (one_tile rs, dp 142.5) capped: one-tile rs, n = 8 capped 415.9
+[490/630    442s] 2048x1280x8192 bfloat16 S= 40 pick=           nan v9=    nan v20=  686.0 (one_tile owner, dp 353.6) capped: one-tile owner, n = 4 capped 718.9
+[491/630    443s] 2048x2560x8192 bfloat16 S= 80 pick=           nan v9=    nan v20= 1079.4 (one_tile owner, dp 692.3) capped: one-tile owner capped 1079.5
+[492/630    444s] 2048x4096x8192 bfloat16 S=128 pick=           nan v9=    nan v20= 1314.2 (one_tile owner, dp 1077.0) capped: one-tile owner capped 1314.1
+[493/630    444s] 2048x4608x8192 bfloat16 S=144 pick=           nan v9=    nan v20= 1176.0 (dp ) capped: data-parallel
+[494/630    445s] 2048x7168x8192 bfloat16 S=224 pick=           nan v9=    nan v20= 1472.5 (dp ) capped: data-parallel
+[495/630    445s] 2048x8192x8192 bfloat16 S=  0 pick=           nan v9=    nan v20= 1603.3 (dp ) capped: data-parallel
+[496/630    446s] 2048x10240x8192 bfloat16 S= 64 pick=           nan v9=    nan v20= 1411.2 (one_tile owner, dp 1189.9) capped: one-tile owner, n = 3 capped 1430.3
+[497/630    447s] 2048x14336x8192 bfloat16 S=192 pick=           nan v9=    nan v20= 1448.8 (dp ) capped: data-parallel
+[498/630    447s] 2048x16384x8192 bfloat16 S=  0 pick=           nan v9=    nan v20= 1559.9 (dp ) capped: data-parallel
+[499/630    448s] 2048x57344x8192 bfloat16 S=  0 pick=           nan v9=    nan v20= 1585.9 (dp ) capped: data-parallel
+[500/630    449s] 4096x512x8192 bfloat16 S= 32 pick=           nan v9=    nan v20=  604.5 (one_tile rs, dp 283.1) capped: one-tile rs, n = 4 capped 585.1
+[501/630    449s] 4096x1280x8192 bfloat16 S= 80 pick=           nan v9=    nan v20= 1076.6 (one_tile owner, dp 694.3) capped: one-tile owner capped 1077.0
+[502/630    450s] 4096x2560x8192 bfloat16 S=160 pick=           nan v9=    nan v20= 1247.3 (dp ) capped: data-parallel
+[503/630    450s] 4096x4096x8192 bfloat16 S=  0 pick=           nan v9=    nan v20= 1601.2 (dp ) capped: data-parallel
+[504/630    451s] 4096x4608x8192 bfloat16 S= 32 pick=           nan v9=    nan v20= 1426.8 (two_tile rs, dp 1090.8) capped: one-tile rs, n = 4 capped 1383.5
+[505/630    452s] 4096x7168x8192 bfloat16 S=192 pick=           nan v9=    nan v20= 1499.1 (dp ) capped: data-parallel
+[506/630    452s] 4096x8192x8192 bfloat16 S=  0 pick=           nan v9=    nan v20= 1618.2 (dp ) capped: data-parallel
+[507/630    454s] 4096x10240x8192 bfloat16 S=128 pick=           nan v9=    nan v20= 1533.7 (one_tile owner, dp 1426.9) capped: one-tile owner capped 1532.1
+[508/630    455s] 4096x14336x8192 bfloat16 S=128 pick=           nan v9=    nan v20= 1549.7 (one_tile owner, dp 1484.9) capped: one-tile owner capped 1560.6
+[509/630    455s] 4096x16384x8192 bfloat16 S=  0 pick=           nan v9=    nan v20= 1596.8 (dp ) capped: data-parallel
+[510/630    456s] 4096x57344x8192 bfloat16 S=  0 pick=           nan v9=    nan v20= 1619.1 (dp ) capped: data-parallel
+[511/630    457s] 8192x512x8192 bfloat16 S= 64 pick=           nan v9=    nan v20=  976.7 (one_tile owner, dp 559.1) capped: one-tile owner, n = 3 capped 981.7
+[512/630    457s] 8192x1280x8192 bfloat16 S=160 pick=           nan v9=    nan v20= 1254.4 (dp ) capped: data-parallel
+[513/630    458s] 8192x2560x8192 bfloat16 S= 64 pick=           nan v9=    nan v20= 1443.3 (one_tile owner, dp 1191.7) capped: one-tile owner, n = 3 capped 1458.2
+[514/630    459s] 8192x4096x8192 bfloat16 S=  0 pick=           nan v9=    nan v20= 1623.7 (dp ) capped: data-parallel
+[515/630    460s] 8192x4608x8192 bfloat16 S= 64 pick=           nan v9=    nan v20= 1518.4 (one_tile owner, dp 1354.9) capped: one-tile owner, n = 3 capped 1512.3
+[516/630    461s] 8192x7168x8192 bfloat16 S=128 pick=           nan v9=    nan v20= 1570.6 (one_tile owner, dp 1497.5) capped: one-tile owner capped 1572.3
+[517/630    462s] 8192x8192x8192 bfloat16 S=  0 pick=           nan v9=    nan v20= 1610.7 (dp ) capped: data-parallel
+[518/630    462s] 8192x10240x8192 bfloat16 S=  0 pick=           nan v9=    nan v20= 1609.8 (dp ) capped: data-parallel
+[519/630    463s] 8192x14336x8192 bfloat16 S=  0 pick=           nan v9=    nan v20= 1622.1 (dp ) capped: data-parallel
+[520/630    463s] 8192x16384x8192 bfloat16 S=  0 pick=           nan v9=    nan v20= 1603.1 (dp ) capped: data-parallel
+[521/630    463s] 8192x57344x8192 bfloat16 S=  0 pick=           nan v9=    nan v20= 1595.0 (dp ) capped: data-parallel
+[522/630    464s] 16384x512x8192 bfloat16 S=128 pick=           nan v9=    nan v20= 1195.2 (one_tile owner, dp 994.9) capped: one-tile owner capped 1194.0
+[523/630    466s] 16384x1280x8192 bfloat16 S= 64 pick=           nan v9=    nan v20= 1390.4 (one_tile owner, dp 1172.8) capped: one-tile owner, n = 3 capped 1392.1
+[524/630    467s] 16384x2560x8192 bfloat16 S=128 pick=           nan v9=    nan v20= 1482.3 (one_tile owner, dp 1408.4) capped: one-tile owner capped 1489.6
+[525/630    468s] 16384x4608x8192 bfloat16 S=128 pick=           nan v9=    nan v20= 1543.1 (one_tile owner, dp 1488.8) capped: one-tile owner capped 1538.3
+[526/630    469s] 16384x7168x8192 bfloat16 S=  0 pick=           nan v9=    nan v20= 1599.1 (dp ) capped: data-parallel
+[527/630    469s] 16384x8192x8192 bfloat16 S=  0 pick=           nan v9=    nan v20= 1611.3 (dp ) capped: data-parallel
+[528/630    470s] 16384x10240x8192 bfloat16 S=  0 pick=           nan v9=    nan v20= 1606.6 (dp ) capped: data-parallel
+[529/630    470s] 16384x14336x8192 bfloat16 S=  0 pick=           nan v9=    nan v20= 1615.4 (dp ) capped: data-parallel
+[530/630    471s] 16384x16384x8192 bfloat16 S=  0 pick=           nan v9=    nan v20= 1618.8 (dp ) capped: data-parallel
+[531/630    471s] 16384x57344x8192 bfloat16 S=  0 pick=           nan v9=    nan v20= 1571.8 (dp ) capped: data-parallel
+[532/630    473s] 32768x1280x8192 bfloat16 S=128 pick=           nan v9=    nan v20= 1452.0 (one_tile owner, dp 1376.5) capped: one-tile owner capped 1451.1
+[533/630    473s] 32768x2560x8192 bfloat16 S=  0 pick=           nan v9=    nan v20= 1543.5 (dp ) capped: data-parallel
+[534/630    473s] 32768x7168x8192 bfloat16 S=  0 pick=           nan v9=    nan v20= 1604.3 (dp ) capped: data-parallel
+[535/630    474s] 32768x8192x8192 bfloat16 S=  0 pick=           nan v9=    nan v20= 1615.0 (dp ) capped: data-parallel
+[536/630    474s] 32768x10240x8192 bfloat16 S=  0 pick=           nan v9=    nan v20= 1616.1 (dp ) capped: data-parallel
+[537/630    475s] 32768x14336x8192 bfloat16 S=  0 pick=           nan v9=    nan v20= 1597.0 (dp ) capped: data-parallel
+[538/630    475s] 32768x16384x8192 bfloat16 S=  0 pick=           nan v9=    nan v20= 1604.6 (dp ) capped: data-parallel
+[539/630    476s] 32768x57344x8192 bfloat16 S=  0 pick=           nan v9=    nan v20= 1554.9 (dp ) capped: data-parallel
+[540/630    479s] 512x6144x12288 bfloat16 S= 48 pick=           nan v9=    nan v20=  966.1 (one_tile owner, dp 432.6) capped: one-tile owner, n = 4 capped 956.6
+[541/630    480s] 1024x6144x12288 bfloat16 S= 96 pick=           nan v9=    nan v20= 1158.6 (one_tile owner, dp 837.6) capped: one-tile owner capped 1167.0
+[542/630    481s] 2048x6144x12288 bfloat16 S=192 pick=           nan v9=    nan v20= 1404.0 (dp ) capped: data-parallel
+[543/630    482s] 4096x6144x12288 bfloat16 S=128 pick=           nan v9=    nan v20= 1525.8 (one_tile owner, dp 1370.5) capped: one-tile owner capped 1533.7
+[544/630    482s] 8192x6144x12288 bfloat16 S=  0 pick=           nan v9=    nan v20= 1594.9 (dp ) capped: data-parallel
+[545/630    483s] 16384x6144x12288 bfloat16 S=  0 pick=           nan v9=    nan v20= 1585.7 (dp ) capped: data-parallel
+[546/630    483s] 32768x6144x12288 bfloat16 S=  0 pick=           nan v9=    nan v20= 1594.9 (dp ) capped: data-parallel
+[547/630    485s] 512x16384x13312 bfloat16 S=128 pick=           nan v9=    nan v20= 1282.1 (one_tile owner, dp 921.9) capped: one-tile owner capped 1279.9
+[548/630    485s] 1024x16384x13312 bfloat16 S=  0 pick=           nan v9=    nan v20= 1522.4 (dp ) capped: data-parallel
+[549/630    485s] 2048x16384x13312 bfloat16 S=  0 pick=           nan v9=    nan v20= 1592.0 (dp ) capped: data-parallel
+[550/630    486s] 4096x16384x13312 bfloat16 S=  0 pick=           nan v9=    nan v20= 1624.4 (dp ) capped: data-parallel
+[551/630    486s] 8192x16384x13312 bfloat16 S=  0 pick=           nan v9=    nan v20= 1610.1 (dp ) capped: data-parallel
+[552/630    487s] 16384x16384x13312 bfloat16 S=  0 pick=           nan v9=    nan v20= 1595.7 (dp ) capped: data-parallel
+[553/630    487s] 32768x16384x13312 bfloat16 S=  0 pick=           nan v9=    nan v20= 1604.7 (dp ) capped: data-parallel
+[554/630    490s] 512x2304x16384 bfloat16 S= 18 pick=           nan v9=    nan v20=  557.3 (one_tile rs, dp 163.9) capped: one-tile rs, n = 7 capped 595.1
+[555/630    493s] 512x4608x16384 bfloat16 S= 36 pick=           nan v9=    nan v20=  913.4 (one_tile owner, dp 328.2) capped: one-tile owner, n = 6 capped 937.6
+[556/630    494s] 512x9216x16384 bfloat16 S= 72 pick=           nan v9=    nan v20= 1076.7 (one_tile owner, dp 592.5) capped: one-tile owner capped 1077.5
+[557/630    495s] 512x13312x16384 bfloat16 S=104 pick=           nan v9=    nan v20= 1148.4 (one_tile owner, dp 796.2) capped: one-tile owner capped 1149.4
+[558/630    495s] 512x26624x16384 bfloat16 S=208 pick=           nan v9=    nan v20= 1286.0 (dp ) capped: data-parallel
+[559/630    496s] 512x53248x16384 bfloat16 S=160 pick=           nan v9=    nan v20= 1190.3 (dp ) capped: data-parallel
+[560/630    497s] 1024x2304x16384 bfloat16 S= 36 pick=           nan v9=    nan v20=  842.2 (one_tile owner, dp 329.2) capped: one-tile owner, n = 6 capped 904.8
+[561/630    498s] 1024x4608x16384 bfloat16 S= 72 pick=           nan v9=    nan v20= 1214.6 (one_tile owner, dp 648.9) capped: one-tile owner capped 1209.9
+[562/630    498s] 1024x9216x16384 bfloat16 S=144 pick=           nan v9=    nan v20= 1132.5 (dp ) capped: data-parallel
+[563/630    499s] 1024x13312x16384 bfloat16 S=208 pick=           nan v9=    nan v20= 1343.1 (dp ) capped: data-parallel
+[564/630    499s] 1024x26624x16384 bfloat16 S=160 pick=           nan v9=    nan v20= 1380.8 (dp ) capped: data-parallel
+[565/630    501s] 1024x53248x16384 bfloat16 S= 64 pick=           nan v9=    nan v20= 1532.2 (one_tile owner, dp 1389.6) capped: one-tile owner capped 1520.8
+[566/630    502s] 2048x2304x16384 bfloat16 S= 72 pick=           nan v9=    nan v20= 1213.7 (one_tile owner, dp 647.2) capped: one-tile owner capped 1208.1
+[567/630    502s] 2048x4608x16384 bfloat16 S=144 pick=           nan v9=    nan v20= 1207.3 (dp ) capped: data-parallel
+[568/630    504s] 2048x9216x16384 bfloat16 S= 32 pick=           nan v9=    nan v20= 1456.1 (one_tile rs, dp 1096.5) capped: one-tile rs, n = 4 capped 1426.2 two_tile 1399.1
+[569/630    504s] 2048x13312x16384 bfloat16 S=160 pick=           nan v9=    nan v20= 1425.3 (dp ) capped: data-parallel
+[570/630    506s] 2048x26624x16384 bfloat16 S= 64 pick=           nan v9=    nan v20= 1569.6 (one_tile owner, dp 1420.0) capped: one-tile owner capped 1565.1
+[571/630    507s] 2048x53248x16384 bfloat16 S=128 pick=           nan v9=    nan v20= 1601.3 (one_tile owner, dp 1548.1) capped: one-tile owner capped 1604.8
+[572/630    507s] 4096x2304x16384 bfloat16 S=144 pick=           nan v9=    nan v20= 1211.7 (dp ) capped: data-parallel
+[573/630    509s] 4096x4608x16384 bfloat16 S= 32 pick=           nan v9=    nan v20= 1479.7 (one_tile rs, dp 1111.8) capped: one-tile rs, n = 4 capped 1444.5 two_tile 1388.4
+[574/630    510s] 4096x9216x16384 bfloat16 S= 64 pick=           nan v9=    nan v20= 1567.0 (one_tile owner, dp 1362.7) capped: one-tile owner capped 1564.8
+[575/630    511s] 4096x13312x16384 bfloat16 S= 64 pick=           nan v9=    nan v20= 1579.5 (one_tile owner, dp 1419.8) capped: one-tile owner capped 1582.3
+[576/630    513s] 4096x26624x16384 bfloat16 S=128 pick=           nan v9=    nan v20= 1607.2 (one_tile owner, dp 1557.8) capped: one-tile owner capped 1607.5
+[577/630    513s] 4096x53248x16384 bfloat16 S=  0 pick=           nan v9=    nan v20= 1619.0 (dp ) capped: data-parallel
+[578/630    515s] 8192x2304x16384 bfloat16 S= 32 pick=           nan v9=    nan v20= 1383.2 (one_tile rs, dp 1023.7) capped: one-tile rs, n = 4 capped 1386.2 two_tile 1381.8
+[579/630    516s] 8192x4608x16384 bfloat16 S= 64 pick=           nan v9=    nan v20= 1518.4 (one_tile owner, dp 1325.6) capped: one-tile owner capped 1521.3
+[580/630    517s] 8192x9216x16384 bfloat16 S=128 pick=           nan v9=    nan v20= 1562.6 (one_tile owner, dp 1488.8) capped: one-tile owner capped 1574.7
+[581/630    519s] 8192x13312x16384 bfloat16 S=128 pick=           nan v9=    nan v20= 1575.8 (one_tile owner, dp 1500.7) capped: one-tile owner capped 1582.1
+[582/630    519s] 8192x26624x16384 bfloat16 S=  0 pick=           nan v9=    nan v20= 1549.6 (dp ) capped: data-parallel
+[583/630    520s] 8192x53248x16384 bfloat16 S=  0 pick=           nan v9=    nan v20= 1594.3 (dp ) capped: data-parallel
+[584/630    521s] 16384x2304x16384 bfloat16 S= 64 pick=           nan v9=    nan v20= 1481.0 (one_tile owner, dp 1309.4) capped: one-tile owner capped 1494.7
+[585/630    522s] 16384x4608x16384 bfloat16 S=128 pick=           nan v9=    nan v20= 1561.2 (one_tile owner, dp 1487.0) capped: one-tile owner capped 1568.5
+[586/630    523s] 16384x9216x16384 bfloat16 S=  0 pick=           nan v9=    nan v20= 1589.6 (dp ) capped: data-parallel
+[587/630    523s] 16384x13312x16384 bfloat16 S=  0 pick=           nan v9=    nan v20= 1575.0 (dp ) capped: data-parallel
+[588/630    524s] 16384x26624x16384 bfloat16 S=  0 pick=           nan v9=    nan v20= 1593.3 (dp ) capped: data-parallel
+[589/630    525s] 16384x53248x16384 bfloat16 S=  0 pick=           nan v9=    nan v20= 1592.2 (dp ) capped: data-parallel
+[590/630    526s] 32768x2304x16384 bfloat16 S=128 pick=           nan v9=    nan v20= 1533.3 (one_tile owner, dp 1468.3) capped: one-tile owner capped 1540.7
+[591/630    526s] 32768x4608x16384 bfloat16 S=  0 pick=           nan v9=    nan v20= 1575.5 (dp ) capped: data-parallel
+[592/630    527s] 32768x9216x16384 bfloat16 S=  0 pick=           nan v9=    nan v20= 1459.2 (dp ) capped: data-parallel
+[593/630    527s] 32768x13312x16384 bfloat16 S=  0 pick=           nan v9=    nan v20= 1592.3 (dp ) capped: data-parallel
+[594/630    528s] 32768x26624x16384 bfloat16 S=  0 pick=           nan v9=    nan v20= 1576.4 (dp ) capped: data-parallel
+[595/630    530s] 32768x53248x16384 bfloat16 S=  0 pick=           nan v9=    nan v20= 1569.0 (dp ) capped: data-parallel
+[596/630    531s] 512x6144x18432 bfloat16 S= 48 pick=           nan v9=    nan v20= 1014.8 (one_tile owner, dp 435.0) capped: one-tile owner capped 1016.5
+[597/630    532s] 1024x6144x18432 bfloat16 S= 96 pick=           nan v9=    nan v20= 1173.0 (one_tile owner, dp 807.7) capped: one-tile owner capped 1176.7
+[598/630    533s] 2048x6144x18432 bfloat16 S=192 pick=           nan v9=    nan v20= 1335.8 (dp ) capped: data-parallel
+[599/630    534s] 4096x6144x18432 bfloat16 S=128 pick=           nan v9=    nan v20= 1562.7 (one_tile owner, dp 1372.1) capped: one-tile owner capped 1564.8
+[600/630    534s] 8192x6144x18432 bfloat16 S=  0 pick=           nan v9=    nan v20= 1603.8 (dp ) capped: data-parallel
+[601/630    535s] 16384x6144x18432 bfloat16 S=  0 pick=           nan v9=    nan v20= 1610.2 (dp ) capped: data-parallel
+[602/630    535s] 32768x6144x18432 bfloat16 S=  0 pick=           nan v9=    nan v20= 1615.9 (dp ) capped: data-parallel
+[603/630    537s] 512x5120x25600 bfloat16 S= 40 pick=           nan v9=    nan v20=  994.6 (one_tile owner, dp 331.5) capped: one-tile owner capped 995.4
+[604/630    538s] 1024x5120x25600 bfloat16 S= 80 pick=           nan v9=    nan v20= 1295.1 (one_tile owner, dp 659.1) capped: one-tile owner capped 1292.6
+[605/630    538s] 2048x5120x25600 bfloat16 S=160 pick=           nan v9=    nan v20= 1166.7 (dp ) capped: data-parallel
+[606/630    540s] 4096x5120x25600 bfloat16 S= 64 pick=           nan v9=    nan v20= 1540.5 (one_tile owner, dp 1155.5) capped: one-tile owner capped 1543.2
+[607/630    541s] 8192x5120x25600 bfloat16 S=128 pick=           nan v9=    nan v20= 1574.4 (one_tile owner, dp 1427.6) capped: one-tile owner capped 1572.0
+[608/630    541s] 16384x5120x25600 bfloat16 S=  0 pick=           nan v9=    nan v20= 1612.8 (dp ) capped: data-parallel
+[609/630    542s] 32768x5120x25600 bfloat16 S=  0 pick=           nan v9=    nan v20= 1606.8 (dp ) capped: data-parallel
+[610/630    543s] 512x16384x26624 bfloat16 S=128 pick=           nan v9=    nan v20= 1369.6 (one_tile owner, dp 945.5) capped: one-tile owner capped 1374.8
+[611/630    543s] 1024x16384x26624 bfloat16 S=  0 pick=           nan v9=    nan v20= 1556.9 (dp ) capped: data-parallel
+[612/630    544s] 2048x16384x26624 bfloat16 S=  0 pick=           nan v9=    nan v20= 1608.0 (dp ) capped: data-parallel
+[613/630    544s] 4096x16384x26624 bfloat16 S=  0 pick=           nan v9=    nan v20= 1632.9 (dp ) capped: data-parallel
+[614/630    545s] 8192x16384x26624 bfloat16 S=  0 pick=           nan v9=    nan v20= 1624.7 (dp ) capped: data-parallel
+[615/630    545s] 16384x16384x26624 bfloat16 S=  0 pick=           nan v9=    nan v20= 1629.1 (dp ) capped: data-parallel
+[616/630    546s] 32768x16384x26624 bfloat16 S=  0 pick=           nan v9=    nan v20= 1609.1 (dp ) capped: data-parallel
+[617/630    548s] 512x8192x28672 bfloat16 S= 64 pick=           nan v9=    nan v20= 1222.5 (one_tile owner, dp 470.7) capped: one-tile owner capped 1228.6
+[618/630    549s] 1024x8192x28672 bfloat16 S=128 pick=           nan v9=    nan v20= 1437.5 (one_tile owner, dp 930.5) capped: one-tile owner capped 1432.8
+[619/630    549s] 2048x8192x28672 bfloat16 S=  0 pick=           nan v9=    nan v20= 1591.2 (dp ) capped: data-parallel
+[620/630    550s] 4096x8192x28672 bfloat16 S=  0 pick=           nan v9=    nan v20= 1619.1 (dp ) capped: data-parallel
+[621/630    550s] 8192x8192x28672 bfloat16 S=  0 pick=           nan v9=    nan v20= 1618.1 (dp ) capped: data-parallel
+[622/630    551s] 16384x8192x28672 bfloat16 S=  0 pick=           nan v9=    nan v20= 1607.2 (dp ) capped: data-parallel
+[623/630    551s] 32768x8192x28672 bfloat16 S=  0 pick=           nan v9=    nan v20= 1622.4 (dp ) capped: data-parallel
+[624/630    553s] 512x7168x35840 bfloat16 S= 56 pick=           nan v9=    nan v20= 1168.6 (one_tile owner, dp 436.9) capped: one-tile owner capped 1174.7
+[625/630    554s] 1024x7168x35840 bfloat16 S=112 pick=           nan v9=    nan v20= 1355.4 (one_tile owner, dp 853.0) capped: one-tile owner capped 1354.2
+[626/630    557s] 2048x7168x35840 bfloat16 S=224 pick=           nan v9=    nan v20= 1488.1 (dp ) capped: spread capped 1505.2
+[627/630    560s] 4096x7168x35840 bfloat16 S=192 pick=           nan v9=    nan v20= 1506.1 (dp ) capped: spread capped 1586.3
+[628/630    561s] 8192x7168x35840 bfloat16 S=128 pick=           nan v9=    nan v20= 1608.5 (one_tile owner, dp 1492.8) capped: one-tile owner capped 1613.5
+[629/630    561s] 16384x7168x35840 bfloat16 S=  0 pick=           nan v9=    nan v20= 1615.7 (dp ) capped: data-parallel
+[630/630    562s] 32768x7168x35840 bfloat16 S=  0 pick=           nan v9=    nan v20= 1615.6 (dp ) capped: data-parallel
+DONE

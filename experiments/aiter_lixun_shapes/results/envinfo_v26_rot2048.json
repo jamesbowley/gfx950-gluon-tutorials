@@ -1,0 +1,52 @@
+{
+  "aiter": {
+    "torch": "2.10.0+rocm7.2.4.git3d3aa833",
+    "hip": "7.2.53211",
+    "hip_device": "3",
+    "gpu_pci_bus": 21,
+    "gpu": "gfx950:sramecc+:xnack-",
+    "hipblaslt": "100202 (dabb6df2b9)",
+    "hipblaslt_path": "/home/jbowley/rocm724_env/root/opt/rocm-7.2.4/lib/libhipblaslt.so.1.2.70204",
+    "triton": "3.8.0 @ /home/jbowley/repos/triton_gfx950-tutorial-v2.2/python/triton",
+    "aiter": "/home/jbowley/repos/aiter_llirsched_wt/aiter",
+    "aiter_commit": "e2c7aa0aa [Triton/Gluon] gfx950 a16w16: skip the Gluon kernel on Triton without cd_regclass",
+    "aiter_base": "a1455f1c4 2026-10-02 [CK] [FlyDSL] add mxfp8 a8w8 blockscale for gfx950 (#4951)",
+    "aiter_jit_dir": "/home/jbowley/repos/gfx950-gluon-tutorials/experiments/aiter_lixun_shapes/jit/rocm724_main",
+    "llir_sched": "/root/.aiter/llir_sched/ccf9a789cf3f11ab/libLlirSched.so"
+  },
+  "v20": {
+    "torch": "2.10.0+rocm7.2.4.git3d3aa833",
+    "hip": "7.2.53211",
+    "hip_device": "3",
+    "gpu_pci_bus": 21,
+    "gpu": "gfx950:sramecc+:xnack-",
+    "triton": "3.8.0 @ /home/jbowley/repos/triton_gfx950-tutorial-v2.2/python/triton",
+    "v20_sched": "aiter",
+    "llir_plugin": "/root/.aiter/llir_sched/ccf9a789cf3f11ab/libLlirSched.so",
+    "llir_opts": "{'llvm_fn_attrs': (('aiter-llir-sched', 'ccf9a789cf3f11ab'),)}",
+    "amdgcnas": null,
+    "v20_snapshot": "/home/jbowley/repos/gfx950-gluon-tutorials/experiments/aiter_lixun_shapes/v20_snapshot_v26_rot2048/matmul_kernel.py",
+    "v20_snapshot_sha256": "96f09f5c62943d6b",
+    "v20_p_slot_pad_elems": 0
+  },
+  "run": {
+    "headline": "capped",
+    "rotating_mb": 2048,
+    "rounds": 3,
+    "v20_snapshot_sha256": "96f09f5c62943d6b",
+    "v20_snapshot_from": "v26",
+    "v20_worklog_latest": "## 5. The host rule from sweeps G and H (2026-10-12)",
+    "v20_live_sha256_at_start": "96f09f5c62943d6b",
+    "v9_live_sha256_at_start": "7f24b78f7112b834",
+    "pad512": false,
+    "pad_bytes": 0,
+    "realloc": true,
+    "realloc_workspace": false,
+    "streamk_p_pad": 0,
+    "v20_sched": "aiter",
+    "kernel": "v26",
+    "kernel_name": "v26_streamk_ragged_k",
+    "v9_handoff": "v9_ragged",
+    "hip_device": "3"
+  }
+}

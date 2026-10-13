@@ -25,8 +25,10 @@
 
     HIP_VISIBLE_DEVICES=0 python experiments/streamk_split_count/check_tile_limit.py [--jobs 8]
     HIP_VISIBLE_DEVICES=0 python experiments/streamk_split_count/check_tile_limit.py --sweep e1   # sweep E1's cases
+    HIP_VISIBLE_DEVICES=1 python experiments/streamk_split_count/check_tile_limit.py --sweep g --versions 9r 25 13
 
-Each case (version, policy, split, K, T = 256 + S) runs 6 launches over 3 rotating inputs, with
+Each case (version, policy, split, K, T = 256 + S; sweep G: T = S, no full wave, and T = 256 + S for
+v9_ragged and v13 on its full-wave cells) runs 6 launches over 3 rotating inputs, with
 B and C padded as bench.py pads them (so the compiled kernels are the ones the sweep times). C is
 filled with NaN before every launch, and the launch must write exactly the tiles whose ids are
 below T (GROUP_SIZE_M = 4 swizzle over the full 16 x 32 grid), each whole, matching torch, and
@@ -48,7 +50,7 @@ A16 = os.path.join(HERE, "..", "..", "kernels", "gemm", "intra_wave", "a16w16")
 TAG = "CHECK_CASE "
 NAMES = {13: "v13_persistant_peel_acc", 16: "v16_streamk_lane_partials", 19: "v19_streamk_two_tile_reversed",
          20: "v20_streamk_reduce_scatter", 22: "v22_streamk_atomic_c", 23: "v23_streamk_rs_band",
-         24: "v24_streamk_combined"}
+         24: "v24_streamk_combined", 25: "v25_streamk_ragged_mn", 26: "v26_streamk_ragged_k", "9r": "v9_ragged"}
 
 
 def atomic_mean_factor(n):
@@ -159,12 +161,12 @@ def worker(v, K, cases):
                 elif not torch.allclose(torch.where(want_el, cc, ref), ref, atol=1e-1, rtol=1e-2):
                     res["wrong"] += 1
             torch.cuda.synchronize()
-            if v != 13:
+            if v not in (13, "9r"):
                 ws = mk.streamk_workspace(bench.DEVICE, 256, 256, 256)
-                # The barrier counts are the even words of tile_sync's first 2 x 256; v24 follows them
-                # with its L2 epoch flags (which hold epochs) and its atomic ending's zero counts.
+                # The barrier counts are the even words of tile_sync's first 2 x 256; v24-v26 follow them
+                # with their L2 epoch flags (which hold epochs) and their atomic ending's zero counts.
                 res["flags_up"] = int((ws[1] != 0).sum()) + (int((ws[2][:512:2] != 0).sum()) if len(ws) > 2 else 0)
-                if v == 24:
+                if v in (24, 25, 26):
                     res["flags_up"] += int((ws[2][768:] != 0).sum())
         except Exception as e:  # noqa: BLE001  (report and go on to the next case)
             res["error"] = f"{type(e).__name__}: {str(e).splitlines()[0][:200]}"
@@ -176,15 +178,17 @@ def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--jobs", type=int, default=8)
     p.add_argument("--timeout", type=int, default=5400, help="seconds per worker")
-    p.add_argument("--versions", nargs="*", type=int, help="only these kernel versions (default: all)")
-    p.add_argument("--sweep", default="c", choices=["c", "e1", "f"], help="the sweep whose cases to check")
+    p.add_argument("--versions", nargs="*", type=lambda s: int(s) if s.isdigit() else s,
+                   help="only these kernel versions (default: all; 9r is v9_ragged)")
+    p.add_argument("--sweep", default="c", choices=["c", "e1", "f", "g", "h", "f2t"],
+                   help="the sweep whose cases to check")
     p.add_argument("--worker", help=argparse.SUPPRESS)
     args = p.parse_args()
     sys.path.insert(0, HERE)
     import sweep
 
     all_cases = {"c": lambda: sweep.cases_c(include_real=False), "e1": sweep.cases_e1,
-                 "f": sweep.cases_f}[args.sweep]()
+                 "f": sweep.cases_f, "g": sweep.cases_g, "h": sweep.cases_h, "f2t": sweep.cases_f2t}[args.sweep]()
     cases = [c for c in all_cases if args.worker or not args.versions or c["v"] in args.versions]
     groups = {}
     for c in cases:

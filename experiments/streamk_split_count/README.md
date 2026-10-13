@@ -263,3 +263,113 @@ chunk-major); plus v13, v24's two-tile and spread, and v20's reduce-scatter as t
   rule, by kernel-time regret, with leave-one-S-out and leave-one-K-out cross-validation.
   [results/rules_frozen.json](results/rules_frozen.json) holds the fitted rule for held-out tests, with checksums of
   what it was fitted on. The held-out test is [experiments/streamk_aiter_test](../streamk_aiter_test/README.md).
+
+## 6. Sweep G: no full wave (v25, v9_ragged)
+
+```bash
+# AITER's stack, as sweep C; HIP numbering: device 0 = rocm-smi GPU 3 (timing), device 1 = rocm-smi GPU 0 (checks)
+HIP_VISIBLE_DEVICES=0 python experiments/streamk_split_count/spot_v25.py   # results/spot_v25.md: v25 times as v24
+HIP_VISIBLE_DEVICES=1 python experiments/streamk_split_count/check_tile_limit.py --sweep g --versions 9r 25 13 --jobs 3
+experiments/streamk_split_count/run_f.sh start g               # detached timing, then sweep.py g_report
+python experiments/streamk_split_count/rules_f.py --freeze     # results/rules_f.md, rules_frozen.json version 2
+```
+
+The AITER test showed the rules losing up to 16% (90th percentile) on shapes with fewer tiles than programs, a
+regime sweep F never measured (every tail there follows a full wave). Sweep G measures it on sweep C's matrix with
+`GEMM_TILE_LIMIT = S`, so all S tiles are leftover: S = 1-128 (dense at 32-64) at K = 512-16384 (and 32768 at
+S = 128), with data-parallel on [v9_ragged](../../kernels/gemm/intra_wave/a16w16/v9_ragged/WORKLOG.md) (one program
+per tile; given the same `TILE_LIMIT` hook as v13), v13 for reference, v25 as deployed, and v25's one-tile
+reduce-scatter and owner (fp32, tile-major) at every n and the default; S = 160-255 with v9_ragged, v13, v25 spread
+and v25 as deployed; and v9_ragged with a full wave on sweep F's 15 cells above 128. 2,003 cases, all first passing
+the tile-limit check ([results/check_tile_limit_g.md](results/check_tile_limit_g.md)), timed in 2 h 50 min.
+[v25](../../kernels/gemm/intra_wave/a16w16/v25_streamk_ragged_mn/WORKLOG.md) is v24's code on aligned shapes (edge
+flags off; `STREAMK_FORCE_EDGE` and `V9_FORCE_EDGE` are in every `ENV_KEYS`), and re-timing 20 stored sweep F and
+AITER cases gave v25 / v24 a median of 0.999 (0.996-1.012), so v24's rows and v25's share one comparison.
+
+Results ([results/sweep_g.md](results/sweep_g.md)):
+- **Reduce-scatter beats owner up to S = 48-56** (at K >= 2048; 0.4-0.65 times the owner's kernel time at S <= 8),
+  owner wins from about S = 56-64. `capped` switches to owner at S = 33 (fewer than 8 programs per tile) and loses
+  4-24% at S = 36-48 (11-24% at S = 36-40).
+- **The best reduce-scatter n falls as about 32 / sqrt(S)**: 32 at S = 1-2, 16 at S = 4-8, 8 at S = 12-24, 6 at
+  S = 28-40, 4 at S = 56. `capped`'s `max(8, k // 8)` gives 8 at K = 4096, 12-18% slower than 16 for S <= 6.
+- **K = 512: data-parallel everywhere. K = 1024: reduce-scatter up to S = 24** (0.71-0.95 of data-parallel), which
+  `capped` misses: its idle-share test sends every K = 1024 shape to data-parallel (up to 40% slower at S = 1).
+- **v13 and v9_ragged tie without a full wave** (v13 / v9_ragged median 1.000, 10th-90th percentile 0.992-1.015) and
+  **with one** (v9_ragged / v13 median 1.002 on sweep F's cells), so data-parallel above one wave stays on v13.
+- **Spread below one wave pays only at S = 160-192 with K >= 16384** (0.89-0.94 of data-parallel). At S = 240-255 it
+  loses even at K = 32768, where `capped` picks it (1-3%).
+
+**Fitting** ([results/rules_f.md](results/rules_f.md), sweep G sections; regret = kernel time / the fastest of
+data-parallel, reduce-scatter and owner at any measured n):
+
+![Sweep G regret](images/sweep_g_regret.png)
+
+| rule, sweep G's 115 cells with S <= 128 | median | 90th percentile | worst |
+|---|---|---|---|
+| capped (v24 / v25) | 1.002 | 1.150 | 1.404 |
+| sweep F's rule, version 1 constants | 1.003 | 1.148 | 1.231 |
+| the same family fitted on sweep G (`one`) | 1.000 | 1.103 (1.139 / 1.155 leaving out an S / a K) | 1.484 |
+| with reduce-scatter n <= Q / sqrt(S) (`one_sqrt`) | 1.000 | 1.094 (1.102 / 1.121) | 1.168 |
+
+`one`: T = 14, E = 4, m = 4, P = 192, c0 = 1.5 (reduce-scatter up to S = 64, n = min(192 // S, k / 4)).
+`one_sqrt`: T = 14, E = 5, m = 4, Q = 32, c0 = 3.0 (reduce-scatter up to S = 51, n = min(32 / sqrt(S), k / 4)). The
+spread threshold fits to k >= 512 in both regimes, `capped`'s own: no single k separates S = 192 (spread pays from
+k = 256) from S = 240-255 (it never pays below one wave). Version 2 of
+[results/rules_frozen.json](results/rules_frozen.json) holds both variants for less than one wave and version 1's
+constants for one wave or more (version 1 is kept as [results/rules_frozen_v1.json](results/rules_frozen_v1.json)),
+frozen before the AITER test's re-score; its result is in [experiments/streamk_aiter_test](../streamk_aiter_test/README.md).
+
+## 7. Sweep H: S > 128 on v26, and two-tile re-timed
+
+```bash
+# HIP device 1: checks; HIP device 0: timing
+python experiments/streamk_split_count/check_tile_limit.py --sweep h --versions 9r 13 25 26 --jobs 3   # results/check_tile_limit_h.md
+python experiments/streamk_split_count/check_tile_limit.py --sweep f2t --versions 26 --jobs 3          # results/check_tile_limit_f2t.md
+experiments/streamk_split_count/run_f.sh start h f2t aiter     # sweep H (2 rounds), two-tile, the AITER re-score
+python experiments/streamk_split_count/rules_f.py --freeze-v3  # rules_frozen.json version 3 (version 2 kept)
+```
+
+Above S = 128 a tile-aligned split has one program per tile, so the choice is data-parallel or spread (end-to-end
+reversed cuts over all programs). Version 2 spread from k >= 512 (`capped`'s test), and still lost up to 18% on
+AITER's shapes there. [v26](../../kernels/gemm/intra_wave/a16w16/v26_streamk_ragged_k/WORKLOG.md) entry 3 removed
+most of the end-to-end loop's spills, so spread was re-timed on v26 on a finer grid: S = 132-255 (13 values, dense
+above 128, where sweep G had nothing below 160), K = 2048-32768 including 3072, 6144, 12288 and 24576, below one wave
+(`GEMM_TILE_LIMIT = S`, data-parallel on v9_ragged) and with one (256 + S, data-parallel on v13), v25's spread again
+at the 40 cells sweeps F and G had, two interleaved rounds: 1,016 cases, all first passing the tile-limit check.
+The rounds agree to 0.26% (median; 0.84% at the 90th percentile).
+
+Results ([results/sweep_h.md](results/sweep_h.md)):
+- **v26's spread is 1.1% faster than v25's** (median of 40 cells, same session; up to 6.9% at small K below one wave).
+- **Whether spread pays follows (256 - S) k**, the k-steps the data-parallel last wave leaves idle, not k alone.
+  Below about 8,192 spread loses in every cell of both regimes; above about 12,288 it wins in most. At S = 132 it
+  pays from K = 6144, at S = 240-255 never below one wave.
+- **Fit** ([results/rules_f.md](results/rules_f.md), last section): "spread if (256 - S) k >= C" gives C = 10,493 in
+  both regimes. Regret, with a full wave / below one wave (90th percentile / worst): `capped`'s k >= 512 1.034 / 1.066
+  and 1.063 / 1.164; k alone refitted 1.009 / 1.054 and 1.021 / 1.078; (256 - S) k >= 10,493 1.000 / 1.019 and
+  1.000 / 1.039, unchanged leaving out an S or a K. Version 3 of [results/rules_frozen.json](results/rules_frozen.json)
+  is version 2 with this test (spread on v26); version 2 is kept as
+  [results/rules_frozen_v2.json](results/rules_frozen_v2.json).
+
+**Two-tile on v26** ([results/sweep_f2t.md](results/sweep_f2t.md)): sweep F's 105 two-tile cells, v26 and v24 timed
+together. v26 is 3.2% faster (median; 0.855-0.998), but still slower than the best choice the rules can make (sweep
+F's fastest of data-parallel, reduce-scatter and owner) in 104 of 105 cells, by a median 6.2%. Against `capped`'s own
+choice it wins by more than 2% in 9 of 90 cells (S <= 6, mostly K = 1024, where `capped` picks badly) and loses by a
+median 3.5%. Two-tile stays out of the rules on this matrix.
+
+## 8. Ragged shapes (open)
+
+`ragged_spread.py` ([results/ragged_spread.md](results/ragged_spread.md); check:
+[results/ragged_spread_check.md](results/ragged_spread_check.md)) times spread against data-parallel (as deployed) on
+real shapes with S = 136-248 tiles below one wave or 256 + S, K = 4096-32768, aligned and with M / N, K or all three
+ragged, with and without bias (640 cases on v26). Every sweep above, and every AITER shape, is aligned, so the host
+rule may need a different form for ragged shapes. Findings so far (v26 WORKLOG entry 5): with M / N ragged the same
+spread test works without a bias and wants a higher threshold with one (that build spills most); with K ragged spread
+should run far more often, but bench.py leaves A's rows unpadded, which misaligns them when K is not a multiple of 64
+and slows data-parallel most, so that needs re-timing with padded A. The S <= 128 rule has not been looked at on
+ragged shapes at all.
+
+**Parked (2026-10-12).** A full ragged sweep and rule are not started. The edge builds' spills with a bias
+(spread: 127 VGPRs at 3000x3000x16384 against 35 without a bias and 5 aligned) are the first thing to look at: if
+they go, ragged shapes may follow the aligned rule. The plan, its prerequisites (a held-out ragged set built from
+AITER's (N, K) with ragged M, and A-row padding in bench.py for ragged K) and the spill table are in v26's WORKLOG
+entry 5.

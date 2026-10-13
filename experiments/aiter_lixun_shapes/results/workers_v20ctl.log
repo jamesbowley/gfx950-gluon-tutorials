@@ -1,0 +1,4 @@
+[aiter] import [module_aiter_core] under /home/jbowley/repos/aiter_llirsched_wt/aiter/jit/module_aiter_core.so
+/home/jbowley/rocm724_env/venv/lib/python3.12/site-packages/torch/profiler/profiler.py:217: UserWarning: Warning: Profiler clears events at the end of each cycle.Only events from the current cycle will be reported.To keep events across cycles, set acc_events=True.
+  _warn_once(
+[W1009 13:20:00.077594117 collection.cpp:1148] Warning: ROCTracer produced duplicate flow start: 4 (function operator())

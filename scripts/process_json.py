@@ -54,6 +54,8 @@ MFMA_CYCLE_MAP = {
     "v_mfma_f32_16x16x32_f16": 16,
     "v_mfma_f32_16x16x32_bf16": 16,
     "v_mfma_f32_32x32x16_f16": 32,
+    # measured on gfx950: busy SIMD-cycles / MFMAs executed (v9_tile WORKLOG §14.9)
+    "v_mfma_f32_4x4x4_16b_bf16": 8,
     # "v_mfma_f32_4x4x4_f16": 4,
     # "v_mfma_f32_16x16x4_f32": 16,
     # "v_mfma_f32_32x32x2_f32": 32,

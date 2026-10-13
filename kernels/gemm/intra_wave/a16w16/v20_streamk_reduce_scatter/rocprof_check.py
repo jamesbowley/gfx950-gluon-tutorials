@@ -54,9 +54,10 @@ NAMES = {9: "v9_beyond_hotloop", 10: "v10_persistant", 11: "v11_persistant_overl
          15: "v15_streamk_onetile", 16: "v16_streamk_lane_partials",
          17: "v17_streamk_tile_aligned", 18: "v18_streamk_chunk_major", 19: "v19_streamk_two_tile_reversed",
          20: "v20_streamk_reduce_scatter", 22: "v22_streamk_atomic_c", 23: "v23_streamk_rs_band",
-         24: "v24_streamk_combined"}
-# v20-v24 hand data-parallel shapes of at most one wave to v9, so their traces can hold v9's kernel.
-DELEGATES = {20: (9,), 21: (9,), 22: (9,), 23: (9,), 24: (9,)}
+         24: "v24_streamk_combined", 25: "v25_streamk_ragged_mn", 26: "v26_streamk_ragged_k", "9r": "v9_ragged"}
+# v20-v24 hand data-parallel shapes of at most one wave to v9 (v25 and v26 to v9_ragged), so their
+# traces can hold that kernel.
+DELEGATES = {20: (9,), 21: (9,), 22: (9,), 23: (9,), 24: (9,), 25: ("9r",), 26: ("9r",)}
 # Kernels a version launches before its GEMM in the same call (v22's atomic ending zeroes the
 # stream-K tiles of C first); cold_detail times the call from their start.
 PRE_KERNELS = {22: ("v22_zero_tiles",)}

@@ -46,6 +46,12 @@ import pathlib
 
 _HERE = pathlib.Path(__file__).parent
 
+# Kernels compiled without the peephole. optimize_nops deletes LLVM's hazard s_nops on the
+# assumption that the MFMA interleave leaves enough instructions between each hazard pair;
+# v9_tile_small's one-region loop (the next k-step's ds_reads overwriting the operands of MFMAs
+# still in flight) does not satisfy it (v9_tile WORKLOG §14.3).
+SKIP_KERNELS = {"v9_tile_small", "triton_ref_matmul"}
+
 
 def get_key():
     # Fold both this hook and the peephole module into the cache key so any edit
@@ -73,6 +79,8 @@ def inspect_stages_hook(self=None, stages=None, options=None, language=None, cap
         # In-tree codegen first (with the RA hints already applied in make_llir /
         # translate_to_asm), then the out-of-tree peephole on the assembly text.
         asm = orig_make_amdgcn(src, metadata, options)
+        if metadata.get("name") in SKIP_KERNELS:
+            return asm
         # The peephole is a pure optimization: a parse/transform failure must never
         # turn a correct kernel into a hard compile error. Fall back to the
         # un-peepholed (correct) assembly on any failure.

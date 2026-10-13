@@ -1,0 +1,284 @@
+main: 90 cases, 90 to run
+[1/90] 5120x3584x6144 v13 n=default: 975 TFLOPS, L2 72.1%, correct=True
+[2/90] 5120x3584x6144 v19 n=default: 1246 TFLOPS, L2 59.4%, correct=True
+[3/90] 5120x3584x6144 v20 auto n=default: 1242 TFLOPS, L2 59.4%, correct=True
+[4/90] 5120x3584x6144 v20 rs n=default: 1139 TFLOPS, L2 65.5%, correct=True
+[5/90] 5120x3584x6144 v20 owner n=default: 1103 TFLOPS, L2 66.0%, correct=True
+[6/90] 5120x3584x6144 v20 two_tile n=default: 1246 TFLOPS, L2 59.4%, correct=True
+[7/90] 5120x3584x6144 v20 spread n=default: 1038 TFLOPS, L2 64.5%, correct=True
+[8/90] 5120x3584x6144 v20 dp n=default: 976 TFLOPS, L2 72.1%, correct=True
+[9/90] 5120x3584x6144 v20 capped n=default: 1199 TFLOPS, L2 69.0%, correct=True
+[10/90] 4096x17152x6144 v13 n=default: 1315 TFLOPS, L2 77.9%, correct=True
+[11/90] 4096x17152x6144 v19 n=default: 1404 TFLOPS, L2 71.5%, correct=True
+[12/90] 4096x17152x6144 v20 auto n=default: 1391 TFLOPS, L2 75.9%, correct=True
+[13/90] 4096x17152x6144 v20 rs n=default: 1383 TFLOPS, L2 75.6%, correct=True
+[14/90] 4096x17152x6144 v20 owner n=default: 1392 TFLOPS, L2 75.9%, correct=True
+[15/90] 4096x17152x6144 v20 two_tile n=default: 1403 TFLOPS, L2 71.5%, correct=True
+[16/90] 4096x17152x6144 v20 spread n=default: 1372 TFLOPS, L2 74.5%, correct=True
+[17/90] 4096x17152x6144 v20 dp n=default: 1315 TFLOPS, L2 77.9%, correct=True
+[18/90] 4096x17152x6144 v20 capped n=default: 1398 TFLOPS, L2 77.1%, correct=True
+[19/90] 9472x14336x6144 v13 n=default: 1360 TFLOPS, L2 76.8%, correct=True
+[20/90] 9472x14336x6144 v19 n=default: 1454 TFLOPS, L2 74.7%, correct=True
+[21/90] 9472x14336x6144 v20 auto n=default: 1462 TFLOPS, L2 74.7%, correct=True
+[22/90] 9472x14336x6144 v20 rs n=default: 1437 TFLOPS, L2 75.8%, correct=True
+[23/90] 9472x14336x6144 v20 owner n=default: 1418 TFLOPS, L2 75.8%, correct=True
+[24/90] 9472x14336x6144 v20 two_tile n=default: 1459 TFLOPS, L2 74.7%, correct=True
+[25/90] 9472x14336x6144 v20 spread n=default: 1411 TFLOPS, L2 75.6%, correct=True
+[26/90] 9472x14336x6144 v20 dp n=default: 1360 TFLOPS, L2 76.8%, correct=True
+[27/90] 9472x14336x6144 v20 capped n=default: 1437 TFLOPS, L2 76.4%, correct=True
+[28/90] 14336x18944x6144 v13 n=default: 1445 TFLOPS, L2 77.7%, correct=True
+[29/90] 14336x18944x6144 v19 n=default: 1488 TFLOPS, L2 75.7%, correct=True
+[30/90] 14336x18944x6144 v20 auto n=default: 1478 TFLOPS, L2 76.7%, correct=True
+[31/90] 14336x18944x6144 v20 rs n=default: 1484 TFLOPS, L2 77.3%, correct=True
+[32/90] 14336x18944x6144 v20 owner n=default: 1481 TFLOPS, L2 77.4%, correct=True
+[33/90] 14336x18944x6144 v20 two_tile n=default: 1491 TFLOPS, L2 76.0%, correct=True
+[34/90] 14336x18944x6144 v20 spread n=default: 1476 TFLOPS, L2 77.3%, correct=True
+[35/90] 14336x18944x6144 v20 dp n=default: 1447 TFLOPS, L2 77.6%, correct=True
+[36/90] 14336x18944x6144 v20 capped n=default: 1483 TFLOPS, L2 78.1%, correct=True
+[37/90] 4864x4096x3072 v13 n=default: 1006 TFLOPS, L2 72.4%, correct=True
+[38/90] 4864x4096x3072 v19 n=default: 1032 TFLOPS, L2 54.8%, correct=True
+[39/90] 4864x4096x3072 v20 auto n=default: 972 TFLOPS, L2 62.7%, correct=True
+[40/90] 4864x4096x3072 v20 rs n=default: 940 TFLOPS, L2 61.3%, correct=True
+[41/90] 4864x4096x3072 v20 owner n=default: 976 TFLOPS, L2 62.7%, correct=True
+[42/90] 4864x4096x3072 v20 two_tile n=default: 1026 TFLOPS, L2 54.8%, correct=True
+[43/90] 4864x4096x3072 v20 spread n=default: 952 TFLOPS, L2 60.6%, correct=True
+[44/90] 4864x4096x3072 v20 dp n=default: 1003 TFLOPS, L2 72.4%, correct=True
+[45/90] 4864x4096x3072 v20 capped n=default: 1089 TFLOPS, L2 70.2%, correct=True
+[46/90] 10752x12544x3072 v13 n=default: 1323 TFLOPS, L2 76.5%, correct=True
+[47/90] 10752x12544x3072 v19 n=default: 1384 TFLOPS, L2 74.2%, correct=True
+[48/90] 10752x12544x3072 v20 auto n=default: 1382 TFLOPS, L2 74.2%, correct=True
+[49/90] 10752x12544x3072 v20 rs n=default: 1366 TFLOPS, L2 74.5%, correct=True
+[50/90] 10752x12544x3072 v20 owner n=default: 1267 TFLOPS, L2 74.6%, correct=True
+[51/90] 10752x12544x3072 v20 two_tile n=default: 1385 TFLOPS, L2 74.2%, correct=True
+[52/90] 10752x12544x3072 v20 spread n=default: 1266 TFLOPS, L2 74.6%, correct=True
+[53/90] 10752x12544x3072 v20 dp n=default: 1324 TFLOPS, L2 76.5%, correct=True
+[54/90] 10752x12544x3072 v20 capped n=default: 1368 TFLOPS, L2 75.8%, correct=True
+[55/90] 12800x10752x3072 v13 n=default: 1345 TFLOPS, L2 76.2%, correct=True
+[56/90] 12800x10752x3072 v19 n=default: 1386 TFLOPS, L2 72.2%, correct=True
+[57/90] 12800x10752x3072 v20 auto n=default: 1361 TFLOPS, L2 74.2%, correct=True
+[58/90] 12800x10752x3072 v20 rs n=default: 1344 TFLOPS, L2 73.9%, correct=True
+[59/90] 12800x10752x3072 v20 owner n=default: 1359 TFLOPS, L2 74.2%, correct=True
+[60/90] 12800x10752x3072 v20 two_tile n=default: 1385 TFLOPS, L2 72.2%, correct=True
+[61/90] 12800x10752x3072 v20 spread n=default: 1351 TFLOPS, L2 73.7%, correct=True
+[62/90] 12800x10752x3072 v20 dp n=default: 1344 TFLOPS, L2 76.1%, correct=True
+[63/90] 12800x10752x3072 v20 capped n=default: 1366 TFLOPS, L2 75.5%, correct=True
+[64/90] 10752x12544x8192 v13 n=default: 1390 TFLOPS, L2 77.5%, correct=True
+[65/90] 10752x12544x8192 v19 n=default: 1522 TFLOPS, L2 76.1%, correct=True
+[66/90] 10752x12544x8192 v20 auto n=default: 1523 TFLOPS, L2 76.2%, correct=True
+[67/90] 10752x12544x8192 v20 rs n=default: 1480 TFLOPS, L2 76.5%, correct=True
+[68/90] 10752x12544x8192 v20 owner n=default: 1418 TFLOPS, L2 76.4%, correct=True
+[69/90] 10752x12544x8192 v20 two_tile n=default: 1518 TFLOPS, L2 76.2%, correct=True
+[70/90] 10752x12544x8192 v20 spread n=default: 1405 TFLOPS, L2 76.4%, correct=True
+[71/90] 10752x12544x8192 v20 dp n=default: 1389 TFLOPS, L2 77.1%, correct=True
+[72/90] 10752x12544x8192 v20 capped n=default: 1487 TFLOPS, L2 76.9%, correct=True
+[73/90] 8192x17152x8192 v13 n=default: 1422 TFLOPS, L2 74.9%, correct=True
+[74/90] 8192x17152x8192 v19 n=default: 1456 TFLOPS, L2 68.8%, correct=True
+[75/90] 8192x17152x8192 v20 auto n=default: 1439 TFLOPS, L2 72.7%, correct=True
+[76/90] 8192x17152x8192 v20 rs n=default: 1424 TFLOPS, L2 73.2%, correct=True
+[77/90] 8192x17152x8192 v20 owner n=default: 1441 TFLOPS, L2 72.4%, correct=True
+[78/90] 8192x17152x8192 v20 two_tile n=default: 1457 TFLOPS, L2 68.8%, correct=True
+[79/90] 8192x17152x8192 v20 spread n=default: 1447 TFLOPS, L2 71.3%, correct=True
+[80/90] 8192x17152x8192 v20 dp n=default: 1422 TFLOPS, L2 73.8%, correct=True
+[81/90] 8192x17152x8192 v20 capped n=default: 1440 TFLOPS, L2 72.5%, correct=True
+[82/90] 10240x26368x8192 v13 n=default: 1463 TFLOPS, L2 78.2%, correct=True
+[83/90] 10240x26368x8192 v19 n=default: 1536 TFLOPS, L2 77.3%, correct=True
+[84/90] 10240x26368x8192 v20 auto n=default: 1520 TFLOPS, L2 77.3%, correct=True
+[85/90] 10240x26368x8192 v20 rs n=default: 1517 TFLOPS, L2 77.6%, correct=True
+[86/90] 10240x26368x8192 v20 owner n=default: 1511 TFLOPS, L2 77.5%, correct=True
+[87/90] 10240x26368x8192 v20 two_tile n=default: 1525 TFLOPS, L2 77.4%, correct=True
+[88/90] 10240x26368x8192 v20 spread n=default: 1507 TFLOPS, L2 77.6%, correct=True
+[89/90] 10240x26368x8192 v20 dp n=default: 1469 TFLOPS, L2 77.8%, correct=True
+[90/90] 10240x26368x8192 v20 capped n=default: 1522 TFLOPS, L2 78.0%, correct=True
+split: 100 cases, 100 to run
+[1/100] 5120x3584x6144 v20 owner n=1: 961 TFLOPS, L2 72.1%, correct=True
+[2/100] 5120x3584x6144 v20 rs n=1: 963 TFLOPS, L2 72.1%, correct=True
+[3/100] 5120x3584x6144 v20 owner n=2: 1124 TFLOPS, L2 71.5%, correct=True
+[4/100] 5120x3584x6144 v20 rs n=2: 1094 TFLOPS, L2 70.9%, correct=True
+[5/100] 5120x3584x6144 v20 owner n=3: 1186 TFLOPS, L2 70.8%, correct=True
+[6/100] 5120x3584x6144 v20 rs n=3: 1158 TFLOPS, L2 70.2%, correct=True
+[7/100] 5120x3584x6144 v20 owner n=4: 1194 TFLOPS, L2 70.2%, correct=True
+[8/100] 5120x3584x6144 v20 rs n=4: 1202 TFLOPS, L2 69.6%, correct=True
+[9/100] 5120x3584x6144 v20 owner n=6: 1176 TFLOPS, L2 68.9%, correct=True
+[10/100] 5120x3584x6144 v20 rs n=6: 1196 TFLOPS, L2 68.4%, correct=True
+[11/100] 5120x3584x6144 v20 owner n=8: 1145 TFLOPS, L2 67.7%, correct=True
+[12/100] 5120x3584x6144 v20 rs n=8: 1188 TFLOPS, L2 67.2%, correct=True
+[13/100] 4096x17152x6144 v20 owner n=1: 1311 TFLOPS, L2 78.0%, correct=True
+[14/100] 4096x17152x6144 v20 rs n=1: 1312 TFLOPS, L2 78.0%, correct=True
+[15/100] 4096x17152x6144 v20 owner n=2: 1380 TFLOPS, L2 77.5%, correct=True
+[16/100] 4096x17152x6144 v20 rs n=2: 1365 TFLOPS, L2 77.1%, correct=True
+[17/100] 4096x17152x6144 v20 owner n=3: 1401 TFLOPS, L2 77.2%, correct=True
+[18/100] 4096x17152x6144 v20 rs n=3: 1385 TFLOPS, L2 76.8%, correct=True
+[19/100] 4096x17152x6144 v20 owner n=4: 1400 TFLOPS, L2 76.8%, correct=True
+[20/100] 4096x17152x6144 v20 rs n=4: 1400 TFLOPS, L2 76.4%, correct=True
+[21/100] 9472x14336x6144 v20 owner n=1: 1354 TFLOPS, L2 76.9%, correct=True
+[22/100] 9472x14336x6144 v20 rs n=1: 1357 TFLOPS, L2 76.9%, correct=True
+[23/100] 9472x14336x6144 v20 owner n=2: 1405 TFLOPS, L2 76.8%, correct=True
+[24/100] 9472x14336x6144 v20 rs n=2: 1395 TFLOPS, L2 76.7%, correct=True
+[25/100] 9472x14336x6144 v20 owner n=3: 1427 TFLOPS, L2 76.7%, correct=True
+[26/100] 9472x14336x6144 v20 rs n=3: 1412 TFLOPS, L2 76.6%, correct=True
+[27/100] 9472x14336x6144 v20 owner n=4: 1434 TFLOPS, L2 76.6%, correct=True
+[28/100] 9472x14336x6144 v20 rs n=4: 1434 TFLOPS, L2 76.5%, correct=True
+[29/100] 9472x14336x6144 v20 owner n=6: 1439 TFLOPS, L2 76.4%, correct=True
+[30/100] 9472x14336x6144 v20 rs n=6: 1444 TFLOPS, L2 76.3%, correct=True
+[31/100] 9472x14336x6144 v20 owner n=8: 1437 TFLOPS, L2 76.2%, correct=True
+[32/100] 9472x14336x6144 v20 rs n=8: 1448 TFLOPS, L2 76.1%, correct=True
+[33/100] 14336x18944x6144 v20 owner n=1: 1434 TFLOPS, L2 77.8%, correct=True
+[34/100] 14336x18944x6144 v20 rs n=1: 1444 TFLOPS, L2 77.9%, correct=True
+[35/100] 14336x18944x6144 v20 owner n=2: 1477 TFLOPS, L2 77.9%, correct=True
+[36/100] 14336x18944x6144 v20 rs n=2: 1469 TFLOPS, L2 78.1%, correct=True
+[37/100] 14336x18944x6144 v20 owner n=3: 1478 TFLOPS, L2 77.6%, correct=True
+[38/100] 14336x18944x6144 v20 rs n=3: 1467 TFLOPS, L2 77.3%, correct=True
+[39/100] 14336x18944x6144 v20 owner n=4: 1478 TFLOPS, L2 78.0%, correct=True
+[40/100] 14336x18944x6144 v20 rs n=4: 1484 TFLOPS, L2 77.8%, correct=True
+[41/100] 4864x4096x3072 v20 owner n=1: 982 TFLOPS, L2 72.5%, correct=True
+[42/100] 4864x4096x3072 v20 rs n=1: 988 TFLOPS, L2 72.5%, correct=True
+[43/100] 4864x4096x3072 v20 owner n=2: 1091 TFLOPS, L2 70.2%, correct=True
+[44/100] 4864x4096x3072 v20 rs n=2: 1022 TFLOPS, L2 68.3%, correct=True
+[45/100] 4864x4096x3072 v20 owner n=3: 1102 TFLOPS, L2 68.1%, correct=True
+[46/100] 4864x4096x3072 v20 rs n=3: 1027 TFLOPS, L2 66.4%, correct=True
+[47/100] 4864x4096x3072 v20 owner n=4: 1058 TFLOPS, L2 66.2%, correct=True
+[48/100] 4864x4096x3072 v20 rs n=4: 1030 TFLOPS, L2 64.6%, correct=True
+[49/100] 10752x12544x3072 v20 owner n=1: 1319 TFLOPS, L2 76.5%, correct=True
+[50/100] 10752x12544x3072 v20 rs n=1: 1319 TFLOPS, L2 76.5%, correct=True
+[51/100] 10752x12544x3072 v20 owner n=2: 1346 TFLOPS, L2 76.4%, correct=True
+[52/100] 10752x12544x3072 v20 rs n=2: 1337 TFLOPS, L2 76.3%, correct=True
+[53/100] 10752x12544x3072 v20 owner n=3: 1355 TFLOPS, L2 76.3%, correct=True
+[54/100] 10752x12544x3072 v20 rs n=3: 1349 TFLOPS, L2 76.2%, correct=True
+[55/100] 10752x12544x3072 v20 owner n=4: 1356 TFLOPS, L2 76.2%, correct=True
+[56/100] 10752x12544x3072 v20 rs n=4: 1360 TFLOPS, L2 76.2%, correct=True
+[57/100] 10752x12544x3072 v20 owner n=6: 1353 TFLOPS, L2 76.1%, correct=True
+[58/100] 10752x12544x3072 v20 rs n=6: 1364 TFLOPS, L2 76.0%, correct=True
+[59/100] 10752x12544x3072 v20 owner n=8: 1345 TFLOPS, L2 75.9%, correct=True
+[60/100] 10752x12544x3072 v20 rs n=8: 1369 TFLOPS, L2 75.8%, correct=True
+[61/100] 10752x12544x3072 v20 owner n=16: 1303 TFLOPS, L2 75.3%, correct=True
+[62/100] 10752x12544x3072 v20 rs n=16: 1366 TFLOPS, L2 75.2%, correct=True
+[63/100] 12800x10752x3072 v20 owner n=1: 1341 TFLOPS, L2 76.1%, correct=True
+[64/100] 12800x10752x3072 v20 rs n=1: 1344 TFLOPS, L2 76.2%, correct=True
+[65/100] 12800x10752x3072 v20 owner n=2: 1366 TFLOPS, L2 75.5%, correct=True
+[66/100] 12800x10752x3072 v20 rs n=2: 1351 TFLOPS, L2 75.1%, correct=True
+[67/100] 12800x10752x3072 v20 owner n=3: 1372 TFLOPS, L2 75.2%, correct=True
+[68/100] 12800x10752x3072 v20 rs n=3: 1351 TFLOPS, L2 74.8%, correct=True
+[69/100] 12800x10752x3072 v20 owner n=4: 1369 TFLOPS, L2 74.7%, correct=True
+[70/100] 12800x10752x3072 v20 rs n=4: 1361 TFLOPS, L2 74.3%, correct=True
+[71/100] 10752x12544x8192 v20 owner n=1: 1384 TFLOPS, L2 77.1%, correct=True
+[72/100] 10752x12544x8192 v20 rs n=1: 1387 TFLOPS, L2 77.4%, correct=True
+[73/100] 10752x12544x8192 v20 owner n=2: 1434 TFLOPS, L2 77.1%, correct=True
+[74/100] 10752x12544x8192 v20 rs n=2: 1429 TFLOPS, L2 77.1%, correct=True
+[75/100] 10752x12544x8192 v20 owner n=3: 1458 TFLOPS, L2 77.2%, correct=True
+[76/100] 10752x12544x8192 v20 rs n=3: 1448 TFLOPS, L2 77.2%, correct=True
+[77/100] 10752x12544x8192 v20 owner n=4: 1467 TFLOPS, L2 76.8%, correct=True
+[78/100] 10752x12544x8192 v20 rs n=4: 1467 TFLOPS, L2 77.2%, correct=True
+[79/100] 10752x12544x8192 v20 owner n=6: 1469 TFLOPS, L2 76.9%, correct=True
+[80/100] 10752x12544x8192 v20 rs n=6: 1480 TFLOPS, L2 77.2%, correct=True
+[81/100] 10752x12544x8192 v20 owner n=8: 1471 TFLOPS, L2 76.9%, correct=True
+[82/100] 10752x12544x8192 v20 rs n=8: 1489 TFLOPS, L2 77.0%, correct=True
+[83/100] 10752x12544x8192 v20 owner n=16: 1450 TFLOPS, L2 76.8%, correct=True
+[84/100] 10752x12544x8192 v20 rs n=16: 1495 TFLOPS, L2 76.6%, correct=True
+[85/100] 8192x17152x8192 v20 owner n=1: 1420 TFLOPS, L2 73.8%, correct=True
+[86/100] 8192x17152x8192 v20 rs n=1: 1421 TFLOPS, L2 75.2%, correct=True
+[87/100] 8192x17152x8192 v20 owner n=2: 1454 TFLOPS, L2 73.9%, correct=True
+[88/100] 8192x17152x8192 v20 rs n=2: 1444 TFLOPS, L2 74.5%, correct=True
+[89/100] 10240x26368x8192 v20 owner n=1: 1457 TFLOPS, L2 78.1%, correct=True
+[90/100] 10240x26368x8192 v20 rs n=1: 1462 TFLOPS, L2 77.8%, correct=True
+[91/100] 10240x26368x8192 v20 owner n=2: 1499 TFLOPS, L2 78.0%, correct=True
+[92/100] 10240x26368x8192 v20 rs n=2: 1497 TFLOPS, L2 78.2%, correct=True
+[93/100] 10240x26368x8192 v20 owner n=3: 1510 TFLOPS, L2 77.8%, correct=True
+[94/100] 10240x26368x8192 v20 rs n=3: 1507 TFLOPS, L2 77.9%, correct=True
+[95/100] 10240x26368x8192 v20 owner n=4: 1514 TFLOPS, L2 77.8%, correct=True
+[96/100] 10240x26368x8192 v20 rs n=4: 1535 TFLOPS, L2 77.7%, correct=True
+[97/100] 10240x26368x8192 v20 owner n=6: 1536 TFLOPS, L2 77.6%, correct=True
+[98/100] 10240x26368x8192 v20 rs n=6: 1518 TFLOPS, L2 78.0%, correct=True
+[99/100] 10240x26368x8192 v20 owner n=8: 1515 TFLOPS, L2 77.6%, correct=True
+[100/100] 10240x26368x8192 v20 rs n=8: 1520 TFLOPS, L2 77.9%, correct=True
+repeat main: 90 cases to 3 runs
+[1/90] 5120x3584x6144 v13 n=default: 976 TFLOPS, spread 0.1%
+[2/90] 5120x3584x6144 v19 n=default: 1246 TFLOPS, spread 0.1%
+[3/90] 5120x3584x6144 v20 auto n=default: 1244 TFLOPS, spread 0.3%
+[4/90] 5120x3584x6144 v20 rs n=default: 1127 TFLOPS, spread 1.7%
+[5/90] 5120x3584x6144 v20 owner n=default: 1085 TFLOPS, spread 2.3%
+[6/90] 5120x3584x6144 v20 two_tile n=default: 1247 TFLOPS, spread 0.2%
+[7/90] 5120x3584x6144 v20 spread n=default: 1038 TFLOPS, spread 0.1%
+[8/90] 5120x3584x6144 v20 dp n=default: 975 TFLOPS, spread 0.1%
+[9/90] 5120x3584x6144 v20 capped n=default: 1198 TFLOPS, spread 0.8%
+[10/90] 4096x17152x6144 v13 n=default: 1316 TFLOPS, spread 0.1%
+[11/90] 4096x17152x6144 v19 n=default: 1404 TFLOPS, spread 0.2%
+[12/90] 4096x17152x6144 v20 auto n=default: 1396 TFLOPS, spread 0.4%
+[13/90] 4096x17152x6144 v20 rs n=default: 1383 TFLOPS, spread 0.3%
+[14/90] 4096x17152x6144 v20 owner n=default: 1393 TFLOPS, spread 0.5%
+[15/90] 4096x17152x6144 v20 two_tile n=default: 1406 TFLOPS, spread 0.4%
+[16/90] 4096x17152x6144 v20 spread n=default: 1373 TFLOPS, spread 0.2%
+[17/90] 4096x17152x6144 v20 dp n=default: 1315 TFLOPS, spread 0.1%
+[18/90] 4096x17152x6144 v20 capped n=default: 1400 TFLOPS, spread 0.2%
+[19/90] 9472x14336x6144 v13 n=default: 1363 TFLOPS, spread 0.3%
+[20/90] 9472x14336x6144 v19 n=default: 1458 TFLOPS, spread 0.4%
+[21/90] 9472x14336x6144 v20 auto n=default: 1462 TFLOPS, spread 0.1%
+[22/90] 9472x14336x6144 v20 rs n=default: 1439 TFLOPS, spread 0.2%
+[23/90] 9472x14336x6144 v20 owner n=default: 1423 TFLOPS, spread 0.3%
+[24/90] 9472x14336x6144 v20 two_tile n=default: 1459 TFLOPS, spread 0.7%
+[25/90] 9472x14336x6144 v20 spread n=default: 1411 TFLOPS, spread 0.1%
+[26/90] 9472x14336x6144 v20 dp n=default: 1365 TFLOPS, spread 0.5%
+[27/90] 9472x14336x6144 v20 capped n=default: 1441 TFLOPS, spread 0.5%
+[28/90] 14336x18944x6144 v13 n=default: 1452 TFLOPS, spread 0.5%
+[29/90] 14336x18944x6144 v19 n=default: 1493 TFLOPS, spread 0.3%
+[30/90] 14336x18944x6144 v20 auto n=default: 1478 TFLOPS, spread 0.2%
+[31/90] 14336x18944x6144 v20 rs n=default: 1484 TFLOPS, spread 0.3%
+[32/90] 14336x18944x6144 v20 owner n=default: 1482 TFLOPS, spread 0.6%
+[33/90] 14336x18944x6144 v20 two_tile n=default: 1493 TFLOPS, spread 0.7%
+[34/90] 14336x18944x6144 v20 spread n=default: 1476 TFLOPS, spread 0.9%
+[35/90] 14336x18944x6144 v20 dp n=default: 1456 TFLOPS, spread 0.8%
+[36/90] 14336x18944x6144 v20 capped n=default: 1486 TFLOPS, spread 0.6%
+[37/90] 4864x4096x3072 v13 n=default: 1006 TFLOPS, spread 0.2%
+[38/90] 4864x4096x3072 v19 n=default: 1027 TFLOPS, spread 0.5%
+[39/90] 4864x4096x3072 v20 auto n=default: 973 TFLOPS, spread 2.5%
+[40/90] 4864x4096x3072 v20 rs n=default: 942 TFLOPS, spread 5.1%
+[41/90] 4864x4096x3072 v20 owner n=default: 976 TFLOPS, spread 2.4%
+[42/90] 4864x4096x3072 v20 two_tile n=default: 1026 TFLOPS, spread 0.3%
+[43/90] 4864x4096x3072 v20 spread n=default: 949 TFLOPS, spread 2.2%
+[44/90] 4864x4096x3072 v20 dp n=default: 1003 TFLOPS, spread 0.0%
+[45/90] 4864x4096x3072 v20 capped n=default: 1089 TFLOPS, spread 0.6%
+[46/90] 10752x12544x3072 v13 n=default: 1323 TFLOPS, spread 0.1%
+[47/90] 10752x12544x3072 v19 n=default: 1386 TFLOPS, spread 0.1%
+[48/90] 10752x12544x3072 v20 auto n=default: 1384 TFLOPS, spread 0.2%
+[49/90] 10752x12544x3072 v20 rs n=default: 1370 TFLOPS, spread 0.5%
+[50/90] 10752x12544x3072 v20 owner n=default: 1268 TFLOPS, spread 0.2%
+[51/90] 10752x12544x3072 v20 two_tile n=default: 1386 TFLOPS, spread 0.3%
+[52/90] 10752x12544x3072 v20 spread n=default: 1268 TFLOPS, spread 0.2%
+[53/90] 10752x12544x3072 v20 dp n=default: 1324 TFLOPS, spread 0.0%
+[54/90] 10752x12544x3072 v20 capped n=default: 1372 TFLOPS, spread 0.3%
+[55/90] 12800x10752x3072 v13 n=default: 1347 TFLOPS, spread 0.2%
+[56/90] 12800x10752x3072 v19 n=default: 1388 TFLOPS, spread 0.2%
+[57/90] 12800x10752x3072 v20 auto n=default: 1361 TFLOPS, spread 0.2%
+[58/90] 12800x10752x3072 v20 rs n=default: 1344 TFLOPS, spread 0.3%
+[59/90] 12800x10752x3072 v20 owner n=default: 1359 TFLOPS, spread 0.1%
+[60/90] 12800x10752x3072 v20 two_tile n=default: 1389 TFLOPS, spread 0.3%
+[61/90] 12800x10752x3072 v20 spread n=default: 1351 TFLOPS, spread 0.2%
+[62/90] 12800x10752x3072 v20 dp n=default: 1345 TFLOPS, spread 0.1%
+[63/90] 12800x10752x3072 v20 capped n=default: 1366 TFLOPS, spread 0.2%
+[64/90] 10752x12544x8192 v13 n=default: 1390 TFLOPS, spread 0.2%
+[65/90] 10752x12544x8192 v19 n=default: 1522 TFLOPS, spread 0.3%
+[66/90] 10752x12544x8192 v20 auto n=default: 1522 TFLOPS, spread 0.3%
+[67/90] 10752x12544x8192 v20 rs n=default: 1486 TFLOPS, spread 0.5%
+[68/90] 10752x12544x8192 v20 owner n=default: 1425 TFLOPS, spread 0.7%
+[69/90] 10752x12544x8192 v20 two_tile n=default: 1518 TFLOPS, spread 0.1%
+[70/90] 10752x12544x8192 v20 spread n=default: 1407 TFLOPS, spread 0.2%
+[71/90] 10752x12544x8192 v20 dp n=default: 1394 TFLOPS, spread 0.4%
+[72/90] 10752x12544x8192 v20 capped n=default: 1494 TFLOPS, spread 0.5%
+[73/90] 8192x17152x8192 v13 n=default: 1423 TFLOPS, spread 0.2%
+[74/90] 8192x17152x8192 v19 n=default: 1462 TFLOPS, spread 0.4%
+[75/90] 8192x17152x8192 v20 auto n=default: 1444 TFLOPS, spread 0.5%
+[76/90] 8192x17152x8192 v20 rs n=default: 1429 TFLOPS, spread 0.4%
+[77/90] 8192x17152x8192 v20 owner n=default: 1445 TFLOPS, spread 0.3%
+[78/90] 8192x17152x8192 v20 two_tile n=default: 1460 TFLOPS, spread 0.3%
+[79/90] 8192x17152x8192 v20 spread n=default: 1449 TFLOPS, spread 0.3%
+[80/90] 8192x17152x8192 v20 dp n=default: 1422 TFLOPS, spread 0.4%
+[81/90] 8192x17152x8192 v20 capped n=default: 1444 TFLOPS, spread 0.3%
+[82/90] 10240x26368x8192 v13 n=default: 1469 TFLOPS, spread 0.8%
+[83/90] 10240x26368x8192 v19 n=default: 1536 TFLOPS, spread 0.1%
+[84/90] 10240x26368x8192 v20 auto n=default: 1534 TFLOPS, spread 1.0%
+[85/90] 10240x26368x8192 v20 rs n=default: 1524 TFLOPS, spread 1.1%
+[86/90] 10240x26368x8192 v20 owner n=default: 1510 TFLOPS, spread 0.1%
+[87/90] 10240x26368x8192 v20 two_tile n=default: 1525 TFLOPS, spread 0.8%
+[88/90] 10240x26368x8192 v20 spread n=default: 1509 TFLOPS, spread 1.4%
+[89/90] 10240x26368x8192 v20 dp n=default: 1477 TFLOPS, spread 0.6%
+[90/90] 10240x26368x8192 v20 capped n=default: 1522 TFLOPS, spread 0.3%
+SHARD_DONE

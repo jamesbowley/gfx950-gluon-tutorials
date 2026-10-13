@@ -584,3 +584,609 @@ with split-K 2. The split-K bar is estimated: a full wave of 256x256 at K/2 (mea
 as above):
 
 ![split-K against tile](images/concepts/split_k.png)
+
+## 11. M and N that are not multiples of the tile (2026-10-10)
+
+The host asserted `M % BLOCK_M == 0 and N % BLOCK_N == 0`; the kernels had no edge masks. Both
+kernels (`v9_tile`, `v9_tile_2r`) now take v25's edge handling: with `EDGE_M` / `EDGE_N` (the host sets
+both when either dimension is ragged; `V9_FORCE_EDGE=1` for any shape) A rows past M and B columns past
+N are clamped to the tile's last in-bounds one, so every load reads valid memory, and the C stores and
+the bias load are masked to M x N. With both off the kernels are unchanged.
+
+- **Code** ([asm_ragged.md](results/asm_ragged.md)): with the flags off, 256x256, 256x128, 128x256 and
+  128x128r2, with and without bias, compile to the same instructions and registers as before. The edge
+  builds of 4000x4000x8192 add 0-12 VGPRs (256x256: 448 to 460), no spills.
+- **Correctness** ([check_tiles_ragged.md](results/check_tiles_ragged.md)): `check_tiles.py` now also runs
+  RAGGED_SHAPES (4000x4000x8192, 1000x2000x4096, 4096x2032x4096, 130x1040x1024), with C a window of a
+  sentinel-filled buffer 256 rows and columns larger: a case fails if anything outside the window
+  changes. The four tiles above, bf16 and fp16, with and without bias: 192 cases, 0 failures.
+- **Timing** (256x256, GPU 0): cold kernel-only (v25's `rocprof_cold.py`, 1000 launches over a rotating
+  512 MB, median) 174.2 us on 4000x4000x8192 against 176.6 us on 4096x4096x8192, the same 16x16 grid;
+  `regress.py` (do_bench, two rounds) 183.1 / 185.3 us against 182.5 / 186.1 us.
+
+## 12. K that is not a multiple of 2 BLOCK_K (2026-10-10)
+
+The host asserted `K % BLOCK_K == 0 and K // BLOCK_K >= 4`, which let through an odd number of K-steps
+(4096x4096x8128 at 256x256x64: 127 steps), while the kernels consume K-steps in pairs: that C was wrong.
+Both kernels now take v9_ragged's ragged-K handling (`EDGE_K`, set when K % (2 BLOCK_K) != 0): K is rounded
+up to a whole number of pairs and the prologue loads the last, partial pair with the lanes at or past K masked
+to zero, so the main loop is unchanged (`k_tail_mask`; `v9_tile_2r` masks both prologue K-steps). The host
+requires K % 16 == 0 and at least two pairs after rounding up.
+
+- **Code** ([asm_ragged_k.md](results/asm_ragged_k.md)): with the flags off, 256x256, 256x128, 128x256 and
+  128x128r2, with and without bias, compile to the same instructions and registers as before; the ragged-K
+  builds of 4096x4096x8080 use 252-452 VGPRs, no spills.
+- **Correctness** ([check_tiles_ragged.md](results/check_tiles_ragged.md)): RAGGED_SHAPES gain 4096x4096x8176,
+  4000x4000x8080, 1000x2000x4032 and 130x1040x400; tiles 256x256, 256x128, 128x256, 128x128r2 and 128x128x128
+  (BLOCK_K = 128), bf16 and fp16, with and without bias: 316 cases, 0 failures.
+- **Timing** (256x256, row stride 8256 for every K, cold rocprof; [stride_timing.md](../v26_streamk_ragged_k/results/stride_timing.md)):
+  4096x4096x8192 183.7 us, 8176 182.9, 8080 184.1; 4000x4000x8080 177.7.
+
+## 13. Wave quantization: smaller tiles against stream-K (2026-10-11)
+
+This repeats the [wave-quantization figure](../v9_beyond_hotloop/images/wave_quant.png) (M = K = 4096, N in
+steps of 256) with three data-parallel tiles. It adds stream-K at 256x256 wherever its split fills the chip,
+and records MFMA utilization, clock and power alongside throughput.
+
+- **Tiles:** v9_tile at `256x256` (v9's code), `128x256` and `128x128x128`, over N = 256..16384.
+- **Stream-K:** v26 with `STREAMK_POLICY=one_tile STREAMK_NUM_PROGRAMS=256` (`sk256` in [sweep.py](sweep.py)).
+  It runs the full waves data-parallel and splits each of the S leftover tiles n = 256 / S ways. Only N with
+  S in {16, 32, 64, 128} is run: N = 4096 w + {256, 512, 1024, 2048}, for w = 0 to 3. The ending is the
+  policy's: reduce-scatter for n >= 8, owner otherwise. The default `capped` policy would use at most 128
+  programs at small S.
+- **K:** 4096, to match the original figure, and 8192.
+- **Measurement:** bf16, M = 4096. [run_wave_quant_tiles.sh](run_wave_quant_tiles.sh) does `timing --graph`
+  (back to back) and `clock` (hwmon, 3 s back to back) for every point, on GPU 6 (K = 4096) and GPU 7
+  (K = 8192). `att` spot checks ran on GPU 4. All 416 points are correct.
+- **Utilization:** MFMA utilization of the busy CUs is sustained TFLOPS / (1048.6 TFLOPS per GHz x clock),
+  scaled by 256 / average busy CUs. That average is tiles / ceil(tiles / 256) for a non-persistent launch,
+  and 256 for stream-K.
+- **Figures and tables:** [plot_wave_quant_tiles.py](plot_wave_quant_tiles.py) draws the figures and
+  prints the tables below.
+- **CSVs:** `results/wq{K}_{timing_graph,clock,att}.csv` and `results/wqsk{K}_{timing_graph,clock}.csv`.
+
+**In short:**
+
+- **Under one 256x256 wave, the smaller tile wins at K = 4096 and stream-K at K = 8192.**
+  - At K = 4096, the best smaller tile beats stream-K by 5-29% at N = 512-2048. At N = 1024, 128x128x128
+    gives 885 TFLOPS, stream-K 684 and 256x256 data-parallel 451. Only at N = 256 (n = 16) is stream-K
+    ahead, by 5%.
+  - At K = 8192, stream-K ties 128x128x128 at N = 1024 (980 against 973) and beats 128x256 at N = 2048
+    (1317 against 1234). At N = 256 and 512 it is 1.3-1.6x ahead.
+  - The split's fixed cost is the same at both K, but at K = 8192 each program does twice the k-steps
+    to pay for it.
+- **Past the first wave, stream-K wins at every point measured, at both K.**
+  - It is 2-23% (K = 4096) and 4-27% (K = 8192) above the best data-parallel tile. The gap shrinks as
+    the tail wave fills, to n = 2 just before the next wave.
+  - The largest gains are one step past a full wave (N = 4352 and 4608), where 256x256 data-parallel runs a
+    16- or 32-tile tail. At K = 8192, N = 4352, stream-K gives 1349 TFLOPS, 128x256 1062 and 256x256 1018.
+- **Once 256x256 fills more than about half the chip, the smaller tiles never win.**
+  - Their peaks over the whole sweep are 1171 and 1275 TFLOPS (128x256, K = 4096 and 8192) and 970 and
+    1054 (128x128x128), against 1561 and 1648 for 256x256.
+  - Halving the tile only moves the wave boundaries, it does not remove them: 128x256's sawtooth has
+    half the period and the same shape.
+- **The trade in the premise holds.**
+  - 256x256 on half the chip (N = 2048) gives 59-61% of its full-wave throughput, not 50%. The clock
+    rises from 1.79-1.82 GHz to 2.19-2.39 GHz, at 1092-1191 W instead of the 1400 W cap.
+  - A full wave of a smaller tile is load-bound: busy-CU MFMA utilization is 52-62% (128x256) and 39-47%
+    (128x128x128). 256x256 reaches 79-84%, and its main loop (ATT) 96-98%.
+  - The smaller tiles do run faster, at 1.94-2.17 GHz against 1.79-1.82, but they do not draw less power.
+    Once the chip is full they sit at the 1400 W cap like 256x256 and spend the budget on clock instead of
+    MFMA cycles.
+- **Stream-K stays compute-bound but pays for the fixup.**
+  - After a full wave its busy-CU utilization is 57-82%. It is lowest at n = 16 and reaches 70-82% at
+    n = 2, close to 256x256's 79-91% on its busy CUs.
+  - At n = 16 under one wave, each program has only 4 (K = 4096) or 8 (K = 8192) k-steps against the
+    fixed cost of the split (about 20 k-steps, [STREAMK.md](../STREAMK.md)). Utilization falls to 10-17%.
+  - From N = 2048 up, its clock (1.80-1.99 GHz) and power (1340-1400 W) are those of a full-chip 256x256
+    kernel. Under one wave, at n = 4-16, it boosts to 2.04-2.30 GHz at 980-1300 W.
+
+![throughput, K = 4096](images/wave_quant_tiles/throughput_k4096.png)
+
+![MFMA utilization, clock and power, K = 4096](images/wave_quant_tiles/power_k4096.png)
+
+![throughput, K = 8192](images/wave_quant_tiles/throughput_k8192.png)
+
+![MFMA utilization, clock and power, K = 8192](images/wave_quant_tiles/power_k8192.png)
+
+Representative points (DP = data-parallel; the ATT column is CU 0's main loop on one cold launch, and is blank
+where it was not run):
+
+#### K = 4096
+
+| N | kernel | tiles | CUs busy | TFLOPS | us | MFMA util, chip | MFMA util, busy CUs | ATT loop MFMA eff | clock GHz | power W |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 1024 | 256×256 DP | 64 | 25% | 451 | 76.2 | 18% | 74% |  | 2.333 | 761 |
+| 1024 | 128×256 DP | 128 | 50% | 596 | 57.6 | 25% | 49% |  | 2.318 | 973 |
+| 1024 | 128×128×128 DP | 256 | 100% | 885 | 38.8 | 39% | 39% | 46% | 2.165 | 1385 |
+| 1024 | 256×256 Stream-K (n=4) | 64 | 100% | 684 | 50.2 | 30% | 30% |  | 2.148 | 1142 |
+| 2048 | 256×256 DP | 128 | 50% | 901 | 76.3 | 36% | 72% | 84% | 2.385 | 1191 |
+| 2048 | 128×256 DP | 256 | 100% | 1139 | 60.3 | 52% | 52% | 57% | 2.067 | 1400 |
+| 2048 | 128×128×128 DP | 512 | 100% | 923 | 74.4 | 41% | 41% | 48% | 2.131 | 1382 |
+| 2048 | 256×256 Stream-K (n=2) | 128 | 100% | 1089 | 63.1 | 51% | 51% |  | 1.989 | 1342 |
+| 4096 | 256×256 DP | 256 | 100% | 1481 | 92.8 | 79% | 79% | 96% | 1.785 | 1400 |
+| 4096 | 128×256 DP | 512 | 100% | 1157 | 118.8 | 53% | 53% |  | 2.065 | 1400 |
+| 4096 | 128×128×128 DP | 1024 | 100% | 934 | 147.2 | 42% | 42% |  | 2.142 | 1373 |
+| 4352 | 256×256 DP | 272 | 53% | 988 | 147.8 | 45% | 85% |  | 2.131 | 1155 |
+| 4352 | 128×256 DP | 544 | 71% | 982 | 148.7 | 41% | 58% |  | 2.282 | 1365 |
+| 4352 | 128×128×128 DP | 1088 | 85% | 836 | 174.7 | 34% | 40% |  | 2.342 | 1366 |
+| 4352 | 256×256 Stream-K (n=16) | 272 | 100% | 1196 | 122.1 | 57% | 57% |  | 1.966 | 1377 |
+| 6144 | 256×256 DP | 384 | 75% | 1320 | 156.2 | 60% | 81% |  | 2.078 | 1400 |
+| 6144 | 128×256 DP | 768 | 100% | 1163 | 177.3 | 53% | 53% |  | 2.072 | 1400 |
+| 6144 | 128×128×128 DP | 1536 | 100% | 936 | 220.4 | 43% | 43% |  | 2.055 | 1354 |
+| 6144 | 256×256 Stream-K (n=2) | 384 | 100% | 1387 | 148.7 | 70% | 70% |  | 1.846 | 1399 |
+
+#### K = 8192
+
+| N | kernel | tiles | CUs busy | TFLOPS | us | MFMA util, chip | MFMA util, busy CUs | ATT loop MFMA eff | clock GHz | power W |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 1024 | 256×256 DP | 64 | 25% | 478 | 143.8 | 19% | 78% |  | 2.33 | 769 |
+| 1024 | 128×256 DP | 128 | 50% | 650 | 105.8 | 27% | 54% |  | 2.288 | 984 |
+| 1024 | 128×128×128 DP | 256 | 100% | 973 | 70.6 | 44% | 44% | 49% | 2.104 | 1366 |
+| 1024 | 256×256 Stream-K (n=4) | 64 | 100% | 980 | 70.1 | 45% | 45% |  | 2.043 | 1303 |
+| 2048 | 256×256 DP | 128 | 50% | 947 | 145.2 | 41% | 82% | 92% | 2.188 | 1092 |
+| 2048 | 128×256 DP | 256 | 100% | 1234 | 111.4 | 60% | 60% | 63% | 1.969 | 1398 |
+| 2048 | 128×128×128 DP | 512 | 100% | 1000 | 137.4 | 46% | 46% | 52% | 2.095 | 1366 |
+| 2048 | 256×256 Stream-K (n=2) | 128 | 100% | 1317 | 104.3 | 65% | 65% |  | 1.91 | 1396 |
+| 4096 | 256×256 DP | 256 | 100% | 1618 | 169.9 | 84% | 84% | 98% | 1.821 | 1400 |
+| 4096 | 128×256 DP | 512 | 100% | 1263 | 217.7 | 62% | 62% |  | 1.937 | 1396 |
+| 4096 | 128×128×128 DP | 1024 | 100% | 1033 | 266.1 | 47% | 47% |  | 2.103 | 1399 |
+| 4352 | 256×256 DP | 272 | 53% | 1018 | 287.0 | 48% | 91% |  | 2.032 | 1109 |
+| 4352 | 128×256 DP | 544 | 71% | 1062 | 274.9 | 47% | 66% |  | 2.165 | 1360 |
+| 4352 | 128×128×128 DP | 1088 | 85% | 910 | 320.8 | 38% | 44% |  | 2.308 | 1387 |
+| 4352 | 256×256 Stream-K (n=16) | 272 | 100% | 1349 | 216.5 | 67% | 67% |  | 1.913 | 1394 |
+| 6144 | 256×256 DP | 384 | 75% | 1418 | 290.9 | 67% | 90% |  | 2.008 | 1398 |
+| 6144 | 128×256 DP | 768 | 100% | 1265 | 325.9 | 62% | 62% |  | 1.945 | 1397 |
+| 6144 | 128×128×128 DP | 1536 | 100% | 1031 | 400.1 | 47% | 47% |  | 2.098 | 1375 |
+| 6144 | 256×256 Stream-K (n=2) | 384 | 100% | 1538 | 268.2 | 78% | 78% |  | 1.862 | 1400 |
+
+**Caveats.**
+
+- **Main loop against whole kernel.** "90-95% MFMA" for v9 is the main loop (ATT, 96-98% here). Over the
+  whole kernel, a full 256x256 wave reaches 79% (K = 4096) and 84% (K = 8192), because the prologue and
+  epilogue are a larger share at small K.
+- **Back-to-back timing.** The launches run back to back (HIP graph), unlike the original figure's isolated
+  launches, so that the clock and power describe the timed runs. 256x256 at N = 4096, K = 4096 gives
+  1481 TFLOPS here against 1372 (fp16, isolated, an earlier GPU) in the original figure.
+- **Busy-CU utilization is an average.** For a non-persistent launch it averages over the waves, so a
+  partial last wave's CUs count as busy only for their share. Stream-K's figure includes its fixup.
+- **Two traps found along the way:**
+  - With 512 MB of rotating inputs, the points where one copy of A, B and C exceeds 256 MB got a single
+    copy. That is K = 8192 from N = 8448, and K = 4096 from about N = 14000. The inputs then stayed warm in
+    the MALL, and the smaller tiles jumped 10-25% (section 9). The sweep now uses 2 GB, at least 4 copies.
+  - The first attempt, on GPU 2, shared that GPU with another tenant for about ten minutes: 1350 W at
+    16 tiles, and sustained throughput at 40% of the timed. The plot script now flags any point whose clock
+    run and timed run disagree by more than 7%. The final runs show none, and no other process appeared on
+    GPUs 6 or 7.
+
+## 14. Tiles with a side of 1 to 32 (2026-10-12)
+
+The question: how far below 64 can the tile go, what MFMA efficiency do such tiles reach on compute-bound
+shapes, and is two-stage pipelining enough for them? And what changes on memory-bound shapes? Every run
+here is on GPU 3 (`GPU=3 source v9_tile/env.sh`).
+
+### 14.1 Predictions (written before any measurement)
+
+[model_small.py](model_small.py) takes README §3's ceilings and adds two of its own: MFMA padding
+(`BM/16`: the MFMA is 16 rows) and the LDS read rate. A ds_read_b128 (1 KB) per wave per 16 cycles
+against one 16x16x32 MFMA (2 KB of operands) per 16 cycles caps a wave tile `wm x wn` at
+`wm wn / (16 (wm + wn))`. B is never reused when the wave has one 16-row block, so BM = 16 tops out at
+`wn / (16 + wn)`. Each tile runs on W waves side by side along N, one wave per SIMD (4 / W tiles per CU),
+2 stages, Q = 32 KB, 2.1 GHz:
+
+| tile | W | tiles/CU | bytes/k-step | in flight (2 stages, CU) | window, cold | 2 stages, cold | LDS read | busy | useful | binds |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 64x64x64 | 4 | 1 | 16 KB | 32 KB | 22% | 18% | 80% | 18% | 18% | stages |
+| 64x64x128 | 4 | 1 | 32 KB | 64 KB | 22% | 31% | 80% | 22% | 22% | window |
+| 32x256x64 | 4 | 1 | 36 KB | 72 KB | 20% | 30% | 100% | 20% | 20% | window |
+| 32x128x64 | 4 | 1 | 20 KB | 40 KB | 18% | 17% | 100% | 17% | 17% | stages |
+| 32x32x128 | 1 | 4 | 16 KB | 128 KB | 11% | 24% | 100% | 11% | 11% | window |
+| 16x256x128 | 4 | 1 | 68 KB | 136 KB | 10% | 23% | 80% | 10% | 10% | window |
+| 16x64x128 | 1 | 4 | 20 KB | 160 KB | 9% | 21% | 80% | 9% | 9% | window |
+| 16x16x128 | 1 | 4 | 8 KB | 64 KB | 5.5% | 7.7% | 50% | 5.5% | 5.5% | window |
+| 8x256x128 | 4 | 1 | 66 KB | 132 KB | 11% | 23% | 80% | 11% | 5.4% | window |
+| 1x256x128 | 4 | 1 | 64 KB | 128 KB | 11% | 23% | 80% | 11% | 0.7% | window |
+
+(Warm, L = 385 ns, every window ceiling is 1.43x higher; `python v9_tile/model_small.py` prints both.)
+
+- **Every tile below 64 is load-bound at 5-20% MFMA busy on a cold compute-bound shape.** The
+  per-CU ceiling is `60 B/ns x BM BN / (BM + BN)` (README §5), whatever the shape: 0.9 TFLOPS per CU for
+  16x256, 0.48 for 16x16, against ~8.6 at 2.1 GHz.
+- **Two stages are enough wherever the CU's tiles hold 32 KB in flight:**
+  `stages x tiles per CU x B >= Q (1 + T_issue / L)`. With one wave per SIMD that holds for every tile
+  above with BK >= 128, 16x16x128 included: 4 tiles x 2 stages x 8 KB = 64 KB. 16x16 needs more stages
+  only when it runs as one tile per CU (2 x 8 KB = 16 KB in flight). The tiles that 2 stages do not
+  cover are those with B < 32 KB on one tile per CU: 64x64x64 and 32x128x64. BK = 128 fixes both.
+- **Below 16 rows nothing improves except the waste:** the bytes per k-step barely shrink (B dominates),
+  so 8, 4, 2 and 1 rows run at the same ~11% busy, and the useful fraction is that times BM / 16.
+- **Natural occupancy against pinned:** where one wave per SIMD already fills the window, more
+  workgroups per CU should change nothing, because Q is per CU. If they do help, Q is not per CU.
+- **Memory-bound (M = BM, B streamed once):** achieved bandwidth is
+  `min(6.3 TB/s, busy CUs x min(Q, stages x tiles/CU x B) / L)`. With one tile per CU at 60 GB/s,
+  HBM needs about 106 tiles. At M = 16, N = 8192: 128 tiles (BN = 64) reach HBM, 32 tiles (BN = 256)
+  give 1.9 TB/s.
+
+### 14.2 The kernel: v9_tile_small
+
+`matmul(..., tile="16x256x128")` and any tile with a side of 32 or less runs `v9_tile_small` in
+[matmul_kernel.py](matmul_kernel.py); every other spec runs the kernels as before.
+
+- **Layout.** The small side is the kernel's M, padded to MP = 16 (or 32) rows. A is held in LDS as
+  MP x BK; the rows at or past BM (or past M) are masked lanes in the async copies, so they read no
+  memory and write zeros, and they are masked out of the C store. W waves (`w1`, `w2`, `w4`; by default
+  one per 64 columns) sit side by side along N with `warps_per_cta = [1, W]`, each owning MP x BN / W.
+- **Pipeline.** One region per k-step, two LDS buffers. k-step j + 2 goes into buffer j % 2 as soon as
+  k-step j has been read out of it. The schedule is simple: per k-step, issue the loads, run the
+  MFMAs, wait, read the next operands.
+- **LDS.** Global loads are blocked (8 K per lane, whole rows per warp, one 1 KB
+  `buffer_load_to_lds_dwordx4` per warp instruction). The MFMA operands are read through an
+  XOR-swizzled view (16-byte chunk c of row r at c ^ phase(r)), so the 16 rows a ds_read_b128 reads
+  land in 16 bank groups. v9's padded layout cannot do this at 16 rows: it keeps the rows one MFMA
+  reads in different 1 KB chunks, and a 16-row strip has only 4 row bits for the 3 the lanes take
+  (4-way conflicts).
+- **The swizzle is in the addresses, not the copy.** A direct-to-LDS load writes lane i at
+  M0 + 16 i, so with a swizzled destination Triton shuffles every copy's offsets across lanes with
+  `ds_bpermute`, in the loop (17-34 per kernel). A linear layout cannot carry the swizzle instead:
+  lane bases may move in one dimension only. So the copies write through a plain row-by-row view of
+  the buffer, each lane loading the element whose swizzled slot it fills (`swizzled_k`, computed once
+  before the loop), and the reads go through `reinterpret` with the swizzled layout. No `ds_bpermute`
+  in the loop, every load still `dwordx4`, and the loops shrank by 20-60 instructions and 12-32
+  `s_waitcnt`.
+- **Small BN** runs as C^T = B^T A^T: the host swaps A and B (both K-contiguous) and C's strides. The
+  C store and the bias then run along the kernel's M (`C_T`).
+- **Pinning** (`p` suffix, or `V9_TILE_PIN=1`): up to three power-of-two LDS pads bring the workgroup's
+  LDS into (160 KB / (t + 1), 160 KB / t], t = 4 / W, so exactly t workgroups fit in a CU: one wave per
+  SIMD, as in v9. The pads are all allocated before any is written, so their live ranges overlap.
+  Written one after another, the allocator stacked them in the same space.
+- **Constraints:** N (M when swapped) a multiple of the long side; K a multiple of 2 BK; the padded A strip
+  must hold one 1 KB load per wave, so W = 4 needs BK >= 128 at 16 rows. BM = 32 also works in
+  `v9_tile_2r` (`32x256r2`, `32x128r2`, `32x64r2` pass as they are).
+- **Correctness** ([check_tiles_small.md](results/check_tiles_small.md)): 25 tiles over SMALL_SHAPES
+  in `check_tiles.py` and SHAPES wherever they fit. SMALL_SHAPES covers M = 1-32, M = 130 (ragged),
+  and the mirrored N = 1-130 run as C^T. Each tile runs bf16 and fp16, with and without bias, with
+  C a window of a sentinel-filled buffer: 1668 cases, 0 failures.
+- **Code** ([asm_small.md](results/asm_small.md)): no spills or scratch. VGPRs are 120-276 plus
+  4-48 AGPRs, set by the operand registers (two k-steps of B per wave: `(BN / W) BK / 32`). That bound
+  rules out 16x64x256 and 1x64x256 at one wave per SIMD: ~395 VGPRs + ~140 AGPRs.
+
+### 14.3 Five amdgcnas bugs the small tiles exposed
+
+With `llir+amdgcnas` the first builds were wrong on most small tiles and correct without the plugin.
+Disabling its passes one at a time found five bugs, all fixed in
+[plugins/amdgcnas/amdgcnas_ext.py](../../../../../plugins/amdgcnas/amdgcnas_ext.py):
+
+1. **`optimize_mfma_density` ignored register dependences.** It interleaves a run of MFMAs with the
+   run of other instructions after (or before) it, five at a time, and moved a `ds_read` of the next
+   k-step's operands above the MFMAs still reading those registers. The pass now lets an instruction
+   cross only the MFMAs it shares no register with (`_can_swap`), and the first one that cannot cross
+   holds back the rest of its list.
+2. **The same pass moved MFMAs above an `s_waitcnt`.** At the loop head, the first MFMA was hoisted above
+   the `s_waitcnt lgkmcnt(N)` that waits for its own operands, read by the previous iteration. A wait may
+   now move earlier past an MFMA, never later. v7-v19, v9_ragged and v9_tile 256x256 had this race. Each
+   has the same move at its loop head: v9's first MFMA reads `v[96:99]`, the oldest of the 8 ds_reads in
+   flight at the back-edge, before `s_waitcnt lgkmcnt(7)`. It went unnoticed because ~8 MFMAs between the
+   read and the back-edge usually cover the LDS latency. The fix moves that one MFMA below the wait in
+   each of these kernels (56 compiles, nothing else changes). v9 and v13 at 4096x4096x8192, back to back:
+   190.3 us before and after, 1443-1446 TFLOPS.
+3. **`rotate_lgkmcnt` assumed v9's loop shape.** It merges a `lgkmcnt` wait + `s_barrier` pair into an
+   earlier standalone `lgkmcnt` wait, and moves the first such pair to the end of the prologue and the
+   loop. Merging dropped the wait for LDS reads issued between the two. Rotating moved the barrier above
+   LDS accesses at the top of the loop. It now skips a merge across an lgkm op and a rotation across an
+   LDS access.
+4. **`licm` judged invariance per register, not per definition.** In
+   `v116 = ds_bpermute ...; v116 = v116 << 1; ...; v116 = 0x10800 + v13`, the last write is invariant,
+   so v116 entered the invariant set and the shift was hoisted with the wrong input: a memory fault.
+   A use is now invariant only through its reaching definition (the last write before it in the
+   iteration, itself invariant) or if the loop never writes the register.
+
+5. **The m0 wait state.** A write of `m0` directly before the `buffer_load ... lds` that reads it needs
+   one wait state. `optimize_buffer_load_m0` replaces that `s_nop` with an MFMA moved between the two,
+   and the MFMA interleave can move the MFMA away again. A last pass (`restore_m0_wait_states`) puts the
+   `s_nop` back wherever the pair has ended up adjacent. v9_tile 256x128, 128x256, 128x128x128 and
+   128x128r2 had one such pair each, and gain one `s_nop`.
+
+With (1), (3) and (4) alone, a16w16 v7-v26 and v9_tile's other tiles compile byte-identically to the old
+plugin ([plugin_diff.py](plugin_diff.py): the old and new peephole on the same input, 72 compiles).
+(2) and (5) change 68 of those 72 compiles, by the one instruction each described above.
+
+**What is not fixed: `optimize_nops` deletes LLVM's hazard `s_nop`s.** It keeps only the m0 ones,
+assuming the MFMA interleave leaves enough instructions between every other hazard pair. v9's input
+loop has 98 `s_nop`s, about a third of them m0 ones, and the output has none. Its results are correct, so
+the assumption holds there. v9_tile_small's single region breaks it: the next k-step's ds_reads overwrite
+registers that MFMAs still in flight are reading, and LLVM's `s_nop 0` between them is the guard.
+With it deleted, 16x32x128 at 1x4096x4096 was wrong in 9 of 10 runs. Making the pass sound needs a model
+of the gfx950 hazards. So v9_tile_small is compiled without the peephole
+(`SKIP_KERNELS` in [amdgcnas_plugin.py](../../../../../plugins/amdgcnas/amdgcnas_plugin.py)): `llir`
+alone, as v24-v26's stream-K points were measured. Its loops interleave well under the LLVM scheduler
+alone: the longest run of non-MFMA instructions is 2-13 (46 with the peephole).
+
+### 14.4 Compute-bound: 2048x4096x{4096, 8192}
+
+All bf16, 2 GB of rotating inputs, GPU 3. The points are `SMALL_CB` in [sweep.py](sweep.py), run by
+`GPU=3 bash v9_tile/run_small_tiles.sh cb`. Each run gives back-to-back timing, clock and power from
+hwmon, counters, and ATT on CU 0 at K = 8192 with [att_stalls.py](att_stalls.py).
+[report_small.py](report_small.py) merges them with the model at the measured clock:
+[small_cb_report.md](results/small_cb_report.md).
+
+- **MFMA busy** is the whole kernel over every SIMD (`SQ_VALU_MFMA_BUSY_CYCLES`), padded rows included.
+- **Useful** is the TFLOPS of the real M x N x K over the peak at the measured clock.
+- **B/ns** is the real rows of A and B, every k-step of every tile, per ns per CU.
+
+K = 8192, the pinned run (one wave per SIMD) where LDS allows it:
+
+| tile | W | TFLOPS | MFMA busy | useful | model (cold) | B/ns per CU | L2 hit | stalls per loop iteration: vmcnt / buffer_load issue / of total |
+|---|---|---|---|---|---|---|---|---|
+| 128x128x128 (v9_tile) | 4 | 1006 | 47.6% | 46.2% | 44.8% | 61 | 81% | 32 / 383 / 3599 |
+| 64x64x128 (v9_tile) | 4 | 625 | 27.6% | 26.3% | 17.3% | 77 | 81% | 262 / 718 / 2272 |
+| 32x256x64 | 4 | 428 | 17.0% | 17.0% | 17.2% | 59 | 89% | 518 / 963 / 2599 |
+| 32x128x128 | 2 | 538 | 22.0% | 21.4% | 15.5% | 82 | 90% | 8 / 2280 / 4021 |
+| 32x64x128 (natural, 3 per CU) | 1 | 470 | 19.5% | 18.7% | 12.9% | 86 | 89% | 20 / 1396 / 3180 |
+| 32x32x128 | 1 | 298 | 12.2% | 11.8% | 9.7% | 73 | 64% | 75 / 1966 / 3159 |
+| 16x256x128 | 4 | 240 | 9.6% | 9.6% | 9.1% | 62 | 91% | 8 / 3606 / 5077 |
+| 16x128x128 | 2 | 330 | 13.5% | 13.1% | 8.6% | 91 | 84% | 28 / 1404 / 2933 |
+| 16x64x128 | 1 | 267 | 11.1% | 10.6% | 7.8% | 82 | 71% | 27 / 2035 / 3323 |
+| 16x64x64 | 1 | 284 | 11.6% | 11.3% | 7.8% | 87 | 84% | 343 / 780 / 1839 |
+| 16x32x128 | 1 | 256 | 10.4% | 10.2% | 6.5% | 94 | 78% | 151 / 1030 / 1968 |
+| 16x16x128 | 1 | 208 | 8.3% | 8.3% | 4.9% | 102 | 90% | **608 / 272** / 1390 |
+| 16x16x256 | 1 | 226 | 9.1% | 9.0% | 4.9% | 111 | 91% | 45 / 1282 / 2291 |
+| 8x256x128 | 4 | 122 | 9.7% | 4.9% | 4.7% | 62 | 94% | 8 / 3583 / 5062 |
+| 4x256x128 | 4 | 75 | 11.9% | 3.0% | 2.4% | 74 | 95% | 8 / 2685 / 4136 |
+| 2x256x128 | 4 | 42 | 13.3% | 1.7% | 1.2% | 82 | 96% | 8 / 2248 / 3681 |
+| 1x256x128 | 4 | 22 | 14.1% | 0.9% | 0.6% | 87 | 97% | 8 / 2028 / 3456 |
+| 256x16x128 (C^T) | 4 | 306 | 12.2% | 12.2% | 9.1% | 79 | 91% | 8 / 2468 / 3902 |
+
+(256x256 has 128 tiles here, half the CUs: 956 TFLOPS, 40.0% busy against 42.6% predicted. Every small
+tile runs at 2.40 GHz, at 820-1290 W: none is power-capped.)
+
+![measured against the model](images/small_tiles/cb_model.png)
+
+- **The model's order holds, and it is a floor.** Every small tile is load-bound at 8-22% MFMA busy, and
+  bytes per FLOP set the order. The tiles with one 4-wave workgroup per CU land on the model: 16x256x128
+  (9.6% / 9.1%), 8x256x128, and 32x256x64 pinned (17.0% / 17.2%). They move 59-63 B/ns per CU, the
+  earlier tiles' 60 (§4).
+- **More, smaller workgroups per CU move more bytes.** The tiles with 2-4 workgroups of 1 or 2 waves
+  beat the cold window by 1.3-2x: 72-111 B/ns per CU, an implied round trip of 300-450 ns against 550.
+  Latency is not what limits them: warm inputs add only 2-13% (§14.6), against +54% for 16x256x128.
+  Two candidates are the TCP processing rate (111 B/ns is 46 B/clk of its 64 at 2.4 GHz) and bursts:
+  one workgroup of 4 waves issues its loads in step, between barriers.
+- **Below 16 rows only the waste changes.** 8, 4, 2 and 1 rows keep the 16-row MFMAs and nearly the same
+  bytes, so MFMA busy stays at 10-14% while the useful share falls with BM / 16: 4.9%, 3.0%, 1.7%, 0.9%.
+  1x256 is busier than 16x256 (14.1% against 9.6%) because A's 15 masked rows are not fetched at all:
+  masked lanes appear to cost no TCP time. Its L2 misses fall with them (97% hits against 91%).
+
+### 14.5 Which tiles two stages are enough for
+
+ATT tells the two limits apart. Waiting on `s_waitcnt vmcnt` means the data is not back yet: the pipeline
+is too shallow. Stalling to issue `buffer_load` means the TCP is full: the window binds, and more stages
+cannot help.
+
+- **Two stages are enough** (vmcnt waits 8-150 cycles, issue stalls 1000-3600) for every tile with
+  BK = 128 and BN >= 32: 32x{32, 64, 128}x128, 16x{32, 64, 128, 256}x128, 8/4/2/1x256x128, 256x16x128.
+  Also 16x16x256 and the v9_tile anchors 128x128x128 and 64x64x128.
+- **Two stages are short** for the BK = 64 tiles that hold one k-step's B under 32 KB per CU:
+  32x256x64 (vmcnt 518 of 2599), 16x64x64 (343 of 1839), and v9_tile 64x64x64 (439 of 2623). As
+  §14.1 predicted, BK = 128 is the fix: 64x64x128's waits fall to 262.
+- **16x16x128 is pipeline-bound, as expected:** 608 of its 1390 stall cycles are `vmcnt` and only 272
+  are issue. Its two stages hold 4 tiles x 2 x 8 KB = 64 KB per CU, enough bytes, but each tile's 2 k-steps
+  last 2 x 27 ns against a round trip of several hundred. 16x16x256 doubles the lead: the waits fall to 45,
+  the stall moves to issue, and busy goes from 8.3% to 9.1% (+10%). A deeper pipeline would do the same.
+  BK = 256 is the cheap form of it (32 KB of LDS, 160 VGPRs).
+- **Occupancy instead of stages:** natural occupancy (more workgroups per CU than one wave per SIMD)
+  helps only where two stages were short. 32x256x64 goes from 17.0% to 20.0% with 2 workgroups per CU.
+  Elsewhere it hurts, because the extra workgroups widen each XCD's footprint and the L2 hit rate falls:
+  16x64x64 at 1.9 waves per SIMD drops from 11.6% to 6.9% (L2 hits 84% to 52%), 16x32x128 from 10.4%
+  to 7.2%, 16x16x128 from 8.3% to 5.7%. Where LDS already limits a tile to one wave per SIMD, pinned and
+  natural are the same run. That fits a per-CU limit on bytes in flight: more workgroups add buffers,
+  not bandwidth.
+
+### 14.6 Warm inputs, padding and GROUP_SIZE_M
+
+- **Warm** (inputs in the MALL; [small_warm_report.md](results/small_warm_report.md)): 16x256x128 goes
+  from 63 to 97 B/ns per CU, 240 to 373 TFLOPS, as 256x128 did in §9. The one-wave tiles barely move:
+  32x32x128 +3%, 16x64x128 +2%, 16x16x128 +13%, 1x256x128 +7%.
+- **Row padding** ([pad_rows.py](pad_rows.py)): padding A's rows changes nothing (241 against 242
+  TFLOPS for 16x256x128). Unpadded B rows are 1-9% faster for the small tiles, the opposite of the
+  large tiles; the sweeps keep bench.py's padded B.
+- **GROUP_SIZE_M is a 20-26% lever the footprint rule misses.** The mirror 256x16x128 beats 16x256x128
+  (306 against 240 TFLOPS) with the same kernel tile; only the grid order differs. With
+  `V9_TILE_GM` overridden:
+  - 16x256x128: GM = 1, 4, 8, 16, 32, 64, 128 give 159, 302, 289, 241, 234, 284, 304 TFLOPS. The rule
+    picks 16.
+  - 16x64x128 pinned: GM = 4, 16, 32, 64, 128 give 162, 267, 311, 321, 317. The rule picks 16.
+
+  The response is not monotone in GM, which suggests channel and XCD placement more than footprint. Every
+  number in §14.4 uses the rule's GM, so the small tiles' TFLOPS are conservative by up to a quarter.
+
+### 14.7 Memory-bound: M = 1-32, N = 4096-16384, K = 8192
+
+`SMALL_MB`, back to back with 2 GB of rotating inputs, so the weights B come from HBM:
+[small_mb_report.md](results/small_mb_report.md). Throughput counts A, B and C once over the kernel time.
+
+![memory-bound bandwidth](images/small_tiles/mb_bandwidth.png)
+
+- **The metric changes.** MFMA busy is 2-3%, meaningless here. What counts is TB/s against HBM's 6.0-6.3,
+  and whether any byte is read twice. It is not: bytes the L2 read from beyond itself are 1.00-1.05x the
+  unique bytes on every point (counters, 32/64/128 B requests). B is streamed exactly once, and padded
+  A rows cost nothing.
+- **The tile count decides, then the bytes in flight per tile.** One small tile per CU with two stages
+  holds `2 x B` bytes, far under 32 KB, so a CU streams far below the window's 60 B/ns. HBM saturates once
+  there are about 2 tiles per CU:
+
+  | tiles | TB/s (BK = 128) | BK = 64 | BK = 256 |
+  |---|---|---|---|
+  | 16 | 0.81-0.88 | | |
+  | 32 | 1.43-1.71 | 1.23 | |
+  | 64 | 1.98-3.19 | 1.43-2.38 | |
+  | 128 | 2.46-5.26 | 1.60-4.28 | 3.72 |
+  | 256 | 2.73-6.12 | 1.79-4.88 | 4.37-5.93 |
+  | 512 | 4.43-6.07 | 3.23-5.23 | 5.66-6.23 |
+  | 1024 | 4.90-6.01 | 5.45 | 5.94 |
+
+  Within a row, the larger shapes (more bytes per tile, a longer kernel against its fixed start-up and
+  finish) reach the higher end.
+- **So pipeline depth matters here, unlike on compute-bound shapes.** At 16x4096x8192 with BN = 16 (256
+  tiles), BK = 64, 128 and 256 give 1.79, 2.98 and 4.37 TB/s. At 16 x 8192 with BN = 32, 3.02, 4.72 and
+  5.93. More stages, or larger BK, buy bytes in flight directly. Pinning changes nothing: the dispatcher
+  already spreads a few hundred workgroups one per CU.
+- **Little's law with a fixed cost fits every point.** Take the bytes the chip can hold in flight,
+  `busy CUs x min(32 KB, 2 x tiles/CU x B)`. Then
+  `time = 7.75 us + unique bytes / min(HBM, in flight / 615 ns)` fits all 78 points (natural occupancy)
+  to 14% rms ([report_small.py](report_small.py) `mb_fit`).
+  - The fixed 7.75 us (launch ramp, pipeline fill, epilogue) is half of a 15 us kernel. It is why the
+    shortest shapes stay at 3-4 TB/s with enough bytes in flight.
+  - The 615 ns round trip is a little longer than the 550 ns of the compute-bound tiles, as expected
+    with HBM near saturation.
+  - Fewer than about 110 busy CUs cannot reach HBM at all; that is split-K's or stream-K's job.
+
+  Each point in the figure is one shape (M x N x 8192) and tile; colour is N, the marker BN (M barely
+  matters).
+  - **Left:** the measured time against the fitted model's, with a ±15% band.
+  - **Middle:** TB/s against the tile count at BK = 128.
+  - **Right:** the BK variants at M = 16.
+
+How to assess a memory-bound point, then:
+
+- **Throughput:** unique bytes over the back-to-back time, against the measured HBM ceiling (or the
+  MALL's 7-7.9 TB/s if the weights stay warm).
+- **Over-fetch:** `ea_rd_over_unique` from the counters, which should be 1.0.
+- **Bytes in flight per CU:** `stages x tiles per CU x B` against the bandwidth per CU needed,
+  6.3 TB/s / busy CUs x L. If short, raise BK or the stages, or split K.
+- **Busy CUs:** at least ~110, or the window caps the chip at busy CUs x 60 B/ns.
+- **Timing:** graph launches, since the kernels run 15-90 us.
+
+### 14.8 Answers
+
+- **What it took.**
+  - A one-region kernel with the waves along N, a 16-row MFMA masked down to BM, and swizzled
+    operand reads with the swizzle folded into the copy addresses.
+  - C^T for small BN, and an LDS pin.
+  - Five fixes to the shared amdgcnas peephole. Its nop deletion is still unsound in general, so the new
+    kernel is compiled without it.
+  - BM = 32 also runs in the existing `v9_tile_2r`.
+- **Is the MFMA efficiency what we expect?** Yes for the tiles built like the earlier ones (one 4-wave
+  workgroup per CU: 16x256, 8-1x256, 32x256), within a few points of the window model. The tiles with
+  several one-wave workgroups per CU do 1.3-2x better than the cold model. It is a per-CU byte rate of
+  72-111 B/ns that warm inputs barely raise, so the "60 B/ns" of §4 is that structure's number, not a
+  hardware constant.
+- **Two stages are enough** for every tile with BK >= 128 except 16x16x128, which waits on `vmcnt`.
+  16x16 does need more pipelining, as expected, and BK = 256 provides it (+10%). BK = 64 tiles that hold
+  less than 32 KB per CU are short too (32x256x64, 16x64x64).
+- **Other changes the numbers point to:**
+  - Retune GROUP_SIZE_M for small tiles (20-26% on the two tiles tried).
+  - Keep one wave per SIMD, since extra occupancy costs L2 hits.
+  - Below 16 rows the MFMA wastes 1 - BM/16 of its work at the same speed: 1x256 gives 22 TFLOPS. A
+    decode-shaped compute-bound GEMM wants the large side as M, or a VALU kernel.
+- **Memory-bound shapes** are a different problem with the same kernel. The tile count and the bytes in
+  flight per CU decide, not intensity. BK and stages now matter, a few hundred tiles saturate HBM, and
+  fewer need split-K.
+
+### 14.9 What Triton does instead: 4x64 / 64x4 MFMA, v_dot2, replicated warps, waves_per_eu
+
+Triton's AMD backend handles small dots differently from v9_tile_small. Its `AccelerateAMDMatmul`
+chooses by min(M, N):
+- **16 or more:** 16x16x32 (32x32 from 32).
+- **4-15:** `mfma_f32_4x4x4bf16_1k` as a 4x64 or 64x4 tile. Its 16 blocks lie along the wide side, and
+  `cbsz`/`abid` broadcast the narrow operand to all of them. For 64x4 the layout is transposed and the
+  operands swapped, because the hardware can only broadcast its first operand.
+- **Below 4:** no MFMA. The dot falls through to `AccelerateBlocked`, which for bf16 on CDNA4 emits
+  `v_dot2_f32_bf16` (kpack plays no part: it only widens kWidth, and gfx950 forces it to 1).
+- **Warps:** for 16x16 with 4 warps, `planWarps` gives `[4, 1]`, so the 4 warps compute the same tile.
+
+Both routes were measured:
+- **New options in v9_tile_small:**
+  - `m4`: the 4x64 MFMA. A is read as an unswizzled 4-row slice, since a slice cannot split a 16-row
+    swizzle.
+  - `wW` above BN / 16: replicated warps.
+  - `eE`: `waves_per_eu = E` instead of the LDS pin.
+- **A plain Triton reference kernel,** [triton_ref.py](triton_ref.py) (`tri` specs: `tl.dot`, 2 stages,
+  the same pid swizzle and GROUP_SIZE_M rule), compiled stock with no LLVM scheduler and no amdgcnas.
+  Its inspect mode reads the chosen path back from the TTGIR and the assembly
+  ([triton_ref_inspect.md](results/triton_ref_inspect.md)). Every path is the one described above.
+  - The 4x64 and 64x4 kernels get swizzled LDS and 130-132 `ds_bpermute` per kernel, one per async
+    load: Triton's padded layout only exists for 16- and 32-wide MFMAs.
+  - BM = 1 and 2 have no MFMA, and 128 or 256 `v_dot2` per loop.
+
+All new specs pass `check_tiles.py` (800 cases, [check_tiles_alt.md](results/check_tiles_alt.md)). The
+runs are `run_small_tiles.sh alt` on GPU 3; tables are in [small_alt_report.md](results/small_alt_report.md),
+and the figure is below.
+
+**The 4x4x4 MFMA takes 8 cycles.** Cycles per MFMA come from the busy SIMD-cycles in the counters over
+the MFMAs executed ([small_mfma_cycles.md](results/small_mfma_cycles.md)). The method gives 16.0 for
+every 16x16x32 point, which checks it, and 8.0 for every `mfma_f32_4x4x4_16b_bf16`
+(added to `MFMA_CYCLE_MAP` in [process_json.py](../../../../../scripts/process_json.py)).
+- **Rate:** 1024 MACs per 8 cycles, a quarter of 16x16x32's 8192 per 16.
+- **Useful MFMA throughput at BM <= 4:** the same as padding to 16. The 4x64 pads too, to 4 rows,
+  and runs a quarter as fast.
+- **At BM = 8:** half that of padding to 16.
+
+![alternatives](images/small_tiles/alternatives.png)
+
+Compute-bound, 2048x4096x8192 (BN = 4, 8: 2048x256x8192), useful TFLOPS:
+
+| BM (or BN) | pad 16 (ours) | 4x64 in ours | Triton |
+|---|---|---|---|
+| 1 | 22 | 21 | 7 (v_dot2) |
+| 2 | 42 | 40 | 13 (v_dot2) |
+| 4 | 75 | 74 | 29 (4x64) |
+| 8 | 122 | 118 | 55 (4x64) |
+| 16 | 240 | | 193 (16x16x32) |
+| BN = 4 (C^T) | 65 | 67 | 24 (64x4) |
+| BN = 8 (C^T) | 126 | 122 | 43 (64x4) |
+
+Memory-bound (M = 1-8, N = 8192-16384, K = 8192; BN = 64 / 256), TB/s:
+- **pad 16 against 4x64:** within 1% on most points; 4x64 is never more than 1% faster, and at most 5%
+  slower (3.86 against 4.08 TB/s at 8x8192x8192, BN = 64).
+- **Triton:** 1.3-5.3x lower. For example 1x16384x8192 at BN = 64: 4.71 against 6.10.
+  4x8192x8192 at BN = 64: 1.18 against 4.11.
+
+- **4x64 instead of padding (and 64x4 instead of the C^T swap): no difference.**
+  - The tiles are load-bound (stalls on `buffer_load` issue), and the MFMA is not the limit.
+  - At BM = 8 the 4x64 version keeps the MFMAs twice as busy (18.9% against 9.7%) for 3% less
+    throughput.
+  - It frees registers (132 VGPRs against 220 at BM = 4, a quarter of the operand registers), but
+    that buys nothing here.
+  - Below 16 rows, padding is as good or better and keeps one code path.
+- **Triton's own code is 1.15-3.2x slower than v9_tile_small's best on every small tile,** and the
+  instruction is not why. (One exception at natural occupancy: Triton's one-warp 16x16 gives 180 against
+  ours at 141, with L2 hits of 88% against 59% at similar occupancy, 2.25 against 2.15 waves per SIMD.
+  Pinned, ours gives 208.) Its
+  loops stall on LDS: `lgkmcnt` waits and `ds_read`s take 1950-3700 of their 4700-5900 cycles, against
+  270-640 in ours.
+  - The 4x64 and 64x4 kernels pay a `ds_bpermute` for every async load, because their LDS is swizzled.
+  - The v_dot2 kernels read every operand through LDS for VALU dot products.
+  - At 16x256 it is the pipeline: 781 cycles of `vmcnt` against 8.
+
+  Fixing the 64x4 tiles' GROUP_SIZE_M (L2 hits 75% to 95%) left them at 24 and 43 TFLOPS.
+- **v_dot2 for M < 4 is the worst choice measured:** 7 and 13 TFLOPS against 22 and 42 for padded MFMA.
+  Memory-bound at M = 1 and BN = 64 it reaches 2.6 and 4.7 TB/s against 4.1 and 6.1 (BN = 256: 0.8 and
+  1.6 against 1.7 and 3.2). So M < 4 should still use the MFMA, padded.
+- **waves_per_eu = 1 does what the LDS pin does.** LLVM honours `amdgpu-waves-per-eu="1,1"` by
+  allocating 257 VGPRs (`.amdhsa_next_free_vgpr`), and `"2,2"` 169. The hardware then fits only 1 (2)
+  waves per SIMD. Measured waves per SIMD and TFLOPS:
+
+  | tile | natural | LDS pin | waves_per_eu 1 | waves_per_eu 2 |
+  |---|---|---|---|---|
+  | 16x64x64 | 174 (1.95) | 284 (1.21) | 291 (1.00) | 275 (1.90) |
+  | 16x32x128 | 180 (1.56) | 256 (1.22) | 254 (1.00) | 200 (1.50) |
+  | 16x16x128 | 141 (2.15) | 208 (1.24) | 208 (1.00) | 210 (2.0) |
+  | 32x256x64 | 491 (1.79) | 428 (1.00) | 427 (1.00) | 491 (1.79) |
+
+  - **The exact match:** `waves_per_eu = 4 / W` gives exactly one wave per SIMD, which the LDS pin only
+    approximates (1.2), with no LDS pad and no code. It is the better pin.
+  - **When it can't:** it cannot pin a tile whose LDS already allows fewer workgroups than it asks for,
+    and it is per SIMD, so a W-wave workgroup needs E = 1 for one wave per SIMD.
+  - **Two waves per SIMD:** at `waves_per_eu = 2`, 16x16x128 runs as fast as pinned (210, 2.0 waves, L2
+    hits 90% against 59% at natural occupancy). 32x256x64 matches its natural run (491), the only tile
+    where extra occupancy helped. 16x32x128 falls back towards natural (200).
+- **One-wave workgroups beat replicated warps for 16x16:**
+  - 208 TFLOPS pinned against 166 for 4 replicated waves in ours.
+  - Triton: 180 with 1 warp against 129 with its default 4. Replication does 4x the MFMA work (35% busy
+    for 6.6% useful) and 4x the LDS reads.
+
+**Answers.**
+- **4x64 / 64x4 MFMA:** no gain over padding at BM (or BN) = 1-8, compute- or memory-bound.
+- **FMA (v_dot2) below 4:** 3x slower than padded MFMA.
+- **Triton's generated code:** slower than v9_tile_small's best on every small tile. Its swizzled-LDS
+  shuffles and LDS-fed operands cost more than any instruction choice.
+- **waves_per_eu:** the cleanest way to pin occupancy, so it replaces the LDS pad.
+- **16x16:** one-wave workgroups at one wave per SIMD, not replicated warps.

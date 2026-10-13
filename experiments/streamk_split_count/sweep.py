@@ -32,6 +32,12 @@
     python experiments/streamk_split_count/sweep.py e1_report                 # results/e1_tails.md
     HIP_VISIBLE_DEVICES=0 python experiments/streamk_split_count/sweep.py f   # v24: every ending and placement
     python experiments/streamk_split_count/sweep.py f_report                  # results/sweep_f.md
+    HIP_VISIBLE_DEVICES=0 python experiments/streamk_split_count/sweep.py g   # v25: no full wave (T = S)
+    python experiments/streamk_split_count/sweep.py g_report                  # results/sweep_g.md
+    HIP_VISIBLE_DEVICES=0 python experiments/streamk_split_count/sweep.py h   # S > 128: spread (v26) or dp, 2 rounds
+    python experiments/streamk_split_count/sweep.py h_report                  # results/sweep_h.md
+    HIP_VISIBLE_DEVICES=0 python experiments/streamk_split_count/sweep.py f2t # sweep F's two-tile cells on v26
+    python experiments/streamk_split_count/sweep.py f2t_report                # results/sweep_f2t.md
 
 Every case is one `rocprofv3 --kernel-trace` run of `bench.py --rocprof` (1000 launches over a
 rotating 512 MB of inputs, median GPU kernel time), so host launch gaps do not count. The split is
@@ -48,6 +54,7 @@ kernel(256 + S) - kernel(256). Real shapes at S = 8, 16, 38, 128 and 192 validat
 
 import json
 import os
+import statistics
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -153,6 +160,40 @@ SPLIT_F = {
 WHOLE_F = {"v13": (13, {}), "v24 two_tile": (24, {"STREAMK_POLICY": "two_tile"})}
 # Rounds C more than once (bf16 partials: about 1.6 times; atomics: 0.5 + 0.75 sqrt(n) times).
 MULTI_ROUNDING_F = ("v24 owner bf16_pairs", "v24 rs bf16_pairs", "v24 atomic_iz", "v24 atomic_iz chunk")
+
+
+# Sweep G (v25 WORKLOG): sweep C's matrix with GEMM_TILE_LIMIT = S, so every tile is leftover and there is no
+# full wave (as AITER's shapes with fewer tiles than programs). v25 replaces v24 (the same code on aligned
+# shapes); data-parallel is v9_ragged (one program per tile), with v13 once per cell for its overhead.
+S_G = (1, 2, 4, 6, 8, 12, 16, 20, 24, 28, 32, 36, 40, 48, 56, 64, 80, 96, 128)
+S_G_HIGH = (160, 192, 224, 240, 255)
+K_G = (512, 1024, 2048, 4096, 8192, 16384)
+K_G_WIDE = 32768  # also for S >= 128
+_V25_RS = {"STREAMK_POLICY": "one_tile", "STREAMK_FIXUP": "rs"}
+_V25_OWNER = {"STREAMK_POLICY": "one_tile", "STREAMK_FIXUP": "owner"}
+SPLIT_G = {"v25 rs": (25, _V25_RS), "v25 owner": (25, _V25_OWNER)}
+# One run per cell: data-parallel (v9_ragged, v13) and v25 as deployed (no STREAMK_*; under GEMM_TILE_LIMIT its
+# data-parallel choice stays on the persistent loop instead of going to v9_ragged).
+WHOLE_G = {"v9r dp": ("9r", {}), "v13": (13, {}), "v25 capped": (25, {})}
+WHOLE_G_HIGH = {**WHOLE_G, "v25 spread": (25, {"STREAMK_POLICY": "spread"})}
+
+
+def g_ks(S):
+    return K_G + ((K_G_WIDE,) if S >= 128 else ())
+
+
+# Sweep H (v26 WORKLOG): S > 128, where the only split is spread (end-to-end reversed cuts, all programs), on a finer
+# grid than sweeps F and G, with and without a full wave, two interleaved rounds. Spread runs on v26 (fewer spills in
+# the end-to-end segment loop, otherwise v25's code on aligned shapes); v25's spread again where sweeps F and G had it.
+S_H = (132, 136, 144, 152, 160, 168, 176, 192, 208, 224, 240, 248, 255)
+K_H = (2048, 3072, 4096, 6144, 8192, 12288, 16384, 24576, 32768)
+ROUNDS_H = 2
+_SPREAD = {"STREAMK_POLICY": "spread"}
+# Data-parallel by regime: v9_ragged below one wave, v13 (persistent) with one (sweep G: they tie in both).
+WHOLE_H = {False: {"v9r dp": ("9r", {}), "v26 spread": (26, _SPREAD)},
+           True: {"v13": (13, {}), "v26 spread": (26, _SPREAD)}}
+# Sweep F's two-tile cells re-timed: v26 (entry 3) and v24 in the same session.
+TWO_TILE_F2T = {"v26 two_tile": (26, {"STREAMK_POLICY": "two_tile"}), "v24 two_tile": (24, {"STREAMK_POLICY": "two_tile"})}
 
 
 def l2_split_ok(S, K, n):
@@ -283,6 +324,82 @@ def cases_f():
                 yield case(S, K, label, "-", None, v, env)
 
 
+def cases_g():
+    """Sweep G's cases: per K and S (GEMM_TILE_LIMIT = S, no full wave) data-parallel and v25 as deployed once,
+    v25's one-tile reduce-scatter and owner at every n and the default (S <= 128) or v25's spread (S > 128).
+    Then sweep F's 15 cells above 128 with their full wave (GEMM_TILE_LIMIT = 256 + S): v9_ragged (a second
+    hardware wave of S programs) and v13 again, timed together."""
+    M, N = MATRIX_C
+
+    def case(S, K, config, n, snp, v, env, limit):
+        return dict(S=S, M=M, N=N, K=K, config=config, n=n, snp=snp, v=v, env=env, limit=limit)
+
+    for K in (*K_G, K_G_WIDE):
+        for S in (*S_G, *S_G_HIGH):
+            if K not in g_ks(S):
+                continue
+            for label, (v, env) in (WHOLE_G if S <= 128 else WHOLE_G_HIGH).items():
+                yield case(S, K, label, "-", None, v, env, S)
+            if S <= 128:
+                for n in splits(S, K, N_C) + ["default"]:
+                    snp = None if n == "default" else S * n
+                    for label, (v, env) in SPLIT_G.items():
+                        yield case(S, K, label, n, snp, v, env, S)
+    for K in K_C_HIGH:
+        for S in S_C_HIGH:
+            for label in ("v9r dp", "v13"):
+                v, env = WHOLE_G[label]
+                yield case(S, K, label, "-", None, v, env, 256 + S)
+
+
+def cases_h():
+    """Sweep H's cases for one round: per K and S, below one wave (GEMM_TILE_LIMIT = S) and with one
+    (256 + S), data-parallel and v26 spread; v25 spread too where sweep G (below) or F (with a full wave) had it."""
+    M, N = MATRIX_C
+    for K in K_H:
+        for S in S_H:
+            for full in (False, True):
+                limit = 256 + S if full else S
+                cfgs = dict(WHOLE_H[full])
+                had = (S in S_C_HIGH and K in K_C_HIGH) if full else (S in S_G_HIGH and K in g_ks(S))
+                if had:
+                    cfgs["v25 spread"] = (25, _SPREAD)
+                for label, (v, env) in cfgs.items():
+                    yield dict(S=S, M=M, N=N, K=K, config=label, n="-", snp=None, v=v, env=env, limit=limit)
+
+
+def cases_f2t():
+    """Sweep F's two-tile cells (GEMM_TILE_LIMIT = 256 + S) on v26 and v24, with v13's full wave alone per K."""
+    M, N = MATRIX_C
+    for K in sorted(set(K_F) | set(K_C_HIGH)):
+        yield dict(S=0, M=M, N=N, K=K, config="v13 base", n="-", snp=None, v=13, env={}, limit=256)
+    for c in cases_f():
+        if c["config"] == "v24 two_tile":
+            for label, (v, env) in TWO_TILE_F2T.items():
+                yield c | dict(config=label, v=v, env=env)
+
+
+def run_h():
+    """results/sweep_h.jsonl: ROUNDS_H passes over sweep H's cases, alternate passes in reverse order; rows carry their
+    round (resumable, SWEEP_MAX_CASES per call)."""
+    path = os.path.join(HERE, "results", "sweep_h.jsonl")
+    done = set()
+    if os.path.exists(path):
+        with open(path) as f:
+            done = {(*key(r), r["round"]) for r in map(json.loads, f)}
+    cases = list(cases_h())
+    todo_ = [(r, c) for r in range(1, ROUNDS_H + 1) for c in (cases if r % 2 else cases[::-1])
+             if (*key(c), r) not in done]
+    print(f"sweep h: {len(cases)} cases x {ROUNDS_H} rounds, {len(todo_)} to run", flush=True)
+    todo_ = todo_[:int(os.environ.get("SWEEP_MAX_CASES", len(todo_)))]
+    for i, (rnd, c) in enumerate(todo_):
+        det = rocprof_check.cold_detail(c["v"], c["M"], c["N"], c["K"], case_env(c))
+        row = {k: c[k] for k in ("S", "M", "N", "K", "config", "n", "snp", "limit")} | {"us": det["us"], "round": rnd}
+        with open(path, "a") as f:
+            f.write(json.dumps(row) + "\n")
+        print(f"[{i + 1}/{len(todo_)}] {row}", flush=True)
+
+
 def cases_e1():
     """Sweep E1's cases for one round: the full wave alone per K, then every (S, K, n) with the
     configurations interleaved."""
@@ -331,9 +448,11 @@ def key(c):
     return (c["S"], c["K"], c["config"], str(c["n"]), c["snp"], c["M"], c["N"], c.get("limit"))
 
 
-# The variables a case sets; any the case does not set are removed from its environment.
+# The variables a case sets; any the case does not set are removed from its environment (so v25's
+# and v9_ragged's edge flags stay off on the aligned matrix unless a case forces them).
 ENV_KEYS = ("STREAMK_NUM_PROGRAMS", "STREAMK_POLICY", "STREAMK_FIXUP", "STREAMK_BALANCE_XCDS", "GEMM_TILE_LIMIT",
-            "STREAMK_PARTIALS", "STREAMK_RS_READERS", "STREAMK_EXCHANGE", "STREAMK_PLACEMENT", "STREAMK_XCD_LOCAL")
+            "STREAMK_PARTIALS", "STREAMK_RS_READERS", "STREAMK_EXCHANGE", "STREAMK_PLACEMENT", "STREAMK_XCD_LOCAL",
+            "STREAMK_FORCE_EDGE", "V9_FORCE_EDGE")
 
 
 def case_env(c):
@@ -355,7 +474,7 @@ def run(which):
     if os.path.exists(path):
         with open(path) as f:
             done = {key(json.loads(l)) for l in f}
-    cases = list({"a": cases_a, "b": cases_b, "c": cases_c, "f": cases_f}[which]())
+    cases = list({"a": cases_a, "b": cases_b, "c": cases_c, "f": cases_f, "g": cases_g, "f2t": cases_f2t}[which]())
     todo = [c for c in cases if key(c) not in done]
     print(f"sweep {which}: {len(cases)} cases, {len(todo)} to run", flush=True)
     # SWEEP_MAX_CASES: stop after that many (run_f.sh checks the GPU is still idle between chunks).
@@ -479,8 +598,17 @@ def cases_f_noise(top=3):
 
 
 def todo(which):
-    """Cases of sweep F ("f") or its second round ("f_noise") not yet in their results file."""
-    name, gen = {"f": ("sweep_f.jsonl", cases_f), "f_noise": ("sweep_f_round2.jsonl", cases_f_noise)}[which]
+    """Cases of sweep F ("f"), its second round ("f_noise"), sweep G ("g"), sweep H ("h", every round) or the
+    two-tile re-time ("f2t") not yet in their results file."""
+    if which == "h":
+        path = os.path.join(HERE, "results", "sweep_h.jsonl")
+        done = set()
+        if os.path.exists(path):
+            with open(path) as f:
+                done = {(*key(r), r["round"]) for r in map(json.loads, f)}
+        return sum((*key(c), r) not in done for r in range(1, ROUNDS_H + 1) for c in cases_h())
+    name, gen = {"f": ("sweep_f.jsonl", cases_f), "f_noise": ("sweep_f_round2.jsonl", cases_f_noise),
+                 "g": ("sweep_g.jsonl", cases_g), "f2t": ("sweep_f2t.jsonl", cases_f2t)}[which]
     path = os.path.join(HERE, "results", name)
     done = set()
     if os.path.exists(path):
@@ -626,6 +754,241 @@ def report_f():
     print(text)
 
 
+def report_g():
+    """results/sweep_g.md: sweep G's kernel times (no full wave, so no baseline to subtract): the fastest
+    configuration per cell, reduce-scatter against owner, v9_ragged against v13, S > 128, and data-parallel
+    with a full wave."""
+    import rules_f
+
+    capped = rules_f.load_capped()
+    rows = load("g")
+    sub = [r for r in rows if r["limit"] == r["S"]]
+    times = {}
+    for r in sub:
+        times.setdefault((r["S"], r["K"], r["config"]), []).append((r["us"], r["n"]))
+
+    def best(S, K, cfg):
+        t = times.get((S, K, cfg))
+        return min(t, key=lambda x: x[0]) if t else None
+
+    def fmt(b):
+        if b is None:
+            return "-"
+        n = "" if b[1] == "-" else f" ({'d' if b[1] == 'default' else b[1]})"
+        return f"{b[0]:.1f}{n}"
+
+    def choice(S, K):
+        pol, fixup, snp = capped(S, K // 64, 256)
+        if pol != "one_tile":
+            return pol
+        return f"{fixup} {'d' if snp is None else snp // S}"
+
+    def q(xs, f):
+        xs = sorted(xs)
+        return xs[min(len(xs) - 1, int(f * len(xs)))]
+
+    low = sorted({(S, K) for S, K, _ in times if S <= 128})
+    Ks = sorted({K for _, K in low})
+    out = ["# Sweep G: no full wave (v25, v9_ragged)\n",
+           f"rocprof kernel times, us (1000 launches over rotating inputs, median), on {MATRIX_C[0]}x{MATRIX_C[1]}xK with "
+           "GEMM_TILE_LIMIT = S: every tile is leftover and there is no full wave, so the kernel time is the tail. "
+           "Data-parallel is v9_ragged (S programs, one tile each; `v9r dp`), with v13 (persistent, 256 programs) for "
+           "reference. v25 one-tile reduce-scatter (`rs`) and owner with fp32 partials, tile-major, each at its best n "
+           "(STREAMK_NUM_PROGRAMS = S n; d: the default, all 256 programs), n in brackets. `v25 capped`: v25 as "
+           "deployed, its choice in brackets (under GEMM_TILE_LIMIT a data-parallel choice runs v25's persistent "
+           "loop, not v9_ragged). Edge flags off (aligned matrix). Raw rows: results/sweep_g.jsonl.\n",
+           "## S <= 128: each configuration at its best n\n",
+           "| S | K | v9r dp | v13 | v25 capped (choice) | v25 rs | v25 owner | fastest | fastest / v9r dp | capped / fastest |",
+           "|---|---|---|---|---|---|---|---|---|---|"]
+    for S, K in low:
+        bs = {c: best(S, K, c) for c in ("v9r dp", "v13", "v25 capped", "v25 rs", "v25 owner")}
+        have = {c: b for c, b in bs.items() if b}
+        f = min(have, key=lambda c: have[c][0])
+        dp, cap = have.get("v9r dp"), have.get("v25 capped")
+        out.append(f"| {S} | {K} | {fmt(bs['v9r dp'])} | {fmt(bs['v13'])} | "
+                   f"{fmt(bs['v25 capped']).split(' (')[0] if cap else '-'} ({choice(S, K)}) | {fmt(bs['v25 rs'])} | "
+                   f"{fmt(bs['v25 owner'])} | {f} | {have[f][0] / dp[0]:.3f} | "
+                   f"{(cap[0] / have[f][0]) if cap else float('nan'):.3f} |")
+
+    out.append("\n## Reduce-scatter against owner (kernel time at each one's best n; below 1: reduce-scatter faster)\n")
+    out.append("| S | " + " | ".join(f"K = {K}" for K in Ks) + " |")
+    out.append("|---|" + "---|" * len(Ks))
+    for S in sorted({S for S, _ in low}):
+        cells = []
+        for K in Ks:
+            a, b = best(S, K, "v25 rs"), best(S, K, "v25 owner")
+            cells.append(f"{a[0] / b[0]:.3f}" if a and b else "-")
+        out.append(f"| {S} | " + " | ".join(cells) + " |")
+
+    out.append("\n## Fastest single-rounding split against data-parallel (v9_ragged): the split's n, and its time / "
+               "v9r dp\n")
+    out.append("| S | " + " | ".join(f"K = {K}" for K in Ks) + " |")
+    out.append("|---|" + "---|" * len(Ks))
+    for S in sorted({S for S, _ in low}):
+        cells = []
+        for K in Ks:
+            sp = [b + (c,) for c in ("v25 rs", "v25 owner") if (b := best(S, K, c))]
+            dp = best(S, K, "v9r dp")
+            if not sp or not dp:
+                cells.append("-")
+                continue
+            us, n, c = min(sp)
+            cells.append(f"{c.removeprefix('v25 ')} {'d' if n == 'default' else n}: {us / dp[0]:.2f}")
+        out.append(f"| {S} | " + " | ".join(cells) + " |")
+
+    r13 = [best(S, K, "v13")[0] / best(S, K, "v9r dp")[0] for S, K in sorted({(S, K) for S, K, _ in times})
+           if best(S, K, "v13") and best(S, K, "v9r dp")]
+    if r13:
+        out.append(f"\n## v13 against v9_ragged, no full wave\n\nv13 / v9r dp over {len(r13)} cells (every S): median "
+                   f"{statistics.median(r13):.3f}, 10th-90th percentile {q(r13, 0.1):.3f}-{q(r13, 0.9):.3f}, range "
+                   f"{min(r13):.3f}-{max(r13):.3f}.")
+
+    high = sorted({(S, K) for S, K, _ in times if S > 128})
+    if high:
+        out.append("\n## S > 128, no full wave\n")
+        out.append("| S | K | v9r dp | v13 | v25 spread | v25 capped (choice) | fastest | spread / v9r dp |")
+        out.append("|---|---|---|---|---|---|---|---|")
+        for S, K in high:
+            bs = {c: best(S, K, c) for c in ("v9r dp", "v13", "v25 spread", "v25 capped")}
+            have = {c: b for c, b in bs.items() if b}
+            f = min(have, key=lambda c: have[c][0])
+            sp, dp = have.get("v25 spread"), have.get("v9r dp")
+            out.append(f"| {S} | {K} | " + " | ".join(fmt(bs[c]) for c in ("v9r dp", "v13", "v25 spread")) +
+                       f" | {fmt(bs['v25 capped'])} ({choice(S, K)}) | {f} | "
+                       f"{(sp[0] / dp[0]) if sp and dp else float('nan'):.3f} |")
+
+    full = {(r["S"], r["K"], r["config"]): r["us"] for r in rows if r["limit"] == 256 + r["S"]}
+    if full:
+        f_rows = {(r["S"], r["K"]): r["us"] for r in load("f") if r["config"] == "v13" and r["S"] > 128}
+        out.append("\n## Data-parallel with a full wave, S > 128 (GEMM_TILE_LIMIT = 256 + S)\n")
+        out.append("v9_ragged runs 256 + S programs (a second hardware wave of S); v13 256 persistent programs. "
+                   "Both timed in this sweep; sweep F's v13 for reference.\n")
+        out.append("| S | K | v9r dp | v13 | v13, sweep F | v9r dp / v13 |")
+        out.append("|---|---|---|---|---|---|")
+        for S, K in sorted({(S, K) for S, K, _ in full}):
+            a, b = full.get((S, K, "v9r dp")), full.get((S, K, "v13"))
+            fr = f_rows.get((S, K))
+            out.append(f"| {S} | {K} | {a or float('nan'):.1f} | {b or float('nan'):.1f} | "
+                       f"{fr or float('nan'):.1f} | {(a / b) if a and b else float('nan'):.3f} |")
+    text = "\n".join(out) + "\n"
+    with open(os.path.join(HERE, "results", "sweep_g.md"), "w") as f:
+        f.write(text)
+    print(text)
+
+
+def h_means():
+    """{(S, K, limit, config): [us per round]} of sweep H."""
+    out = {}
+    for r in load("h"):
+        out.setdefault((r["S"], r["K"], r["limit"], r["config"]), []).append(r["us"])
+    return out
+
+
+def report_h():
+    """results/sweep_h.md: spread against data-parallel per cell and regime (mean of the rounds), the rounds'
+    spread, and v26's spread against v25's where both ran."""
+    t = h_means()
+    mean = {k: sum(v) / len(v) for k, v in t.items()}
+    out = ["# Sweep H: S > 128, spread or data-parallel (v26)\n",
+           f"rocprof kernel times (1000 launches over rotating inputs, median) on {MATRIX_C[0]}x{MATRIX_C[1]}xK, "
+           f"{ROUNDS_H} interleaved rounds (the second in reverse order), mean of the rounds. Below one wave: "
+           "GEMM_TILE_LIMIT = S, data-parallel on v9_ragged; with one: 256 + S, data-parallel on v13. Spread: v26's "
+           "end-to-end reversed cuts over all 256 programs. Cells: spread / data-parallel (below 1: spread faster), "
+           "k = K / 64. Raw rows: results/sweep_h.jsonl.\n"]
+    for full, dp in ((False, "v9r dp"), (True, "v13")):
+        out.append(f"\n## {'One full wave, then S' if full else 'Less than one wave (S tiles)'}\n")
+        out.append("| S | " + " | ".join(f"K = {K}" for K in K_H) + " |")
+        out.append("|---|" + "---|" * len(K_H))
+        for S in S_H:
+            lim = 256 + S if full else S
+            cells = []
+            for K in K_H:
+                a, b = mean.get((S, K, lim, "v26 spread")), mean.get((S, K, lim, dp))
+                cells.append(f"{a / b:.3f}" if a and b else "-")
+            out.append(f"| {S} | " + " | ".join(cells) + " |")
+        out.append("\nThe same cells by idle k-steps of the data-parallel last wave, (256 - S) k:\n")
+        pts = sorted(((256 - S) * (K // 64), S, K, mean[(S, K, 256 + S if full else S, "v26 spread")] /
+                      mean[(S, K, 256 + S if full else S, dp)]) for S in S_H for K in K_H
+                     if (S, K, 256 + S if full else S, "v26 spread") in mean and (S, K, 256 + S if full else S, dp) in mean)
+        out.append("| (256 - S) k | cells | spread faster | spread / data-parallel: min / median / max |")
+        out.append("|---|---|---|---|")
+        bins = [0, 2048, 4096, 6144, 8192, 10240, 12288, 16384, 24576, 32768, 1e9]
+        for lo, hi in zip(bins, bins[1:]):
+            xs = sorted(p[3] for p in pts if lo <= p[0] < hi)
+            if xs:
+                out.append(f"| {lo}-{'' if hi >= 1e9 else int(hi) - 1} | {len(xs)} | {sum(x < 1 for x in xs)} | "
+                           f"{xs[0]:.3f} / {statistics.median(xs):.3f} / {xs[-1]:.3f} |")
+    diffs = sorted(abs(v[0] - v[1]) / min(v) for v in t.values() if len(v) == 2)
+    if diffs:
+        out.append(f"\n## Rounds\n\n|round 1 - round 2| / the faster, over {len(diffs)} cases: median "
+                   f"{100 * statistics.median(diffs):.2f}%, 90th percentile {100 * diffs[int(0.9 * (len(diffs) - 1))]:.2f}%, "
+                   f"max {100 * diffs[-1]:.2f}%.")
+    pairs = sorted((k[0], k[1], k[2], mean[k], mean[(k[0], k[1], k[2], "v25 spread")]) for k in mean
+                   if k[3] == "v26 spread" and (k[0], k[1], k[2], "v25 spread") in mean)
+    if pairs:
+        rs = sorted(a / b for *_, a, b in pairs)
+        out.append(f"\n## v26 spread against v25 spread (same session)\n\nv26 / v25 over {len(rs)} cells: median "
+                   f"{statistics.median(rs):.3f}, range {rs[0]:.3f}-{rs[-1]:.3f}, v26 faster in {sum(x < 1 for x in rs)}.\n")
+        out.append("| S | K | regime | v25 | v26 | v26 / v25 |")
+        out.append("|---|---|---|---|---|---|")
+        for S, K, lim, a, b in pairs:
+            out.append(f"| {S} | {K} | {'full wave' if lim > S else 'below'} | {b:.1f} | {a:.1f} | {a / b:.3f} |")
+    text = "\n".join(out) + "\n"
+    with open(os.path.join(HERE, "results", "sweep_h.md"), "w") as f:
+        f.write(text)
+    print(text)
+
+
+def report_f2t():
+    """results/sweep_f2t.md: sweep F's two-tile cells on v26 and v24 (same session), and v26's two-tile against
+    sweep F's fastest single-rounding choice the rules can pick (v13, v24 reduce-scatter or owner)."""
+    rows = load("f2t")
+    base = {r["K"]: r["us"] for r in rows if r["config"] == "v13 base"}
+    f_rows = load("f")
+    f_base = {r["K"]: r["us"] for r in f_rows if r["config"] == "v13 base"}
+    now = {(r["S"], r["K"], r["config"]): r["us"] for r in rows if r["config"] != "v13 base"}
+    rule_cfgs = ("v13", "v24 rs", "v24 owner")
+    best_f = {}
+    for r in f_rows:
+        if r["config"] in rule_cfgs:
+            k = (r["S"], r["K"])
+            if k not in best_f or r["us"] < best_f[k][0]:
+                best_f[k] = (r["us"], r["config"], r["n"])
+    cells = sorted({(S, K) for S, K, _ in now})
+    ratios = [now[(S, K, "v26 two_tile")] / now[(S, K, "v24 two_tile")] for S, K in cells
+              if (S, K, "v26 two_tile") in now and (S, K, "v24 two_tile") in now]
+    drift = sorted(base[K] / f_base[K] for K in base if K in f_base)
+    out = ["# Sweep F's two-tile cells on v26\n",
+           "rocprof kernel times (1000 launches over rotating inputs, median), 4096x8192xK, GEMM_TILE_LIMIT = 256 + S. "
+           "v26's two-tile (entry 3: fewer spills in the end-to-end segment loop) and v24's, timed together; `best "
+           "rule choice` is sweep F's fastest of v13, v24 reduce-scatter and owner (fp32) at any n, timed in sweep F "
+           "(v13's full wave alone now / then: " + ", ".join(f"{x:.3f}" for x in drift) + ").\n"]
+    if ratios:
+        rs = sorted(ratios)
+        out.append(f"v26 / v24 two-tile over {len(rs)} cells: median {statistics.median(rs):.3f}, range "
+                   f"{rs[0]:.3f}-{rs[-1]:.3f}, v26 faster in {sum(x < 1 for x in rs)}.\n")
+    out.append("| S | K | v24 two-tile | v26 two-tile | v26 / v24 | best rule choice (n) | v26 two-tile / best |")
+    out.append("|---|---|---|---|---|---|---|")
+    wins = []
+    for S, K in cells:
+        a, b = now.get((S, K, "v24 two_tile")), now.get((S, K, "v26 two_tile"))
+        bf = best_f.get((S, K))
+        rel = b / bf[0] if b and bf else None
+        if rel:
+            wins.append((S, K, rel))
+        out.append(f"| {S} | {K} | {a or float('nan'):.1f} | {b or float('nan'):.1f} | "
+                   f"{(b / a) if a and b else float('nan'):.3f} | "
+                   + (f"{bf[0]:.1f} ({bf[1]} {bf[2]})" if bf else "-") + f" | {rel or float('nan'):.3f} |")
+    if wins:
+        w = sorted(x[2] for x in wins)
+        out.append(f"\nv26 two-tile / the best rule choice over {len(w)} cells: median {statistics.median(w):.3f}, "
+                   f"faster in {sum(x < 1 for x in w)}, more than 2% faster in {sum(x < 0.98 for x in w)}.")
+    text = "\n".join(out) + "\n"
+    with open(os.path.join(HERE, "results", "sweep_f2t.md"), "w") as f:
+        f.write(text)
+    print(text)
+
+
 def load(which):
     path = os.path.join(HERE, "results", f"sweep_{which}.jsonl")
     with open(path) as f:
@@ -709,4 +1072,6 @@ def report():
 if __name__ == "__main__":
     {"a": lambda: run("a"), "b": lambda: run("b"), "c": lambda: run("c"), "l2": run_l2, "report": report,
      "e1": run_e1, "e1_report": report_e1, "f": lambda: run("f"), "f_report": report_f,
-     "f_noise": run_f_noise, "todo": lambda: print(todo(sys.argv[2]))}[sys.argv[1]]()
+     "f_noise": run_f_noise, "g": lambda: run("g"), "g_report": report_g, "h": run_h, "h_report": report_h,
+     "f2t": lambda: run("f2t"), "f2t_report": report_f2t,
+     "todo": lambda: print(todo(sys.argv[2]))}[sys.argv[1]]()

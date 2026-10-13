@@ -1080,6 +1080,18 @@ def find_loop_invariants(bb: BasicBlock):
     logging.debug(f"defs_in_loop: {coalesce_regs(set(defs_in_loop))}")
     logging.debug(f"invariant regs: {coalesce_regs(invariant_regs)}")
 
+    ## invariant_regs is per register, but a register the loop writes more than once holds a
+    ## different value after each write. A use is invariant only through the def that reaches it:
+    ## the last write before it in the iteration, which must itself be invariant. With no write
+    ## before it (`v116 = v116 << 1`, then a later `v116 = ...`) it reads the previous iteration.
+    pos = {inst: i for i, inst in enumerate(bb.instructions)}
+
+    def reaching_def_invariant(inst, r):
+        if r not in defs_in_loop:
+            return True
+        before = [d for d in defs_in_loop[r] if pos[d] < pos[inst]]
+        return bool(before) and max(before, key=pos.get) in invariant_insts
+
     changed = True
     while changed:
         changed = False
@@ -1101,7 +1113,7 @@ def find_loop_invariants(bb: BasicBlock):
                 invariant_regs -= flatten_regs(inst.get_dst_regs())
                 continue
 
-            if all(r in invariant_regs for r in inst.uses):
+            if all(r in invariant_regs and reaching_def_invariant(inst, r) for r in inst.uses):
                 if "scratch_load" in inst.opcode:
                     read_from = flatten_regs(inst.get_copy_src())
                     if read_from & bb.write_to:
@@ -1112,6 +1124,7 @@ def find_loop_invariants(bb: BasicBlock):
                         logging.debug(f"Adding {inst.emit()}, which defines {inst.get_dst_regs()}")
                     continue
                 invariant_insts.add(inst)
+                changed = True
                 logging.debug(f"Adding {inst.emit()}, which uses {coalesce_regs(inst.uses)}")
                 for r in inst.defs:
                     if r not in invariant_regs:
@@ -1366,6 +1379,15 @@ def _make_inst(text, bb):
     return parse_instruction(text, 0, bb)
 
 
+def _touches_lds(inst):
+    return inst.opcode.startswith("ds_") or (inst.opcode.startswith("buffer_") and "lds" in inst.operands)
+
+
+def _is_lgkm_op(inst):
+    """An instruction counted by lgkmcnt: LDS, scalar memory, or a message."""
+    return inst.opcode.startswith(("ds_", "s_load", "s_buffer_load", "s_sendmsg"))
+
+
 def rotate_lgkmcnt(program):
     loop = program.get_loop()
     prologue = program.get_prologue()
@@ -1397,10 +1419,11 @@ def rotate_lgkmcnt(program):
             barrier_inst = insts[i + 1]
 
             # Look backward for a standalone s_waitcnt lgkmcnt(0) in the same region.
-            # Stop at any s_barrier (region boundary).
+            # Stop at any s_barrier (region boundary). Merging moves the pair's wait up to the
+            # standalone, so an LDS or scalar-memory op in between would lose its wait.
             prev_standalone = None
             for k in range(i - 1, -1, -1):
-                if "s_barrier" in insts[k].opcode:
+                if "s_barrier" in insts[k].opcode or _is_lgkm_op(insts[k]):
                     break
                 if "s_waitcnt" in insts[k].opcode and any(
                     "lgkmcnt" in op for op in insts[k].operands
@@ -1437,8 +1460,13 @@ def rotate_lgkmcnt(program):
         return
 
     ## Step 2: Rotate the first sync pair.
-    ## Remove from current position, add to end of prologue and end of loop.
+    ## Remove from current position, add to end of prologue and end of loop. That moves the
+    ## barrier above everything before it in the loop: only valid if none of it touches LDS.
     first_waitcnt, first_barrier = sync_pairs[0]
+    if any(_touches_lds(x) for x in insts[: insts.index(first_waitcnt)] if not x.mark_dead):
+        logging.debug("rotate_lgkmcnt: LDS access above the first sync pair; not rotating")
+        loop.cleanup_bb()
+        return
     waitcnt_text = first_waitcnt.emit()
     barrier_text = first_barrier.emit()
     logging.debug(f"rotate_lgkmcnt: rotating [{waitcnt_text}] + [{barrier_text}]")
@@ -1485,6 +1513,30 @@ def separate_waitcnt_and_barrier(loop):
             loop.swap_inst(idx - 2, idx - 1)
 
 
+def restore_m0_wait_states(loop):
+    """A write of m0 directly before the buffer_load ... lds that reads it needs one wait state.
+    optimize_buffer_load_m0 trades the s_nop for an MFMA between the two; the MFMA interleave can
+    move that MFMA away again, so put the s_nop back wherever the pair has become adjacent."""
+    insts = loop.instructions
+    i = 0
+    while i + 1 < len(insts):
+        dst = insts[i].get_dst_regs()
+        nxt = insts[i + 1]
+        if dst is not None and dst.kind == "m" and nxt.opcode.startswith("buffer_") and "lds" in nxt.operands:
+            insts.insert(i + 1, _make_inst("s_nop 0", loop))
+            i += 1
+        i += 1
+
+
+def _can_swap(inst, mfma, inst_moves_later):
+    """inst and mfma may trade places: neither writes a register the other reads or writes. A
+    s_waitcnt may move earlier past an MFMA but not later: the MFMA may read what it waits for,
+    including loads issued by the previous loop iteration."""
+    if inst_moves_later and inst.opcode.startswith("s_waitcnt"):
+        return False
+    return not (inst.defs & (mfma.uses | mfma.defs) or inst.uses & mfma.defs)
+
+
 def schedule_window(window):
     mfmas = [i for i in window if i.is_mfma()]
     nonmfmas = [i for i in window if not i.is_mfma() and not i.is_control()]
@@ -1496,16 +1548,27 @@ def schedule_window(window):
     logging.debug("Found window:")
     for inst in window:
         logging.debug(f"  {inst.emit()}")
+        inst.compute_def_use()
 
+    ## The window is a run of MFMAs and a run of other instructions, in either order. Each list
+    ## keeps its order; an instruction only crosses the MFMAs it is independent of, and the first
+    ## one that cannot cross holds back the rest of its list.
+    nonmfma_first = not window[0].is_mfma()
     out = []
     mi = ni = 0
 
     while mi < len(mfmas) or ni < len(nonmfmas):
         if mi < len(mfmas):
+            if nonmfma_first and not all(_can_swap(n, mfmas[mi], True) for n in nonmfmas[ni:]):
+                out.append(nonmfmas[ni])
+                ni += 1
+                continue
             out.append(mfmas[mi])
             mi += 1
         for _ in range(5):
             if ni < len(nonmfmas):
+                if not nonmfma_first and not all(_can_swap(nonmfmas[ni], m, False) for m in mfmas[mi:]):
+                    break
                 out.append(nonmfmas[ni])
                 ni += 1
 
@@ -1613,6 +1676,7 @@ def amdgcn_as(text, verbose=False):
     separate_waitcnt_and_barrier(loop)
 
     loop.instructions = optimize_mfma_density(loop.instructions)
+    restore_m0_wait_states(loop)
 
     program.process_blocks(indent)
     program.update_free_regs(indent)

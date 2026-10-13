@@ -26,6 +26,7 @@ a16w16/
 ├── v8_sliceMN/           # M+N slicing, buffer load throughput analysis
 ├── v9_beyond_hotloop/    # L2 cache locality via XCD-aware PID remapping
 ├── v9_tile/              # v9 with the tile size as a parameter (256x128, 128x256, 128x128); tile-size study
+├── v9_ragged/            # v9 for M, N, K not multiples of the tile (clamped loads, masked stores, masked last pair)
 ├── v10_persistant/       # v9 as a persistent kernel (one program per CU loops over tiles)
 ├── v11_persistant_overlap_global/  # + next tile's first global->LDS loads in the epilogue
 ├── v12_persistant_overlap_lds/     # + next tile's first LDS reads in the epilogue
@@ -40,7 +41,9 @@ a16w16/
 ├── v21_streamk_l2_partials/        # + partials and flags through one XCD's L2 (STREAMK_PARTIALS)
 ├── v22_streamk_atomic_c/           # v20 + an atomic ending: bf16 pk_add into C (STREAMK_FIXUP=atomic)
 ├── v23_streamk_rs_band/            # v20 + band C store, power-of-two readers, opt-in bf16 partials
-└── v24_streamk_combined/           # v23 + v22's atomic_iz, v21's L2 exchange, v18's chunk-major placement (switches)
+├── v24_streamk_combined/           # v23 + v22's atomic_iz, v21's L2 exchange, v18's chunk-major placement (switches)
+├── v25_streamk_ragged_mn/          # v24 for M, N not multiples of the tile (clamped loads, masked stores)
+└── v26_streamk_ragged_k/           # v25 for K not a multiple of 128 (the last, partial pair first, masked)
 ```
 
 v14-v24 balance a partly empty last wave with stream-K. [STREAMK.md](STREAMK.md) summarizes

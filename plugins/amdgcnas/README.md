@@ -29,6 +29,14 @@ The kernels it is used on (a16w16 v7 and later, a8w8, a4w4) keep their MFMA accu
 AGPRs with `cd_regclass="a"`, and the peephole assumes that, so it is only used on these pinned
 kernels.
 
+The loop passes reorder instructions, and keep these dependences (found on v9_tile's small tiles,
+[WORKLOG §14.3](../../kernels/gemm/intra_wave/a16w16/v9_tile/WORKLOG.md)):
+
+- **MFMA interleave:** an instruction crosses only MFMAs it shares no register with, and an `s_waitcnt`
+  never moves below an MFMA.
+- **lgkmcnt / barrier rotation:** a merge never crosses an lgkm op, and a rotation never crosses an LDS access.
+- **LICM:** a use is invariant only through its reaching definition.
+
 `scripts/run_perf_table.py` wires these into the tutorial's configs; see
 [gemm/README §2.1](../../kernels/gemm/intra_wave/README.md#21-triton-build-and-the-out-of-tree-plugins)
 for the component stack.

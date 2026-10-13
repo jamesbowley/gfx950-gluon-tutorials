@@ -291,7 +291,8 @@ def short(name):
     return name.replace("_ZN5aiter", "").rstrip("E")[:70]
 
 
-HEAD = ("| # | Shape (MxNxK) | out | v24 vs best | Best library | Kernel | Tile (MxNxK) | Their tiles / waves "
+NAME = "v24"  # --name: the label of the kernel the libraries beat
+HEAD = ("| # | Shape (MxNxK) | out | {name} vs best | Best library | Kernel | Tile (MxNxK) | Their tiles / waves "
         "| Launched WGs x threads | Their k-steps: per tile / per WG | Our tiles / full waves / S | Our k-steps "
         "| Our config | Stream-K | Split-K | K-wave | Atomics | Other |")
 SEP = "|---:|---|---|---:|---|---|---|---|---|---|---|---:|---|---|---|---|---|---|"
@@ -324,7 +325,7 @@ def table(state, rows, probe):
                         ("Library on another tile, with our grid or theirs at least one wave", rest)):
         if not part:
             continue
-        L += [f"*{title} ({len(part)}), worst first:*", "", HEAD, SEP]
+        L += [f"*{title} ({len(part)}), worst first:*", "", HEAD.format(name=NAME), SEP]
         L += [row_md(i, r, b, gap, family, name, probe) for i, (r, b, gap, family, name, why) in enumerate(part, 1)]
         L += [""]
     return L, sel
@@ -340,10 +341,10 @@ def cmd_report(args):
         t, sel = table(state, read_rows(path), probe)
         sels[state] = sel
         tables += t
-    L = ["## Library kernels that beat v24 with the same tile or at least one wave", ""]
+    L = [f"## Library kernels that beat {NAME} with the same tile or at least one wave", ""]
     L += ["**Patterns.** By the winning kernel's approach and launched grid (workgroups of its GEMM kernel), "
           "with the median gap and how many of those shapes are under one wave of our 256x256 tiles:", "",
-          "| Caches | Approach | Launched grid | Shapes | v24 vs best: median | Our grid under one wave | "
+          f"| Caches | Approach | Launched grid | Shapes | {NAME} vs best: median | Our grid under one wave | "
           "Their tile area vs 256x256: median |", "|---|---|---|---:|---:|---:|---:|"]
     for state, sel in sels.items():
         pat = {}
@@ -398,7 +399,10 @@ def main():
     r.add_argument("--cold", required=True)
     r.add_argument("--probe", default=None)
     r.add_argument("--out", required=True)
+    r.add_argument("--name", default="v24", help="the kernel the libraries beat, for labels")
     args = p.parse_args()
+    global NAME
+    NAME = getattr(args, "name", NAME)
     dict(select=cmd_select, probe=cmd_probe, report=cmd_report)[args.mode](args)
 
 

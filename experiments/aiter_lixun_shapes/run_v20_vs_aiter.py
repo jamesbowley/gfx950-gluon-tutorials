@@ -59,15 +59,17 @@ import time
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, "..", ".."))
 A16 = os.path.join(REPO, "kernels", "gemm", "intra_wave", "a16w16")
-# --kernel: the stream-K kernel timed as streamk_wip, (directory, Gluon kernel). Its columns keep
-# the v20_* names whichever kernel it is.
+# --kernel: the stream-K kernel timed as streamk_wip, (directory, Gluon kernel, the directory and
+# Gluon kernel of the v9 it hands one-wave data-parallel launches to). Its columns keep the v20_*
+# names whichever kernel it is.
 KERNELS = {
-    "v20": ("v20_streamk_reduce_scatter", "v20_streamk_reduce_scatter"),
-    "v24": ("v24_streamk_combined", "v24_streamk_combined"),
+    "v20": ("v20_streamk_reduce_scatter", "v20_streamk_reduce_scatter", "v9_beyond_hotloop", "v9_beyond_hotloop"),
+    "v24": ("v24_streamk_combined", "v24_streamk_combined", "v9_beyond_hotloop", "v9_beyond_hotloop"),
+    "v26": ("v26_streamk_ragged_k", "v26_streamk_ragged_k", "v9_ragged", "v9_ragged"),
 }
 V20_LIVE = os.path.join(A16, KERNELS[os.environ.get("V20CMP_KERNEL", "v20")][0], "matmul_kernel.py")
-# v20 hands one-wave data-parallel launches to the live v9 (not snapshotted).
-V9_LIVE = os.path.join(A16, "v9_beyond_hotloop", "matmul_kernel.py")
+# The v9 it hands off to is the live one (not snapshotted).
+V9_LIVE = os.path.join(A16, KERNELS[os.environ.get("V20CMP_KERNEL", "v20")][2], "matmul_kernel.py")
 SHAPES_CSV = os.path.join(HERE, "supported_status_scoped.csv")
 RESULTS = os.path.join(HERE, "results")
 HVR = os.path.join(REPO, "experiments", "hip_version_repro")
@@ -498,8 +500,8 @@ class V20Worker:
 
             self.llir_opts = llir_sched.compile_options()
             assert self.llir_opts, "AITER llirSched plugin not available"
-            streamk = getattr(self.mk, KERNELS[os.environ.get("V20CMP_KERNEL", "v20")][1])
-            kernels = [streamk, sys.modules[self.mk.v9_matmul.__module__].v9_beyond_hotloop]
+            spec = KERNELS[os.environ.get("V20CMP_KERNEL", "v20")]
+            kernels = [getattr(self.mk, spec[1]), getattr(sys.modules[self.mk.v9_matmul.__module__], spec[3])]
             for k in kernels:
                 run = k.run
                 k.run = lambda *a, _run=run, **kw: _run(*a, **{**self.llir_opts, **kw})
@@ -904,10 +906,11 @@ def pad_columns(M, N, K, ms, res, post):
 
 
 def sweep(args):
-    global V20_LIVE
+    global V20_LIVE, V9_LIVE
     assert args.v20_only or os.environ.get("V20CMP_ENV") == "rocm724", "run through run_rocm724_v20.sh"
     os.environ["V20CMP_KERNEL"] = args.kernel
     V20_LIVE = os.path.join(A16, KERNELS[args.kernel][0], "matmul_kernel.py")
+    V9_LIVE = os.path.join(A16, KERNELS[args.kernel][2], "matmul_kernel.py")
     os.makedirs(RESULTS, exist_ok=True)
     paths = run_paths(args.tag, args.jit_tag)
     snap = paths["snapshot"]
@@ -953,7 +956,7 @@ def sweep(args):
                        pad_bytes=PAD_BYTES if args.pad512 else 0, realloc=args.realloc,
                        realloc_workspace=args.realloc_workspace, streamk_p_pad=args.p_pad,
                        v20_sched=args.v20_sched, kernel=args.kernel, kernel_name=KERNELS[args.kernel][1],
-                       hip_device=GPU)
+                       v9_handoff=KERNELS[args.kernel][3], hip_device=GPU)
     for role, i in info.items():
         print(f"{role}: " + " ".join(f"{k}={v}" for k, v in i.items()), flush=True)
     with open(paths["envinfo"], "w") as f:

@@ -92,7 +92,10 @@ VERSION_MAP = {
     22: "v22_streamk_atomic_c",
     23: "v23_streamk_rs_band",
     24: "v24_streamk_combined",
+    25: "v25_streamk_ragged_mn",
+    26: "v26_streamk_ragged_k",
     "9t": "v9_tile",
+    "9r": "v9_ragged",
 }
 
 DEVICE = triton.runtime.driver.active.get_active_torch_device()
@@ -161,7 +164,7 @@ def parse_args():
         type=lambda s: int(s) if s.isdigit() else s,
         default=9,
         choices=list(VERSION_MAP),
-        help="Kernel version to benchmark (default: 9, the final version; 9t is v9_tile)",
+        help="Kernel version to benchmark (default: 9, the final version; 9t is v9_tile, 9r v9_ragged)",
     )
     parser.add_argument(
         "--tile",

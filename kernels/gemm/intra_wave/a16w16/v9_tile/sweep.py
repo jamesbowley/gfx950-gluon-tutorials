@@ -28,7 +28,8 @@
     python v9_tile/sweep.py counters --points A --out v9_tile/results/a_counters.csv
     python v9_tile/sweep.py att      --points A --out v9_tile/results/a_att.csv
 
-A point is "TILE:MxNxK" (TILE as in V9_TILE, "v9" for v9_beyond_hotloop itself); --points takes
+A point is "TILE:MxNxK" (TILE as in V9_TILE, "v9" for v9_beyond_hotloop itself, "sk256" for
+v26_streamk_ragged_k with every leftover tile split over all 256 programs); --points takes
 a comma-separated list or the name of a preset in POINTS. All runs are bf16 with B and C rows
 padded as bench.py pads them.
 
@@ -74,16 +75,115 @@ FULL_WAVE = {"256x256": (4096, 4096), "256x128": (4096, 2048), "128x256": (2048,
              "128x128": (2048, 2048), "128x128x128": (2048, 2048)}
 SAME_SHAPE = [(4096, n, k) for k in (4096, 8192) for n in (1024, 2048, 3072)] + [
     (16384, 512, 8192), (1024, 2304, 16384), (2048, 2304, 16384)]
+# Wave quantization against N (M = 4096): each tile over N = 256..16384, and stream-K at 256x256
+# ("sk256") wherever the leftover tiles S divide the 256 CUs, so the split n = 256 / S fills them.
+WQ_TILES = ("256x256", "128x256", "128x128x128")
+WQ_N = range(256, 16384 + 1, 256)
+WQ_SK_N = [w * 4096 + d for w in range(4) for d in (256, 512, 1024, 2048)]
+TILE_RE = re.compile(r"^(tri)?(\d+)x(\d+)(?:x(\d+))?(r2)?(?:w([1248]))?(m4)?(?:e(\d))?(p)?$")
+
+
+def tile_spec(tile):
+    """(BM, BN, BK, regions, W, pin) as matmul_kernel.parse_spec, with v9_tile_small's default W.
+    "tri..." is the Triton tl.dot reference (triton_ref.py, 4 warps unless wW)."""
+    if tile in ("v9", "sk256"):
+        return 256, 256, 64, 4, 4, False
+    tri, bm, bn, bk, r2, w, _, _, pin = TILE_RE.match(tile).groups()
+    bm, bn, bk = int(bm), int(bn), int(bk or 64)
+    small = not tri and not r2 and min(bm, bn) <= 32
+    w = int(w) if w else max(1, min(4, max(bm, bn) // 64)) if small else 4
+    return bm, bn, bk, 2 if r2 else 4, w, bool(pin)
+
+
+def is_small(tile):
+    bm, bn, _, regions, _, _ = tile_spec(tile)
+    return tile not in ("v9", "sk256") and not tile.startswith("tri") and regions != 2 and min(bm, bn) <= 32
+
+
+def regs_ok(tile):
+    """B's operand for two k-steps is (BN / W) BK / 32 registers per lane: past 8192 elements per wave
+    (256 registers) the tile cannot keep one wave per SIMD (asm_small.md: 16x64x256 uses ~700)."""
+    bm, bn, bk, _, w, _ = tile_spec(tile)
+    return max(bm, bn) // w * bk <= 8192
+
+
+def loads_ok(tile):
+    """matmul_kernel.strip_load_layout: the padded A strip holds at least one 1 KB load per wave."""
+    bm, bn, bk, _, w, _ = tile_spec(tile)
+    return -(-min(bm, bn) // 16) * 16 >= w * (64 // min(64, bk // 8))
+
+
+def pinnable(tile):
+    """Whether one wave per SIMD fits: LDS holds exactly 4 / W of the tile's workgroups
+    (matmul_kernel.small_pin_pads) and the registers allow it."""
+    bm, bn, bk, _, w, _ = tile_spec(tile)
+    km, kn = min(bm, bn), max(bm, bn)
+    return 2 * (-(-km // 16) * 16 + kn) * bk * 2 <= 160 * 1024 // (4 // w) and regs_ok(tile)
+
+
+# Small tiles (v9_tile_small) against the anchors, on compute-bound shapes (~1000 FLOP/B at HBM):
+# each small tile with natural occupancy and pinned to one wave per SIMD ("p"), where LDS allows.
+SMALL_CB_TILES = ("32x256x64", "32x128x128", "32x64x128", "32x32x128", "16x256x128", "16x256x64w2",
+                  "16x128x128", "16x64x128", "16x64x64", "16x32x128", "16x16x128", "16x16x256",
+                  "8x256x128", "4x256x128", "2x256x128", "1x256x128", "256x16x128")
+SMALL_ANCHORS = ("256x256", "128x128x128", "64x64", "64x64x128")
+# Memory-bound: M = BM rows, the weights B (N x K) streamed once.
+SMALL_MB_M = (1, 4, 16, 32)
+SMALL_MB_N = (4096, 8192, 16384)
+SMALL_MB_BN = (16, 32, 64, 128, 256)
+# Alternatives to v9_tile_small's choices (WORKLOG §14.9), and the Triton tl.dot reference ("tri", run
+# stock: no LLVM scheduler, no amdgcnas; SMALL_REF_*). m4: the 4x64 MFMA; wW above BN / 16: replicated
+# warps; eE: waves_per_eu = E instead of the LDS pin.
+ALT_CB = "2048x4096x8192"
+ALT_CB_SMALL_N = "2048x256x8192"
+ALT_WPE_TILES = ("16x64x64", "16x32x128", "16x16x128", "32x256x64")
+ALT_POINTS = {
+    "SMALL_ALT_CB": [f"{bm}x256x128{s}:{ALT_CB}" for bm in (1, 2, 4, 8) for s in ("", "m4")]
+    + [f"256x{bn}x128{s}:{ALT_CB_SMALL_N}" for bn in (4, 8) for s in ("", "m4")]
+    + [f"16x16x128{s}:{ALT_CB}" for s in ("", "p", "w4")]
+    + [f"{t}{s}:{ALT_CB}" for t in ALT_WPE_TILES for s in ("", "p", "e1", "e2")
+       if not (t == "16x16x128" and s in ("", "p"))]
+    + [f"16x256x128:{ALT_CB}", f"16x64x128:{ALT_CB}"],
+    "SMALL_REF_CB": [f"tri{bm}x256x128:{ALT_CB}" for bm in (1, 2, 4, 8, 16)]
+    + [f"tri256x{bn}x128:{ALT_CB_SMALL_N}" for bn in (4, 8)]
+    + [f"tri16x16x128{w}:{ALT_CB}" for w in ("w1", "")] + [f"tri16x64x128w1:{ALT_CB}"],
+    "SMALL_ALT_MB": [f"{m}x{bn}x128{s}:{m}x{n}x8192" for m in (1, 4, 8) for n in (8192, 16384) for bn in (64, 256)
+                     for s in ("", "m4")]
+    + [f"{bn}x{m}x128{s}:{n}x{m}x8192" for m in (4, 8) for n in (8192, 16384) for bn in (64, 256) for s in ("", "m4")],
+    "SMALL_REF_MB": [f"tri{m}x{bn}x128{'w1' if bn == 64 else ''}:{m}x{n}x8192" for m in (1, 4, 8) for n in (8192, 16384)
+                     for bn in (64, 256)]
+    + [f"tri{bn}x{m}x128{'w1' if bn == 64 else ''}:{n}x{m}x8192" for m in (4, 8) for n in (8192, 16384)
+       for bn in (64, 256)],
+}
 POINTS = {
     "A": [f"{t}:{m}x{n}x{k}" for t in ("256x256", "256x128", "128x256") for k in KS
           for m, n in [FULL_WAVE[t]]],
+    "SMALL_CB": [f"{t}{p}:2048x4096x{k}" for k in (4096, 8192) for t in SMALL_CB_TILES
+                 for p in ("", "p") if not p or pinnable(t)]
+    + [f"{t}:2048x4096x{k}" for k in (4096, 8192) for t in SMALL_ANCHORS],
+    "SMALL_MB": [f"{m}x{bn}x128{p}:{m}x{n}x8192" for m in SMALL_MB_M for n in SMALL_MB_N for bn in SMALL_MB_BN
+                 for p in ("", "p") if not p or pinnable(f"{m}x{bn}x128")]
+    + [f"16x{bn}x{bk}:16x{n}x8192" for n in SMALL_MB_N for bn in SMALL_MB_BN for bk in (64, 256)
+       if regs_ok(f"16x{bn}x{bk}") and loads_ok(f"16x{bn}x{bk}")],
+    **ALT_POINTS,
+    # Run with --rotating-mb 0 (inputs warm in the MALL): the window ceiling with a shorter round trip.
+    "SMALL_WARM": [f"{t}:2048x4096x8192" for t in ("256x256", "64x64x128", "32x32x128p", "16x256x128", "16x64x128p",
+                                                   "16x16x128p", "1x256x128")],
     "A128": [f"{t}:2048x2048x{k}" for t in ("128x128", "128x128r2", "128x128x128") for k in KS],
     "B": [f"{t}:{m}x{n}x{k}" for m, n, k in SAME_SHAPE for t in ("256x256", "256x128", "128x256")],
     "B128": [f"{t}:{m}x{n}x{k}" for m, n, k in SAME_SHAPE for t in ("128x128", "128x128r2", "128x128x128")],
+    **{f"WQ{k}": [f"{t}:4096x{n}x{k}" for t in WQ_TILES for n in WQ_N] for k in (4096, 8192)},
+    **{f"WQSK{k}": [f"sk256:4096x{n}x{k}" for n in WQ_SK_N] for k in (4096, 8192)},
 }
+# sk256 runs v26 with every leftover tile split over all 256 programs (the default capped policy
+# would use at most 128 of them for small S); the ending is the policy's (rs for n >= 8, else owner).
+SK_ENV = {"STREAMK_POLICY": "one_tile", "STREAMK_NUM_PROGRAMS": "256"}
+PEAK_TFLOPS_PER_GHZ = 256 * 4096 / 1e3  # 256 CUs x 4096 FLOP per clock
 COUNTER_SETS = [
     ["GRBM_GUI_ACTIVE", "SQ_VALU_MFMA_BUSY_CYCLES", "SQ_BUSY_CU_CYCLES"],
     ["TCC_HIT_sum", "TCC_MISS_sum", "TCC_EA0_RDREQ_sum", "TCC_EA0_RDREQ_DRAM_sum"],
+    ["TCC_EA0_RDREQ_32B_sum", "TCC_EA0_RDREQ_64B_sum", "TCC_EA0_RDREQ_128B_sum"],
+    ["MeanOccupancyPerActiveCU"],
 ]
 GRAPH_LEN = 100
 ROTATING_MB = 512  # --rotating-mb; 0 reuses one set of inputs (warm caches)
@@ -97,18 +197,43 @@ def parse_point(p):
     return tile, M, N, K
 
 
-KERNELS = ("v9_tile", "v9_tile_2r", "v9_beyond_hotloop")
+KERNELS = ("v9_tile", "v9_tile_2r", "v9_tile_small", "v9_beyond_hotloop", "v26_streamk_ragged_k", "triton_ref_matmul")
 
 
 def kernel_name(tile):
-    return "v9_beyond_hotloop" if tile == "v9" else "v9_tile_2r" if tile.endswith("r2") else "v9_tile"
+    if tile == "sk256":
+        return "v26_streamk_ragged_k"
+    if tile == "v9":
+        return "v9_beyond_hotloop"
+    if tile.startswith("tri"):
+        return "triton_ref_matmul"
+    return "v9_tile_small" if is_small(tile) else "v9_tile_2r" if tile_spec(tile)[3] == 2 else "v9_tile"
 
 
 def tile_dims(tile):
+    return tile_spec(tile)[:3]
+
+
+def runner(tile):
+    """The point's matmul(a, b, c)."""
+    import importlib
+
     if tile == "v9":
-        return 256, 256, 64
-    dims = [int(x) for x in tile.removesuffix("r2").split("x")]
-    return tuple(dims + [64] * (3 - len(dims)))
+        return importlib.import_module("v9_beyond_hotloop.matmul_kernel").matmul
+    if tile == "sk256":
+        os.environ.update(SK_ENV)
+        return importlib.import_module("v26_streamk_ragged_k.matmul_kernel").matmul
+    if tile.startswith("tri"):
+        ref = importlib.import_module("v9_tile.triton_ref")
+        return lambda a, b, c: ref.matmul(a, b, c, tile)
+    mk = importlib.import_module("v9_tile.matmul_kernel")
+    return lambda a, b, c: mk.matmul(a, b, c, tile=tile)
+
+
+def busy_cus(tile, tiles):
+    """Average busy CUs: stream-K keeps all 256 busy; a non-persistent launch runs its tiles in
+    ceil(tiles / 256) waves."""
+    return 256 if tile == "sk256" else tiles / -(-tiles // 256)
 
 
 # ---------------------------------------------------------------------------------------------
@@ -118,14 +243,11 @@ def worker(args):
     sys.path.insert(0, A16)
     import bench  # RTLD_GLOBAL, amdgcnas hook, utils path
     import torch
-    from v9_tile import matmul_kernel as mk
-    import importlib
 
-    v9 = importlib.import_module("v9_beyond_hotloop.matmul_kernel").matmul
     manifest = []
     for p in args.points:
         tile, M, N, K = parse_point(p)
-        run = (lambda a, b, c: v9(a, b, c)) if tile == "v9" else (lambda a, b, c: mk.matmul(a, b, c, tile=tile))
+        run = runner(tile)
         dt = torch.bfloat16
         a = torch.rand((M, K), device="cuda", dtype=dt) - 0.5
         b = bench.make_b(N, K, dt, True, lambda t: t.uniform_(-0.5, 0.5))
@@ -200,7 +322,12 @@ def read_csv(out_dir, suffix):
 def base_row(p, correct):
     tile, M, N, K = parse_point(p)
     BM, BN, BK = tile_dims(tile)
-    return {"tile": tile, "M": M, "N": N, "K": K, "tiles": (M // BM) * (N // BN), "correct": correct}
+    return {"tile": tile, "M": M, "N": N, "K": K, "tiles": -(-M // BM) * -(-N // BN), "correct": correct}
+
+
+def unique_bytes(r):
+    """Bytes of A, B and C (bf16), each touched once: the memory-bound roof's numerator."""
+    return 2 * (r["M"] * r["K"] + r["K"] * r["N"] + r["M"] * r["N"])
 
 
 # ---------------------------------------------------------------------------------------------
@@ -220,6 +347,7 @@ def timing(args):
         med = S.median(us)
         r.update({"us_median": round(med, 3), "us_mean": round(S.mean(us), 3),
                   "tflops": round(2 * r["M"] * r["N"] * r["K"] / (med * 1e-6) / 1e12, 1),
+                  "tbps": round(unique_bytes(r) / (med * 1e-6) / 1e12, 3),
                   "gap_us": round(S.median(gaps), 1)})
         res.append(r)
     return res
@@ -250,11 +378,21 @@ def counters(args):
                                            (v["GRBM_GUI_ACTIVE"] / NUM_XCDS * NUM_SIMDS)), 4)
                 r["pmc_us"] = round(med(lambda v, t: t / 1e3), 2)
                 r["pmc_clock_ghz"] = round(med(lambda v, t: v["GRBM_GUI_ACTIVE"] / NUM_XCDS / t), 3)
-            else:
+            elif i == 1:
                 r["l2_hit"] = round(med(lambda v, t: v["TCC_HIT_sum"] / (v["TCC_HIT_sum"] + v["TCC_MISS_sum"])), 4)
                 r["l2_req_M"] = round(med(lambda v, t: (v["TCC_HIT_sum"] + v["TCC_MISS_sum"]) / 1e6), 3)
                 r["ea_rdreq_M"] = round(med(lambda v, t: v["TCC_EA0_RDREQ_sum"] / 1e6), 3)
                 r["ea_rdreq_dram_M"] = round(med(lambda v, t: v["TCC_EA0_RDREQ_DRAM_sum"] / 1e6), 3)
+            elif i == 2:
+                # Bytes the L2 read from beyond itself (MALL or HBM), by request size, against the
+                # bytes of A, B and C: over 1 means re-reads, under 1 data the L2 already held.
+                ea = med(lambda v, t: 32 * v["TCC_EA0_RDREQ_32B_sum"] + 64 * v["TCC_EA0_RDREQ_64B_sum"]
+                         + 128 * v["TCC_EA0_RDREQ_128B_sum"])
+                r["ea_rd_MB"] = round(ea / 1e6, 2)
+                r["ea_rd_over_unique"] = round(ea / unique_bytes(r), 3)
+            else:
+                # Reads 1.0 at one wave per SIMD (the pinned runs, 4 waves per CU): waves per SIMD.
+                r["waves_per_simd"] = round(med(lambda v, t: v["MeanOccupancyPerActiveCU"]), 2)
     return res
 
 
@@ -264,14 +402,11 @@ def clock_worker(args):
     sys.path.insert(0, A16)
     import bench  # noqa: F401
     import torch
-    from v9_tile import matmul_kernel as mk
-    import importlib
 
-    v9 = importlib.import_module("v9_beyond_hotloop.matmul_kernel").matmul
     out = []
     for p in args.points:
         tile, M, N, K = parse_point(p)
-        run = (lambda a, b, c: v9(a, b, c)) if tile == "v9" else (lambda a, b, c: mk.matmul(a, b, c, tile=tile))
+        run = runner(tile)
         a_l, b_l, c_l, copies = bench.gen_rotating_tensors(M, N, K, torch.bfloat16, args.rotating_mb)
         for i in range(copies):
             run(a_l[i], b_l[i], c_l[i])
@@ -335,9 +470,13 @@ def clock(args):
         r.pop("correct")
         lo = m["t0"] + 0.3 * (m["t1"] - m["t0"])
         win = [s for s in samples if lo <= s[0] <= m["t1"]]
-        r.update({"sustained_tflops": round(2 * r["M"] * r["N"] * r["K"] * m["launches"] / (m["t1"] - m["t0"]) / 1e12, 1),
-                  "sclk_ghz": round(S.mean(s[1] for s in win), 3), "power_w": round(S.mean(s[2] for s in win)),
-                  "samples": len(win)})
+        tflops = 2 * r["M"] * r["N"] * r["K"] * m["launches"] / (m["t1"] - m["t0"]) / 1e12
+        ghz = S.mean(s[1] for s in win)
+        util = tflops / (PEAK_TFLOPS_PER_GHZ * ghz)
+        r.update({"sustained_tflops": round(tflops, 1), "sclk_ghz": round(ghz, 3),
+                  "power_w": round(S.mean(s[2] for s in win)), "samples": len(win),
+                  "mfma_util": round(util, 4),
+                  "mfma_util_busy": round(util * 256 / busy_cus(r["tile"], r["tiles"]), 4)})
         res.append(r)
     return res
 
@@ -378,6 +517,10 @@ def att(args):
             print(f"{p}: process_json failed\n{pj.stderr[-2000:]}", file=sys.stderr)
             res.append(row)
             continue
+        if j["mfma efficiency"] == "N/A":  # process_json found no loop (e.g. LLVM rotated it)
+            print(f"{p}: process_json found no loop", flush=True)
+            res.append(row)
+            continue
         row.update({"att_mfma_eff": float(j["mfma efficiency"].rstrip("%")) / 100,
                     "mfma_in_loop": j["mfma_count_in_loop"],
                     "iter_cycles": round(j["average_iteration_duration"], 1),
@@ -390,6 +533,7 @@ def att(args):
 
 
 def main():
+    global ROTATING_MB, TMP
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
     ap.add_argument("mode", choices=["timing", "counters", "att", "clock", "worker", "clock_worker"])
     ap.add_argument("--points", required=True)
@@ -399,10 +543,11 @@ def main():
     ap.add_argument("--seconds", type=float, default=3.0)
     ap.add_argument("--graph", action="store_true", help="timing: launch from a HIP graph, back to back")
     ap.add_argument("--manifest")
+    ap.add_argument("--tmp", default=TMP, help="scratch directory (one per concurrent sweep)")
     args = ap.parse_args()
     args.points = POINTS.get(args.points) or [p for p in args.points.split(",") if p]
-    global ROTATING_MB
     ROTATING_MB = args.rotating_mb
+    TMP = args.tmp
     if args.mode in ("worker", "clock_worker"):
         (worker if args.mode == "worker" else clock_worker)(args)
         return

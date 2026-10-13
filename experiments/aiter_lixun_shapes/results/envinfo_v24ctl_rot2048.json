@@ -1,0 +1,37 @@
+{
+  "v20": {
+    "torch": "2.10.0+rocm7.2.4.git3d3aa833",
+    "hip": "7.2.53211",
+    "hip_device": "3",
+    "gpu_pci_bus": 21,
+    "gpu": "gfx950:sramecc+:xnack-",
+    "triton": "3.8.0 @ /home/jbowley/repos/triton_gfx950-tutorial-v2.2/python/triton",
+    "v20_sched": "aiter",
+    "llir_plugin": "/root/.aiter/llir_sched/ccf9a789cf3f11ab/libLlirSched.so",
+    "llir_opts": "{'llvm_fn_attrs': (('aiter-llir-sched', 'ccf9a789cf3f11ab'),)}",
+    "amdgcnas": null,
+    "v20_snapshot": "/home/jbowley/repos/gfx950-gluon-tutorials/experiments/aiter_lixun_shapes/v20_snapshot_v24ctl_rot2048/matmul_kernel.py",
+    "v20_snapshot_sha256": "07108e9456bf44c4",
+    "v20_p_slot_pad_elems": 0
+  },
+  "run": {
+    "headline": "capped",
+    "rotating_mb": 2048,
+    "rounds": 3,
+    "v20_snapshot_sha256": "07108e9456bf44c4",
+    "v20_snapshot_from": "v24",
+    "v20_worklog_latest": "## 2. Sweep F and the held-out AITER test (2026-10-09)",
+    "v20_live_sha256_at_start": "49ee85ccb783a3b5",
+    "v9_live_sha256_at_start": "7b4e246a4877a02c",
+    "pad512": false,
+    "pad_bytes": 0,
+    "realloc": true,
+    "realloc_workspace": false,
+    "streamk_p_pad": 0,
+    "v20_sched": "aiter",
+    "kernel": "v24",
+    "kernel_name": "v24_streamk_combined",
+    "v9_handoff": "v9_beyond_hotloop",
+    "hip_device": "3"
+  }
+}

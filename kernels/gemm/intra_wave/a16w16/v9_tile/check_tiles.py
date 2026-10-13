@@ -28,7 +28,10 @@
 
 B and C rows are padded as bench.py does; `--no-pad` uses contiguous tensors. A failure prints
 the largest error and where it is, which tells a layout bug (whole rows or columns wrong) from
-rounding.
+rounding. RAGGED_SHAPES have M, N or K that are not multiples of the tile: C is a window of a buffer
+256 rows and columns larger, filled with a sentinel, and a case also fails if anything outside the
+window changes. Tiles with a side of 32 or less (v9_tile_small) run SMALL_SHAPES and SHAPES, where
+the long side and K fit the tile.
 """
 
 import os
@@ -50,17 +53,53 @@ SHAPES = [
     (16384, 512, 8192),
     (512, 512, 256),
 ]
+RAGGED_SHAPES = [
+    (4000, 4000, 8192),
+    (1000, 2000, 4096),
+    (4096, 2032, 4096),
+    (130, 1040, 1024),
+    (4096, 4096, 8176),
+    (4000, 4000, 8080),
+    (1000, 2000, 4032),
+    (130, 1040, 400),
+]
+# For v9_tile_small (a tile side of 32 or less): skinny M, M not a multiple of the tile (130),
+# and the mirror images, which run as C^T = B^T A^T.
+SMALL_SHAPES = [
+    (1, 4096, 4096),
+    (2, 2048, 2048),
+    (4, 1024, 4096),
+    (8, 4096, 2048),
+    (16, 4096, 4096),
+    (32, 2048, 4096),
+    (130, 1024, 1024),
+    (512, 512, 1024),
+    (2048, 1024, 4096),
+    (4096, 1, 4096),
+    (2048, 8, 2048),
+    (1024, 16, 4096),
+    (1024, 130, 1024),
+]
+SENTINEL = 1234.0
 
 
 def check(tile, M, N, K, dtype, bias, pad):
-    BM, BN, BK, _ = mk.parse_tile(tile)
-    if M % BM or N % BN or K % BK or K // BK < 4:
+    BM, BN, BK, regions = mk.parse_tile(tile)
+    if mk.is_small(BM, BN, regions):
+        km, kn, bk, _, swap = mk.small_config(BM, BN, BK)
+        if (M if swap else N) % kn or K % (2 * bk):
+            return None
+    elif K % 16 or -(-K // (2 * BK)) * 2 * BK < 4 * BK:
         return None
     torch.manual_seed(0)
     a = torch.rand((M, K), device="cuda", dtype=dtype) - 0.5
     b = bench.make_b(N, K, dtype, pad, lambda t: t.uniform_(-0.5, 0.5))
-    c = bench.make_c(M, N, dtype, pad)
+    big = bench.make_c(M + 256, N + 256, dtype, pad)
+    big.fill_(SENTINEL)
+    c = big[:M, :N]
     c.fill_(float("nan"))
+    outside = torch.ones(big.shape, device="cuda", dtype=torch.bool)
+    outside[:M, :N] = False
     bias_n = (torch.rand((N,), device="cuda", dtype=dtype) - 0.5) if bias else None
     mk.matmul(a, b, c, bias=bias_n, tile=tile)
     ref = a.float() @ b.float()
@@ -70,6 +109,7 @@ def check(tile, M, N, K, dtype, bias, pad):
     err = (c.float() - ref).abs()
     rtol = 1e-2 if dtype == torch.bfloat16 else 0
     ok = bool(torch.isfinite(c).all()) and bool((err <= 1e-1 + rtol * ref.abs()).all())
+    ok = ok and bool((big[outside] == SENTINEL).all())
     worst = err.nan_to_num(float("inf")).argmax().item()
     return ok, err.nan_to_num(float("inf")).max().item(), divmod(worst, N)
 
@@ -81,7 +121,9 @@ def main():
     print("|---|---|---|---|---|---|---|")
     fails = 0
     for tile in tiles:
-        for M, N, K in SHAPES:
+        BM, BN, _, regions = mk.parse_tile(tile)
+        shapes = SMALL_SHAPES + SHAPES if mk.is_small(BM, BN, regions) else SHAPES + RAGGED_SHAPES
+        for M, N, K in shapes:
             for dtype in (torch.bfloat16, torch.float16):
                 for bias in (False, True):
                     r = check(tile, M, N, K, dtype, bias, pad)

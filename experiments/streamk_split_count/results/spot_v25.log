@@ -1,0 +1,49 @@
+[1] sweep F 4096x8192x16384 S=2 v24 rs n=64: stored 364.2, v24 364.3, v25 364.2
+[2] sweep F 4096x8192x16384 S=8 v24 rs n=4: stored 425.5, v24 426.9, v25 426.2
+[3] sweep F 4096x8192x8192 S=38 v24 rs n=6: stored 222.8, v24 222.7, v25 221.9
+[4] sweep F 4096x8192x16384 S=2 v24 owner n=64: stored 518.6, v24 517.6, v25 517.3
+[5] sweep F 4096x8192x16384 S=8 v24 owner n=4: stored 430.4, v24 430.2, v25 429.8
+[6] sweep F 4096x8192x8192 S=38 v24 owner n=6: stored 228.8, v24 229.8, v25 229.0
+[7] sweep F 4096x8192x2048 S=6 v24 two_tile n=-: stored 71.4, v24 71.9, v25 71.9
+[8] sweep F 4096x8192x512 S=96 v24 two_tile n=-: stored 48.1, v24 48.1, v25 48.5
+[9] sweep F 4096x8192x8192 S=192 v24 spread n=-: stored 321.6, v24 321.5, v25 321.3
+[10] sweep F 4096x8192x32768 S=240 v24 spread n=-: stored 1343.8, v24 1340.8, v25 1339.1
+[11] AITER 512x6144x2048 S=48 v24 capped n=-: stored 36.1, v24 36.1, v25 36.3
+[12] AITER 4096x14336x8192 S=128 v24 capped n=-: stored 610.7, v24 611.6, v25 611.4
+[13] AITER 2048x5120x3200 S=160 v24 capped n=-: stored 63.8, v24 63.9, v25 63.8
+[14] AITER 1024x1024x5120 S=16 v24 rs n=3: stored 49.7, v24 49.8, v25 49.6
+[15] AITER 512x5120x3200 S=40 v24 rs n=1: stored 63.8, v24 63.7, v25 63.6
+[16] AITER 2048x10240x8192 S=64 v24 rs n=1: stored 294.1, v24 294.4, v25 293.4
+[17] AITER 512x16384x8192 S=128 v24 rs n=2: stored 121.9, v24 120.3, v25 121.8
+[18] AITER 1280x1024x4096 S=20 v24 owner n=2: stored 51.4, v24 51.0, v25 51.6
+[19] AITER 512x7168x8192 S=56 v24 owner n=2: stored 86.4, v24 85.6, v25 86.0
+[20] AITER 4096x6144x4608 S=128 v24 owner n=1: stored 179.7, v24 179.0, v25 179.4
+# v25 against v24 on stored cases (spot check)
+
+rocprof kernel times, us (1000 launches over rotating inputs, median), HIP device 0. Sweep F cases: 4096x8192xK, GEMM_TILE_LIMIT = 256 + S, padded B and C; AITER cases: contiguous, no limit. `stored`: the v24 row in sweep_f.jsonl / test.jsonl; v24 and v25 timed now, alternating which goes first. Edge flags unset (all shapes aligned).
+
+| source | shape | S | config | n | stored v24 | v24 now | v25 now | v25 / v24 now | v25 / stored |
+|---|---|---|---|---|---|---|---|---|---|
+| sweep F | 4096x8192x16384 | 2 | v24 rs | 64 | 364.2 | 364.3 | 364.2 | 1.000 | 1.000 |
+| sweep F | 4096x8192x16384 | 8 | v24 rs | 4 | 425.5 | 426.9 | 426.2 | 0.998 | 1.002 |
+| sweep F | 4096x8192x8192 | 38 | v24 rs | 6 | 222.8 | 222.7 | 221.9 | 0.996 | 0.996 |
+| sweep F | 4096x8192x16384 | 2 | v24 owner | 64 | 518.6 | 517.6 | 517.3 | 0.999 | 0.997 |
+| sweep F | 4096x8192x16384 | 8 | v24 owner | 4 | 430.4 | 430.2 | 429.8 | 0.999 | 0.999 |
+| sweep F | 4096x8192x8192 | 38 | v24 owner | 6 | 228.8 | 229.8 | 229.0 | 0.997 | 1.001 |
+| sweep F | 4096x8192x2048 | 6 | v24 two_tile | - | 71.4 | 71.9 | 71.9 | 1.000 | 1.008 |
+| sweep F | 4096x8192x512 | 96 | v24 two_tile | - | 48.1 | 48.1 | 48.5 | 1.007 | 1.007 |
+| sweep F | 4096x8192x8192 | 192 | v24 spread | - | 321.6 | 321.5 | 321.3 | 0.999 | 0.999 |
+| sweep F | 4096x8192x32768 | 240 | v24 spread | - | 1343.8 | 1340.8 | 1339.1 | 0.999 | 0.996 |
+| AITER | 512x6144x2048 | 48 | v24 capped | - | 36.1 | 36.1 | 36.3 | 1.007 | 1.006 |
+| AITER | 4096x14336x8192 | 128 | v24 capped | - | 610.7 | 611.6 | 611.4 | 1.000 | 1.001 |
+| AITER | 2048x5120x3200 | 160 | v24 capped | - | 63.8 | 63.9 | 63.8 | 0.999 | 1.001 |
+| AITER | 1024x1024x5120 | 16 | v24 rs | 3 | 49.7 | 49.8 | 49.6 | 0.997 | 0.999 |
+| AITER | 512x5120x3200 | 40 | v24 rs | 1 | 63.8 | 63.7 | 63.6 | 0.998 | 0.997 |
+| AITER | 2048x10240x8192 | 64 | v24 rs | 1 | 294.1 | 294.4 | 293.4 | 0.996 | 0.998 |
+| AITER | 512x16384x8192 | 128 | v24 rs | 2 | 121.9 | 120.3 | 121.8 | 1.012 | 0.999 |
+| AITER | 1280x1024x4096 | 20 | v24 owner | 2 | 51.4 | 51.0 | 51.6 | 1.011 | 1.005 |
+| AITER | 512x7168x8192 | 56 | v24 owner | 2 | 86.4 | 85.6 | 86.0 | 1.005 | 0.995 |
+| AITER | 4096x6144x4608 | 128 | v24 owner | 1 | 179.7 | 179.0 | 179.4 | 1.002 | 0.998 |
+
+v25 / v24 timed now: median 0.999, range 0.996-1.012, 18 of 20 within 1%.
+

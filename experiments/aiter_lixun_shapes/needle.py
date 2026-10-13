@@ -16,6 +16,8 @@ from pad_report import best_fields, times
 from run_v20_vs_aiter import fnum, key, pct, read_rows
 
 TIE = 1.0
+# --name / --ctl-name: the labels of the run's kernel and of the control's.
+NAME, CTL = "v24", "v20"
 
 
 def med(xs):
@@ -57,7 +59,7 @@ def headline(rows, label):
 def three_way(rows, state):
     rs = list(rows.values())
     out = []
-    for name, col in (("v24 (capped)", "_v20"), ("AITER v9", "_v9"), ("v24 data-parallel (forced)", "_dp")):
+    for name, col in ((f"{NAME} (capped)", "_v20"), ("AITER v9", "_v9"), (f"{NAME} data-parallel (forced)", "_dp")):
         f, w, s, m = counts([pct(r[col], r["_best"]) for r in rs])
         same = [r for r in rs if r["_best_tile"] == "256x256"]
         sb = sum(pct(r[col], r["_best"]) < -TIE for r in same)
@@ -86,8 +88,17 @@ def by_path(rows, base, state):
     return out
 
 
+def kind(r):
+    """The configuration's kind, without its split count."""
+    if str(r.get("v20_v9_delegated")) == "True":
+        return "handed to v9"
+    lab = r["v20_label"]
+    return "reduce-scatter" if "reduce-scatter" in lab else "owner" if "owner" in lab else lab
+
+
 def control(rows, ctl, state):
-    """v24 against v20 timed on the same card (a --v20-only run), per path and by S and k-steps."""
+    """The run's kernel against the control's, timed on the same card (a --v20-only run): per path,
+    and by how the configuration changed between the two (the host rules may differ)."""
     out = []
     groups = {}
     for k, r in rows.items():
@@ -100,12 +111,19 @@ def control(rows, ctl, state):
         p = path(r)
         keys = ["All shapes", p]
         if p == "Stream-K split":
-            keys.append("Split: " + ("reduce-scatter" if "reduce-scatter" in r["v20_label"] else
-                                     "owner" if "owner" in r["v20_label"] else r["v20_label"]))
+            keys.append("Split: " + kind(r))
+        if r["v20_label"] == c["v20_label"] and kind(r) == kind(c):
+            keys.append("Same configuration: " + kind(r))
+        elif kind(r) == kind(c):
+            keys.append(f"Changed: {kind(c)}, another split count")
+        else:
+            keys.append(f"Changed: {kind(c)} -> {kind(r)}")
         for kk in keys:
             groups.setdefault(kk, []).append((g, gdp))
-    for p in ("All shapes", "Handed to v9", "Stream-K split", "Split: reduce-scatter", "Split: owner", "Split: spread",
-              "Persistent data-parallel"):
+    order = ["All shapes", "Handed to v9", "Stream-K split", "Split: reduce-scatter", "Split: owner", "Split: spread",
+             "Persistent data-parallel"]
+    order += sorted(k for k in groups if k.startswith("Same")) + sorted(k for k in groups if k.startswith("Changed"))
+    for p in order:
         gs = groups.get(p, [])
         if not gs:
             continue
@@ -125,8 +143,8 @@ def same_tile_behind(rows, other, state, other_state):
     rs = sorted((r for r in rows.values() if r["_best_tile"] == "256x256" and r["_gap"] < -TIE), key=lambda r: r["_gap"])
     ties = sum(1 for r in rows.values() if r["_best_tile"] == "256x256" and -TIE <= r["_gap"] < 0)
     L = [f"{state}: {len(rs)} behind by more than 1%, {ties} behind by less (ties)", "",
-         "| # | Shape (MxNxK) | Output tiles | Full waves | S | k-steps | Best library | v24 config | Best TFLOPS | "
-         f"v9 TFLOPS | v24 TFLOPS | v24 vs best | v24 vs v9 | {other_state}: vs best |",
+         f"| # | Shape (MxNxK) | Output tiles | Full waves | S | k-steps | Best library | {NAME} config | Best TFLOPS | "
+         f"v9 TFLOPS | {NAME} TFLOPS | {NAME} vs best | {NAME} vs v9 | {other_state}: vs best |",
          "|---:|---|---:|---:|---:|---:|---|---|---:|---:|---:|---:|---:|---:|"]
     for i, r in enumerate(rs, 1):
         o = other.get(key(r["M"], r["N"], r["K"], r["out"]))
@@ -153,7 +171,7 @@ def handoff(rows, state):
 def spread(rows, state):
     sp = [fnum(r["v20_spread"]) for r in rows.values()]
     sp9 = [fnum(r["v9_spread"]) for r in rows.values()]
-    return (f"{state}: v24 median spread {med(sp):.2f}%, {sum(x > 2 for x in sp if x == x)} shapes over 2%; "
+    return (f"{state}: {NAME} median spread {med(sp):.2f}%, {sum(x > 2 for x in sp if x == x)} shapes over 2%; "
             f"v9 {med(sp9):.2f}%, {sum(x > 2 for x in sp9 if x == x)} over 2%")
 
 
@@ -162,7 +180,7 @@ def correctness(rows, state):
            or str(r.get("v20_dp_ok")) == "False" or str(r["v20_flags_left"]) != "0"]
     pick_bad = [r for r in rows.values() if str(r["pick_ok"]) != "True"]
     notes = [r for r in rows.values() if r["note"]]
-    return f"{state}: {len(bad)} shapes with a v24/v9/hipBLASLt/dp failure or flag left; AITER pick outside tolerance on {len(pick_bad)}; notes on {len(notes)}"
+    return f"{state}: {len(bad)} shapes with a {NAME}/v9/hipBLASLt/dp failure or flag left; AITER pick outside tolerance on {len(pick_bad)}; notes on {len(notes)}"
 
 
 def main():
@@ -173,12 +191,17 @@ def main():
     p.add_argument("--base-cold", required=True)
     p.add_argument("--ctl-warm", default=None, help="a --v20-only run of the baseline kernel on this card")
     p.add_argument("--ctl-cold", default=None)
+    p.add_argument("--name", default="v24", help="the run's kernel, for labels")
+    p.add_argument("--ctl-name", default="v20", help="the control's kernel, for labels")
     a = p.parse_args()
+    global NAME, CTL
+    NAME, CTL = a.name, a.ctl_name
     W, C = enrich(read_rows(a.warm)), enrich(read_rows(a.cold))
     BW, BC = enrich(read_rows(a.base_warm)), enrich(read_rows(a.base_cold))
     if a.ctl_warm:
-        print("## v24 against v20 on the same card (this / control - 1)\n")
-        print("| Path | Caches | Shapes | v24 vs v20: median | faster | within 1% | slower | data-parallel (forced) vs v20's |")
+        print(f"## {NAME} against {CTL} on the same card (this / control - 1)\n")
+        print(f"| Path | Caches | Shapes | {NAME} vs {CTL}: median | faster | within 1% | slower | "
+              f"data-parallel (forced) vs {CTL}'s |")
         lines = control(W, {key(r["M"], r["N"], r["K"], r["out"]): r for r in read_rows(a.ctl_warm)}, "warm")
         if a.ctl_cold:
             lines += control(C, {key(r["M"], r["N"], r["K"], r["out"]): r for r in read_rows(a.ctl_cold)}, "cold")
@@ -193,12 +216,12 @@ def main():
     print("| Caches | Kernel | faster | within 1% | slower | median | same-tile behind |")
     print("\n".join(three_way(W, "warm") + three_way(C, "cold")))
     print("\n## Per path against the baseline (this / base - 1, median)\n")
-    print("| Path | Caches | Shapes | v24 vs v20 | AITER v9 (card) | v24 corrected by v9 | dp | hipBLASLt | AITER pick |")
+    print(f"| Path | Caches | Shapes | {NAME} vs base | AITER v9 (card) | {NAME} corrected by v9 | dp | hipBLASLt | AITER pick |")
     print("\n".join(by_path(W, BW, "warm") + by_path(C, BC, "cold")))
     for st, R, B in (("warm", W, BW), ("cold", C, BC)):
         ah, be = flips(R, B)
         v9f = counts([pct(r["_v20"], r["_v9"]) for r in R.values()])
-        print(f"\n{st}: behind->ahead {ah}, ahead->behind {be}; v24 vs v9: {v9f[0]} faster, {v9f[2]} slower, median {v9f[3]:+.1f}%")
+        print(f"\n{st}: behind->ahead {ah}, ahead->behind {be}; {NAME} vs v9: {v9f[0]} faster, {v9f[2]} slower, median {v9f[3]:+.1f}%")
     print("\n## Same-tile behind\n")
     print("\n".join(same_tile_behind(W, C, "Warm", "Cold")))
     print()

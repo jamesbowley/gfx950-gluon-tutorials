@@ -138,7 +138,7 @@ def worker(case):
     named = [f for f in files if os.path.basename(f) == f"{version_dir}.amdgcn"] or files
     regs = parse_amdgcn(named[0]) if len(named) == 1 else {"error": f"{len(named)} .amdgcn files"}
 
-    print(RESULT_TAG + json.dumps({"correct": correct, "tflops": tflops, **regs}), flush=True)
+    print(RESULT_TAG + json.dumps({"correct": correct, "tflops": tflops, "us": ms * 1e3, **regs}), flush=True)
 
 
 def run_case(case):
@@ -161,12 +161,12 @@ def run_case(case):
 def fmt_row(shape, version, r, base_tflops):
     shape_s = "x".join(str(x) for x in shape)
     if "tflops" not in r:
-        return f"| {shape_s} | v{version} | error: {r.get('error', '?')} | | | | | | | |"
+        return f"| {shape_s} | v{version} | error: {r.get('error', '?')} | | | | | | | | |"
     delta = "" if base_tflops is None else f"{100 * (r['tflops'] / base_tflops - 1):+.1f}%"
     s = r.get("spill_ops", {})
     spill_ops = f"{s.get('kloop', '?')}/{s.get('tile_loop', '?')}/{s.get('outside', '?')}"
     return (
-        f"| {shape_s} | v{version} | {'yes' if r['correct'] else 'NO'} | {r['tflops']:.1f} | "
+        f"| {shape_s} | v{version} | {'yes' if r['correct'] else 'NO'} | {r['us']:.1f} | {r['tflops']:.1f} | "
         f"{delta} | {r.get('vgpr_count', '?')} | {r.get('agpr_count', '?')} | "
         f"{r.get('vgpr_spill', '?')} | {r.get('sgpr_spill', '?')} | {spill_ops} |"
     )
@@ -174,7 +174,7 @@ def fmt_row(shape, version, r, base_tflops):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--versions", type=int, nargs="+", default=[13, 14])
+    parser.add_argument("--versions", type=lambda s: int(s) if s.isdigit() else s, nargs="+", default=[13, 14])
     parser.add_argument("--extra", nargs="*", default=[], help="Extra MxNxK shapes")
     parser.add_argument("--only-extra", action="store_true", help="Skip the fixed regression shapes")
     parser.add_argument(
@@ -206,8 +206,8 @@ def main():
         f"dtype={args.dtype} bias={args.bias} "
         f"HIP_VISIBLE_DEVICES={os.environ.get('HIP_VISIBLE_DEVICES', 'unset')}\n"
     )
-    print("| shape (MxNxK) | version | correct | TFLOPS | vs first | VGPR | AGPR | VGPR spill | SGPR spill | scratch ops (kloop/tile/other) |")
-    print("|---|---|---|---|---|---|---|---|---|---|")
+    print("| shape (MxNxK) | version | correct | us | TFLOPS | vs first | VGPR | AGPR | VGPR spill | SGPR spill | scratch ops (kloop/tile/other) |")
+    print("|---|---|---|---|---|---|---|---|---|---|---|")
     for shape in shapes:
         base = None
         for i, version in enumerate(args.versions):

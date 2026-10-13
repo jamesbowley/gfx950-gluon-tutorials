@@ -6,6 +6,10 @@
 #   run_f.sh start [stages]   wait until GPU 0 is idle, then each stage in turn (default: f):
 #                             f       sweep F (sweep.py f), then sweep.py f_report
 #                             noise   sweep F's second round (sweep.py f_noise)
+#                             g       sweep G (sweep.py g, no full wave), then sweep.py g_report
+#                             h       sweep H (sweep.py h, S > 128, two rounds), then sweep.py h_report
+#                             f2t     sweep F's two-tile cells on v26 (sweep.py f2t), then sweep.py f2t_report
+#                             ragged  spread or dp for S > 128 on ragged shapes (ragged_spread.py run, then report)
 #                             aiter   the held-out AITER test (../streamk_aiter_test/test.py run, then report)
 #   run_f.sh status    stage, progress, the last log lines
 #   run_f.sh stop      kill the driver and everything it started
@@ -106,6 +110,10 @@ case "${1:-}" in
             case "$stage" in
                 f) count="sweep.py todo f"; step="sweep.py f"; report="sweep.py f_report" ;;
                 noise) count="sweep.py todo f_noise"; step="sweep.py f_noise"; report="" ;;
+                g) count="sweep.py todo g"; step="sweep.py g"; report="sweep.py g_report" ;;
+                h) count="sweep.py todo h"; step="sweep.py h"; report="sweep.py h_report" ;;
+                f2t) count="sweep.py todo f2t"; step="sweep.py f2t"; report="sweep.py f2t_report" ;;
+                ragged) count="ragged_spread.py todo"; step="ragged_spread.py run"; report="ragged_spread.py report" ;;
                 aiter) count="../streamk_aiter_test/test.py todo"; step="../streamk_aiter_test/test.py run"
                        report="../streamk_aiter_test/test.py report" ;;
                 *) echo "unknown stage $stage"; exit 1 ;;
@@ -133,7 +141,8 @@ case "${1:-}" in
         if alive; then echo "running (pid $(cat "$RES/run_f.pid"))"; else echo "not running"; fi
         echo "stage: $(cat "$RES/run_f.stage" 2>/dev/null)"
         echo "rows: sweep F $(cat "$RES/sweep_f.jsonl" 2>/dev/null | wc -l), round 2 $(cat "$RES/sweep_f_round2.jsonl" \
-            2>/dev/null | wc -l), AITER test $(cat "$HERE/../streamk_aiter_test/results/test.jsonl" 2>/dev/null | wc -l)"
+            2>/dev/null | wc -l), sweep G $(cat "$RES/sweep_g.jsonl" 2>/dev/null | wc -l), sweep H $(cat \
+            "$RES/sweep_h.jsonl" 2>/dev/null | wc -l), two-tile $(cat "$RES/sweep_f2t.jsonl" 2>/dev/null | wc -l), AITER test $(cat "$HERE/../streamk_aiter_test/results/test.jsonl" 2>/dev/null | wc -l)"
         tail -n 3 "$LOG" 2>/dev/null
         ;;
     stop)

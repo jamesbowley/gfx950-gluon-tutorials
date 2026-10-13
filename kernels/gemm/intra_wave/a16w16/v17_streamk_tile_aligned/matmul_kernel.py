@@ -1059,6 +1059,9 @@ def matmul(a, b, c=None, bias=None):
     K, N = b.shape
     assert bias is None or (bias.shape == (N,) and bias.is_contiguous()), "bias must be contiguous (N,)"
     BLOCK_M, BLOCK_N, BLOCK_K = 256, 256, 64
+    # The kernel has no edge masks: a ragged M or N would read past A / B and write past C.
+    # v25_streamk_ragged_mn, v9_ragged and v9_tile handle them.
+    assert M % BLOCK_M == 0 and N % BLOCK_N == 0, f"{M}x{N} is not a multiple of the {BLOCK_M}x{BLOCK_N} tile"
     num_warps = 4
     if c is None:
         c = torch.empty((M, N), device=a.device, dtype=a.dtype)
