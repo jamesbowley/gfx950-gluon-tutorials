@@ -159,8 +159,8 @@ def summarize(tile):
 
 def main():
     tiles = sys.argv[1].split(",")
-    stack = ("llir" if os.environ.get("LLVM_PASS_PLUGIN_PATH") else "base") + (
-        "+amdgcnas" if os.environ.get("TRITON_AMDGCNAS_PLUGIN") else "")
+    # matmul() always launches with schedule_hint="mfma-schedule" (the "llir" config since v3.0).
+    stack = "llir" + ("+amdgcnas" if os.environ.get("TRITON_AMDGCNAS_PLUGIN") else "")
     print(f"Stack: `{stack}`, K = 8192, one loop iteration = two k-steps.\n")
     print("| tile | waves | VGPRs | AGPRs | spills | LDS KB | WGs per CU | loop insts | MFMAs | buffer loads | "
           "ds_reads | s_waitcnt | s_barrier | s_nop | v_accvgpr | scratch | longest non-MFMA run | "

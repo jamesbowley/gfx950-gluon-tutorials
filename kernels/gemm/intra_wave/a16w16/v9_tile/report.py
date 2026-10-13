@@ -37,11 +37,14 @@ Derived columns:
 """
 
 import csv
+import glob
 import os
+import re
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 RES = os.path.join(HERE, "results")
+LAYOUT_ATT_DIR = os.path.join(HERE, "tmp", "layout_ab", "sweep_att")
 PEAK_PER_GHZ = 1048.576  # TFLOPS per GHz
 HBM_TBS = 8.0
 
@@ -54,8 +57,10 @@ def load(name):
 
 
 def dims(tile):
-    d = [int(x) for x in tile.removesuffix("r2").split("x")] if tile != "v9" else [256, 256]
-    return d[0], d[1], d[2] if len(d) > 2 else 64
+    if tile == "v9":
+        return 256, 256, 64
+    d = [int(x) for x in re.match(r"^(\d+)x(\d+)(?:x(\d+))?", tile).groups(default="64")]
+    return d[0], d[1], d[2]
 
 
 def f(x, fmt="{:.0f}"):
@@ -109,8 +114,53 @@ def table(rows, ref_tile="256x256"):
               f"{r['pro'] or '-'} / {r['epi'] or '-'} | {f(r['l2'], '{:.1%}')} | {f(r.get('bns'), '{:.0f}')} |")
 
 
+def att_stall_split(tile, M, N, K):
+    """att_stalls.analyze on a LAYOUT_AB point's ATT run: per loop iteration and wave, the stall cycles
+    on vmcnt, on buffer_load issue, on lgkmcnt + ds_read, on s_barrier, and the cycles issued."""
+    import att_stalls
+
+    d = os.path.join(LAYOUT_ATT_DIR, f"{tile}_{M}x{N}x{K}")
+    if not glob.glob(os.path.join(d, "**", "ui_*"), recursive=True):
+        return None
+    r = att_stalls.analyze(d)
+    s = {k: v[1] for k, v in r["by"].items()}
+    return (s.get("s_waitcnt vmcnt", 0) + s.get("s_waitcnt vmcnt+lgkmcnt", 0), s.get("buffer_load", 0),
+            s.get("s_waitcnt lgkmcnt", 0) + s.get("ds_read", 0), s.get("s_barrier", 0), r["total_latency"])
+
+
+def layout_table(prefix="layout_ab"):
+    """WORKLOG §15's A/B, from its CSVs: each tile with the former hand-built layouts (no suffix) and
+    with aiter's derived ones ("d", now the only layouts), side by side."""
+    rows = {(r["tile"], r["M"], r["N"], r["K"]): r for r in merged(prefix)}
+    p = load(f"{prefix}_counters.csv")
+    print("| tile | M x N x K | layout | TFLOPS (back to back) | d / ours | clock GHz | power W | ATT loop MFMA eff | "
+          "stalls per iteration: vmcnt / buffer_load / lgkm+ds_read / barrier (of issued) | LDS conflict cycles "
+          "per access | LDS conflict, % of CU cycles | L2 hit |")
+    print("|" + "---|" * 12)
+    for (tile, M, N, K), r in rows.items():
+        if tile.endswith("d"):
+            continue
+        base = tile.removesuffix("h")
+        pair = (base + "d", M, N, K) in rows
+        for t, name in ((tile, "ours"), (base + "d", "aiter (d)")) if pair else ((tile, "both (identical)"),):
+            x = rows.get((t, M, N, K), {})
+            c = p.get((t, M, N, K), {})
+            st = att_stall_split(t, M, N, K)
+            sp = f"{st[0]:.0f} / {st[1]:.0f} / {st[2]:.0f} / {st[3]:.0f} ({st[4]:.0f})" if st else "-"
+            rel = "-"
+            if name == "aiter (d)" and x.get("b2b") and r.get("b2b"):
+                rel = f"{float(x['b2b']) / float(r['b2b']):.3f}"
+            print(f"| {base} | {M}x{N}x{K} | {name} | {f(x.get('b2b'))} | {rel} | {f(x.get('sclk'), '{:.2f}')} | "
+                  f"{f(x.get('power'))} | {f(x.get('att'), '{:.1%}')} | {sp} | "
+                  f"{f(c.get('lds_conflict_per_access'), '{:.3f}')} | {f(c.get('lds_conflict_pct'), '{:.1%}')} | "
+                  f"{f(x.get('l2'), '{:.1%}')} |")
+
+
 def main():
     prefix = sys.argv[1]
+    if prefix == "layout_ab":
+        layout_table(prefix)
+        return
     table(merged(prefix))
 
 

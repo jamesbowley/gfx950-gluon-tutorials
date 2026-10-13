@@ -1,7 +1,9 @@
 # v9_tile: what limits a tile, worked through by hand
 
 v9_tile is [v9_beyond_hotloop](../v9_beyond_hotloop/README.md) with the tile size as a parameter
-(`bench_ext.py --version 9t --tile 256x128`). This page works through, with numbers, why smaller tiles
+(`bench_ext.py --version 9t --tile 256x128`). Its LDS layouts are derived from the tile as aiter's port
+does it, from Triton's `compute_efficient_padded_shared_layout` (WORKLOG §15). At 256x256x64 they are
+v9's. This page works through, with numbers, why smaller tiles
 lose MFMA efficiency on MI355X (gfx950), and what limits each tile. The measurements behind it are in
 [WORKLOG.md](WORKLOG.md).
 
@@ -235,6 +237,7 @@ sustains. It can only ask for that much because 80% comes from L2.
 | more bytes in flight (`Q`) | raises `Q/L` | fixed in hardware |
 | split-K / stream-K | more busy CUs for the same tiles | trades a fixup for the idle CUs (WORKLOG §8) |
 | GROUP_SIZE_M, small tiles | changes `L` through placement in L2 | the footprint rule leaves 20-26% on 16x256 and 16x64 (WORKLOG §14.6) |
+| conflict-free LDS layout (aiter's derived layout, now the only one) | none: it shortens LDS reads, not the window | the former hand-built layout had 2-way bank conflicts at side 128 and BK = 128; removing them gave -2% to +4% (WORKLOG §15) |
 
 The interactive canvas *Tile vs TCP window* (in the Cursor canvases directory) animates the slots,
 the requests and the MFMA lane for any tile, clock, `L` and `Q`. It uses the same formulas.

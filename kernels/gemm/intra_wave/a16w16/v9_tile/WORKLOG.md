@@ -33,6 +33,9 @@ This round has no stream-K; shapes with M or N of 256 or less are left for later
   bandwidth rises 30-45%: 256x128's loop goes from 59% to 89%, 128x128's from 44% to 66% (§9).
 - **A shared-plugin bug the tiles exposed.** The `amdgcnas` loop-invariant hoist could corrupt a
   live register (§2). It is fixed, and v9-v13's output is unchanged.
+- **aiter's derived layouts (§15).** Ours has two-way LDS bank conflicts at a tile side of 128 and at
+  BK = 128, and aiter's has none. Removing them moves throughput by -2% to +4%, because the window binds.
+  v9_tile now uses aiter's layouts for every tile.
 
 ## 1. Predictions (written before any measurement)
 
@@ -1190,3 +1193,194 @@ Memory-bound (M = 1-8, N = 8192-16384, K = 8192; BN = 64 / 256), TB/s:
   shuffles and LDS-fed operands cost more than any instruction choice.
 - **waves_per_eu:** the cleanest way to pin occupancy, so it replaces the LDS pad.
 - **16x16:** one-wave workgroups at one wave per SIMD, not replicated warps.
+
+## 15. aiter's derived layouts against ours (2026-10-13)
+
+aiter's draft gfx950 Gluon GEMM (`upstream/llirSched_integration`, 72ef58a89, "tiles from 64x64 to 256x256")
+is v9's four-quadrant kernel with tiles of 64, 128 and 256 per side, like v9_tile. It builds its layouts
+differently. The shared layout comes from Triton's `compute_efficient_padded_shared_layout` for the MFMA
+operand that reads it. The global-load layout is cut from that layout's offset bases: 3 register bases
+(16 B per lane), 6 lane bases, 2 warp bases, the rest registers (`compute_gload_layout`). v9_tile writes
+both from one hand-built rule (`_half_tile_bases`: the top three row bits on lanes, rows 1 and 2 on warps).
+
+For the A/B the tile spec took a trailing `d` (aiter's layouts) next to the hand-built default; the
+results are in `results/layout_ab_*.csv`, and `python v9_tile/report.py layout_ab` prints the table.
+Since then the derived layouts are v9_tile's only layouts and the suffix is gone (§15.5).
+
+**The stack moved.** This section runs on the `gfx950-tutorial-v3.0` stack ([env.sh](env.sh)): the
+installed Triton (a build with 3b0c7f081), its MFMA scheduler through `schedule_hint="mfma-schedule"`, no
+llirSched plugin. Sections 1-14 ran on Triton v2.2 + llirSched + amdgcnas, which no longer works: the
+re-pin brought main's amdgcnas, and on v2.2's output it breaks even v9_beyond_hotloop. Main's amdgcnas
+also lacks the fixes of §2 and §14.3, and it miscompiles our hand-built layouts on v3.0:
+[check_tiles_v30.md](results/check_tiles_v30.md) has 86 failures in 312 cases (256x128 and 128x256 with
+bias, 128x128x128 everywhere, some ragged 128x256), all correct with amdgcnas off. The derived layouts pass
+all 312 with it ([check_tiles_derived.md](results/check_tiles_derived.md)). So the measurements below use
+the scheduler alone, and one timing pass with amdgcnas is kept for comparison.
+
+**In short:**
+
+- **Our layout has two-way LDS bank conflicts wherever it differs from aiter's.** That is every tile with
+  a 64-row half (side 128) and every BK = 128 tile. Every `ds_read_b128` of those operands takes two
+  passes. aiter's layout has none.
+- **Removing them barely moves throughput.** The LDS read stalls halve, and the waves then stall issuing
+  `buffer_load`s instead. These tiles are bound by the bytes in flight per CU (§4), not by LDS reads.
+  - 128x128x128 gains 1-4% in every run.
+  - 128x128 gains up to 1.3%, mixed at K = 4096.
+  - 256x128 and 128x256 are unchanged (±0.6%).
+  - 64x64x128 loses 0.4-2.3% in every run.
+- **v9_tile now has one layout path, aiter's,** for every tile with sides of 64 or more and for
+  v9_tile_2r (§15.5). The hand-built layouts are gone; every v9_tile number before this section used
+  them.
+- **aiter's derivation stops at 32 rows**, a tile side of 64. Triton returns no layout below that, so
+  v9_tile_small keeps its swizzle (§14.2).
+
+### 15.1 The two layouts
+
+Both use the same padding (16 elements after every 512, so each wave's 1 KB load lands contiguously) and
+the same split of the offset bases into registers, lanes and warps. Only the order of the bases differs.
+Rows of A, in LDS address order after the first 64 K elements (B's are the same, transposed):
+
+| half-tile | tiles | ours | aiter (derived) |
+|---|---|---|---|
+| 128 rows, BK 64 | side 256 | identical | |
+| 32 rows, BK 64 | side 64 | identical | |
+| 64 rows, BK 64 | side 128 | lanes: rows 8, 16, 32; then rows 1, 2, 4 | lanes: rows 4, 8, 16; then rows 1, 2, 32 |
+| 64 rows, BK 128 | 128x128x128 | lanes: rows 8, 16, 32; then K 64, rows 1, 2, 4 | lanes: K 64, rows 16, 32; then rows 1, 2, 4, 8 |
+| 32 rows, BK 128 | 64x64x128 | lanes: rows 4, 8, 16; then K 64, rows 1, 2 | lanes: K 64, rows 8, 16; then rows 1, 2, 4 |
+| 128 rows, BK 128 | side 256 at BK 128 | lanes: rows 16, 32, 64; then K 64, rows 1, 2, 4, 8 | lanes: K 64, rows 16, 32; then rows 1, 2, 4, 8, 64 |
+
+At BK = 128, aiter's wave covers 4 rows x 256 B per load instruction, and ours covers 8 rows x 128 B.
+
+The compiled loops are the same instruction for instruction ([asm_derived.md](results/asm_derived.md)):
+the same MFMAs, loads, waits and spacing. Only the `ds_read` offsets, the load offsets and 4 VGPRs differ.
+
+### 15.2 Gates
+
+- **Equivalence:** where the bases are equal, the option reproduces our layout. `256x256d` and `64x64d`
+  compile byte-identical to `256x256` and `64x64`.
+- **Correctness:** above. All `d` tiles pass with and without bias, ragged M, N and K included.
+- **After the default switch:** `128x128x128` compiles byte-identical to `128x128x128d`, and `256x256` and
+  `128x128` are unchanged. v9_tile 256x256's instruction stream is identical to v9_beyond_hotloop's (2339
+  instructions; only the kernel name and labels differ).
+
+### 15.3 LDS bank conflicts
+
+`SQ_LDS_BANK_CONFLICT` and `SQ_LDS_IDX_ACTIVE` (counter set 4 in [sweep.py](sweep.py)), K = 8192:
+
+| tile | ours: conflict cycles per access | ours: LDS busy, % of CU cycles | aiter: conflict | aiter: LDS busy |
+|---|---|---|---|---|
+| 128x128 | 0.99 | 40% | 0 | 20% |
+| 128x128x128 | 0.99 | 43% | 0 | 22% |
+| 256x128 | 0.33 | 30% | 0 | 22% |
+| 128x256 | 0.33 | 30% | 0 | 23% |
+| 64x64x128 | 0.99 | 64% | 0 | 31% |
+| 256x256, 64x64 (identical code) | 0 | 20%, 29% | | |
+
+0.99 means every LDS access takes two passes. 256x128 and 128x256 have one 64-row operand and one
+128-row operand, so a third of their LDS cycles are conflicts.
+
+A model reproduces every row: 128 banks of 4 B (512 B), with the 64 lanes of a `ds_read_b128` serviced
+32 at a time. One MFMA operand read covers rows 0-15 of a 16-row block, four lanes per row (32 K values).
+It is conflict-free when row bits 1, 2, 4 and 8 land 32, 64, 128 and 256 B apart (mod 512). A padded 1 KB
+chunk is 1056 B, so a row bit at chunk index c moves the address by `1056 c mod 512 = 32 c` (c < 16).
+The three bits on the lanes after the 64 K elements move it by 128, 256 and 512 B. Each pass of 32
+lanes reads 16 rows x 32 B, so the rows must fill the 512 B exactly.
+
+- **Ours at 64 rows:**
+  - Row 4 sits at chunk 4, so 4224 B, which is 128 mod 512.
+  - Row 8 sits on the first lane row bit, also 128 B.
+  - Rows that differ in bits 4 and 8 collide.
+- **Ours at BK = 128:**
+  - K 64 takes chunk 1, which moves the row bits up one chunk each.
+  - At 64 rows, row 2 lands at 128 and collides with row 8 on the lane.
+  - At 32 rows, row 2 lands at 128 and collides with row 4 on the lane.
+- **aiter:** in every case rows 1, 2, 4 and 8 land at 32, 64, 128 and 256 B.
+- **Not built here:** the model predicts conflicts for our 128-row half at BK = 128 (row 8 at chunk 16 is
+  0 mod 512). That covers 256x128x128 and 128x256x128.
+
+### 15.4 Throughput
+
+d / ours, back-to-back TFLOPS: four runs over two GPUs. The last column is with amdgcnas, where our
+128x128x128 is wrong:
+
+| tile | K | GPU 3 | GPU 4, repeat | GPU 3, sustained (clock run) | GPU 4, amdgcnas |
+|---|---|---|---|---|---|
+| 128x128 | 4096 | 0.989 | 1.004 | 1.005 | 1.002 |
+| 128x128 | 8192 | 1.013 | 1.005 | 1.013 | 1.013 |
+| 128x128x128 | 4096 | 1.016 | 1.019 | 1.038 | 1.024 |
+| 128x128x128 | 8192 | 1.016 | 1.011 | 1.014 | 1.019 |
+| 256x128 | 4096 | 0.999 | 0.999 | 0.999 | 1.002 |
+| 256x128 | 8192 | 0.999 | 0.997 | 0.999 | 1.001 |
+| 128x256 | 4096 | 1.001 | 0.994 | 1.002 | 1.004 |
+| 128x256 | 8192 | 1.003 | 1.004 | 0.998 | 1.000 |
+| 64x64x128 | 4096 | 0.983 | 0.986 | 0.983 | 0.977 |
+| 64x64x128 | 8192 | 0.995 | 0.996 | 0.994 | 0.988 |
+
+K = 8192, GPU 3. Stalls per loop iteration (2 k-steps) and wave, from ATT on CU 0
+([att_stalls.py](att_stalls.py)):
+
+| tile | layout | TFLOPS | ATT loop MFMA eff | vmcnt | buffer_load issue | lgkmcnt + ds_read | s_barrier | cycles issued |
+|---|---|---|---|---|---|---|---|---|
+| 128x128 | ours | 949 | 51.9% | 261 | 158 | 100 | 230 | 1983 |
+| 128x128 | aiter | 961 | 50.6% | 301 | 177 | 98 | 221 | 2030 |
+| 128x128x128 | ours | 1027 | 55.7% | 47 | 279 | 844 | 199 | 3657 |
+| 128x128x128 | aiter | 1044 | 55.7% | 47 | 662 | 411 | 231 | 3646 |
+| 256x128 | ours | 1233 | 74.6% | 48 | 268 | 140 | 153 | 2759 |
+| 256x128 | aiter | 1232 | 73.0% | 48 | 313 | 141 | 167 | 2818 |
+| 128x256 | ours | 1246 | 73.2% | 48 | 294 | 152 | 167 | 2798 |
+| 128x256 | aiter | 1250 | 76.3% | 48 | 219 | 152 | 144 | 2699 |
+| 64x64x128 | ours | 679 | 21.8% | 200 | 724 | 364 | 324 | 2448 |
+| 64x64x128 | aiter | 676 | 21.1% | 75 | 987 | 191 | 461 | 2546 |
+
+Clocks, power and L2 hit rates match within each pair: 1.9-2.3 GHz at the 1400 W cap, the same L2 hits
+to 0.1 point.
+
+- **Where the conflicts showed.** 128x128x128 and 64x64x128 are the two tiles with many LDS read stalls,
+  and the derived layout halves them: 844 to 411 and 364 to 191. In 128x128 the reads were already
+  hidden behind the `vmcnt` waits of its short pipeline (§7), so conflict-free reads change nothing there.
+- **The stall moves, it does not go away.** The time saved on LDS reads reappears as `buffer_load` issue
+  stalls (279 to 662, 724 to 987): the waves reach the next load sooner and find the TCP full. This is §4's
+  window: removing a limit that does not bind only moves the wait.
+- **64x64x128 is slower anyway.** Its `vmcnt` waits fall (200 to 75), but issue and barrier stalls grow
+  more (+263 and +137). It runs 2 workgroups per CU (66 KB of LDS each). The loads per wave instruction
+  change shape (4 rows x 256 B instead of 8 x 128 B), and that is the remaining difference. Why that costs
+  1-2% here and not in 128x128x128 is open. [TODO.md](../TODO.md) has the details and experiments to try.
+
+### 15.5 What changes: one layout path
+
+v9_tile and v9_tile_2r build every layout the aiter way (`tile_shared_layout`, `tile_load_layout` in
+[matmul_kernel.py](matmul_kernel.py)). The hand-built `_half_tile_bases`, the `d` / `h` suffixes and the
+A/B presets are gone. The reasons:
+
+- One way to build a layout, the one that has no bank conflicts at any size and that the aiter port
+  uses. That includes 256x128x128 and other BK = 128 tiles at side 256, where the hand-built one would
+  conflict (§15.3).
+- The cost is small. 128x128x128 gains 1-4% and 128x128 up to 1.3%. 256x128 and 128x256 are unchanged,
+  and 64x64x128 loses 0.4-2.3%.
+- Main's amdgcnas compiles it correctly where it miscompiled the hand-built one: 256x128 and 128x256
+  with bias, and 128x128x128.
+- At 256x256x64 and 64x64x64 nothing changes: the code is byte-identical, and 256x256's instruction
+  stream is v9's.
+- Triton has no layout at 32 rows for the 32x32x16 MFMA, so `V9_TILE_MFMA=32` now needs both tile sides
+  of 128 or more (at 64, the half-tile is 32 rows).
+- v9_tile_small (a side of 32 or less) keeps its own swizzled layout (§14.2).
+
+Gates for the switch ([check_tiles_derived.md](results/check_tiles_derived.md)): bf16 and fp16, with and
+without bias, ragged M, N and K included.
+
+- **All 11 four-quadrant tiles** with sides 64-256 pass under the documented stack (0 of 696 fail). That
+  includes aiter's 256x64, 64x256, 128x64 and 64x128, which compile without spills
+  ([asm_check.py](asm_check.py): 112-348 VGPRs, 1-3 workgroups per CU).
+- **v9_tile_2r (128x128r2, 32x256r2, 128x128x128r2):**
+  - It fails 27 ragged-K cases under main's amdgcnas.
+  - The former hand-built layouts fail the same cases, so the layout is not the cause.
+  - Without amdgcnas everything passes.
+- **256x256** has the same instruction stream as v9_beyond_hotloop.
+
+Open: main's amdgcnas lacks the §2 and §14.3 fixes (they are in d6873fa).
+
+- v9_tile's four-quadrant tiles now compile correctly under it.
+- v9_tile_2r with ragged K does not.
+- v9_tile_small still needs the peephole skipped (§14.3).
+
+This branch keeps main's files unchanged.

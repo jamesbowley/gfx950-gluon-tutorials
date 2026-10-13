@@ -23,7 +23,7 @@
 ##############################################################################
 """Timing, counters and ATT for v9_tile over a list of (tile, M, N, K) points.
 
-    source v9_tile/env.sh            # GPU 2, llir+amdgcnas
+    source v9_tile/env.sh            # GPU 2, llir (schedule_hint) + amdgcnas
     python v9_tile/sweep.py timing  --points A --out v9_tile/results/a_timing.csv
     python v9_tile/sweep.py counters --points A --out v9_tile/results/a_counters.csv
     python v9_tile/sweep.py att      --points A --out v9_tile/results/a_att.csv
@@ -184,7 +184,9 @@ COUNTER_SETS = [
     ["TCC_HIT_sum", "TCC_MISS_sum", "TCC_EA0_RDREQ_sum", "TCC_EA0_RDREQ_DRAM_sum"],
     ["TCC_EA0_RDREQ_32B_sum", "TCC_EA0_RDREQ_64B_sum", "TCC_EA0_RDREQ_128B_sum"],
     ["MeanOccupancyPerActiveCU"],
+    ["GRBM_GUI_ACTIVE", "SQ_LDS_BANK_CONFLICT", "SQ_LDS_IDX_ACTIVE", "SQ_INSTS_LDS"],
 ]
+DEFAULT_COUNTER_SETS = "0,1,2,3"  # --sets; 4 (LDS bank conflicts) on request
 GRAPH_LEN = 100
 ROTATING_MB = 512  # --rotating-mb; 0 reuses one set of inputs (warm caches)
 NUM_SIMDS = 1024
@@ -355,7 +357,8 @@ def timing(args):
 
 def counters(args):
     res = None
-    for i, cset in enumerate(COUNTER_SETS):
+    for i in (int(s) for s in args.sets.split(",")):
+        cset = COUNTER_SETS[i]
         out_dir = os.path.join(TMP, f"sweep_counters_{i}")
         manifest = run_worker(["--kernel-trace", "--pmc", *cset], args.points, 20, out_dir)
         trace = sorted(read_csv(out_dir, "kernel_trace.csv"), key=lambda r: int(r["Dispatch_Id"]))
@@ -390,9 +393,19 @@ def counters(args):
                          + 128 * v["TCC_EA0_RDREQ_128B_sum"])
                 r["ea_rd_MB"] = round(ea / 1e6, 2)
                 r["ea_rd_over_unique"] = round(ea / unique_bytes(r), 3)
-            else:
+            elif i == 3:
                 # Reads 1.0 at one wave per SIMD (the pinned runs, 4 waves per CU): waves per SIMD.
                 r["waves_per_simd"] = round(med(lambda v, t: v["MeanOccupancyPerActiveCU"]), 2)
+            else:
+                # LDS bank conflicts, summed over the CUs: conflict cycles per conflict-free LDS cycle
+                # (rocprof's LDS_BANK_CONFLICT_ACCESS), and as a share of every CU's kernel cycles.
+                cu_cycles = lambda v: v["GRBM_GUI_ACTIVE"] / NUM_XCDS * 256  # noqa: E731
+                r["lds_conflict_per_access"] = round(med(lambda v, t: v["SQ_LDS_BANK_CONFLICT"] / max(
+                    1.0, v["SQ_LDS_IDX_ACTIVE"] - v["SQ_LDS_BANK_CONFLICT"])), 4)
+                r["lds_conflict_pct"] = round(med(lambda v, t: v["SQ_LDS_BANK_CONFLICT"] / cu_cycles(v)), 4)
+                r["lds_active_pct"] = round(med(lambda v, t: v["SQ_LDS_IDX_ACTIVE"] / cu_cycles(v)), 4)
+                r["lds_conflict_per_inst"] = round(med(lambda v, t: v["SQ_LDS_BANK_CONFLICT"] / max(
+                    1.0, v["SQ_INSTS_LDS"])), 3)
     return res
 
 
@@ -542,6 +555,8 @@ def main():
     ap.add_argument("--rotating-mb", type=int, default=512)
     ap.add_argument("--seconds", type=float, default=3.0)
     ap.add_argument("--graph", action="store_true", help="timing: launch from a HIP graph, back to back")
+    ap.add_argument("--sets", default=DEFAULT_COUNTER_SETS,
+                    help="counters: indices into COUNTER_SETS (4: LDS bank conflicts)")
     ap.add_argument("--manifest")
     ap.add_argument("--tmp", default=TMP, help="scratch directory (one per concurrent sweep)")
     args = ap.parse_args()

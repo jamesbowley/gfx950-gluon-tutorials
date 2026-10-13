@@ -24,8 +24,10 @@
 """v9_beyond_hotloop with the tile size as a parameter.
 
 The kernel is v9's: four quadrant accumulators, two LDS buffers, the same region order and
-wait counts. Only the layouts that encoded 256x256x64 are now built on the host from the tile
-size, and GROUP_SIZE_M follows v9's footprint rule for the tile.
+wait counts. Only the layouts that encoded 256x256x64 are now derived from the tile size, as aiter's
+gfx950 Gluon GEMM derives them: the shared layouts from Triton's compute_efficient_padded_shared_layout
+for the MFMA operands, the global-load layouts cut from those (tile_shared_layout, tile_load_layout).
+At 256x256x64 they are v9's. GROUP_SIZE_M follows v9's footprint rule for the tile.
 
 The tile comes from `matmul(..., tile="256x128")` or, when `tile` is None, from the V9_TILE
 environment variable ("256x128" or "128x128x128", read at call time); the default is 256x256x64.
@@ -62,6 +64,7 @@ from bias import init_acc
 from common import get_pids
 from triton.experimental import gluon
 from triton.experimental.gluon import language as gl
+from triton.experimental.gluon.language.amd import cdna4
 
 
 @gluon.jit
@@ -93,10 +96,10 @@ def v9_tile(
 ):
     pid_m, pid_n = get_pids(M, N, BLOCK_M, BLOCK_N, GRID_MN, NUM_XCDS, GROUP_SIZE_M)
 
-    gLoadLayoutA: gl.constexpr = half_tile_load_layout(BLOCK_M // 2, BLOCK_K, False)
-    gLoadLayoutB: gl.constexpr = half_tile_load_layout(BLOCK_N // 2, BLOCK_K, True)
-    sharedLayoutA: gl.constexpr = half_tile_shared_layout(BLOCK_M // 2, BLOCK_K, False)
-    sharedLayoutB: gl.constexpr = half_tile_shared_layout(BLOCK_N // 2, BLOCK_K, True)
+    sharedLayoutA: gl.constexpr = tile_shared_layout(BLOCK_M // 2, BLOCK_K, False, MFMA_32, a_ptr.dtype.element_ty)
+    sharedLayoutB: gl.constexpr = tile_shared_layout(BLOCK_N // 2, BLOCK_K, True, MFMA_32, b_ptr.dtype.element_ty)
+    gLoadLayoutA: gl.constexpr = tile_load_layout(sharedLayoutA)
+    gLoadLayoutB: gl.constexpr = tile_load_layout(sharedLayoutB)
     mfmaLayout: gl.constexpr = mfma_layout(MFMA_32)
     gStoreLayoutC: gl.constexpr = store_layout(BLOCK_N // 2)
 
@@ -376,10 +379,10 @@ def v9_tile_2r(
     """
     pid_m, pid_n = get_pids(M, N, BLOCK_M, BLOCK_N, GRID_MN, NUM_XCDS, GROUP_SIZE_M)
 
-    gLoadLayoutA: gl.constexpr = half_tile_load_layout(BLOCK_M, BLOCK_K, False)
-    gLoadLayoutB: gl.constexpr = half_tile_load_layout(BLOCK_N // 2, BLOCK_K, True)
-    sharedLayoutA: gl.constexpr = half_tile_shared_layout(BLOCK_M, BLOCK_K, False)
-    sharedLayoutB: gl.constexpr = half_tile_shared_layout(BLOCK_N // 2, BLOCK_K, True)
+    sharedLayoutA: gl.constexpr = tile_shared_layout(BLOCK_M, BLOCK_K, False, MFMA_32, a_ptr.dtype.element_ty)
+    sharedLayoutB: gl.constexpr = tile_shared_layout(BLOCK_N // 2, BLOCK_K, True, MFMA_32, b_ptr.dtype.element_ty)
+    gLoadLayoutA: gl.constexpr = tile_load_layout(sharedLayoutA)
+    gLoadLayoutB: gl.constexpr = tile_load_layout(sharedLayoutB)
     mfmaLayout: gl.constexpr = mfma_layout(MFMA_32)
     gStoreLayoutC: gl.constexpr = store_layout(BLOCK_N // 2)
 
@@ -764,61 +767,32 @@ def store_edge(c, c_base, c_offsets, layout: gl.constexpr, rows_left, cols_left,
 
 
 @gluon.constexpr_function
-def _pow2_bases(lo, hi):
-    """[lo, 2 lo, ..., hi / 2]: the powers of two in [lo, hi)."""
-    out, x = [], lo
-    while x < hi:
-        out.append(x)
-        x *= 2
-    return out
+def tile_shared_layout(rows, block_k, k_first, mfma_32, dtype):
+    """Padded shared layout of a [rows, block_k] block of A (k_first: B's [block_k, rows]), as aiter's
+    gfx950 GEMM builds it: Triton's compute_efficient_padded_shared_layout for the MFMA operand that
+    reads it. 16 elements of padding after every 512, so each wave's 1 KB load lands contiguously,
+    with the row bits one ds_read_b128 spans 32, 64, 128 and 256 B apart: no bank conflicts (WORKLOG
+    §15). At 128 and 32 rows with BLOCK_K = 64 this is v9's layout. Triton has none below 32 rows,
+    nor at 32 rows for the 32x32x16 MFMA."""
+    op = gl.DotOperandLayout(operand_index=1 if k_first else 0, parent=mfma_layout(mfma_32), k_width=8)
+    shape = [block_k, rows] if k_first else [rows, block_k]
+    layout = cdna4.compute_efficient_padded_shared_layout(op, shape, dtype)
+    assert layout is not None, f"no efficient padded layout for {shape} (fewer than 32 rows?)"
+    return layout
 
 
 @gluon.constexpr_function
-def _half_tile_bases(rows, block_k, k_first):
-    """Bases of a [rows, block_k] half-tile, K contiguous (k_first: the [block_k, rows] half-tile
-    of B, the same bases transposed).
-
-    One buffer_load_to_lds_dwordx4 per wave covers 64 K values (8 per lane over 8 lanes) of 8
-    rows, 1 KB; the shared layout keeps that 1 KB contiguous (lanes write consecutive LDS
-    addresses) and pads 16 elements after each. Warps take rows 1 and 2, the lanes the top
-    three row bits, and the registers the K bits past 64 and the rows in between. At rows = 128
-    and block_k = 64 this is v9's layout.
-    """
-    assert rows >= 32 and block_k >= 64 and rows & (rows - 1) == 0 and block_k & (block_k - 1) == 0
-    lane_rows = [rows // 8, rows // 4, rows // 2]
-    reg_rows = _pow2_bases(4, rows // 8)
-    extra_k = _pow2_bases(64, block_k)
-
-    def t(bs):
-        return [[b[1], b[0]] for b in bs] if k_first else bs
-
-    return {
-        "shape": [block_k, rows] if k_first else [rows, block_k],
-        "reg": t([[0, 1], [0, 2], [0, 4]] + [[0, k] for k in extra_k] + [[r, 0] for r in reg_rows]),
-        "lane": t([[0, 8], [0, 16], [0, 32]] + [[r, 0] for r in lane_rows]),
-        "warp": t([[1, 0], [2, 0]]),
-        "offset": t(
-            [[0, k] for k in _pow2_bases(1, 64)]
-            + [[r, 0] for r in lane_rows]
-            + [[0, k] for k in extra_k]
-            + [[1, 0], [2, 0]]
-            + [[r, 0] for r in reg_rows]
-        ),
-    }
-
-
-@gluon.constexpr_function
-def half_tile_load_layout(rows, block_k, k_first):
-    b = _half_tile_bases(rows, block_k, k_first)
-    return gl.DistributedLinearLayout(
-        reg_bases=b["reg"], lane_bases=b["lane"], warp_bases=b["warp"], block_bases=[], shape=b["shape"]
-    )
-
-
-@gluon.constexpr_function
-def half_tile_shared_layout(rows, block_k, k_first):
-    b = _half_tile_bases(rows, block_k, k_first)
-    return gl.PaddedSharedLayout([[512, 16]], b["offset"], [], b["shape"])
+def tile_load_layout(shared, num_warps=4):
+    """The global-load layout that fills a tile_shared_layout (aiter's compute_gload_layout): its offset
+    bases, in LDS address order, split into 3 register bases (8 elements, 16 B per lane), 6 lane bases
+    and 2 warp bases, the rest registers again (further loads). Each warp's buffer_load_to_lds then
+    fills 1 KB of LDS in order."""
+    bases = [list(b) for b in shared.offset_bases]
+    n_warp = int(math.log2(num_warps))
+    warp = bases[9:9 + n_warp]
+    warp += [[0] * len(shared.shape)] * (n_warp - len(warp))
+    return gl.DistributedLinearLayout(reg_bases=bases[:3] + bases[9 + n_warp:], lane_bases=bases[3:9],
+                                      warp_bases=warp, block_bases=[], shape=list(shared.shape))
 
 
 @gluon.constexpr_function
