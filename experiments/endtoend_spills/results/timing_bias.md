@@ -1,0 +1,42 @@
+<!-- round 1: base:4352x4096x8192:8192:STREAMK_POLICY=two_tile:CASE_BIAS=1 226.7 -->
+<!-- round 1: crow:4352x4096x8192:8192:STREAMK_POLICY=two_tile:CASE_BIAS=1 223.0 -->
+<!-- round 1: base:4352x4096x4096:4096:STREAMK_POLICY=two_tile:CASE_BIAS=1 129.5 -->
+<!-- round 1: crow:4352x4096x4096:4096:STREAMK_POLICY=two_tile:CASE_BIAS=1 126.1 -->
+<!-- round 1: base:8192x8448x8192:8192:STREAMK_POLICY=two_tile:CASE_BIAS=1 797.6 -->
+<!-- round 1: crow:8192x8448x8192:8192:STREAMK_POLICY=two_tile:CASE_BIAS=1 792.1 -->
+<!-- round 1: base:4096x7168x32768:32768:STREAMK_POLICY=spread:CASE_BIAS=1 1296.7 -->
+<!-- round 1: crow:4096x7168x32768:32768:STREAMK_POLICY=spread:CASE_BIAS=1 1293.0 -->
+<!-- round 1: base:4096x7168x8192:8192:STREAMK_POLICY=spread:CASE_BIAS=1 350.8 -->
+<!-- round 1: crow:4096x7168x8192:8192:STREAMK_POLICY=spread:CASE_BIAS=1 347.4 -->
+<!-- round 2: crow:4096x7168x8192:8192:STREAMK_POLICY=spread:CASE_BIAS=1 346.7 -->
+<!-- round 2: base:4096x7168x8192:8192:STREAMK_POLICY=spread:CASE_BIAS=1 351.0 -->
+<!-- round 2: crow:4096x7168x32768:32768:STREAMK_POLICY=spread:CASE_BIAS=1 1296.4 -->
+<!-- round 2: base:4096x7168x32768:32768:STREAMK_POLICY=spread:CASE_BIAS=1 1298.6 -->
+<!-- round 2: crow:8192x8448x8192:8192:STREAMK_POLICY=two_tile:CASE_BIAS=1 793.2 -->
+<!-- round 2: base:8192x8448x8192:8192:STREAMK_POLICY=two_tile:CASE_BIAS=1 795.6 -->
+<!-- round 2: crow:4352x4096x4096:4096:STREAMK_POLICY=two_tile:CASE_BIAS=1 127.1 -->
+<!-- round 2: base:4352x4096x4096:4096:STREAMK_POLICY=two_tile:CASE_BIAS=1 128.9 -->
+<!-- round 2: crow:4352x4096x8192:8192:STREAMK_POLICY=two_tile:CASE_BIAS=1 222.8 -->
+<!-- round 2: base:4352x4096x8192:8192:STREAMK_POLICY=two_tile:CASE_BIAS=1 225.7 -->
+<!-- round 3: base:4352x4096x8192:8192:STREAMK_POLICY=two_tile:CASE_BIAS=1 225.8 -->
+<!-- round 3: crow:4352x4096x8192:8192:STREAMK_POLICY=two_tile:CASE_BIAS=1 222.8 -->
+<!-- round 3: base:4352x4096x4096:4096:STREAMK_POLICY=two_tile:CASE_BIAS=1 128.9 -->
+<!-- round 3: crow:4352x4096x4096:4096:STREAMK_POLICY=two_tile:CASE_BIAS=1 126.5 -->
+<!-- round 3: base:8192x8448x8192:8192:STREAMK_POLICY=two_tile:CASE_BIAS=1 796.9 -->
+<!-- round 3: crow:8192x8448x8192:8192:STREAMK_POLICY=two_tile:CASE_BIAS=1 792.7 -->
+<!-- round 3: base:4096x7168x32768:32768:STREAMK_POLICY=spread:CASE_BIAS=1 1298.5 -->
+<!-- round 3: crow:4096x7168x32768:32768:STREAMK_POLICY=spread:CASE_BIAS=1 1296.0 -->
+<!-- round 3: base:4096x7168x8192:8192:STREAMK_POLICY=spread:CASE_BIAS=1 350.8 -->
+<!-- round 3: crow:4096x7168x8192:8192:STREAMK_POLICY=spread:CASE_BIAS=1 346.6 -->
+| variant | shape | row stride | env | round 1 us | round 2 us | round 3 us |
+|---|---|---|---|---|---|---|
+| base | 4352x4096x8192 | 8192 | STREAMK_POLICY=two_tile CASE_BIAS=1 | 226.7 | 225.7 | 225.8 |
+| crow | 4352x4096x8192 | 8192 | STREAMK_POLICY=two_tile CASE_BIAS=1 | 223.0 | 222.8 | 222.8 |
+| base | 4352x4096x4096 | 4096 | STREAMK_POLICY=two_tile CASE_BIAS=1 | 129.5 | 128.9 | 128.9 |
+| crow | 4352x4096x4096 | 4096 | STREAMK_POLICY=two_tile CASE_BIAS=1 | 126.1 | 127.1 | 126.5 |
+| base | 8192x8448x8192 | 8192 | STREAMK_POLICY=two_tile CASE_BIAS=1 | 797.6 | 795.6 | 796.9 |
+| crow | 8192x8448x8192 | 8192 | STREAMK_POLICY=two_tile CASE_BIAS=1 | 792.1 | 793.2 | 792.7 |
+| base | 4096x7168x32768 | 32768 | STREAMK_POLICY=spread CASE_BIAS=1 | 1296.7 | 1298.6 | 1298.5 |
+| crow | 4096x7168x32768 | 32768 | STREAMK_POLICY=spread CASE_BIAS=1 | 1293.0 | 1296.4 | 1296.0 |
+| base | 4096x7168x8192 | 8192 | STREAMK_POLICY=spread CASE_BIAS=1 | 350.8 | 351.0 | 350.8 |
+| crow | 4096x7168x8192 | 8192 | STREAMK_POLICY=spread CASE_BIAS=1 | 347.4 | 346.7 | 346.6 |

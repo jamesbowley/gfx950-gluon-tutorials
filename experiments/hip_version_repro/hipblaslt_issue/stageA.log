@@ -1,0 +1,8 @@
+start 1.2.2 11:15:59
+done 1.2.2 11:19:05 rows=631
+GPU 3 busy (1%), waiting
+start 1.4.1 11:19:18
+done 1.4.1 11:22:25 rows=631
+start 1.5.0 11:22:36
+done 1.5.0 11:25:42 rows=631
+STAGEA_DONE

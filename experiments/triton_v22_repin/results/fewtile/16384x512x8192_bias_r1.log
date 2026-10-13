@@ -1,0 +1,43 @@
+
+============================================================
+Config: llir+amdgcnas
+============================================================
+  Running: v9 (v9_beyond_hotloop) config=llir+amdgcnas
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a16w16/tmp/llir+amdgcnas/v9_beyond_hotloop
+  [v9_beyond_hotloop] M=16384 N=512 K=8192 dtype='bf16': ✅ Triton and Torch match
+  rocprofv3: collecting kernel trace for v9_beyond_hotloop ...
+  rocprofv3: 1002 dispatches, final-100 avg=135.02 us, tflops=1017.9
+  Running: v10 (v10_persistant) config=llir+amdgcnas
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a16w16/tmp/llir+amdgcnas/v10_persistant
+  [v10_persistant] M=16384 N=512 K=8192 dtype='bf16': ✅ Triton and Torch match
+  rocprofv3: collecting kernel trace for v10_persistant ...
+  rocprofv3: 1002 dispatches, final-100 avg=135.38 us, tflops=1015.2
+  Running: v11 (v11_persistant_overlap_global) config=llir+amdgcnas
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a16w16/tmp/llir+amdgcnas/v11_persistant_overlap_global
+  [v11_persistant_overlap_global] M=16384 N=512 K=8192 dtype='bf16': ✅ Triton and Torch match
+  rocprofv3: collecting kernel trace for v11_persistant_overlap_global ...
+  rocprofv3: 1002 dispatches, final-100 avg=136.93 us, tflops=1003.7
+  Running: v12 (v12_persistant_overlap_lds) config=llir+amdgcnas
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a16w16/tmp/llir+amdgcnas/v12_persistant_overlap_lds
+  [v12_persistant_overlap_lds] M=16384 N=512 K=8192 dtype='bf16': ✅ Triton and Torch match
+  rocprofv3: collecting kernel trace for v12_persistant_overlap_lds ...
+  rocprofv3: 1002 dispatches, final-100 avg=137.19 us, tflops=1001.8
+  Running: v13 (v13_persistant_peel_acc) config=llir+amdgcnas
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a16w16/tmp/llir+amdgcnas/v13_persistant_peel_acc
+  [v13_persistant_peel_acc] M=16384 N=512 K=8192 dtype='bf16': ✅ Triton and Torch match
+  rocprofv3: collecting kernel trace for v13_persistant_peel_acc ...
+  rocprofv3: 1002 dispatches, final-100 avg=137.23 us, tflops=1001.5
+
+============================================================
+RESULTS SUMMARY
+============================================================
+
+Config: llir+amdgcnas
+| Version              | TFLOPS | VGPRs | Spills | MFMA Eff. |
+|----------------------|--------|-------|--------|-----------|
+| v9_beyond_hotloop    |   1018 |   448 |      0 |    93.59% |
+| v10_persistant       |   1015 |   488 |      0 |    93.22% |
+| v11_persistant_overlap_global |   1004 |   464 |      0 |    94.92% |
+| v12_persistant_overlap_lds |   1002 |   444 |      0 |    94.94% |
+| v13_persistant_peel_acc |   1002 |   488 |      0 |    94.49% |
+

@@ -1,0 +1,49 @@
+
+============================================================
+Config: base
+============================================================
+  Running: a8w8 config=base
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a8w8/tmp/base/a8w8_kernel
+  [a8w8] M=4096 N=4096 K=16384 dtype=f8: ✅ Triton and Torch match
+  rocprofv3: collecting kernel trace for a8w8_kernel ...
+  rocprofv3: 1002 dispatches, final-100 avg=202.37 us, tflops=2716.6
+
+============================================================
+Config: llir
+============================================================
+  Running: a8w8 config=llir
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a8w8/tmp/llir/a8w8_kernel
+  [a8w8] M=4096 N=4096 K=16384 dtype=f8: ✅ Triton and Torch match
+  rocprofv3: collecting kernel trace for a8w8_kernel ...
+  rocprofv3: 1002 dispatches, final-100 avg=186.75 us, tflops=2943.7
+
+============================================================
+Config: llir+amdgcnas
+============================================================
+  Running: a8w8 config=llir+amdgcnas
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a8w8/tmp/llir+amdgcnas/a8w8_kernel
+  [a8w8] M=4096 N=4096 K=16384 dtype=f8: ✅ Triton and Torch match
+  rocprofv3: collecting kernel trace for a8w8_kernel ...
+  rocprofv3: 1002 dispatches, final-100 avg=185.54 us, tflops=2963.0
+
+============================================================
+RESULTS SUMMARY
+============================================================
+
+Config: base
+| Version              | TFLOPS | VGPRs | Spills | MFMA Eff. |
+|----------------------|--------|-------|--------|-----------|
+| a8w8_kernel          |   2717 |   448 |      0 |    72.10% |
+
+
+Config: llir
+| Version              | TFLOPS | VGPRs | Spills | MFMA Eff. |
+|----------------------|--------|-------|--------|-----------|
+| a8w8_kernel          |   2944 |   448 |      0 |    96.31% |
+
+
+Config: llir+amdgcnas
+| Version              | TFLOPS | VGPRs | Spills | MFMA Eff. |
+|----------------------|--------|-------|--------|-----------|
+| a8w8_kernel          |   2963 |   448 |      0 |    99.72% |
+

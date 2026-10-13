@@ -1,0 +1,98 @@
+a16w16 v15_streamk_onetile: one-tile, end-to-end split, row-major partials. 4352x8192x8192 bf16: 544 tiles = 2 waves + S = 32; 2 data-parallel tile(s) per program, 32 stream-K tiles.
+ATT, 80 traced workgroups from 3 launches; one k-step = 2176 cycles (the last data-parallel tile's median).
+
+16-k-step partial: 71 workgroups
+  DP -> SK MFMA idle: median 5.6 k-steps (min 3.9, max 10.1)
+  segment 0 (16 k-steps, partial): MAC 1.10 DP k-steps per k-step
+    ending: drain 0.4 [0.4-0.6], partial store 10.9 [8.6-18.2], store drain 1.8 [0.8-4.9], exit 0.4 [0.2-1.5]; total 13.5 [10.6-20.2] k-steps (median [min-max])
+    flag / barrier polls per workgroup: median 0; partial stores 256, partial reads 0, C stores 0 (all four waves)
+
+16-k-step owner: 9 workgroups
+  DP -> SK MFMA idle: median 5.2 k-steps (min 4.2, max 6.8)
+  segment 0 (16 k-steps, owner): MAC 1.38 DP k-steps per k-step
+    ending: drain 0.4 [0.4-0.9], spin on flags 17.2 [12.5-21.1], collect 60.8 [60.3-63.7], exit 0.5 [0.4-0.5]; total 78.9 [75.0-83.8] k-steps (median [min-max])
+    flag / barrier polls per workgroup: median 52; partial stores 0, partial reads 1792, C stores 128 (all four waves)
+
+stream-K phase per workgroup (last DP MFMA to wave end): median 38.5, max 114.5 k-steps
+
+workgroups:
+  c0 se0 cu0 xcd0  16O  spid 0,8,16,24: DP end 258.1, end 360.2 k-steps; [16 owner: MAC 18.0, drain 0.4, spin on flags 15.0, collect 63.7, exit 0.4]
+  c1 se5 cu1 xcd1  16O  spid 32,40,48,56: DP end 263.7, end 371.0 k-steps; [16 owner: MAC 22.1, drain 0.4, spin on flags 17.3, collect 60.5, exit 0.4]
+  c1 se21 cu1 xcd5  16O  spid 160,168,176,184: DP end 261.0, end 363.7 k-steps; [16 owner: MAC 19.9, drain 0.4, spin on flags 16.6, collect 60.7, exit 0.5]
+  c1 se29 cu1 xcd7  16O  spid 224,232,240,248: DP end 267.9, end 379.1 k-steps; [16 owner: MAC 25.0, drain 0.4, spin on flags 18.3, collect 60.3, exit 0.5]
+  c2 se0 cu2 xcd0  16O  spid 0,8,16,24: DP end 265.1, end 367.0 k-steps; [16 owner: MAC 20.3, drain 0.4, spin on flags 14.7, collect 60.8, exit 0.4]
+  c2 se5 cu2 xcd1  16O  spid 32,40,48,56: DP end 263.1, end 372.2 k-steps; [16 owner: MAC 27.4, drain 0.9, spin on flags 12.5, collect 61.1, exit 0.4]
+  c2 se21 cu2 xcd5  16O  spid 160,168,176,184: DP end 260.8, end 371.1 k-steps; [16 owner: MAC 22.2, drain 0.4, spin on flags 20.8, collect 61.2, exit 0.5]
+  c2 se25 cu2 xcd6  16O  spid 192,200,208,216: DP end 262.5, end 369.1 k-steps; [16 owner: MAC 18.4, drain 0.4, spin on flags 21.1, collect 61.8, exit 0.5]
+  c2 se29 cu2 xcd7  16O  spid 224,232,240,248: DP end 266.1, end 380.6 k-steps; [16 owner: MAC 31.5, drain 0.4, spin on flags 17.2, collect 60.7, exit 0.5]
+  c0 se2 cu0 xcd0  16P  spid 28 pids (1..31): DP end 259.2, end 293.4 k-steps; [16 partial: MAC 16.1, drain 0.4, partial store 10.2, store drain 1.9, exit 0.6]
+  c0 se4 cu0 xcd1  16P  spid 28 pids (33..63): DP end 261.5, end 299.5 k-steps; [16 partial: MAC 19.7, drain 0.4, partial store 10.3, store drain 1.0, exit 0.4]
+  c0 se6 cu0 xcd1  16P  spid 28 pids (33..63): DP end 260.4, end 305.1 k-steps; [16 partial: MAC 25.1, drain 0.6, partial store 11.5, store drain 1.1, exit 0.2]
+  c0 se8 cu0 xcd2  16P  spid 28 pids (65..95): DP end 261.4, end 294.2 k-steps; [16 partial: MAC 15.8, drain 0.4, partial store 9.3, store drain 2.1, exit 0.5]
+  c0 se10 cu0 xcd2  16P  spid 28 pids (65..95): DP end 259.9, end 292.3 k-steps; [16 partial: MAC 15.6, drain 0.4, partial store 9.9, store drain 1.3, exit 0.4]
+  c0 se12 cu0 xcd3  16P  spid 28 pids (97..127): DP end 260.5, end 299.8 k-steps; [16 partial: MAC 19.4, drain 0.4, partial store 11.4, store drain 1.8, exit 0.2]
+  c0 se14 cu0 xcd3  16P  spid 28 pids (97..127): DP end 259.8, end 306.3 k-steps; [16 partial: MAC 25.8, drain 0.6, partial store 12.7, store drain 1.3, exit 0.2]
+  c0 se16 cu0 xcd4  16P  spid 28 pids (129..159): DP end 260.9, end 296.9 k-steps; [16 partial: MAC 15.6, drain 0.4, partial store 13.3, store drain 1.3, exit 0.4]
+  c0 se18 cu0 xcd4  16P  spid 28 pids (129..159): DP end 259.9, end 294.1 k-steps; [16 partial: MAC 15.8, drain 0.4, partial store 10.2, store drain 2.2, exit 0.8]
+  c0 se20 cu0 xcd5  16P  spid 28 pids (161..191): DP end 259.7, end 296.3 k-steps; [16 partial: MAC 19.1, drain 0.4, partial store 10.3, store drain 1.3, exit 0.3]
+  c0 se22 cu0 xcd5  16P  spid 28 pids (161..191): DP end 259.1, end 297.4 k-steps; [16 partial: MAC 19.0, drain 0.4, partial store 11.4, store drain 1.8, exit 0.5]
+  c0 se24 cu0 xcd6  16P  spid 28 pids (193..223): DP end 257.8, end 292.8 k-steps; [16 partial: MAC 16.5, drain 0.4, partial store 10.4, store drain 2.4, exit 0.4]
+  c0 se26 cu0 xcd6  16P  spid 28 pids (193..223): DP end 258.9, end 294.2 k-steps; [16 partial: MAC 15.9, drain 0.4, partial store 11.6, store drain 2.4, exit 0.4]
+  c0 se28 cu0 xcd7  16P  spid 28 pids (225..255): DP end 266.5, end 311.8 k-steps; [16 partial: MAC 26.1, drain 0.4, partial store 9.2, store drain 1.6, exit 0.4]
+  c0 se30 cu0 xcd7  16P  spid 28 pids (225..255): DP end 265.8, end 312.9 k-steps; [16 partial: MAC 26.4, drain 0.4, partial store 9.6, store drain 2.2, exit 0.7]
+  c1 se0 cu1 xcd0  16P  spid 28 pids (1..31): DP end 263.9, end 298.1 k-steps; [16 partial: MAC 15.7, drain 0.4, partial store 10.4, store drain 2.0, exit 0.2]
+  c1 se1 cu1 xcd0  16P  spid 28 pids (1..31): DP end 263.2, end 298.0 k-steps; [16 partial: MAC 15.9, drain 0.4, partial store 11.5, store drain 2.2, exit 0.2]
+  c1 se2 cu1 xcd0  16P  spid 28 pids (1..31): DP end 263.0, end 298.2 k-steps; [16 partial: MAC 15.6, drain 0.4, partial store 9.8, store drain 3.9, exit 0.5]
+  c1 se3 cu1 xcd0  16P  spid 28 pids (1..31): DP end 259.9, end 295.4 k-steps; [16 partial: MAC 15.5, drain 0.4, partial store 10.9, store drain 2.7, exit 0.3]
+  c1 se4 cu1 xcd1  16P  spid 28 pids (33..63): DP end 264.2, end 298.3 k-steps; [16 partial: MAC 15.6, drain 0.4, partial store 10.1, store drain 1.3, exit 0.2]
+  c1 se6 cu1 xcd1  16P  spid 28 pids (33..63): DP end 263.0, end 304.0 k-steps; [16 partial: MAC 21.0, drain 0.4, partial store 11.4, store drain 1.2, exit 0.2]
+  c1 se7 cu1 xcd1  16P  spid 28 pids (33..63): DP end 260.9, end 304.3 k-steps; [16 partial: MAC 22.3, drain 0.4, partial store 13.0, store drain 1.0, exit 0.3]
+  c1 se8 cu1 xcd2  16P  spid 28 pids (65..95): DP end 261.8, end 302.6 k-steps; [16 partial: MAC 22.9, drain 0.4, partial store 9.1, store drain 1.3, exit 0.3]
+  c1 se9 cu1 xcd2  16P  spid 28 pids (65..95): DP end 263.2, end 306.4 k-steps; [16 partial: MAC 19.9, drain 0.4, partial store 10.6, store drain 2.0, exit 0.2]
+  c1 se10 cu1 xcd2  16P  spid 28 pids (65..95): DP end 262.4, end 310.0 k-steps; [16 partial: MAC 24.5, drain 0.4, partial store 12.0, store drain 0.8, exit 0.2]
+  c1 se11 cu1 xcd2  16P  spid 28 pids (65..95): DP end 259.8, end 295.9 k-steps; [16 partial: MAC 16.1, drain 0.4, partial store 8.8, store drain 1.2, exit 0.2]
+  c1 se12 cu1 xcd3  16P  spid 28 pids (97..127): DP end 260.5, end 303.7 k-steps; [16 partial: MAC 22.4, drain 0.4, partial store 9.7, store drain 2.0, exit 0.2]
+  c1 se13 cu1 xcd3  16P  spid 28 pids (97..127): DP end 261.5, end 311.2 k-steps; [16 partial: MAC 27.8, drain 0.4, partial store 10.7, store drain 1.3, exit 0.3]
+  c1 se14 cu1 xcd3  16P  spid 28 pids (97..127): DP end 260.3, end 310.1 k-steps; [16 partial: MAC 28.2, drain 0.4, partial store 10.3, store drain 0.8, exit 0.4]
+  c1 se15 cu1 xcd3  16P  spid 28 pids (97..127): DP end 260.0, end 295.6 k-steps; [16 partial: MAC 15.7, drain 0.4, partial store 8.6, store drain 2.1, exit 0.2]
+  c1 se16 cu1 xcd4  16P  spid 28 pids (129..159): DP end 264.7, end 301.3 k-steps; [16 partial: MAC 16.2, drain 0.4, partial store 11.8, store drain 1.9, exit 0.7]
+  c1 se17 cu1 xcd4  16P  spid 28 pids (129..159): DP end 264.4, end 302.3 k-steps; [16 partial: MAC 15.5, drain 0.4, partial store 15.4, store drain 0.9, exit 0.3]
+  c1 se18 cu1 xcd4  16P  spid 28 pids (129..159): DP end 264.1, end 298.0 k-steps; [16 partial: MAC 15.5, drain 0.4, partial store 9.1, store drain 2.4, exit 0.9]
+  c1 se19 cu1 xcd4  16P  spid 28 pids (129..159): DP end 262.8, end 298.1 k-steps; [16 partial: MAC 15.5, drain 0.4, partial store 10.5, store drain 2.4, exit 0.8]
+  c1 se20 cu1 xcd5  16P  spid 28 pids (161..191): DP end 261.4, end 296.7 k-steps; [16 partial: MAC 18.1, drain 0.4, partial store 10.2, store drain 1.4, exit 0.6]
+  c1 se22 cu1 xcd5  16P  spid 28 pids (161..191): DP end 261.9, end 300.6 k-steps; [16 partial: MAC 19.4, drain 0.4, partial store 12.6, store drain 1.3, exit 0.4]
+  c1 se23 cu1 xcd5  16P  spid 28 pids (161..191): DP end 260.0, end 296.1 k-steps; [16 partial: MAC 18.4, drain 0.4, partial store 9.9, store drain 1.9, exit 0.9]
+  c1 se24 cu1 xcd6  16P  spid 28 pids (193..223): DP end 260.9, end 298.2 k-steps; [16 partial: MAC 15.5, drain 0.4, partial store 13.6, store drain 2.5, exit 0.4]
+  c1 se25 cu1 xcd6  16P  spid 28 pids (193..223): DP end 260.7, end 302.1 k-steps; [16 partial: MAC 15.8, drain 0.4, partial store 18.2, store drain 1.2, exit 0.4]
+  c1 se26 cu1 xcd6  16P  spid 28 pids (193..223): DP end 259.7, end 295.8 k-steps; [16 partial: MAC 17.0, drain 0.4, partial store 11.1, store drain 2.3, exit 0.6]
+  c1 se27 cu1 xcd6  16P  spid 28 pids (193..223): DP end 258.8, end 296.1 k-steps; [16 partial: MAC 16.7, drain 0.4, partial store 12.9, store drain 2.2, exit 0.4]
+  c1 se28 cu1 xcd7  16P  spid 28 pids (225..255): DP end 269.0, end 308.8 k-steps; [16 partial: MAC 22.5, drain 0.4, partial store 8.6, store drain 1.3, exit 0.5]
+  c1 se30 cu1 xcd7  16P  spid 28 pids (225..255): DP end 267.5, end 310.4 k-steps; [16 partial: MAC 24.6, drain 0.4, partial store 9.1, store drain 2.5, exit 0.7]
+  c1 se31 cu1 xcd7  16P  spid 28 pids (225..255): DP end 267.1, end 311.0 k-steps; [16 partial: MAC 24.5, drain 0.4, partial store 9.1, store drain 3.0, exit 0.8]
+  c2 se1 cu2 xcd0  16P  spid 28 pids (1..31): DP end 263.0, end 297.6 k-steps; [16 partial: MAC 15.7, drain 0.4, partial store 11.3, store drain 1.4, exit 0.2]
+  c2 se2 cu2 xcd0  16P  spid 28 pids (1..31): DP end 264.0, end 303.4 k-steps; [16 partial: MAC 16.2, drain 0.4, partial store 13.9, store drain 2.8, exit 0.2]
+  c2 se3 cu2 xcd0  16P  spid 28 pids (1..31): DP end 260.9, end 300.3 k-steps; [16 partial: MAC 17.5, drain 0.4, partial store 13.7, store drain 1.8, exit 0.2]
+  c2 se4 cu2 xcd1  16P  spid 28 pids (33..63): DP end 263.6, end 309.2 k-steps; [16 partial: MAC 25.7, drain 0.4, partial store 11.4, store drain 1.2, exit 0.2]
+  c2 se6 cu2 xcd1  16P  spid 28 pids (33..63): DP end 260.6, end 307.0 k-steps; [16 partial: MAC 27.5, drain 0.4, partial store 11.7, store drain 1.3, exit 0.2]
+  c2 se7 cu2 xcd1  16P  spid 28 pids (33..63): DP end 259.8, end 297.2 k-steps; [16 partial: MAC 19.5, drain 0.4, partial store 9.3, store drain 1.4, exit 0.3]
+  c2 se8 cu2 xcd2  16P  spid 28 pids (65..95): DP end 263.5, end 298.9 k-steps; [16 partial: MAC 17.7, drain 0.4, partial store 9.6, store drain 1.8, exit 1.5]
+  c2 se9 cu2 xcd2  16P  spid 28 pids (65..95): DP end 265.4, end 308.8 k-steps; [16 partial: MAC 18.5, drain 0.4, partial store 16.4, store drain 1.8, exit 0.2]
+  c2 se10 cu2 xcd2  16P  spid 28 pids (65..95): DP end 263.3, end 296.9 k-steps; [16 partial: MAC 16.2, drain 0.4, partial store 9.4, store drain 2.7, exit 0.3]
+  c2 se11 cu2 xcd2  16P  spid 28 pids (65..95): DP end 261.5, end 297.8 k-steps; [16 partial: MAC 15.8, drain 0.4, partial store 10.0, store drain 4.9, exit 0.2]
+  c2 se12 cu2 xcd3  16P  spid 28 pids (97..127): DP end 261.7, end 305.1 k-steps; [16 partial: MAC 22.1, drain 0.4, partial store 12.9, store drain 2.0, exit 0.3]
+  c2 se13 cu2 xcd3  16P  spid 28 pids (97..127): DP end 262.4, end 305.0 k-steps; [16 partial: MAC 19.8, drain 0.4, partial store 14.2, store drain 2.2, exit 0.3]
+  c2 se14 cu2 xcd3  16P  spid 28 pids (97..127): DP end 260.3, end 303.3 k-steps; [16 partial: MAC 21.7, drain 0.4, partial store 13.0, store drain 1.8, exit 0.3]
+  c2 se15 cu2 xcd3  16P  spid 28 pids (97..127): DP end 259.3, end 296.8 k-steps; [16 partial: MAC 16.8, drain 0.4, partial store 11.4, store drain 3.4, exit 0.2]
+  c2 se16 cu2 xcd4  16P  spid 28 pids (129..159): DP end 263.4, end 301.3 k-steps; [16 partial: MAC 18.1, drain 0.4, partial store 11.7, store drain 2.0, exit 0.9]
+  c2 se17 cu2 xcd4  16P  spid 28 pids (129..159): DP end 263.6, end 301.1 k-steps; [16 partial: MAC 16.3, drain 0.4, partial store 12.9, store drain 2.8, exit 0.5]
+  c2 se18 cu2 xcd4  16P  spid 28 pids (129..159): DP end 263.1, end 299.1 k-steps; [16 partial: MAC 16.8, drain 0.4, partial store 11.2, store drain 1.9, exit 0.6]
+  c2 se19 cu2 xcd4  16P  spid 28 pids (129..159): DP end 259.5, end 294.8 k-steps; [16 partial: MAC 16.6, drain 0.4, partial store 10.6, store drain 1.9, exit 0.7]
+  c2 se20 cu2 xcd5  16P  spid 28 pids (161..191): DP end 262.4, end 294.3 k-steps; [16 partial: MAC 15.5, drain 0.4, partial store 9.0, store drain 1.4, exit 0.3]
+  c2 se22 cu2 xcd5  16P  spid 28 pids (161..191): DP end 259.8, end 297.7 k-steps; [16 partial: MAC 17.6, drain 0.4, partial store 12.6, store drain 1.6, exit 0.3]
+  c2 se23 cu2 xcd5  16P  spid 28 pids (161..191): DP end 259.9, end 300.0 k-steps; [16 partial: MAC 21.0, drain 0.4, partial store 10.7, store drain 1.4, exit 1.0]
+  c2 se24 cu2 xcd6  16P  spid 28 pids (193..223): DP end 261.3, end 300.2 k-steps; [16 partial: MAC 18.2, drain 0.4, partial store 12.5, store drain 3.2, exit 0.7]
+  c2 se26 cu2 xcd6  16P  spid 28 pids (193..223): DP end 266.4, end 305.6 k-steps; [16 partial: MAC 15.9, drain 0.4, partial store 16.3, store drain 2.4, exit 0.3]
+  c2 se27 cu2 xcd6  16P  spid 28 pids (193..223): DP end 262.0, end 297.2 k-steps; [16 partial: MAC 15.6, drain 0.4, partial store 12.1, store drain 2.4, exit 0.7]
+  c2 se28 cu2 xcd7  16P  spid 28 pids (225..255): DP end 268.7, end 305.6 k-steps; [16 partial: MAC 19.5, drain 0.4, partial store 8.8, store drain 1.6, exit 0.3]
+  c2 se30 cu2 xcd7  16P  spid 28 pids (225..255): DP end 268.2, end 307.2 k-steps; [16 partial: MAC 20.9, drain 0.4, partial store 9.5, store drain 1.2, exit 0.5]
+  c2 se31 cu2 xcd7  16P  spid 28 pids (225..255): DP end 267.7, end 316.3 k-steps; [16 partial: MAC 28.2, drain 0.4, partial store 12.1, store drain 1.5, exit 0.5]

@@ -1,0 +1,14 @@
+[v11_persistant_overlap_global] M=16384 N=12800 K=5120 dtype='bf16': ✅ Triton and Torch match
+[v11_persistant_overlap_global] M=16384 N=12800 K=5120 dtype='bf16': rotating tensors: 1 copies, 685 MB
+[v11_persistant_overlap_global] M=16384 N=12800 K=5120 dtype='bf16': 200 iterations done
+
+W0928 14:19:30.772125  592559 simple_timer.cpp:55] [rocprofv3] tool initialization ::     0.199424 sec
+W0928 14:19:30.772437  592559 simple_timer.cpp:55] [rocprofv3] '/opt/venv/bin/python /home/jbowley/repos/gfx950-gluon-tutorials/experiments/aiter_256x256_loss_investigation/run_compare.py --worker --version 11 --M 16384 --N 12800 --K 5120 --iters 200 --rotating-buffer-size 512' ::     0.000000 sec
+W0928 14:19:31.803136  592559 tool.cpp:3082] HSA version 1.21.0 initialized (instance=0)
+W0928 14:19:32.114063  592725 simple_timer.cpp:55] [rocprofv3] tool initialization ::     0.199236 sec
+W0928 14:19:32.114384  592725 simple_timer.cpp:55] [rocprofv3] '/bin/sh /sbin/ldconfig -p' ::     0.000000 sec
+W0928 14:19:35.000448  592559 simple_timer.cpp:55] [rocprofv3] '/opt/venv/bin/python /home/jbowley/repos/gfx950-gluon-tutorials/experiments/aiter_256x256_loss_investigation/run_compare.py --worker --version 11 --M 16384 --N 12800 --K 5120 --iters 200 --rotating-buffer-size 512' ::     4.228009 sec
+E0928 14:19:35.013290  592559 output_stream.cpp:111] Opened result file: /home/jbowley/repos/gfx950-gluon-tutorials/experiments/aiter_256x256_loss_investigation/results/rocprof_kw9evqho/smci355-ccs-aus-m01-29/592559_counter_collection.csv
+E0928 14:19:35.016344  592559 output_stream.cpp:111] Opened result file: /home/jbowley/repos/gfx950-gluon-tutorials/experiments/aiter_256x256_loss_investigation/results/rocprof_kw9evqho/smci355-ccs-aus-m01-29/592559_agent_info.csv
+W0928 14:19:35.017510  592559 simple_timer.cpp:55] [rocprofv3] output generation ::     0.008262 sec
+W0928 14:19:35.019451  592559 simple_timer.cpp:55] [rocprofv3] tool finalization ::     0.010208 sec

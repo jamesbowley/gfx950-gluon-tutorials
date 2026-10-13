@@ -1,0 +1,6 @@
+[v10_persistant] M=4096 N=4096 K=8192 dtype='fp16': ✅ Triton and Torch match
+
+v10_persistant:
+matmul-performance-v10_persistant:
+        M       N       K  fp16 (TFLOPS)
+0  4096.0  4096.0  8192.0    1332.282732

@@ -1,0 +1,83 @@
+{
+ "version": 3,
+ "fitted_on": {
+  "one_wave_or_more": "sweep F (4096x8192xK, GEMM_TILE_LIMIT = 256 + S, S <= 128, K = 512-16384), every cell (version 1's constants); k_s on sweep F's 15 cells with S > 128",
+  "less_than_one_wave": "sweep G (4096x8192xK, GEMM_TILE_LIMIT = S, S <= 128, K = 512-16384, and 32768 at S = 128), every cell; k_s on its cells with S > 128",
+  "spread_test": "sweep H (4096x8192xK, S = 132-255, K = 2048-32768, GEMM_TILE_LIMIT = S and 256 + S, two rounds), every cell: spread if (256 - S) k >= C, per regime"
+ },
+ "regime": "less_than_one_wave if tiles < num_programs, else one_wave_or_more",
+ "data_parallel": {
+  "less_than_one_wave": "v9_ragged",
+  "one_wave_or_more": "v13"
+ },
+ "tile": [
+  256,
+  256,
+  64
+ ],
+ "num_programs": 256,
+ "frozen": "2026-10-12 10:37",
+ "sha256": {
+  "sweep_f.jsonl": "8e29bf6acfb490d887c075c0f4132178f2dcc927794f072f07abefef9ac1c673",
+  "sweep_g.jsonl": "a8605436cbdc3c3832a5a6e6fe5f01540d1a77569f1f4de5277038dcfbb1c3df",
+  "rules_f.py": "4f0d11ba20f889e9fd500048aca60c5891a80b92553ff52aa71faa297a910b64",
+  "sweep_h.jsonl": "f23a51fae2f213b7e380419b70d94eb61f6791eafbd94ef153ea4fded3ec80d1"
+ },
+ "variants": {
+  "one": "the rule family as version 1, constants by regime",
+  "one_sqrt": "below one wave, the family with the reduce-scatter n also at most Q / sqrt(S); one wave or more as `one`"
+ },
+ "rules": {
+  "one_wave_or_more": {
+   "one": {
+    "T": 12,
+    "E": 6,
+    "m": 4,
+    "P": 128,
+    "c0": 3.0,
+    "c1": null,
+    "A": null,
+    "k_s": 512,
+    "C": 10493
+   },
+   "any": {
+    "T": 12,
+    "E": 3,
+    "m": 4,
+    "P": 192,
+    "c0": 1.5,
+    "c1": null,
+    "A": null,
+    "k_s": 512,
+    "C": 10493
+   }
+  },
+  "less_than_one_wave": {
+   "one": {
+    "T": 14,
+    "E": 4,
+    "m": 4,
+    "P": 192,
+    "c0": 1.5,
+    "c1": null,
+    "A": null,
+    "k_s": 512,
+    "C": 10493
+   },
+   "one_sqrt": {
+    "T": 14,
+    "E": 5,
+    "m": 4,
+    "P": 256,
+    "Q": 32,
+    "c0": 3.0,
+    "c1": null,
+    "A": null,
+    "k_s": 512,
+    "C": 10493
+   }
+  }
+ },
+ "spread_kernel": "v26",
+ "sha256_version_2": "b870380fc9f5891321c9193e1107be4af5013bc100d2a01d9bbd906ca6c06aa8"
+}

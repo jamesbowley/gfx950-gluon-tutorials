@@ -1,0 +1,1016 @@
+{"S": 132, "M": 4096, "N": 8192, "K": 2048, "config": "v9r dp", "n": "-", "snp": null, "limit": 132, "us": 40.68, "round": 1}
+{"S": 132, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 132, "us": 50.241, "round": 1}
+{"S": 132, "M": 4096, "N": 8192, "K": 2048, "config": "v13", "n": "-", "snp": null, "limit": 388, "us": 89.241, "round": 1}
+{"S": 132, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 388, "us": 94.561, "round": 1}
+{"S": 136, "M": 4096, "N": 8192, "K": 2048, "config": "v9r dp", "n": "-", "snp": null, "limit": 136, "us": 40.761, "round": 1}
+{"S": 136, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 136, "us": 50.8, "round": 1}
+{"S": 136, "M": 4096, "N": 8192, "K": 2048, "config": "v13", "n": "-", "snp": null, "limit": 392, "us": 89.681, "round": 1}
+{"S": 136, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 392, "us": 95.401, "round": 1}
+{"S": 144, "M": 4096, "N": 8192, "K": 2048, "config": "v9r dp", "n": "-", "snp": null, "limit": 144, "us": 41.16, "round": 1}
+{"S": 144, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 144, "us": 52.84, "round": 1}
+{"S": 144, "M": 4096, "N": 8192, "K": 2048, "config": "v13", "n": "-", "snp": null, "limit": 400, "us": 89.561, "round": 1}
+{"S": 144, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 400, "us": 100.56, "round": 1}
+{"S": 152, "M": 4096, "N": 8192, "K": 2048, "config": "v9r dp", "n": "-", "snp": null, "limit": 152, "us": 41.6, "round": 1}
+{"S": 152, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 152, "us": 53.96, "round": 1}
+{"S": 152, "M": 4096, "N": 8192, "K": 2048, "config": "v13", "n": "-", "snp": null, "limit": 408, "us": 88.881, "round": 1}
+{"S": 152, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 408, "us": 101.961, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 2048, "config": "v9r dp", "n": "-", "snp": null, "limit": 160, "us": 41.64, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 160, "us": 54.24, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 2048, "config": "v25 spread", "n": "-", "snp": null, "limit": 160, "us": 58.401, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 2048, "config": "v13", "n": "-", "snp": null, "limit": 416, "us": 89.321, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 416, "us": 101.321, "round": 1}
+{"S": 168, "M": 4096, "N": 8192, "K": 2048, "config": "v9r dp", "n": "-", "snp": null, "limit": 168, "us": 42.52, "round": 1}
+{"S": 168, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 168, "us": 58.08, "round": 1}
+{"S": 168, "M": 4096, "N": 8192, "K": 2048, "config": "v13", "n": "-", "snp": null, "limit": 424, "us": 90.281, "round": 1}
+{"S": 168, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 424, "us": 103.001, "round": 1}
+{"S": 176, "M": 4096, "N": 8192, "K": 2048, "config": "v9r dp", "n": "-", "snp": null, "limit": 176, "us": 42.921, "round": 1}
+{"S": 176, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 176, "us": 58.12, "round": 1}
+{"S": 176, "M": 4096, "N": 8192, "K": 2048, "config": "v13", "n": "-", "snp": null, "limit": 432, "us": 91.521, "round": 1}
+{"S": 176, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 432, "us": 102.921, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 2048, "config": "v9r dp", "n": "-", "snp": null, "limit": 192, "us": 44.0, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 192, "us": 57.001, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 2048, "config": "v25 spread", "n": "-", "snp": null, "limit": 192, "us": 60.001, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 2048, "config": "v13", "n": "-", "snp": null, "limit": 448, "us": 93.12, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 448, "us": 101.801, "round": 1}
+{"S": 208, "M": 4096, "N": 8192, "K": 2048, "config": "v9r dp", "n": "-", "snp": null, "limit": 208, "us": 46.84, "round": 1}
+{"S": 208, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 208, "us": 63.281, "round": 1}
+{"S": 208, "M": 4096, "N": 8192, "K": 2048, "config": "v13", "n": "-", "snp": null, "limit": 464, "us": 94.16, "round": 1}
+{"S": 208, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 464, "us": 107.641, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 2048, "config": "v9r dp", "n": "-", "snp": null, "limit": 224, "us": 48.801, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 224, "us": 64.561, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 2048, "config": "v25 spread", "n": "-", "snp": null, "limit": 224, "us": 66.881, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 2048, "config": "v13", "n": "-", "snp": null, "limit": 480, "us": 95.92, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 480, "us": 108.681, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 2048, "config": "v9r dp", "n": "-", "snp": null, "limit": 240, "us": 50.36, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 240, "us": 67.681, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 2048, "config": "v25 spread", "n": "-", "snp": null, "limit": 240, "us": 71.96, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 2048, "config": "v13", "n": "-", "snp": null, "limit": 496, "us": 98.321, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 496, "us": 113.161, "round": 1}
+{"S": 248, "M": 4096, "N": 8192, "K": 2048, "config": "v9r dp", "n": "-", "snp": null, "limit": 248, "us": 51.52, "round": 1}
+{"S": 248, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 248, "us": 63.521, "round": 1}
+{"S": 248, "M": 4096, "N": 8192, "K": 2048, "config": "v13", "n": "-", "snp": null, "limit": 504, "us": 99.241, "round": 1}
+{"S": 248, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 504, "us": 109.401, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 2048, "config": "v9r dp", "n": "-", "snp": null, "limit": 255, "us": 51.8, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 255, "us": 57.881, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 2048, "config": "v25 spread", "n": "-", "snp": null, "limit": 255, "us": 60.76, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 2048, "config": "v13", "n": "-", "snp": null, "limit": 511, "us": 100.601, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 511, "us": 104.401, "round": 1}
+{"S": 132, "M": 4096, "N": 8192, "K": 3072, "config": "v9r dp", "n": "-", "snp": null, "limit": 132, "us": 54.281, "round": 1}
+{"S": 132, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 132, "us": 62.08, "round": 1}
+{"S": 132, "M": 4096, "N": 8192, "K": 3072, "config": "v13", "n": "-", "snp": null, "limit": 388, "us": 128.361, "round": 1}
+{"S": 132, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 388, "us": 126.681, "round": 1}
+{"S": 136, "M": 4096, "N": 8192, "K": 3072, "config": "v9r dp", "n": "-", "snp": null, "limit": 136, "us": 55.6, "round": 1}
+{"S": 136, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 136, "us": 63.68, "round": 1}
+{"S": 136, "M": 4096, "N": 8192, "K": 3072, "config": "v13", "n": "-", "snp": null, "limit": 392, "us": 128.561, "round": 1}
+{"S": 136, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 392, "us": 132.361, "round": 1}
+{"S": 144, "M": 4096, "N": 8192, "K": 3072, "config": "v9r dp", "n": "-", "snp": null, "limit": 144, "us": 55.36, "round": 1}
+{"S": 144, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 144, "us": 65.0, "round": 1}
+{"S": 144, "M": 4096, "N": 8192, "K": 3072, "config": "v13", "n": "-", "snp": null, "limit": 400, "us": 127.801, "round": 1}
+{"S": 144, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 400, "us": 134.201, "round": 1}
+{"S": 152, "M": 4096, "N": 8192, "K": 3072, "config": "v9r dp", "n": "-", "snp": null, "limit": 152, "us": 55.881, "round": 1}
+{"S": 152, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 152, "us": 66.44, "round": 1}
+{"S": 152, "M": 4096, "N": 8192, "K": 3072, "config": "v13", "n": "-", "snp": null, "limit": 408, "us": 124.801, "round": 1}
+{"S": 152, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 408, "us": 136.042, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 3072, "config": "v9r dp", "n": "-", "snp": null, "limit": 160, "us": 56.641, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 160, "us": 68.041, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 3072, "config": "v13", "n": "-", "snp": null, "limit": 416, "us": 126.801, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 416, "us": 135.681, "round": 1}
+{"S": 168, "M": 4096, "N": 8192, "K": 3072, "config": "v9r dp", "n": "-", "snp": null, "limit": 168, "us": 58.321, "round": 1}
+{"S": 168, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 168, "us": 65.8, "round": 1}
+{"S": 168, "M": 4096, "N": 8192, "K": 3072, "config": "v13", "n": "-", "snp": null, "limit": 424, "us": 127.641, "round": 1}
+{"S": 168, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 424, "us": 134.001, "round": 1}
+{"S": 176, "M": 4096, "N": 8192, "K": 3072, "config": "v9r dp", "n": "-", "snp": null, "limit": 176, "us": 58.961, "round": 1}
+{"S": 176, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 176, "us": 71.76, "round": 1}
+{"S": 176, "M": 4096, "N": 8192, "K": 3072, "config": "v13", "n": "-", "snp": null, "limit": 432, "us": 128.241, "round": 1}
+{"S": 176, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 432, "us": 136.481, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 3072, "config": "v9r dp", "n": "-", "snp": null, "limit": 192, "us": 61.841, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 192, "us": 73.601, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 3072, "config": "v13", "n": "-", "snp": null, "limit": 448, "us": 130.721, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 448, "us": 139.081, "round": 1}
+{"S": 208, "M": 4096, "N": 8192, "K": 3072, "config": "v9r dp", "n": "-", "snp": null, "limit": 208, "us": 65.28, "round": 1}
+{"S": 208, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 208, "us": 79.801, "round": 1}
+{"S": 208, "M": 4096, "N": 8192, "K": 3072, "config": "v13", "n": "-", "snp": null, "limit": 464, "us": 133.241, "round": 1}
+{"S": 208, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 464, "us": 143.921, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 3072, "config": "v9r dp", "n": "-", "snp": null, "limit": 224, "us": 67.48, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 224, "us": 81.601, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 3072, "config": "v13", "n": "-", "snp": null, "limit": 480, "us": 135.881, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 480, "us": 146.641, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 3072, "config": "v9r dp", "n": "-", "snp": null, "limit": 240, "us": 69.04, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 240, "us": 89.041, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 3072, "config": "v13", "n": "-", "snp": null, "limit": 496, "us": 138.761, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 496, "us": 154.562, "round": 1}
+{"S": 248, "M": 4096, "N": 8192, "K": 3072, "config": "v9r dp", "n": "-", "snp": null, "limit": 248, "us": 70.64, "round": 1}
+{"S": 248, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 248, "us": 86.241, "round": 1}
+{"S": 248, "M": 4096, "N": 8192, "K": 3072, "config": "v13", "n": "-", "snp": null, "limit": 504, "us": 140.801, "round": 1}
+{"S": 248, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 504, "us": 152.961, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 3072, "config": "v9r dp", "n": "-", "snp": null, "limit": 255, "us": 70.641, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 255, "us": 78.841, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 3072, "config": "v13", "n": "-", "snp": null, "limit": 511, "us": 141.201, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 511, "us": 146.201, "round": 1}
+{"S": 132, "M": 4096, "N": 8192, "K": 4096, "config": "v9r dp", "n": "-", "snp": null, "limit": 132, "us": 73.36, "round": 1}
+{"S": 132, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 132, "us": 76.041, "round": 1}
+{"S": 132, "M": 4096, "N": 8192, "K": 4096, "config": "v13", "n": "-", "snp": null, "limit": 388, "us": 160.961, "round": 1}
+{"S": 132, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 388, "us": 158.641, "round": 1}
+{"S": 136, "M": 4096, "N": 8192, "K": 4096, "config": "v9r dp", "n": "-", "snp": null, "limit": 136, "us": 73.36, "round": 1}
+{"S": 136, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 136, "us": 75.881, "round": 1}
+{"S": 136, "M": 4096, "N": 8192, "K": 4096, "config": "v13", "n": "-", "snp": null, "limit": 392, "us": 161.281, "round": 1}
+{"S": 136, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 392, "us": 163.642, "round": 1}
+{"S": 144, "M": 4096, "N": 8192, "K": 4096, "config": "v9r dp", "n": "-", "snp": null, "limit": 144, "us": 74.2, "round": 1}
+{"S": 144, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 144, "us": 78.321, "round": 1}
+{"S": 144, "M": 4096, "N": 8192, "K": 4096, "config": "v13", "n": "-", "snp": null, "limit": 400, "us": 164.041, "round": 1}
+{"S": 144, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 400, "us": 166.281, "round": 1}
+{"S": 152, "M": 4096, "N": 8192, "K": 4096, "config": "v9r dp", "n": "-", "snp": null, "limit": 152, "us": 74.681, "round": 1}
+{"S": 152, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 152, "us": 80.601, "round": 1}
+{"S": 152, "M": 4096, "N": 8192, "K": 4096, "config": "v13", "n": "-", "snp": null, "limit": 408, "us": 163.081, "round": 1}
+{"S": 152, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 408, "us": 166.761, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 4096, "config": "v9r dp", "n": "-", "snp": null, "limit": 160, "us": 75.601, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 160, "us": 83.12, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 4096, "config": "v25 spread", "n": "-", "snp": null, "limit": 160, "us": 86.081, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 4096, "config": "v13", "n": "-", "snp": null, "limit": 416, "us": 163.881, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 416, "us": 168.041, "round": 1}
+{"S": 168, "M": 4096, "N": 8192, "K": 4096, "config": "v9r dp", "n": "-", "snp": null, "limit": 168, "us": 77.161, "round": 1}
+{"S": 168, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 168, "us": 84.761, "round": 1}
+{"S": 168, "M": 4096, "N": 8192, "K": 4096, "config": "v13", "n": "-", "snp": null, "limit": 424, "us": 166.721, "round": 1}
+{"S": 168, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 424, "us": 169.762, "round": 1}
+{"S": 176, "M": 4096, "N": 8192, "K": 4096, "config": "v9r dp", "n": "-", "snp": null, "limit": 176, "us": 78.201, "round": 1}
+{"S": 176, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 176, "us": 87.361, "round": 1}
+{"S": 176, "M": 4096, "N": 8192, "K": 4096, "config": "v13", "n": "-", "snp": null, "limit": 432, "us": 166.761, "round": 1}
+{"S": 176, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 432, "us": 173.001, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 4096, "config": "v9r dp", "n": "-", "snp": null, "limit": 192, "us": 81.44, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 192, "us": 89.321, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 4096, "config": "v25 spread", "n": "-", "snp": null, "limit": 192, "us": 91.841, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 4096, "config": "v13", "n": "-", "snp": null, "limit": 448, "us": 170.082, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 448, "us": 176.041, "round": 1}
+{"S": 208, "M": 4096, "N": 8192, "K": 4096, "config": "v9r dp", "n": "-", "snp": null, "limit": 208, "us": 86.24, "round": 1}
+{"S": 208, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 208, "us": 95.641, "round": 1}
+{"S": 208, "M": 4096, "N": 8192, "K": 4096, "config": "v13", "n": "-", "snp": null, "limit": 464, "us": 171.842, "round": 1}
+{"S": 208, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 464, "us": 183.201, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 4096, "config": "v9r dp", "n": "-", "snp": null, "limit": 224, "us": 89.24, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 224, "us": 99.041, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 4096, "config": "v25 spread", "n": "-", "snp": null, "limit": 224, "us": 102.201, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 4096, "config": "v13", "n": "-", "snp": null, "limit": 480, "us": 175.241, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 480, "us": 185.562, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 4096, "config": "v9r dp", "n": "-", "snp": null, "limit": 240, "us": 91.6, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 240, "us": 106.36, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 4096, "config": "v25 spread", "n": "-", "snp": null, "limit": 240, "us": 107.361, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 4096, "config": "v13", "n": "-", "snp": null, "limit": 496, "us": 180.201, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 496, "us": 191.082, "round": 1}
+{"S": 248, "M": 4096, "N": 8192, "K": 4096, "config": "v9r dp", "n": "-", "snp": null, "limit": 248, "us": 92.761, "round": 1}
+{"S": 248, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 248, "us": 108.961, "round": 1}
+{"S": 248, "M": 4096, "N": 8192, "K": 4096, "config": "v13", "n": "-", "snp": null, "limit": 504, "us": 181.961, "round": 1}
+{"S": 248, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 504, "us": 194.962, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 4096, "config": "v9r dp", "n": "-", "snp": null, "limit": 255, "us": 93.561, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 255, "us": 99.481, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 4096, "config": "v25 spread", "n": "-", "snp": null, "limit": 255, "us": 102.281, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 4096, "config": "v13", "n": "-", "snp": null, "limit": 511, "us": 182.322, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 511, "us": 190.042, "round": 1}
+{"S": 132, "M": 4096, "N": 8192, "K": 6144, "config": "v9r dp", "n": "-", "snp": null, "limit": 132, "us": 104.08, "round": 1}
+{"S": 132, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 132, "us": 97.081, "round": 1}
+{"S": 132, "M": 4096, "N": 8192, "K": 6144, "config": "v13", "n": "-", "snp": null, "limit": 388, "us": 236.042, "round": 1}
+{"S": 132, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 388, "us": 224.842, "round": 1}
+{"S": 136, "M": 4096, "N": 8192, "K": 6144, "config": "v9r dp", "n": "-", "snp": null, "limit": 136, "us": 104.88, "round": 1}
+{"S": 136, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 136, "us": 101.0, "round": 1}
+{"S": 136, "M": 4096, "N": 8192, "K": 6144, "config": "v13", "n": "-", "snp": null, "limit": 392, "us": 236.682, "round": 1}
+{"S": 136, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 392, "us": 237.361, "round": 1}
+{"S": 144, "M": 4096, "N": 8192, "K": 6144, "config": "v9r dp", "n": "-", "snp": null, "limit": 144, "us": 105.041, "round": 1}
+{"S": 144, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 144, "us": 104.281, "round": 1}
+{"S": 144, "M": 4096, "N": 8192, "K": 6144, "config": "v13", "n": "-", "snp": null, "limit": 400, "us": 238.642, "round": 1}
+{"S": 144, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 400, "us": 237.722, "round": 1}
+{"S": 152, "M": 4096, "N": 8192, "K": 6144, "config": "v9r dp", "n": "-", "snp": null, "limit": 152, "us": 106.201, "round": 1}
+{"S": 152, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 152, "us": 108.2, "round": 1}
+{"S": 152, "M": 4096, "N": 8192, "K": 6144, "config": "v13", "n": "-", "snp": null, "limit": 408, "us": 237.842, "round": 1}
+{"S": 152, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 408, "us": 237.762, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 6144, "config": "v9r dp", "n": "-", "snp": null, "limit": 160, "us": 107.601, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 160, "us": 112.681, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 6144, "config": "v13", "n": "-", "snp": null, "limit": 416, "us": 239.001, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 416, "us": 244.122, "round": 1}
+{"S": 168, "M": 4096, "N": 8192, "K": 6144, "config": "v9r dp", "n": "-", "snp": null, "limit": 168, "us": 109.441, "round": 1}
+{"S": 168, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 168, "us": 113.161, "round": 1}
+{"S": 168, "M": 4096, "N": 8192, "K": 6144, "config": "v13", "n": "-", "snp": null, "limit": 424, "us": 240.962, "round": 1}
+{"S": 168, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 424, "us": 239.921, "round": 1}
+{"S": 176, "M": 4096, "N": 8192, "K": 6144, "config": "v9r dp", "n": "-", "snp": null, "limit": 176, "us": 111.281, "round": 1}
+{"S": 176, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 176, "us": 117.641, "round": 1}
+{"S": 176, "M": 4096, "N": 8192, "K": 6144, "config": "v13", "n": "-", "snp": null, "limit": 432, "us": 243.401, "round": 1}
+{"S": 176, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 432, "us": 246.722, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 6144, "config": "v9r dp", "n": "-", "snp": null, "limit": 192, "us": 116.681, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 192, "us": 122.041, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 6144, "config": "v13", "n": "-", "snp": null, "limit": 448, "us": 248.242, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 448, "us": 248.722, "round": 1}
+{"S": 208, "M": 4096, "N": 8192, "K": 6144, "config": "v9r dp", "n": "-", "snp": null, "limit": 208, "us": 122.88, "round": 1}
+{"S": 208, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 208, "us": 132.321, "round": 1}
+{"S": 208, "M": 4096, "N": 8192, "K": 6144, "config": "v13", "n": "-", "snp": null, "limit": 464, "us": 250.242, "round": 1}
+{"S": 208, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 464, "us": 259.682, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 6144, "config": "v9r dp", "n": "-", "snp": null, "limit": 224, "us": 128.001, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 224, "us": 137.281, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 6144, "config": "v13", "n": "-", "snp": null, "limit": 480, "us": 254.521, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 480, "us": 263.161, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 6144, "config": "v9r dp", "n": "-", "snp": null, "limit": 240, "us": 131.321, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 240, "us": 146.441, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 6144, "config": "v13", "n": "-", "snp": null, "limit": 496, "us": 260.641, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 496, "us": 270.602, "round": 1}
+{"S": 248, "M": 4096, "N": 8192, "K": 6144, "config": "v9r dp", "n": "-", "snp": null, "limit": 248, "us": 134.081, "round": 1}
+{"S": 248, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 248, "us": 150.121, "round": 1}
+{"S": 248, "M": 4096, "N": 8192, "K": 6144, "config": "v13", "n": "-", "snp": null, "limit": 504, "us": 262.602, "round": 1}
+{"S": 248, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 504, "us": 276.842, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 6144, "config": "v9r dp", "n": "-", "snp": null, "limit": 255, "us": 135.601, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 255, "us": 144.161, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 6144, "config": "v13", "n": "-", "snp": null, "limit": 511, "us": 264.002, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 511, "us": 271.642, "round": 1}
+{"S": 132, "M": 4096, "N": 8192, "K": 8192, "config": "v9r dp", "n": "-", "snp": null, "limit": 132, "us": 126.761, "round": 1}
+{"S": 132, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 132, "us": 119.361, "round": 1}
+{"S": 132, "M": 4096, "N": 8192, "K": 8192, "config": "v13", "n": "-", "snp": null, "limit": 388, "us": 295.762, "round": 1}
+{"S": 132, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 388, "us": 292.322, "round": 1}
+{"S": 136, "M": 4096, "N": 8192, "K": 8192, "config": "v9r dp", "n": "-", "snp": null, "limit": 136, "us": 127.041, "round": 1}
+{"S": 136, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 136, "us": 124.121, "round": 1}
+{"S": 136, "M": 4096, "N": 8192, "K": 8192, "config": "v13", "n": "-", "snp": null, "limit": 392, "us": 295.722, "round": 1}
+{"S": 136, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 392, "us": 295.322, "round": 1}
+{"S": 144, "M": 4096, "N": 8192, "K": 8192, "config": "v9r dp", "n": "-", "snp": null, "limit": 144, "us": 128.72, "round": 1}
+{"S": 144, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 144, "us": 125.48, "round": 1}
+{"S": 144, "M": 4096, "N": 8192, "K": 8192, "config": "v13", "n": "-", "snp": null, "limit": 400, "us": 301.803, "round": 1}
+{"S": 144, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 400, "us": 299.042, "round": 1}
+{"S": 152, "M": 4096, "N": 8192, "K": 8192, "config": "v9r dp", "n": "-", "snp": null, "limit": 152, "us": 131.84, "round": 1}
+{"S": 152, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 152, "us": 128.281, "round": 1}
+{"S": 152, "M": 4096, "N": 8192, "K": 8192, "config": "v13", "n": "-", "snp": null, "limit": 408, "us": 303.523, "round": 1}
+{"S": 152, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 408, "us": 300.962, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 8192, "config": "v9r dp", "n": "-", "snp": null, "limit": 160, "us": 134.521, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 160, "us": 137.761, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 8192, "config": "v25 spread", "n": "-", "snp": null, "limit": 160, "us": 144.161, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 8192, "config": "v13", "n": "-", "snp": null, "limit": 416, "us": 305.322, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 416, "us": 308.762, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 8192, "config": "v25 spread", "n": "-", "snp": null, "limit": 416, "us": 311.443, "round": 1}
+{"S": 168, "M": 4096, "N": 8192, "K": 8192, "config": "v9r dp", "n": "-", "snp": null, "limit": 168, "us": 137.081, "round": 1}
+{"S": 168, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 168, "us": 135.121, "round": 1}
+{"S": 168, "M": 4096, "N": 8192, "K": 8192, "config": "v13", "n": "-", "snp": null, "limit": 424, "us": 310.282, "round": 1}
+{"S": 168, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 424, "us": 310.002, "round": 1}
+{"S": 176, "M": 4096, "N": 8192, "K": 8192, "config": "v9r dp", "n": "-", "snp": null, "limit": 176, "us": 140.201, "round": 1}
+{"S": 176, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 176, "us": 141.481, "round": 1}
+{"S": 176, "M": 4096, "N": 8192, "K": 8192, "config": "v13", "n": "-", "snp": null, "limit": 432, "us": 312.802, "round": 1}
+{"S": 176, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 432, "us": 314.763, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 8192, "config": "v9r dp", "n": "-", "snp": null, "limit": 192, "us": 147.801, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 192, "us": 147.801, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 8192, "config": "v25 spread", "n": "-", "snp": null, "limit": 192, "us": 151.201, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 8192, "config": "v13", "n": "-", "snp": null, "limit": 448, "us": 316.842, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 448, "us": 316.882, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 8192, "config": "v25 spread", "n": "-", "snp": null, "limit": 448, "us": 321.443, "round": 1}
+{"S": 208, "M": 4096, "N": 8192, "K": 8192, "config": "v9r dp", "n": "-", "snp": null, "limit": 208, "us": 155.681, "round": 1}
+{"S": 208, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 208, "us": 161.241, "round": 1}
+{"S": 208, "M": 4096, "N": 8192, "K": 8192, "config": "v13", "n": "-", "snp": null, "limit": 464, "us": 323.523, "round": 1}
+{"S": 208, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 464, "us": 333.123, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 8192, "config": "v9r dp", "n": "-", "snp": null, "limit": 224, "us": 160.441, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 224, "us": 168.601, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 8192, "config": "v25 spread", "n": "-", "snp": null, "limit": 224, "us": 172.601, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 8192, "config": "v13", "n": "-", "snp": null, "limit": 480, "us": 326.762, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 480, "us": 339.282, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 8192, "config": "v25 spread", "n": "-", "snp": null, "limit": 480, "us": 342.602, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 8192, "config": "v9r dp", "n": "-", "snp": null, "limit": 240, "us": 165.482, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 240, "us": 177.441, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 8192, "config": "v25 spread", "n": "-", "snp": null, "limit": 240, "us": 181.001, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 8192, "config": "v13", "n": "-", "snp": null, "limit": 496, "us": 333.483, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 496, "us": 347.043, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 8192, "config": "v25 spread", "n": "-", "snp": null, "limit": 496, "us": 350.683, "round": 1}
+{"S": 248, "M": 4096, "N": 8192, "K": 8192, "config": "v9r dp", "n": "-", "snp": null, "limit": 248, "us": 169.361, "round": 1}
+{"S": 248, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 248, "us": 183.081, "round": 1}
+{"S": 248, "M": 4096, "N": 8192, "K": 8192, "config": "v13", "n": "-", "snp": null, "limit": 504, "us": 338.202, "round": 1}
+{"S": 248, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 504, "us": 352.922, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 8192, "config": "v9r dp", "n": "-", "snp": null, "limit": 255, "us": 170.961, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 255, "us": 174.842, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 8192, "config": "v25 spread", "n": "-", "snp": null, "limit": 255, "us": 177.161, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 8192, "config": "v13", "n": "-", "snp": null, "limit": 511, "us": 341.882, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 511, "us": 347.642, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 8192, "config": "v25 spread", "n": "-", "snp": null, "limit": 511, "us": 350.202, "round": 1}
+{"S": 132, "M": 4096, "N": 8192, "K": 12288, "config": "v9r dp", "n": "-", "snp": null, "limit": 132, "us": 191.482, "round": 1}
+{"S": 132, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 132, "us": 176.241, "round": 1}
+{"S": 132, "M": 4096, "N": 8192, "K": 12288, "config": "v13", "n": "-", "snp": null, "limit": 388, "us": 461.163, "round": 1}
+{"S": 132, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 388, "us": 432.444, "round": 1}
+{"S": 136, "M": 4096, "N": 8192, "K": 12288, "config": "v9r dp", "n": "-", "snp": null, "limit": 136, "us": 190.522, "round": 1}
+{"S": 136, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 136, "us": 193.242, "round": 1}
+{"S": 136, "M": 4096, "N": 8192, "K": 12288, "config": "v13", "n": "-", "snp": null, "limit": 392, "us": 462.923, "round": 1}
+{"S": 136, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 392, "us": 453.243, "round": 1}
+{"S": 144, "M": 4096, "N": 8192, "K": 12288, "config": "v9r dp", "n": "-", "snp": null, "limit": 144, "us": 194.841, "round": 1}
+{"S": 144, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 144, "us": 199.081, "round": 1}
+{"S": 144, "M": 4096, "N": 8192, "K": 12288, "config": "v13", "n": "-", "snp": null, "limit": 400, "us": 463.243, "round": 1}
+{"S": 144, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 400, "us": 455.643, "round": 1}
+{"S": 152, "M": 4096, "N": 8192, "K": 12288, "config": "v9r dp", "n": "-", "snp": null, "limit": 152, "us": 197.481, "round": 1}
+{"S": 152, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 152, "us": 199.281, "round": 1}
+{"S": 152, "M": 4096, "N": 8192, "K": 12288, "config": "v13", "n": "-", "snp": null, "limit": 408, "us": 468.803, "round": 1}
+{"S": 152, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 408, "us": 452.483, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 12288, "config": "v9r dp", "n": "-", "snp": null, "limit": 160, "us": 200.601, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 160, "us": 201.561, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 12288, "config": "v13", "n": "-", "snp": null, "limit": 416, "us": 469.963, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 416, "us": 455.163, "round": 1}
+{"S": 168, "M": 4096, "N": 8192, "K": 12288, "config": "v9r dp", "n": "-", "snp": null, "limit": 168, "us": 204.721, "round": 1}
+{"S": 168, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 168, "us": 201.041, "round": 1}
+{"S": 168, "M": 4096, "N": 8192, "K": 12288, "config": "v13", "n": "-", "snp": null, "limit": 424, "us": 478.804, "round": 1}
+{"S": 168, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 424, "us": 463.003, "round": 1}
+{"S": 176, "M": 4096, "N": 8192, "K": 12288, "config": "v9r dp", "n": "-", "snp": null, "limit": 176, "us": 213.042, "round": 1}
+{"S": 176, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 176, "us": 215.362, "round": 1}
+{"S": 176, "M": 4096, "N": 8192, "K": 12288, "config": "v13", "n": "-", "snp": null, "limit": 432, "us": 479.524, "round": 1}
+{"S": 176, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 432, "us": 470.724, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 12288, "config": "v9r dp", "n": "-", "snp": null, "limit": 192, "us": 220.962, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 192, "us": 216.122, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 12288, "config": "v13", "n": "-", "snp": null, "limit": 448, "us": 489.004, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 448, "us": 475.323, "round": 1}
+{"S": 208, "M": 4096, "N": 8192, "K": 12288, "config": "v9r dp", "n": "-", "snp": null, "limit": 208, "us": 231.921, "round": 1}
+{"S": 208, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 208, "us": 239.282, "round": 1}
+{"S": 208, "M": 4096, "N": 8192, "K": 12288, "config": "v13", "n": "-", "snp": null, "limit": 464, "us": 496.203, "round": 1}
+{"S": 208, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 464, "us": 497.163, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 12288, "config": "v9r dp", "n": "-", "snp": null, "limit": 224, "us": 239.122, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 224, "us": 250.362, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 12288, "config": "v13", "n": "-", "snp": null, "limit": 480, "us": 497.923, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 480, "us": 505.324, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 12288, "config": "v9r dp", "n": "-", "snp": null, "limit": 240, "us": 247.601, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 240, "us": 263.282, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 12288, "config": "v13", "n": "-", "snp": null, "limit": 496, "us": 500.804, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 496, "us": 516.243, "round": 1}
+{"S": 248, "M": 4096, "N": 8192, "K": 12288, "config": "v9r dp", "n": "-", "snp": null, "limit": 248, "us": 254.562, "round": 1}
+{"S": 248, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 248, "us": 271.642, "round": 1}
+{"S": 248, "M": 4096, "N": 8192, "K": 12288, "config": "v13", "n": "-", "snp": null, "limit": 504, "us": 505.724, "round": 1}
+{"S": 248, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 504, "us": 520.324, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 12288, "config": "v9r dp", "n": "-", "snp": null, "limit": 255, "us": 258.282, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 255, "us": 270.482, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 12288, "config": "v13", "n": "-", "snp": null, "limit": 511, "us": 509.444, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 511, "us": 518.324, "round": 1}
+{"S": 132, "M": 4096, "N": 8192, "K": 16384, "config": "v9r dp", "n": "-", "snp": null, "limit": 132, "us": 275.962, "round": 1}
+{"S": 132, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 132, "us": 254.962, "round": 1}
+{"S": 132, "M": 4096, "N": 8192, "K": 16384, "config": "v13", "n": "-", "snp": null, "limit": 388, "us": 640.085, "round": 1}
+{"S": 132, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 388, "us": 605.725, "round": 1}
+{"S": 136, "M": 4096, "N": 8192, "K": 16384, "config": "v9r dp", "n": "-", "snp": null, "limit": 136, "us": 275.082, "round": 1}
+{"S": 136, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 136, "us": 267.482, "round": 1}
+{"S": 136, "M": 4096, "N": 8192, "K": 16384, "config": "v13", "n": "-", "snp": null, "limit": 392, "us": 646.085, "round": 1}
+{"S": 136, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 392, "us": 616.364, "round": 1}
+{"S": 144, "M": 4096, "N": 8192, "K": 16384, "config": "v9r dp", "n": "-", "snp": null, "limit": 144, "us": 275.242, "round": 1}
+{"S": 144, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 144, "us": 276.482, "round": 1}
+{"S": 144, "M": 4096, "N": 8192, "K": 16384, "config": "v13", "n": "-", "snp": null, "limit": 400, "us": 644.725, "round": 1}
+{"S": 144, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 400, "us": 628.084, "round": 1}
+{"S": 152, "M": 4096, "N": 8192, "K": 16384, "config": "v9r dp", "n": "-", "snp": null, "limit": 152, "us": 306.922, "round": 1}
+{"S": 152, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 152, "us": 288.082, "round": 1}
+{"S": 152, "M": 4096, "N": 8192, "K": 16384, "config": "v13", "n": "-", "snp": null, "limit": 408, "us": 659.405, "round": 1}
+{"S": 152, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 408, "us": 639.805, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 16384, "config": "v9r dp", "n": "-", "snp": null, "limit": 160, "us": 304.643, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 160, "us": 305.002, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 16384, "config": "v25 spread", "n": "-", "snp": null, "limit": 160, "us": 312.202, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 16384, "config": "v13", "n": "-", "snp": null, "limit": 416, "us": 659.204, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 416, "us": 651.804, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 16384, "config": "v25 spread", "n": "-", "snp": null, "limit": 416, "us": 645.684, "round": 1}
+{"S": 168, "M": 4096, "N": 8192, "K": 16384, "config": "v9r dp", "n": "-", "snp": null, "limit": 168, "us": 310.362, "round": 1}
+{"S": 168, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 168, "us": 273.202, "round": 1}
+{"S": 168, "M": 4096, "N": 8192, "K": 16384, "config": "v13", "n": "-", "snp": null, "limit": 424, "us": 666.884, "round": 1}
+{"S": 168, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 424, "us": 626.364, "round": 1}
+{"S": 176, "M": 4096, "N": 8192, "K": 16384, "config": "v9r dp", "n": "-", "snp": null, "limit": 176, "us": 313.402, "round": 1}
+{"S": 176, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 176, "us": 305.762, "round": 1}
+{"S": 176, "M": 4096, "N": 8192, "K": 16384, "config": "v13", "n": "-", "snp": null, "limit": 432, "us": 667.884, "round": 1}
+{"S": 176, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 432, "us": 662.804, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 16384, "config": "v9r dp", "n": "-", "snp": null, "limit": 192, "us": 319.602, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 192, "us": 294.082, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 16384, "config": "v25 spread", "n": "-", "snp": null, "limit": 192, "us": 299.082, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 16384, "config": "v13", "n": "-", "snp": null, "limit": 448, "us": 673.725, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 448, "us": 644.724, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 16384, "config": "v25 spread", "n": "-", "snp": null, "limit": 448, "us": 650.884, "round": 1}
+{"S": 208, "M": 4096, "N": 8192, "K": 16384, "config": "v9r dp", "n": "-", "snp": null, "limit": 208, "us": 327.722, "round": 1}
+{"S": 208, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 208, "us": 322.082, "round": 1}
+{"S": 208, "M": 4096, "N": 8192, "K": 16384, "config": "v13", "n": "-", "snp": null, "limit": 464, "us": 682.765, "round": 1}
+{"S": 208, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 464, "us": 679.805, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 16384, "config": "v9r dp", "n": "-", "snp": null, "limit": 224, "us": 333.043, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 224, "us": 331.442, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 16384, "config": "v25 spread", "n": "-", "snp": null, "limit": 224, "us": 335.442, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 16384, "config": "v13", "n": "-", "snp": null, "limit": 480, "us": 685.964, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 480, "us": 679.844, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 16384, "config": "v25 spread", "n": "-", "snp": null, "limit": 480, "us": 683.725, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 16384, "config": "v9r dp", "n": "-", "snp": null, "limit": 240, "us": 340.922, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 240, "us": 347.562, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 16384, "config": "v25 spread", "n": "-", "snp": null, "limit": 240, "us": 350.482, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 16384, "config": "v13", "n": "-", "snp": null, "limit": 496, "us": 696.045, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 496, "us": 694.924, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 16384, "config": "v25 spread", "n": "-", "snp": null, "limit": 496, "us": 698.484, "round": 1}
+{"S": 248, "M": 4096, "N": 8192, "K": 16384, "config": "v9r dp", "n": "-", "snp": null, "limit": 248, "us": 347.882, "round": 1}
+{"S": 248, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 248, "us": 354.802, "round": 1}
+{"S": 248, "M": 4096, "N": 8192, "K": 16384, "config": "v13", "n": "-", "snp": null, "limit": 504, "us": 700.405, "round": 1}
+{"S": 248, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 504, "us": 701.804, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 16384, "config": "v9r dp", "n": "-", "snp": null, "limit": 255, "us": 350.642, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 255, "us": 364.562, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 16384, "config": "v25 spread", "n": "-", "snp": null, "limit": 255, "us": 367.762, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 16384, "config": "v13", "n": "-", "snp": null, "limit": 511, "us": 689.205, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 511, "us": 726.325, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 16384, "config": "v25 spread", "n": "-", "snp": null, "limit": 511, "us": 733.565, "round": 1}
+{"S": 132, "M": 4096, "N": 8192, "K": 24576, "config": "v9r dp", "n": "-", "snp": null, "limit": 132, "us": 417.483, "round": 1}
+{"S": 132, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 132, "us": 358.042, "round": 1}
+{"S": 132, "M": 4096, "N": 8192, "K": 24576, "config": "v13", "n": "-", "snp": null, "limit": 388, "us": 914.006, "round": 1}
+{"S": 132, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 388, "us": 868.446, "round": 1}
+{"S": 136, "M": 4096, "N": 8192, "K": 24576, "config": "v9r dp", "n": "-", "snp": null, "limit": 136, "us": 421.483, "round": 1}
+{"S": 136, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 136, "us": 393.442, "round": 1}
+{"S": 136, "M": 4096, "N": 8192, "K": 24576, "config": "v13", "n": "-", "snp": null, "limit": 392, "us": 914.966, "round": 1}
+{"S": 136, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 392, "us": 904.846, "round": 1}
+{"S": 144, "M": 4096, "N": 8192, "K": 24576, "config": "v9r dp", "n": "-", "snp": null, "limit": 144, "us": 421.123, "round": 1}
+{"S": 144, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 144, "us": 392.443, "round": 1}
+{"S": 144, "M": 4096, "N": 8192, "K": 24576, "config": "v13", "n": "-", "snp": null, "limit": 400, "us": 923.606, "round": 1}
+{"S": 144, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 400, "us": 908.006, "round": 1}
+{"S": 152, "M": 4096, "N": 8192, "K": 24576, "config": "v9r dp", "n": "-", "snp": null, "limit": 152, "us": 424.883, "round": 1}
+{"S": 152, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 152, "us": 421.323, "round": 1}
+{"S": 152, "M": 4096, "N": 8192, "K": 24576, "config": "v13", "n": "-", "snp": null, "limit": 408, "us": 932.727, "round": 1}
+{"S": 152, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 408, "us": 920.447, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 24576, "config": "v9r dp", "n": "-", "snp": null, "limit": 160, "us": 426.123, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 160, "us": 370.523, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 24576, "config": "v13", "n": "-", "snp": null, "limit": 416, "us": 934.127, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 416, "us": 890.446, "round": 1}
+{"S": 168, "M": 4096, "N": 8192, "K": 24576, "config": "v9r dp", "n": "-", "snp": null, "limit": 168, "us": 430.043, "round": 1}
+{"S": 168, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 168, "us": 383.682, "round": 1}
+{"S": 168, "M": 4096, "N": 8192, "K": 24576, "config": "v13", "n": "-", "snp": null, "limit": 424, "us": 947.366, "round": 1}
+{"S": 168, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 424, "us": 901.006, "round": 1}
+{"S": 176, "M": 4096, "N": 8192, "K": 24576, "config": "v9r dp", "n": "-", "snp": null, "limit": 176, "us": 436.323, "round": 1}
+{"S": 176, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 176, "us": 414.683, "round": 1}
+{"S": 176, "M": 4096, "N": 8192, "K": 24576, "config": "v13", "n": "-", "snp": null, "limit": 432, "us": 952.687, "round": 1}
+{"S": 176, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 432, "us": 938.727, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 24576, "config": "v9r dp", "n": "-", "snp": null, "limit": 192, "us": 455.403, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 192, "us": 415.363, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 24576, "config": "v13", "n": "-", "snp": null, "limit": 448, "us": 968.687, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 448, "us": 929.606, "round": 1}
+{"S": 208, "M": 4096, "N": 8192, "K": 24576, "config": "v9r dp", "n": "-", "snp": null, "limit": 208, "us": 470.603, "round": 1}
+{"S": 208, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 208, "us": 453.203, "round": 1}
+{"S": 208, "M": 4096, "N": 8192, "K": 24576, "config": "v13", "n": "-", "snp": null, "limit": 464, "us": 982.447, "round": 1}
+{"S": 208, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 464, "us": 965.127, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 24576, "config": "v9r dp", "n": "-", "snp": null, "limit": 224, "us": 485.123, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 224, "us": 477.483, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 24576, "config": "v13", "n": "-", "snp": null, "limit": 480, "us": 991.207, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 480, "us": 983.247, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 24576, "config": "v9r dp", "n": "-", "snp": null, "limit": 240, "us": 499.803, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 240, "us": 504.323, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 24576, "config": "v13", "n": "-", "snp": null, "limit": 496, "us": 1004.247, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 496, "us": 1010.007, "round": 1}
+{"S": 248, "M": 4096, "N": 8192, "K": 24576, "config": "v9r dp", "n": "-", "snp": null, "limit": 248, "us": 506.963, "round": 1}
+{"S": 248, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 248, "us": 516.324, "round": 1}
+{"S": 248, "M": 4096, "N": 8192, "K": 24576, "config": "v13", "n": "-", "snp": null, "limit": 504, "us": 1007.647, "round": 1}
+{"S": 248, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 504, "us": 1018.207, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 24576, "config": "v9r dp", "n": "-", "snp": null, "limit": 255, "us": 510.764, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 255, "us": 524.803, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 24576, "config": "v13", "n": "-", "snp": null, "limit": 511, "us": 1011.367, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 511, "us": 1020.767, "round": 1}
+{"S": 132, "M": 4096, "N": 8192, "K": 32768, "config": "v9r dp", "n": "-", "snp": null, "limit": 132, "us": 572.324, "round": 1}
+{"S": 132, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 132, "us": 488.723, "round": 1}
+{"S": 132, "M": 4096, "N": 8192, "K": 32768, "config": "v13", "n": "-", "snp": null, "limit": 388, "us": 1229.208, "round": 1}
+{"S": 132, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 388, "us": 1167.608, "round": 1}
+{"S": 136, "M": 4096, "N": 8192, "K": 32768, "config": "v9r dp", "n": "-", "snp": null, "limit": 136, "us": 577.404, "round": 1}
+{"S": 136, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 136, "us": 524.804, "round": 1}
+{"S": 136, "M": 4096, "N": 8192, "K": 32768, "config": "v13", "n": "-", "snp": null, "limit": 392, "us": 1232.529, "round": 1}
+{"S": 136, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 392, "us": 1198.689, "round": 1}
+{"S": 144, "M": 4096, "N": 8192, "K": 32768, "config": "v9r dp", "n": "-", "snp": null, "limit": 144, "us": 584.204, "round": 1}
+{"S": 144, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 144, "us": 531.044, "round": 1}
+{"S": 144, "M": 4096, "N": 8192, "K": 32768, "config": "v13", "n": "-", "snp": null, "limit": 400, "us": 1241.449, "round": 1}
+{"S": 144, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 400, "us": 1223.049, "round": 1}
+{"S": 152, "M": 4096, "N": 8192, "K": 32768, "config": "v9r dp", "n": "-", "snp": null, "limit": 152, "us": 587.484, "round": 1}
+{"S": 152, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 152, "us": 583.124, "round": 1}
+{"S": 152, "M": 4096, "N": 8192, "K": 32768, "config": "v13", "n": "-", "snp": null, "limit": 408, "us": 1248.289, "round": 1}
+{"S": 152, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 408, "us": 1234.809, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 32768, "config": "v9r dp", "n": "-", "snp": null, "limit": 160, "us": 589.444, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 160, "us": 512.643, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 32768, "config": "v25 spread", "n": "-", "snp": null, "limit": 160, "us": 524.604, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 32768, "config": "v13", "n": "-", "snp": null, "limit": 416, "us": 1255.648, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 416, "us": 1202.608, "round": 1}
+{"S": 160, "M": 4096, "N": 8192, "K": 32768, "config": "v25 spread", "n": "-", "snp": null, "limit": 416, "us": 1204.769, "round": 1}
+{"S": 168, "M": 4096, "N": 8192, "K": 32768, "config": "v9r dp", "n": "-", "snp": null, "limit": 168, "us": 594.884, "round": 1}
+{"S": 168, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 168, "us": 521.244, "round": 1}
+{"S": 168, "M": 4096, "N": 8192, "K": 32768, "config": "v13", "n": "-", "snp": null, "limit": 424, "us": 1270.769, "round": 1}
+{"S": 168, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 424, "us": 1221.449, "round": 1}
+{"S": 176, "M": 4096, "N": 8192, "K": 32768, "config": "v9r dp", "n": "-", "snp": null, "limit": 176, "us": 596.164, "round": 1}
+{"S": 176, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 176, "us": 617.884, "round": 1}
+{"S": 176, "M": 4096, "N": 8192, "K": 32768, "config": "v13", "n": "-", "snp": null, "limit": 432, "us": 1270.329, "round": 1}
+{"S": 176, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 432, "us": 1270.369, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 32768, "config": "v9r dp", "n": "-", "snp": null, "limit": 192, "us": 607.004, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 192, "us": 553.324, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 32768, "config": "v25 spread", "n": "-", "snp": null, "limit": 192, "us": 556.844, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 32768, "config": "v13", "n": "-", "snp": null, "limit": 448, "us": 1287.569, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 448, "us": 1231.609, "round": 1}
+{"S": 192, "M": 4096, "N": 8192, "K": 32768, "config": "v25 spread", "n": "-", "snp": null, "limit": 448, "us": 1237.369, "round": 1}
+{"S": 208, "M": 4096, "N": 8192, "K": 32768, "config": "v9r dp", "n": "-", "snp": null, "limit": 208, "us": 625.804, "round": 1}
+{"S": 208, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 208, "us": 597.765, "round": 1}
+{"S": 208, "M": 4096, "N": 8192, "K": 32768, "config": "v13", "n": "-", "snp": null, "limit": 464, "us": 1304.849, "round": 1}
+{"S": 208, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 464, "us": 1290.089, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 32768, "config": "v9r dp", "n": "-", "snp": null, "limit": 224, "us": 641.964, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 224, "us": 628.925, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 32768, "config": "v25 spread", "n": "-", "snp": null, "limit": 224, "us": 632.404, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 32768, "config": "v13", "n": "-", "snp": null, "limit": 480, "us": 1317.93, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 480, "us": 1306.329, "round": 1}
+{"S": 224, "M": 4096, "N": 8192, "K": 32768, "config": "v25 spread", "n": "-", "snp": null, "limit": 480, "us": 1307.609, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 32768, "config": "v9r dp", "n": "-", "snp": null, "limit": 240, "us": 661.645, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 240, "us": 665.965, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 32768, "config": "v25 spread", "n": "-", "snp": null, "limit": 240, "us": 668.244, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 32768, "config": "v13", "n": "-", "snp": null, "limit": 496, "us": 1331.209, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 496, "us": 1339.37, "round": 1}
+{"S": 240, "M": 4096, "N": 8192, "K": 32768, "config": "v25 spread", "n": "-", "snp": null, "limit": 496, "us": 1344.25, "round": 1}
+{"S": 248, "M": 4096, "N": 8192, "K": 32768, "config": "v9r dp", "n": "-", "snp": null, "limit": 248, "us": 670.645, "round": 1}
+{"S": 248, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 248, "us": 680.484, "round": 1}
+{"S": 248, "M": 4096, "N": 8192, "K": 32768, "config": "v13", "n": "-", "snp": null, "limit": 504, "us": 1335.249, "round": 1}
+{"S": 248, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 504, "us": 1352.89, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 32768, "config": "v9r dp", "n": "-", "snp": null, "limit": 255, "us": 675.364, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 255, "us": 693.165, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 32768, "config": "v25 spread", "n": "-", "snp": null, "limit": 255, "us": 698.525, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 32768, "config": "v13", "n": "-", "snp": null, "limit": 511, "us": 1341.49, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 511, "us": 1351.89, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 32768, "config": "v25 spread", "n": "-", "snp": null, "limit": 511, "us": 1360.09, "round": 1}
+{"S": 255, "M": 4096, "N": 8192, "K": 32768, "config": "v25 spread", "n": "-", "snp": null, "limit": 511, "us": 1362.009, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 511, "us": 1356.61, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 32768, "config": "v13", "n": "-", "snp": null, "limit": 511, "us": 1339.73, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 32768, "config": "v25 spread", "n": "-", "snp": null, "limit": 255, "us": 698.525, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 255, "us": 692.525, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 32768, "config": "v9r dp", "n": "-", "snp": null, "limit": 255, "us": 675.765, "round": 2}
+{"S": 248, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 504, "us": 1355.449, "round": 2}
+{"S": 248, "M": 4096, "N": 8192, "K": 32768, "config": "v13", "n": "-", "snp": null, "limit": 504, "us": 1339.569, "round": 2}
+{"S": 248, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 248, "us": 683.125, "round": 2}
+{"S": 248, "M": 4096, "N": 8192, "K": 32768, "config": "v9r dp", "n": "-", "snp": null, "limit": 248, "us": 670.724, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 32768, "config": "v25 spread", "n": "-", "snp": null, "limit": 496, "us": 1340.77, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 496, "us": 1337.53, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 32768, "config": "v13", "n": "-", "snp": null, "limit": 496, "us": 1332.369, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 32768, "config": "v25 spread", "n": "-", "snp": null, "limit": 240, "us": 668.685, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 240, "us": 666.924, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 32768, "config": "v9r dp", "n": "-", "snp": null, "limit": 240, "us": 661.525, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 32768, "config": "v25 spread", "n": "-", "snp": null, "limit": 480, "us": 1306.529, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 480, "us": 1301.169, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 32768, "config": "v13", "n": "-", "snp": null, "limit": 480, "us": 1316.089, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 32768, "config": "v25 spread", "n": "-", "snp": null, "limit": 224, "us": 632.525, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 224, "us": 630.165, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 32768, "config": "v9r dp", "n": "-", "snp": null, "limit": 224, "us": 645.405, "round": 2}
+{"S": 208, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 464, "us": 1289.929, "round": 2}
+{"S": 208, "M": 4096, "N": 8192, "K": 32768, "config": "v13", "n": "-", "snp": null, "limit": 464, "us": 1305.329, "round": 2}
+{"S": 208, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 208, "us": 599.124, "round": 2}
+{"S": 208, "M": 4096, "N": 8192, "K": 32768, "config": "v9r dp", "n": "-", "snp": null, "limit": 208, "us": 625.925, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 32768, "config": "v25 spread", "n": "-", "snp": null, "limit": 448, "us": 1238.769, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 448, "us": 1234.369, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 32768, "config": "v13", "n": "-", "snp": null, "limit": 448, "us": 1287.569, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 32768, "config": "v25 spread", "n": "-", "snp": null, "limit": 192, "us": 557.524, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 192, "us": 551.844, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 32768, "config": "v9r dp", "n": "-", "snp": null, "limit": 192, "us": 606.484, "round": 2}
+{"S": 176, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 432, "us": 1271.609, "round": 2}
+{"S": 176, "M": 4096, "N": 8192, "K": 32768, "config": "v13", "n": "-", "snp": null, "limit": 432, "us": 1278.369, "round": 2}
+{"S": 176, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 176, "us": 616.404, "round": 2}
+{"S": 176, "M": 4096, "N": 8192, "K": 32768, "config": "v9r dp", "n": "-", "snp": null, "limit": 176, "us": 592.204, "round": 2}
+{"S": 168, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 424, "us": 1217.849, "round": 2}
+{"S": 168, "M": 4096, "N": 8192, "K": 32768, "config": "v13", "n": "-", "snp": null, "limit": 424, "us": 1257.769, "round": 2}
+{"S": 168, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 168, "us": 519.444, "round": 2}
+{"S": 168, "M": 4096, "N": 8192, "K": 32768, "config": "v9r dp", "n": "-", "snp": null, "limit": 168, "us": 595.325, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 32768, "config": "v25 spread", "n": "-", "snp": null, "limit": 416, "us": 1205.769, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 416, "us": 1203.409, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 32768, "config": "v13", "n": "-", "snp": null, "limit": 416, "us": 1253.889, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 32768, "config": "v25 spread", "n": "-", "snp": null, "limit": 160, "us": 528.164, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 160, "us": 511.203, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 32768, "config": "v9r dp", "n": "-", "snp": null, "limit": 160, "us": 590.044, "round": 2}
+{"S": 152, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 408, "us": 1234.769, "round": 2}
+{"S": 152, "M": 4096, "N": 8192, "K": 32768, "config": "v13", "n": "-", "snp": null, "limit": 408, "us": 1249.489, "round": 2}
+{"S": 152, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 152, "us": 581.124, "round": 2}
+{"S": 152, "M": 4096, "N": 8192, "K": 32768, "config": "v9r dp", "n": "-", "snp": null, "limit": 152, "us": 586.004, "round": 2}
+{"S": 144, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 400, "us": 1221.208, "round": 2}
+{"S": 144, "M": 4096, "N": 8192, "K": 32768, "config": "v13", "n": "-", "snp": null, "limit": 400, "us": 1241.289, "round": 2}
+{"S": 144, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 144, "us": 526.924, "round": 2}
+{"S": 144, "M": 4096, "N": 8192, "K": 32768, "config": "v9r dp", "n": "-", "snp": null, "limit": 144, "us": 581.764, "round": 2}
+{"S": 136, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 392, "us": 1200.769, "round": 2}
+{"S": 136, "M": 4096, "N": 8192, "K": 32768, "config": "v13", "n": "-", "snp": null, "limit": 392, "us": 1232.608, "round": 2}
+{"S": 136, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 136, "us": 523.164, "round": 2}
+{"S": 136, "M": 4096, "N": 8192, "K": 32768, "config": "v9r dp", "n": "-", "snp": null, "limit": 136, "us": 578.484, "round": 2}
+{"S": 132, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 388, "us": 1168.328, "round": 2}
+{"S": 132, "M": 4096, "N": 8192, "K": 32768, "config": "v13", "n": "-", "snp": null, "limit": 388, "us": 1225.649, "round": 2}
+{"S": 132, "M": 4096, "N": 8192, "K": 32768, "config": "v26 spread", "n": "-", "snp": null, "limit": 132, "us": 486.924, "round": 2}
+{"S": 132, "M": 4096, "N": 8192, "K": 32768, "config": "v9r dp", "n": "-", "snp": null, "limit": 132, "us": 572.164, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 511, "us": 1020.768, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 24576, "config": "v13", "n": "-", "snp": null, "limit": 511, "us": 1008.927, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 255, "us": 523.364, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 24576, "config": "v9r dp", "n": "-", "snp": null, "limit": 255, "us": 510.723, "round": 2}
+{"S": 248, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 504, "us": 1018.447, "round": 2}
+{"S": 248, "M": 4096, "N": 8192, "K": 24576, "config": "v13", "n": "-", "snp": null, "limit": 504, "us": 1010.927, "round": 2}
+{"S": 248, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 248, "us": 516.004, "round": 2}
+{"S": 248, "M": 4096, "N": 8192, "K": 24576, "config": "v9r dp", "n": "-", "snp": null, "limit": 248, "us": 505.964, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 496, "us": 1007.767, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 24576, "config": "v13", "n": "-", "snp": null, "limit": 496, "us": 1002.727, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 240, "us": 505.403, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 24576, "config": "v9r dp", "n": "-", "snp": null, "limit": 240, "us": 499.683, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 480, "us": 983.807, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 24576, "config": "v13", "n": "-", "snp": null, "limit": 480, "us": 992.167, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 224, "us": 476.284, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 24576, "config": "v9r dp", "n": "-", "snp": null, "limit": 224, "us": 483.364, "round": 2}
+{"S": 208, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 464, "us": 964.247, "round": 2}
+{"S": 208, "M": 4096, "N": 8192, "K": 24576, "config": "v13", "n": "-", "snp": null, "limit": 464, "us": 982.487, "round": 2}
+{"S": 208, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 208, "us": 453.643, "round": 2}
+{"S": 208, "M": 4096, "N": 8192, "K": 24576, "config": "v9r dp", "n": "-", "snp": null, "limit": 208, "us": 472.164, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 448, "us": 927.727, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 24576, "config": "v13", "n": "-", "snp": null, "limit": 448, "us": 968.446, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 192, "us": 415.203, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 24576, "config": "v9r dp", "n": "-", "snp": null, "limit": 192, "us": 455.043, "round": 2}
+{"S": 176, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 432, "us": 938.887, "round": 2}
+{"S": 176, "M": 4096, "N": 8192, "K": 24576, "config": "v13", "n": "-", "snp": null, "limit": 432, "us": 960.807, "round": 2}
+{"S": 176, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 176, "us": 417.763, "round": 2}
+{"S": 176, "M": 4096, "N": 8192, "K": 24576, "config": "v9r dp", "n": "-", "snp": null, "limit": 176, "us": 435.563, "round": 2}
+{"S": 168, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 424, "us": 900.486, "round": 2}
+{"S": 168, "M": 4096, "N": 8192, "K": 24576, "config": "v13", "n": "-", "snp": null, "limit": 424, "us": 944.167, "round": 2}
+{"S": 168, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 168, "us": 382.803, "round": 2}
+{"S": 168, "M": 4096, "N": 8192, "K": 24576, "config": "v9r dp", "n": "-", "snp": null, "limit": 168, "us": 430.124, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 416, "us": 893.166, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 24576, "config": "v13", "n": "-", "snp": null, "limit": 416, "us": 937.127, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 160, "us": 370.362, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 24576, "config": "v9r dp", "n": "-", "snp": null, "limit": 160, "us": 425.803, "round": 2}
+{"S": 152, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 408, "us": 920.567, "round": 2}
+{"S": 152, "M": 4096, "N": 8192, "K": 24576, "config": "v13", "n": "-", "snp": null, "limit": 408, "us": 932.407, "round": 2}
+{"S": 152, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 152, "us": 422.403, "round": 2}
+{"S": 152, "M": 4096, "N": 8192, "K": 24576, "config": "v9r dp", "n": "-", "snp": null, "limit": 152, "us": 424.883, "round": 2}
+{"S": 144, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 400, "us": 907.287, "round": 2}
+{"S": 144, "M": 4096, "N": 8192, "K": 24576, "config": "v13", "n": "-", "snp": null, "limit": 400, "us": 924.166, "round": 2}
+{"S": 144, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 144, "us": 389.562, "round": 2}
+{"S": 144, "M": 4096, "N": 8192, "K": 24576, "config": "v9r dp", "n": "-", "snp": null, "limit": 144, "us": 421.603, "round": 2}
+{"S": 136, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 392, "us": 899.726, "round": 2}
+{"S": 136, "M": 4096, "N": 8192, "K": 24576, "config": "v13", "n": "-", "snp": null, "limit": 392, "us": 916.367, "round": 2}
+{"S": 136, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 136, "us": 393.362, "round": 2}
+{"S": 136, "M": 4096, "N": 8192, "K": 24576, "config": "v9r dp", "n": "-", "snp": null, "limit": 136, "us": 421.483, "round": 2}
+{"S": 132, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 388, "us": 869.046, "round": 2}
+{"S": 132, "M": 4096, "N": 8192, "K": 24576, "config": "v13", "n": "-", "snp": null, "limit": 388, "us": 913.167, "round": 2}
+{"S": 132, "M": 4096, "N": 8192, "K": 24576, "config": "v26 spread", "n": "-", "snp": null, "limit": 132, "us": 359.242, "round": 2}
+{"S": 132, "M": 4096, "N": 8192, "K": 24576, "config": "v9r dp", "n": "-", "snp": null, "limit": 132, "us": 417.283, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 16384, "config": "v25 spread", "n": "-", "snp": null, "limit": 511, "us": 729.125, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 511, "us": 727.365, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 16384, "config": "v13", "n": "-", "snp": null, "limit": 511, "us": 689.445, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 16384, "config": "v25 spread", "n": "-", "snp": null, "limit": 255, "us": 368.802, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 255, "us": 364.202, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 16384, "config": "v9r dp", "n": "-", "snp": null, "limit": 255, "us": 349.922, "round": 2}
+{"S": 248, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 504, "us": 706.285, "round": 2}
+{"S": 248, "M": 4096, "N": 8192, "K": 16384, "config": "v13", "n": "-", "snp": null, "limit": 504, "us": 697.045, "round": 2}
+{"S": 248, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 248, "us": 354.202, "round": 2}
+{"S": 248, "M": 4096, "N": 8192, "K": 16384, "config": "v9r dp", "n": "-", "snp": null, "limit": 248, "us": 347.883, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 16384, "config": "v25 spread", "n": "-", "snp": null, "limit": 496, "us": 699.165, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 496, "us": 694.645, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 16384, "config": "v13", "n": "-", "snp": null, "limit": 496, "us": 697.445, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 16384, "config": "v25 spread", "n": "-", "snp": null, "limit": 240, "us": 351.283, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 240, "us": 347.443, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 16384, "config": "v9r dp", "n": "-", "snp": null, "limit": 240, "us": 344.003, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 16384, "config": "v25 spread", "n": "-", "snp": null, "limit": 480, "us": 682.605, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 480, "us": 677.965, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 16384, "config": "v13", "n": "-", "snp": null, "limit": 480, "us": 687.964, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 16384, "config": "v25 spread", "n": "-", "snp": null, "limit": 224, "us": 334.363, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 224, "us": 331.162, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 16384, "config": "v9r dp", "n": "-", "snp": null, "limit": 224, "us": 333.563, "round": 2}
+{"S": 208, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 464, "us": 678.604, "round": 2}
+{"S": 208, "M": 4096, "N": 8192, "K": 16384, "config": "v13", "n": "-", "snp": null, "limit": 464, "us": 679.845, "round": 2}
+{"S": 208, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 208, "us": 321.842, "round": 2}
+{"S": 208, "M": 4096, "N": 8192, "K": 16384, "config": "v9r dp", "n": "-", "snp": null, "limit": 208, "us": 325.922, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 16384, "config": "v25 spread", "n": "-", "snp": null, "limit": 448, "us": 650.125, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 448, "us": 644.724, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 16384, "config": "v13", "n": "-", "snp": null, "limit": 448, "us": 671.445, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 16384, "config": "v25 spread", "n": "-", "snp": null, "limit": 192, "us": 297.682, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 192, "us": 294.882, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 16384, "config": "v9r dp", "n": "-", "snp": null, "limit": 192, "us": 317.122, "round": 2}
+{"S": 176, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 432, "us": 664.845, "round": 2}
+{"S": 176, "M": 4096, "N": 8192, "K": 16384, "config": "v13", "n": "-", "snp": null, "limit": 432, "us": 668.844, "round": 2}
+{"S": 176, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 176, "us": 307.922, "round": 2}
+{"S": 176, "M": 4096, "N": 8192, "K": 16384, "config": "v9r dp", "n": "-", "snp": null, "limit": 176, "us": 311.563, "round": 2}
+{"S": 168, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 424, "us": 624.845, "round": 2}
+{"S": 168, "M": 4096, "N": 8192, "K": 16384, "config": "v13", "n": "-", "snp": null, "limit": 424, "us": 666.164, "round": 2}
+{"S": 168, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 168, "us": 276.559, "round": 2}
+{"S": 168, "M": 4096, "N": 8192, "K": 16384, "config": "v9r dp", "n": "-", "snp": null, "limit": 168, "us": 308.919, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 16384, "config": "v25 spread", "n": "-", "snp": null, "limit": 416, "us": 649.319, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 416, "us": 648.999, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 16384, "config": "v13", "n": "-", "snp": null, "limit": 416, "us": 660.199, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 16384, "config": "v25 spread", "n": "-", "snp": null, "limit": 160, "us": 309.68, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 160, "us": 304.12, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 16384, "config": "v9r dp", "n": "-", "snp": null, "limit": 160, "us": 305.239, "round": 2}
+{"S": 152, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 408, "us": 640.76, "round": 2}
+{"S": 152, "M": 4096, "N": 8192, "K": 16384, "config": "v13", "n": "-", "snp": null, "limit": 408, "us": 661.639, "round": 2}
+{"S": 152, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 152, "us": 281.36, "round": 2}
+{"S": 152, "M": 4096, "N": 8192, "K": 16384, "config": "v9r dp", "n": "-", "snp": null, "limit": 152, "us": 306.6, "round": 2}
+{"S": 144, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 400, "us": 628.279, "round": 2}
+{"S": 144, "M": 4096, "N": 8192, "K": 16384, "config": "v13", "n": "-", "snp": null, "limit": 400, "us": 643.959, "round": 2}
+{"S": 144, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 144, "us": 274.92, "round": 2}
+{"S": 144, "M": 4096, "N": 8192, "K": 16384, "config": "v9r dp", "n": "-", "snp": null, "limit": 144, "us": 275.96, "round": 2}
+{"S": 136, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 392, "us": 619.04, "round": 2}
+{"S": 136, "M": 4096, "N": 8192, "K": 16384, "config": "v13", "n": "-", "snp": null, "limit": 392, "us": 641.76, "round": 2}
+{"S": 136, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 136, "us": 268.04, "round": 2}
+{"S": 136, "M": 4096, "N": 8192, "K": 16384, "config": "v9r dp", "n": "-", "snp": null, "limit": 136, "us": 273.84, "round": 2}
+{"S": 132, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 388, "us": 603.919, "round": 2}
+{"S": 132, "M": 4096, "N": 8192, "K": 16384, "config": "v13", "n": "-", "snp": null, "limit": 388, "us": 640.319, "round": 2}
+{"S": 132, "M": 4096, "N": 8192, "K": 16384, "config": "v26 spread", "n": "-", "snp": null, "limit": 132, "us": 255.28, "round": 2}
+{"S": 132, "M": 4096, "N": 8192, "K": 16384, "config": "v9r dp", "n": "-", "snp": null, "limit": 132, "us": 273.92, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 511, "us": 516.68, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 12288, "config": "v13", "n": "-", "snp": null, "limit": 511, "us": 509.28, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 255, "us": 270.52, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 12288, "config": "v9r dp", "n": "-", "snp": null, "limit": 255, "us": 257.84, "round": 2}
+{"S": 248, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 504, "us": 520.88, "round": 2}
+{"S": 248, "M": 4096, "N": 8192, "K": 12288, "config": "v13", "n": "-", "snp": null, "limit": 504, "us": 506.28, "round": 2}
+{"S": 248, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 248, "us": 271.16, "round": 2}
+{"S": 248, "M": 4096, "N": 8192, "K": 12288, "config": "v9r dp", "n": "-", "snp": null, "limit": 248, "us": 253.6, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 496, "us": 515.68, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 12288, "config": "v13", "n": "-", "snp": null, "limit": 496, "us": 501.56, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 240, "us": 264.08, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 12288, "config": "v9r dp", "n": "-", "snp": null, "limit": 240, "us": 248.6, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 480, "us": 505.24, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 12288, "config": "v13", "n": "-", "snp": null, "limit": 480, "us": 497.96, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 224, "us": 250.16, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 12288, "config": "v9r dp", "n": "-", "snp": null, "limit": 224, "us": 238.08, "round": 2}
+{"S": 208, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 464, "us": 497.4, "round": 2}
+{"S": 208, "M": 4096, "N": 8192, "K": 12288, "config": "v13", "n": "-", "snp": null, "limit": 464, "us": 497.8, "round": 2}
+{"S": 208, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 208, "us": 238.441, "round": 2}
+{"S": 208, "M": 4096, "N": 8192, "K": 12288, "config": "v9r dp", "n": "-", "snp": null, "limit": 208, "us": 231.64, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 448, "us": 474.481, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 12288, "config": "v13", "n": "-", "snp": null, "limit": 448, "us": 489.201, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 192, "us": 216.041, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 12288, "config": "v9r dp", "n": "-", "snp": null, "limit": 192, "us": 222.041, "round": 2}
+{"S": 176, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 432, "us": 469.48, "round": 2}
+{"S": 176, "M": 4096, "N": 8192, "K": 12288, "config": "v13", "n": "-", "snp": null, "limit": 432, "us": 482.641, "round": 2}
+{"S": 176, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 176, "us": 214.481, "round": 2}
+{"S": 176, "M": 4096, "N": 8192, "K": 12288, "config": "v9r dp", "n": "-", "snp": null, "limit": 176, "us": 210.92, "round": 2}
+{"S": 168, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 424, "us": 461.321, "round": 2}
+{"S": 168, "M": 4096, "N": 8192, "K": 12288, "config": "v13", "n": "-", "snp": null, "limit": 424, "us": 478.761, "round": 2}
+{"S": 168, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 168, "us": 201.76, "round": 2}
+{"S": 168, "M": 4096, "N": 8192, "K": 12288, "config": "v9r dp", "n": "-", "snp": null, "limit": 168, "us": 204.64, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 416, "us": 454.121, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 12288, "config": "v13", "n": "-", "snp": null, "limit": 416, "us": 470.161, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 160, "us": 203.84, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 12288, "config": "v9r dp", "n": "-", "snp": null, "limit": 160, "us": 201.361, "round": 2}
+{"S": 152, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 408, "us": 452.361, "round": 2}
+{"S": 152, "M": 4096, "N": 8192, "K": 12288, "config": "v13", "n": "-", "snp": null, "limit": 408, "us": 467.201, "round": 2}
+{"S": 152, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 152, "us": 199.88, "round": 2}
+{"S": 152, "M": 4096, "N": 8192, "K": 12288, "config": "v9r dp", "n": "-", "snp": null, "limit": 152, "us": 196.401, "round": 2}
+{"S": 144, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 400, "us": 455.681, "round": 2}
+{"S": 144, "M": 4096, "N": 8192, "K": 12288, "config": "v13", "n": "-", "snp": null, "limit": 400, "us": 463.081, "round": 2}
+{"S": 144, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 144, "us": 198.401, "round": 2}
+{"S": 144, "M": 4096, "N": 8192, "K": 12288, "config": "v9r dp", "n": "-", "snp": null, "limit": 144, "us": 193.16, "round": 2}
+{"S": 136, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 392, "us": 451.721, "round": 2}
+{"S": 136, "M": 4096, "N": 8192, "K": 12288, "config": "v13", "n": "-", "snp": null, "limit": 392, "us": 460.681, "round": 2}
+{"S": 136, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 136, "us": 194.6, "round": 2}
+{"S": 136, "M": 4096, "N": 8192, "K": 12288, "config": "v9r dp", "n": "-", "snp": null, "limit": 136, "us": 191.321, "round": 2}
+{"S": 132, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 388, "us": 433.001, "round": 2}
+{"S": 132, "M": 4096, "N": 8192, "K": 12288, "config": "v13", "n": "-", "snp": null, "limit": 388, "us": 461.001, "round": 2}
+{"S": 132, "M": 4096, "N": 8192, "K": 12288, "config": "v26 spread", "n": "-", "snp": null, "limit": 132, "us": 175.64, "round": 2}
+{"S": 132, "M": 4096, "N": 8192, "K": 12288, "config": "v9r dp", "n": "-", "snp": null, "limit": 132, "us": 188.001, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 8192, "config": "v25 spread", "n": "-", "snp": null, "limit": 511, "us": 349.761, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 511, "us": 347.441, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 8192, "config": "v13", "n": "-", "snp": null, "limit": 511, "us": 341.321, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 8192, "config": "v25 spread", "n": "-", "snp": null, "limit": 255, "us": 177.4, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 255, "us": 174.2, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 8192, "config": "v9r dp", "n": "-", "snp": null, "limit": 255, "us": 169.08, "round": 2}
+{"S": 248, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 504, "us": 352.521, "round": 2}
+{"S": 248, "M": 4096, "N": 8192, "K": 8192, "config": "v13", "n": "-", "snp": null, "limit": 504, "us": 337.88, "round": 2}
+{"S": 248, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 248, "us": 182.04, "round": 2}
+{"S": 248, "M": 4096, "N": 8192, "K": 8192, "config": "v9r dp", "n": "-", "snp": null, "limit": 248, "us": 166.92, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 8192, "config": "v25 spread", "n": "-", "snp": null, "limit": 496, "us": 351.081, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 496, "us": 347.161, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 8192, "config": "v13", "n": "-", "snp": null, "limit": 496, "us": 333.961, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 8192, "config": "v25 spread", "n": "-", "snp": null, "limit": 240, "us": 180.64, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 240, "us": 176.881, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 8192, "config": "v9r dp", "n": "-", "snp": null, "limit": 240, "us": 164.441, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 8192, "config": "v25 spread", "n": "-", "snp": null, "limit": 480, "us": 343.001, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 480, "us": 338.8, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 8192, "config": "v13", "n": "-", "snp": null, "limit": 480, "us": 327.761, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 8192, "config": "v25 spread", "n": "-", "snp": null, "limit": 224, "us": 173.32, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 224, "us": 169.04, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 8192, "config": "v9r dp", "n": "-", "snp": null, "limit": 224, "us": 160.921, "round": 2}
+{"S": 208, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 464, "us": 333.161, "round": 2}
+{"S": 208, "M": 4096, "N": 8192, "K": 8192, "config": "v13", "n": "-", "snp": null, "limit": 464, "us": 321.6, "round": 2}
+{"S": 208, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 208, "us": 161.121, "round": 2}
+{"S": 208, "M": 4096, "N": 8192, "K": 8192, "config": "v9r dp", "n": "-", "snp": null, "limit": 208, "us": 155.801, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 8192, "config": "v25 spread", "n": "-", "snp": null, "limit": 448, "us": 320.841, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 448, "us": 317.161, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 8192, "config": "v13", "n": "-", "snp": null, "limit": 448, "us": 318.881, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 8192, "config": "v25 spread", "n": "-", "snp": null, "limit": 192, "us": 151.04, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 192, "us": 148.4, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 8192, "config": "v9r dp", "n": "-", "snp": null, "limit": 192, "us": 147.201, "round": 2}
+{"S": 176, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 432, "us": 315.961, "round": 2}
+{"S": 176, "M": 4096, "N": 8192, "K": 8192, "config": "v13", "n": "-", "snp": null, "limit": 432, "us": 311.321, "round": 2}
+{"S": 176, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 176, "us": 141.76, "round": 2}
+{"S": 176, "M": 4096, "N": 8192, "K": 8192, "config": "v9r dp", "n": "-", "snp": null, "limit": 176, "us": 139.76, "round": 2}
+{"S": 168, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 424, "us": 309.241, "round": 2}
+{"S": 168, "M": 4096, "N": 8192, "K": 8192, "config": "v13", "n": "-", "snp": null, "limit": 424, "us": 310.161, "round": 2}
+{"S": 168, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 168, "us": 135.721, "round": 2}
+{"S": 168, "M": 4096, "N": 8192, "K": 8192, "config": "v9r dp", "n": "-", "snp": null, "limit": 168, "us": 137.041, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 8192, "config": "v25 spread", "n": "-", "snp": null, "limit": 416, "us": 311.961, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 416, "us": 308.402, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 8192, "config": "v13", "n": "-", "snp": null, "limit": 416, "us": 307.761, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 8192, "config": "v25 spread", "n": "-", "snp": null, "limit": 160, "us": 143.76, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 160, "us": 139.28, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 8192, "config": "v9r dp", "n": "-", "snp": null, "limit": 160, "us": 134.961, "round": 2}
+{"S": 152, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 408, "us": 300.841, "round": 2}
+{"S": 152, "M": 4096, "N": 8192, "K": 8192, "config": "v13", "n": "-", "snp": null, "limit": 408, "us": 304.001, "round": 2}
+{"S": 152, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 152, "us": 128.681, "round": 2}
+{"S": 152, "M": 4096, "N": 8192, "K": 8192, "config": "v9r dp", "n": "-", "snp": null, "limit": 152, "us": 132.28, "round": 2}
+{"S": 144, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 400, "us": 298.681, "round": 2}
+{"S": 144, "M": 4096, "N": 8192, "K": 8192, "config": "v13", "n": "-", "snp": null, "limit": 400, "us": 300.922, "round": 2}
+{"S": 144, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 144, "us": 126.4, "round": 2}
+{"S": 144, "M": 4096, "N": 8192, "K": 8192, "config": "v9r dp", "n": "-", "snp": null, "limit": 144, "us": 128.88, "round": 2}
+{"S": 136, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 392, "us": 292.401, "round": 2}
+{"S": 136, "M": 4096, "N": 8192, "K": 8192, "config": "v13", "n": "-", "snp": null, "limit": 392, "us": 296.361, "round": 2}
+{"S": 136, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 136, "us": 124.841, "round": 2}
+{"S": 136, "M": 4096, "N": 8192, "K": 8192, "config": "v9r dp", "n": "-", "snp": null, "limit": 136, "us": 127.24, "round": 2}
+{"S": 132, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 388, "us": 292.961, "round": 2}
+{"S": 132, "M": 4096, "N": 8192, "K": 8192, "config": "v13", "n": "-", "snp": null, "limit": 388, "us": 294.881, "round": 2}
+{"S": 132, "M": 4096, "N": 8192, "K": 8192, "config": "v26 spread", "n": "-", "snp": null, "limit": 132, "us": 119.281, "round": 2}
+{"S": 132, "M": 4096, "N": 8192, "K": 8192, "config": "v9r dp", "n": "-", "snp": null, "limit": 132, "us": 126.441, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 511, "us": 271.121, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 6144, "config": "v13", "n": "-", "snp": null, "limit": 511, "us": 263.441, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 255, "us": 143.521, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 6144, "config": "v9r dp", "n": "-", "snp": null, "limit": 255, "us": 135.32, "round": 2}
+{"S": 248, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 504, "us": 276.081, "round": 2}
+{"S": 248, "M": 4096, "N": 8192, "K": 6144, "config": "v13", "n": "-", "snp": null, "limit": 504, "us": 262.001, "round": 2}
+{"S": 248, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 248, "us": 150.361, "round": 2}
+{"S": 248, "M": 4096, "N": 8192, "K": 6144, "config": "v9r dp", "n": "-", "snp": null, "limit": 248, "us": 133.76, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 496, "us": 271.041, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 6144, "config": "v13", "n": "-", "snp": null, "limit": 496, "us": 260.481, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 240, "us": 146.801, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 6144, "config": "v9r dp", "n": "-", "snp": null, "limit": 240, "us": 131.72, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 480, "us": 263.561, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 6144, "config": "v13", "n": "-", "snp": null, "limit": 480, "us": 255.121, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 224, "us": 136.92, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 6144, "config": "v9r dp", "n": "-", "snp": null, "limit": 224, "us": 127.0, "round": 2}
+{"S": 208, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 464, "us": 259.161, "round": 2}
+{"S": 208, "M": 4096, "N": 8192, "K": 6144, "config": "v13", "n": "-", "snp": null, "limit": 464, "us": 251.001, "round": 2}
+{"S": 208, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 208, "us": 132.721, "round": 2}
+{"S": 208, "M": 4096, "N": 8192, "K": 6144, "config": "v9r dp", "n": "-", "snp": null, "limit": 208, "us": 123.561, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 448, "us": 249.721, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 6144, "config": "v13", "n": "-", "snp": null, "limit": 448, "us": 248.361, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 192, "us": 122.0, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 6144, "config": "v9r dp", "n": "-", "snp": null, "limit": 192, "us": 117.04, "round": 2}
+{"S": 176, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 432, "us": 246.721, "round": 2}
+{"S": 176, "M": 4096, "N": 8192, "K": 6144, "config": "v13", "n": "-", "snp": null, "limit": 432, "us": 242.441, "round": 2}
+{"S": 176, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 176, "us": 118.44, "round": 2}
+{"S": 176, "M": 4096, "N": 8192, "K": 6144, "config": "v9r dp", "n": "-", "snp": null, "limit": 176, "us": 110.96, "round": 2}
+{"S": 168, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 424, "us": 239.081, "round": 2}
+{"S": 168, "M": 4096, "N": 8192, "K": 6144, "config": "v13", "n": "-", "snp": null, "limit": 424, "us": 240.801, "round": 2}
+{"S": 168, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 168, "us": 111.881, "round": 2}
+{"S": 168, "M": 4096, "N": 8192, "K": 6144, "config": "v9r dp", "n": "-", "snp": null, "limit": 168, "us": 107.96, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 416, "us": 244.161, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 6144, "config": "v13", "n": "-", "snp": null, "limit": 416, "us": 238.881, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 160, "us": 112.881, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 6144, "config": "v9r dp", "n": "-", "snp": null, "limit": 160, "us": 107.721, "round": 2}
+{"S": 152, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 408, "us": 238.602, "round": 2}
+{"S": 152, "M": 4096, "N": 8192, "K": 6144, "config": "v13", "n": "-", "snp": null, "limit": 408, "us": 236.521, "round": 2}
+{"S": 152, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 152, "us": 108.0, "round": 2}
+{"S": 152, "M": 4096, "N": 8192, "K": 6144, "config": "v9r dp", "n": "-", "snp": null, "limit": 152, "us": 105.281, "round": 2}
+{"S": 144, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 400, "us": 238.121, "round": 2}
+{"S": 144, "M": 4096, "N": 8192, "K": 6144, "config": "v13", "n": "-", "snp": null, "limit": 400, "us": 238.561, "round": 2}
+{"S": 144, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 144, "us": 103.92, "round": 2}
+{"S": 144, "M": 4096, "N": 8192, "K": 6144, "config": "v9r dp", "n": "-", "snp": null, "limit": 144, "us": 104.08, "round": 2}
+{"S": 136, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 392, "us": 236.281, "round": 2}
+{"S": 136, "M": 4096, "N": 8192, "K": 6144, "config": "v13", "n": "-", "snp": null, "limit": 392, "us": 235.601, "round": 2}
+{"S": 136, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 136, "us": 101.281, "round": 2}
+{"S": 136, "M": 4096, "N": 8192, "K": 6144, "config": "v9r dp", "n": "-", "snp": null, "limit": 136, "us": 103.161, "round": 2}
+{"S": 132, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 388, "us": 223.481, "round": 2}
+{"S": 132, "M": 4096, "N": 8192, "K": 6144, "config": "v13", "n": "-", "snp": null, "limit": 388, "us": 236.201, "round": 2}
+{"S": 132, "M": 4096, "N": 8192, "K": 6144, "config": "v26 spread", "n": "-", "snp": null, "limit": 132, "us": 97.44, "round": 2}
+{"S": 132, "M": 4096, "N": 8192, "K": 6144, "config": "v9r dp", "n": "-", "snp": null, "limit": 132, "us": 102.721, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 511, "us": 188.961, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 4096, "config": "v13", "n": "-", "snp": null, "limit": 511, "us": 182.001, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 4096, "config": "v25 spread", "n": "-", "snp": null, "limit": 255, "us": 102.8, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 255, "us": 101.081, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 4096, "config": "v9r dp", "n": "-", "snp": null, "limit": 255, "us": 93.961, "round": 2}
+{"S": 248, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 504, "us": 194.561, "round": 2}
+{"S": 248, "M": 4096, "N": 8192, "K": 4096, "config": "v13", "n": "-", "snp": null, "limit": 504, "us": 181.441, "round": 2}
+{"S": 248, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 248, "us": 108.44, "round": 2}
+{"S": 248, "M": 4096, "N": 8192, "K": 4096, "config": "v9r dp", "n": "-", "snp": null, "limit": 248, "us": 93.64, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 496, "us": 190.961, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 4096, "config": "v13", "n": "-", "snp": null, "limit": 496, "us": 179.401, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 4096, "config": "v25 spread", "n": "-", "snp": null, "limit": 240, "us": 107.841, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 240, "us": 105.241, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 4096, "config": "v9r dp", "n": "-", "snp": null, "limit": 240, "us": 91.761, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 480, "us": 185.441, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 4096, "config": "v13", "n": "-", "snp": null, "limit": 480, "us": 175.36, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 4096, "config": "v25 spread", "n": "-", "snp": null, "limit": 224, "us": 102.56, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 224, "us": 98.681, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 4096, "config": "v9r dp", "n": "-", "snp": null, "limit": 224, "us": 89.241, "round": 2}
+{"S": 208, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 464, "us": 183.041, "round": 2}
+{"S": 208, "M": 4096, "N": 8192, "K": 4096, "config": "v13", "n": "-", "snp": null, "limit": 464, "us": 172.721, "round": 2}
+{"S": 208, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 208, "us": 96.361, "round": 2}
+{"S": 208, "M": 4096, "N": 8192, "K": 4096, "config": "v9r dp", "n": "-", "snp": null, "limit": 208, "us": 86.641, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 448, "us": 175.121, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 4096, "config": "v13", "n": "-", "snp": null, "limit": 448, "us": 169.681, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 4096, "config": "v25 spread", "n": "-", "snp": null, "limit": 192, "us": 91.321, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 192, "us": 89.52, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 4096, "config": "v9r dp", "n": "-", "snp": null, "limit": 192, "us": 81.24, "round": 2}
+{"S": 176, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 432, "us": 173.001, "round": 2}
+{"S": 176, "M": 4096, "N": 8192, "K": 4096, "config": "v13", "n": "-", "snp": null, "limit": 432, "us": 168.28, "round": 2}
+{"S": 176, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 176, "us": 87.12, "round": 2}
+{"S": 176, "M": 4096, "N": 8192, "K": 4096, "config": "v9r dp", "n": "-", "snp": null, "limit": 176, "us": 78.56, "round": 2}
+{"S": 168, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 424, "us": 170.56, "round": 2}
+{"S": 168, "M": 4096, "N": 8192, "K": 4096, "config": "v13", "n": "-", "snp": null, "limit": 424, "us": 165.92, "round": 2}
+{"S": 168, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 168, "us": 85.08, "round": 2}
+{"S": 168, "M": 4096, "N": 8192, "K": 4096, "config": "v9r dp", "n": "-", "snp": null, "limit": 168, "us": 76.88, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 416, "us": 168.681, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 4096, "config": "v13", "n": "-", "snp": null, "limit": 416, "us": 164.121, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 4096, "config": "v25 spread", "n": "-", "snp": null, "limit": 160, "us": 86.12, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 160, "us": 83.04, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 4096, "config": "v9r dp", "n": "-", "snp": null, "limit": 160, "us": 75.601, "round": 2}
+{"S": 152, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 408, "us": 166.161, "round": 2}
+{"S": 152, "M": 4096, "N": 8192, "K": 4096, "config": "v13", "n": "-", "snp": null, "limit": 408, "us": 163.001, "round": 2}
+{"S": 152, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 152, "us": 80.681, "round": 2}
+{"S": 152, "M": 4096, "N": 8192, "K": 4096, "config": "v9r dp", "n": "-", "snp": null, "limit": 152, "us": 74.8, "round": 2}
+{"S": 144, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 400, "us": 165.921, "round": 2}
+{"S": 144, "M": 4096, "N": 8192, "K": 4096, "config": "v13", "n": "-", "snp": null, "limit": 400, "us": 163.921, "round": 2}
+{"S": 144, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 144, "us": 77.76, "round": 2}
+{"S": 144, "M": 4096, "N": 8192, "K": 4096, "config": "v9r dp", "n": "-", "snp": null, "limit": 144, "us": 73.801, "round": 2}
+{"S": 136, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 392, "us": 164.681, "round": 2}
+{"S": 136, "M": 4096, "N": 8192, "K": 4096, "config": "v13", "n": "-", "snp": null, "limit": 392, "us": 160.961, "round": 2}
+{"S": 136, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 136, "us": 76.08, "round": 2}
+{"S": 136, "M": 4096, "N": 8192, "K": 4096, "config": "v9r dp", "n": "-", "snp": null, "limit": 136, "us": 73.241, "round": 2}
+{"S": 132, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 388, "us": 156.761, "round": 2}
+{"S": 132, "M": 4096, "N": 8192, "K": 4096, "config": "v13", "n": "-", "snp": null, "limit": 388, "us": 160.361, "round": 2}
+{"S": 132, "M": 4096, "N": 8192, "K": 4096, "config": "v26 spread", "n": "-", "snp": null, "limit": 132, "us": 75.44, "round": 2}
+{"S": 132, "M": 4096, "N": 8192, "K": 4096, "config": "v9r dp", "n": "-", "snp": null, "limit": 132, "us": 73.0, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 511, "us": 147.44, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 3072, "config": "v13", "n": "-", "snp": null, "limit": 511, "us": 141.201, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 255, "us": 78.44, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 3072, "config": "v9r dp", "n": "-", "snp": null, "limit": 255, "us": 70.481, "round": 2}
+{"S": 248, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 504, "us": 153.84, "round": 2}
+{"S": 248, "M": 4096, "N": 8192, "K": 3072, "config": "v13", "n": "-", "snp": null, "limit": 504, "us": 140.761, "round": 2}
+{"S": 248, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 248, "us": 87.04, "round": 2}
+{"S": 248, "M": 4096, "N": 8192, "K": 3072, "config": "v9r dp", "n": "-", "snp": null, "limit": 248, "us": 70.64, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 496, "us": 153.921, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 3072, "config": "v13", "n": "-", "snp": null, "limit": 496, "us": 138.321, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 240, "us": 88.921, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 3072, "config": "v9r dp", "n": "-", "snp": null, "limit": 240, "us": 68.88, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 480, "us": 147.441, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 3072, "config": "v13", "n": "-", "snp": null, "limit": 480, "us": 135.641, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 224, "us": 82.441, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 3072, "config": "v9r dp", "n": "-", "snp": null, "limit": 224, "us": 66.88, "round": 2}
+{"S": 208, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 464, "us": 144.32, "round": 2}
+{"S": 208, "M": 4096, "N": 8192, "K": 3072, "config": "v13", "n": "-", "snp": null, "limit": 464, "us": 133.041, "round": 2}
+{"S": 208, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 208, "us": 79.521, "round": 2}
+{"S": 208, "M": 4096, "N": 8192, "K": 3072, "config": "v9r dp", "n": "-", "snp": null, "limit": 208, "us": 64.441, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 448, "us": 139.2, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 3072, "config": "v13", "n": "-", "snp": null, "limit": 448, "us": 130.72, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 192, "us": 73.96, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 3072, "config": "v9r dp", "n": "-", "snp": null, "limit": 192, "us": 61.04, "round": 2}
+{"S": 176, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 432, "us": 137.281, "round": 2}
+{"S": 176, "M": 4096, "N": 8192, "K": 3072, "config": "v13", "n": "-", "snp": null, "limit": 432, "us": 128.241, "round": 2}
+{"S": 176, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 176, "us": 70.641, "round": 2}
+{"S": 176, "M": 4096, "N": 8192, "K": 3072, "config": "v9r dp", "n": "-", "snp": null, "limit": 176, "us": 59.0, "round": 2}
+{"S": 168, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 424, "us": 132.88, "round": 2}
+{"S": 168, "M": 4096, "N": 8192, "K": 3072, "config": "v13", "n": "-", "snp": null, "limit": 424, "us": 128.281, "round": 2}
+{"S": 168, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 168, "us": 65.041, "round": 2}
+{"S": 168, "M": 4096, "N": 8192, "K": 3072, "config": "v9r dp", "n": "-", "snp": null, "limit": 168, "us": 57.64, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 416, "us": 135.641, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 3072, "config": "v13", "n": "-", "snp": null, "limit": 416, "us": 125.92, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 160, "us": 68.12, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 3072, "config": "v9r dp", "n": "-", "snp": null, "limit": 160, "us": 56.961, "round": 2}
+{"S": 152, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 408, "us": 135.841, "round": 2}
+{"S": 152, "M": 4096, "N": 8192, "K": 3072, "config": "v13", "n": "-", "snp": null, "limit": 408, "us": 125.72, "round": 2}
+{"S": 152, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 152, "us": 66.36, "round": 2}
+{"S": 152, "M": 4096, "N": 8192, "K": 3072, "config": "v9r dp", "n": "-", "snp": null, "limit": 152, "us": 57.041, "round": 2}
+{"S": 144, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 400, "us": 133.601, "round": 2}
+{"S": 144, "M": 4096, "N": 8192, "K": 3072, "config": "v13", "n": "-", "snp": null, "limit": 400, "us": 128.721, "round": 2}
+{"S": 144, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 144, "us": 65.08, "round": 2}
+{"S": 144, "M": 4096, "N": 8192, "K": 3072, "config": "v9r dp", "n": "-", "snp": null, "limit": 144, "us": 55.921, "round": 2}
+{"S": 136, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 392, "us": 131.881, "round": 2}
+{"S": 136, "M": 4096, "N": 8192, "K": 3072, "config": "v13", "n": "-", "snp": null, "limit": 392, "us": 128.241, "round": 2}
+{"S": 136, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 136, "us": 63.641, "round": 2}
+{"S": 136, "M": 4096, "N": 8192, "K": 3072, "config": "v9r dp", "n": "-", "snp": null, "limit": 136, "us": 56.0, "round": 2}
+{"S": 132, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 388, "us": 128.561, "round": 2}
+{"S": 132, "M": 4096, "N": 8192, "K": 3072, "config": "v13", "n": "-", "snp": null, "limit": 388, "us": 128.361, "round": 2}
+{"S": 132, "M": 4096, "N": 8192, "K": 3072, "config": "v26 spread", "n": "-", "snp": null, "limit": 132, "us": 62.681, "round": 2}
+{"S": 132, "M": 4096, "N": 8192, "K": 3072, "config": "v9r dp", "n": "-", "snp": null, "limit": 132, "us": 54.2, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 511, "us": 104.921, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 2048, "config": "v13", "n": "-", "snp": null, "limit": 511, "us": 99.8, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 2048, "config": "v25 spread", "n": "-", "snp": null, "limit": 255, "us": 60.32, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 255, "us": 58.32, "round": 2}
+{"S": 255, "M": 4096, "N": 8192, "K": 2048, "config": "v9r dp", "n": "-", "snp": null, "limit": 255, "us": 52.12, "round": 2}
+{"S": 248, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 504, "us": 110.6, "round": 2}
+{"S": 248, "M": 4096, "N": 8192, "K": 2048, "config": "v13", "n": "-", "snp": null, "limit": 504, "us": 100.201, "round": 2}
+{"S": 248, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 248, "us": 62.64, "round": 2}
+{"S": 248, "M": 4096, "N": 8192, "K": 2048, "config": "v9r dp", "n": "-", "snp": null, "limit": 248, "us": 50.92, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 496, "us": 112.801, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 2048, "config": "v13", "n": "-", "snp": null, "limit": 496, "us": 98.12, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 2048, "config": "v25 spread", "n": "-", "snp": null, "limit": 240, "us": 72.521, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 240, "us": 68.001, "round": 2}
+{"S": 240, "M": 4096, "N": 8192, "K": 2048, "config": "v9r dp", "n": "-", "snp": null, "limit": 240, "us": 49.921, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 480, "us": 108.96, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 2048, "config": "v13", "n": "-", "snp": null, "limit": 480, "us": 96.081, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 2048, "config": "v25 spread", "n": "-", "snp": null, "limit": 224, "us": 67.0, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 224, "us": 64.56, "round": 2}
+{"S": 224, "M": 4096, "N": 8192, "K": 2048, "config": "v9r dp", "n": "-", "snp": null, "limit": 224, "us": 47.56, "round": 2}
+{"S": 208, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 464, "us": 107.96, "round": 2}
+{"S": 208, "M": 4096, "N": 8192, "K": 2048, "config": "v13", "n": "-", "snp": null, "limit": 464, "us": 94.521, "round": 2}
+{"S": 208, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 208, "us": 63.04, "round": 2}
+{"S": 208, "M": 4096, "N": 8192, "K": 2048, "config": "v9r dp", "n": "-", "snp": null, "limit": 208, "us": 46.4, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 448, "us": 102.44, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 2048, "config": "v13", "n": "-", "snp": null, "limit": 448, "us": 92.72, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 2048, "config": "v25 spread", "n": "-", "snp": null, "limit": 192, "us": 58.121, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 192, "us": 58.0, "round": 2}
+{"S": 192, "M": 4096, "N": 8192, "K": 2048, "config": "v9r dp", "n": "-", "snp": null, "limit": 192, "us": 44.36, "round": 2}
+{"S": 176, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 432, "us": 102.96, "round": 2}
+{"S": 176, "M": 4096, "N": 8192, "K": 2048, "config": "v13", "n": "-", "snp": null, "limit": 432, "us": 91.601, "round": 2}
+{"S": 176, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 176, "us": 58.32, "round": 2}
+{"S": 176, "M": 4096, "N": 8192, "K": 2048, "config": "v9r dp", "n": "-", "snp": null, "limit": 176, "us": 43.081, "round": 2}
+{"S": 168, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 424, "us": 103.481, "round": 2}
+{"S": 168, "M": 4096, "N": 8192, "K": 2048, "config": "v13", "n": "-", "snp": null, "limit": 424, "us": 90.641, "round": 2}
+{"S": 168, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 168, "us": 58.401, "round": 2}
+{"S": 168, "M": 4096, "N": 8192, "K": 2048, "config": "v9r dp", "n": "-", "snp": null, "limit": 168, "us": 42.28, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 416, "us": 101.001, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 2048, "config": "v13", "n": "-", "snp": null, "limit": 416, "us": 90.081, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 2048, "config": "v25 spread", "n": "-", "snp": null, "limit": 160, "us": 58.561, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 160, "us": 54.601, "round": 2}
+{"S": 160, "M": 4096, "N": 8192, "K": 2048, "config": "v9r dp", "n": "-", "snp": null, "limit": 160, "us": 41.321, "round": 2}
+{"S": 152, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 408, "us": 101.2, "round": 2}
+{"S": 152, "M": 4096, "N": 8192, "K": 2048, "config": "v13", "n": "-", "snp": null, "limit": 408, "us": 88.84, "round": 2}
+{"S": 152, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 152, "us": 54.08, "round": 2}
+{"S": 152, "M": 4096, "N": 8192, "K": 2048, "config": "v9r dp", "n": "-", "snp": null, "limit": 152, "us": 41.361, "round": 2}
+{"S": 144, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 400, "us": 101.12, "round": 2}
+{"S": 144, "M": 4096, "N": 8192, "K": 2048, "config": "v13", "n": "-", "snp": null, "limit": 400, "us": 89.6, "round": 2}
+{"S": 144, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 144, "us": 52.8, "round": 2}
+{"S": 144, "M": 4096, "N": 8192, "K": 2048, "config": "v9r dp", "n": "-", "snp": null, "limit": 144, "us": 41.961, "round": 2}
+{"S": 136, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 392, "us": 94.241, "round": 2}
+{"S": 136, "M": 4096, "N": 8192, "K": 2048, "config": "v13", "n": "-", "snp": null, "limit": 392, "us": 89.201, "round": 2}
+{"S": 136, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 136, "us": 51.0, "round": 2}
+{"S": 136, "M": 4096, "N": 8192, "K": 2048, "config": "v9r dp", "n": "-", "snp": null, "limit": 136, "us": 40.84, "round": 2}
+{"S": 132, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 388, "us": 94.12, "round": 2}
+{"S": 132, "M": 4096, "N": 8192, "K": 2048, "config": "v13", "n": "-", "snp": null, "limit": 388, "us": 89.401, "round": 2}
+{"S": 132, "M": 4096, "N": 8192, "K": 2048, "config": "v26 spread", "n": "-", "snp": null, "limit": 132, "us": 49.0, "round": 2}
+{"S": 132, "M": 4096, "N": 8192, "K": 2048, "config": "v9r dp", "n": "-", "snp": null, "limit": 132, "us": 41.2, "round": 2}

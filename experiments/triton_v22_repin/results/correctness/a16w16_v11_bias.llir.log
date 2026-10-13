@@ -1,0 +1,28 @@
+[v11_persistant_overlap_global] M=4096 N=4096 K=512 dtype='fp16': ✅ Triton and Torch match
+[v11_persistant_overlap_global] M=4096 N=4096 K=1024 dtype='fp16': ✅ Triton and Torch match
+[v11_persistant_overlap_global] M=4096 N=4096 K=2048 dtype='fp16': ✅ Triton and Torch match
+[v11_persistant_overlap_global] M=4096 N=4096 K=3072 dtype='fp16': ✅ Triton and Torch match
+[v11_persistant_overlap_global] M=4096 N=4096 K=4096 dtype='fp16': ✅ Triton and Torch match
+[v11_persistant_overlap_global] M=4096 N=4096 K=8192 dtype='fp16': ✅ Triton and Torch match
+[v11_persistant_overlap_global] M=4096 N=4096 K=16384 dtype='fp16': ✅ Triton and Torch match
+[v11_persistant_overlap_global] M=4096 N=4096 K=32768 dtype='fp16': ✅ Triton and Torch match
+[v11_persistant_overlap_global] M=4096 N=4096 K=512 dtype='bf16': ✅ Triton and Torch match
+[v11_persistant_overlap_global] M=4096 N=4096 K=1024 dtype='bf16': ✅ Triton and Torch match
+[v11_persistant_overlap_global] M=4096 N=4096 K=2048 dtype='bf16': ✅ Triton and Torch match
+[v11_persistant_overlap_global] M=4096 N=4096 K=3072 dtype='bf16': ✅ Triton and Torch match
+[v11_persistant_overlap_global] M=4096 N=4096 K=4096 dtype='bf16': ✅ Triton and Torch match
+[v11_persistant_overlap_global] M=4096 N=4096 K=8192 dtype='bf16': ✅ Triton and Torch match
+[v11_persistant_overlap_global] M=4096 N=4096 K=16384 dtype='bf16': ✅ Triton and Torch match
+[v11_persistant_overlap_global] M=4096 N=4096 K=32768 dtype='bf16': ✅ Triton and Torch match
+
+v11_persistant_overlap_global (bias):
+matmul-performance-v11_persistant_overlap_global-bias:
+        M       N        K  fp16 (TFLOPS)  bf16 (TFLOPS)
+0  4096.0  4096.0    512.0     671.088657     699.506053
+1  4096.0  4096.0   1024.0     920.654248     961.891831
+2  4096.0  4096.0   2048.0    1114.852025    1176.683225
+3  4096.0  4096.0   3072.0    1183.186630    1258.890501
+4  4096.0  4096.0   4096.0    1223.201786    1302.985902
+5  4096.0  4096.0   8192.0    1307.193268    1392.202792
+6  4096.0  4096.0  16384.0    1348.359468    1439.290810
+7  4096.0  4096.0  32768.0    1241.396409    1232.296494

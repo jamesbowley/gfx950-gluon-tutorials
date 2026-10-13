@@ -1,0 +1,25 @@
+main: 110 cases, 11 to run
+[1/11] 4864x4096x6144 v20 default n=default: 1333 TFLOPS, L2 70.5%, correct=True
+[2/11] 6144x11008x6144 v20 default n=default: 1558 TFLOPS, L2 76.8%, correct=True
+[3/11] 7680x8960x6144 v20 default n=default: 1533 TFLOPS, L2 75.4%, correct=True
+[4/11] 8960x8192x6144 v20 default n=default: 1559 TFLOPS, L2 75.2%, correct=True
+[5/11] 12800x10752x6144 v20 default n=default: 1532 TFLOPS, L2 76.3%, correct=True
+[6/11] 18432x14592x6144 v20 default n=default: 1527 TFLOPS, L2 75.6%, correct=True
+[7/11] 8192x33536x6144 v20 default n=default: 1603 TFLOPS, L2 79.2%, correct=True
+[8/11] 5632x3072x3072 v20 default n=default: 1151 TFLOPS, L2 69.8%, correct=True
+[9/11] 4096x5632x3072 v20 default n=default: 1180 TFLOPS, L2 68.8%, correct=True
+[10/11] 9472x14336x8192 v20 default n=default: 1494 TFLOPS, L2 76.6%, correct=True
+[11/11] 14336x18944x8192 v20 default n=default: 1547 TFLOPS, L2 78.2%, correct=True
+repeat main: 11 cases to 3 runs
+[1/11] 4864x4096x6144 v20 default n=default: 1329 TFLOPS, spread 0.4%
+[2/11] 6144x11008x6144 v20 default n=default: 1558 TFLOPS, spread 0.3%
+[3/11] 7680x8960x6144 v20 default n=default: 1533 TFLOPS, spread 0.3%
+[4/11] 8960x8192x6144 v20 default n=default: 1560 TFLOPS, spread 0.1%
+[5/11] 12800x10752x6144 v20 default n=default: 1529 TFLOPS, spread 0.2%
+[6/11] 18432x14592x6144 v20 default n=default: 1527 TFLOPS, spread 0.2%
+[7/11] 8192x33536x6144 v20 default n=default: 1603 TFLOPS, spread 1.3%
+[8/11] 5632x3072x3072 v20 default n=default: 1159 TFLOPS, spread 1.1%
+[9/11] 4096x5632x3072 v20 default n=default: 1180 TFLOPS, spread 1.9%
+[10/11] 9472x14336x8192 v20 default n=default: 1495 TFLOPS, spread 0.1%
+[11/11] 14336x18944x8192 v20 default n=default: 1545 TFLOPS, spread 0.4%
+SHARD_DONE

@@ -1,0 +1,7 @@
+torch=2.15.0a0+rocm10.2.0a20260929
+hip=7.17.26386
+hipblaslt=100500 (6054c511)
+triton=3.8.0 @ /home/jbowley/repos/triton_gfx950-tutorial-v2.2/python/triton
+llir_sched=/root/.aiter/llir_sched/ccf9a789cf3f11ab/libLlirSched.so
+gpu_pci_bus=117
+gpu=gfx950:sramecc+:xnack-

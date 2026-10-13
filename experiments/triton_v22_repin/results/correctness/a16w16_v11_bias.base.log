@@ -1,0 +1,28 @@
+[v11_persistant_overlap_global] M=4096 N=4096 K=512 dtype='fp16': ✅ Triton and Torch match
+[v11_persistant_overlap_global] M=4096 N=4096 K=1024 dtype='fp16': ✅ Triton and Torch match
+[v11_persistant_overlap_global] M=4096 N=4096 K=2048 dtype='fp16': ✅ Triton and Torch match
+[v11_persistant_overlap_global] M=4096 N=4096 K=3072 dtype='fp16': ✅ Triton and Torch match
+[v11_persistant_overlap_global] M=4096 N=4096 K=4096 dtype='fp16': ✅ Triton and Torch match
+[v11_persistant_overlap_global] M=4096 N=4096 K=8192 dtype='fp16': ✅ Triton and Torch match
+[v11_persistant_overlap_global] M=4096 N=4096 K=16384 dtype='fp16': ✅ Triton and Torch match
+[v11_persistant_overlap_global] M=4096 N=4096 K=32768 dtype='fp16': ✅ Triton and Torch match
+[v11_persistant_overlap_global] M=4096 N=4096 K=512 dtype='bf16': ✅ Triton and Torch match
+[v11_persistant_overlap_global] M=4096 N=4096 K=1024 dtype='bf16': ✅ Triton and Torch match
+[v11_persistant_overlap_global] M=4096 N=4096 K=2048 dtype='bf16': ✅ Triton and Torch match
+[v11_persistant_overlap_global] M=4096 N=4096 K=3072 dtype='bf16': ✅ Triton and Torch match
+[v11_persistant_overlap_global] M=4096 N=4096 K=4096 dtype='bf16': ✅ Triton and Torch match
+[v11_persistant_overlap_global] M=4096 N=4096 K=8192 dtype='bf16': ✅ Triton and Torch match
+[v11_persistant_overlap_global] M=4096 N=4096 K=16384 dtype='bf16': ✅ Triton and Torch match
+[v11_persistant_overlap_global] M=4096 N=4096 K=32768 dtype='bf16': ✅ Triton and Torch match
+
+v11_persistant_overlap_global (bias):
+matmul-performance-v11_persistant_overlap_global-bias:
+        M       N        K  fp16 (TFLOPS)  bf16 (TFLOPS)
+0  4096.0  4096.0    512.0     635.350212     662.803597
+1  4096.0  4096.0   1024.0     855.571168     885.560241
+2  4096.0  4096.0   2048.0    1016.560353    1065.087961
+3  4096.0  4096.0   3072.0    1074.178242    1130.738119
+4  4096.0  4096.0   4096.0    1108.727355    1171.078565
+5  4096.0  4096.0   8192.0    1177.502344    1246.041117
+6  4096.0  4096.0  16384.0    1207.715718    1281.954201
+7  4096.0  4096.0  32768.0    1226.468285    1305.948834

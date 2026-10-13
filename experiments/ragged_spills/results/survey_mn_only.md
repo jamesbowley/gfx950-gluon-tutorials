@@ -1,0 +1,32 @@
+| case | variant | correct | VGPR | VGPR spill | SGPR spill | scratch ops (kloop/tile/other) |
+|---|---|---|---|---|---|---|
+| 4300x4000x8192 | base | yes | 496 | 0 | 45 | 0/0/0 |
+| 4300x4000x8192 | crow | yes | 488 | 0 | 45 | 0/0/0 |
+| 4300x4000x8192 | final+nopers | yes | 512 | 0 | 37 | 0/0/0 |
+| 4300x4000x8192:CASE_BIAS=1 | base | yes | 512 | 4 | 44 | 0/0/8 |
+| 4300x4000x8192:CASE_BIAS=1 | crow | yes | 512 | 4 | 44 | 0/0/8 |
+| 4300x4000x8192:CASE_BIAS=1 | final+nopers | yes | 512 | 5 | 34 | 0/0/10 |
+| 4300x4000x8192:STREAMK_FIXUP=owner | base | yes | 500 | 0 | 43 | 0/0/0 |
+| 4300x4000x8192:STREAMK_FIXUP=owner | crow | yes | 492 | 0 | 43 | 0/0/0 |
+| 4300x4000x8192:STREAMK_FIXUP=owner | final+nopers | yes | 512 | 0 | 35 | 0/0/0 |
+| 4300x4000x8192:STREAMK_EXCHANGE=l2 | base | yes | 496 | 0 | 43 | 0/0/0 |
+| 4300x4000x8192:STREAMK_EXCHANGE=l2 | crow | yes | 488 | 0 | 43 | 0/0/0 |
+| 4300x4000x8192:STREAMK_EXCHANGE=l2 | final+nopers | yes | 512 | 0 | 34 | 0/0/0 |
+| 4300x4000x8192:STREAMK_PARTIALS=bf16_pairs | base | yes | 496 | 0 | 43 | 0/0/0 |
+| 4300x4000x8192:STREAMK_PARTIALS=bf16_pairs | crow | yes | 488 | 0 | 43 | 0/0/0 |
+| 4300x4000x8192:STREAMK_PARTIALS=bf16_pairs | final+nopers | yes | 512 | 0 | 36 | 0/0/0 |
+| 4300x4000x8192:STREAMK_PLACEMENT=chunk | base | yes | 496 | 0 | 42 | 0/0/0 |
+| 4300x4000x8192:STREAMK_PLACEMENT=chunk | crow | yes | 488 | 0 | 42 | 0/0/0 |
+| 4300x4000x8192:STREAMK_PLACEMENT=chunk | final+nopers | yes | 512 | 0 | 34 | 0/0/0 |
+| 4300x4000x8192:STREAMK_FIXUP=atomic_iz | base | NO | 496 | 0 | 136 | 0/0/0 |
+| 4300x4000x8192:STREAMK_FIXUP=atomic_iz | crow | NO | 492 | 0 | 136 | 0/0/0 |
+| 4300x4000x8192:STREAMK_FIXUP=atomic_iz | final+nopers | NO | 512 | 0 | 116 | 0/0/0 |
+| 8150x8400x8192 | base | yes | 496 | 0 | 43 | 0/0/0 |
+| 8150x8400x8192 | crow | yes | 488 | 0 | 43 | 0/0/0 |
+| 8150x8400x8192 | final+nopers | yes | 512 | 0 | 35 | 0/0/0 |
+| 8150x8400x8192:CASE_BIAS=1 | base | yes | 512 | 4 | 43 | 0/0/8 |
+| 8150x8400x8192:CASE_BIAS=1 | crow | yes | 512 | 4 | 43 | 0/0/8 |
+| 8150x8400x8192:CASE_BIAS=1 | final+nopers | yes | 512 | 5 | 36 | 0/0/10 |
+| 4000x6080x8192 | base | yes | 500 | 0 | 43 | 0/0/0 |
+| 4000x6080x8192 | crow | yes | 492 | 0 | 43 | 0/0/0 |
+| 4000x6080x8192 | final+nopers | yes | 512 | 0 | 36 | 0/0/0 |

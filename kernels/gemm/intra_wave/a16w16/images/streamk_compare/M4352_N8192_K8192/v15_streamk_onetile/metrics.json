@@ -1,0 +1,50 @@
+{
+ "version": "v15_streamk_onetile",
+ "note": "one-tile, end-to-end split, row-major partials",
+ "ks_cycles": 2176.390625,
+ "shape": "4352x8192x8192 bf16",
+ "groups": [
+  {
+   "sig": "16-k-step partial",
+   "n": 71,
+   "n_dp": 2,
+   "segs": [
+    {
+     "ksteps": 16,
+     "role": "partial",
+     "mac": 17.667784247140837,
+     "transition": 5.579880679737811,
+     "phases": {
+      "drain": 0.3602294509975662,
+      "partial store": 10.915319946298702,
+      "store drain": 1.8360674568702482,
+      "exit": 0.3583915456353337
+     }
+    }
+   ],
+   "dp_last": 128.0009189526811
+  },
+  {
+   "sig": "16-k-step owner",
+   "n": 9,
+   "n_dp": 2,
+   "segs": [
+    {
+     "ksteps": 16,
+     "role": "owner",
+     "mac": 22.056702252152,
+     "transition": 5.239868187724802,
+     "phases": {
+      "drain": 0.41169080114007567,
+      "spin on flags": 17.210145811944948,
+      "collect": 60.830991679170644,
+      "exit": 0.47050377273151506
+     }
+    }
+   ],
+   "dp_last": 127.60025558371443
+  }
+ ],
+ "tail_median": 38.54455125673958,
+ "tail_max": 114.51988312070587
+}

@@ -1,0 +1,207 @@
+
+============================================================
+Skipped (not reported in tutorial; pass --allow-unreported to run):
+  v10_persistant + base
+  v11_persistant_overlap_global + base
+  v12_persistant_overlap_lds + base
+  v13_persistant_peel_acc + base
+  v0_naive + llir
+  v1_buffer_load + llir
+  v2_async_copy + llir
+  v3_lds + llir
+  v4_global_prefetch + llir
+  v0_naive + llir+amdgcnas
+  v1_buffer_load + llir+amdgcnas
+  v2_async_copy + llir+amdgcnas
+  v3_lds + llir+amdgcnas
+  v4_global_prefetch + llir+amdgcnas
+  v5_local_prefetch + llir+amdgcnas
+  v6_loop_unroll + llir+amdgcnas
+============================================================
+
+============================================================
+Config: base
+============================================================
+  Running: v0 (v0_naive) config=base
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a16w16/tmp/base/v0_naive
+  [v0_naive] M=4096 N=4096 K=8192 dtype='fp16': ✅ Triton and Torch match
+  rocprofv3: collecting kernel trace for v0_naive ...
+  rocprofv3: 1002 dispatches, final-100 avg=462.18 us, tflops=594.7
+  Running: v1 (v1_buffer_load) config=base
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a16w16/tmp/base/v1_buffer_load
+  [v1_buffer_load] M=4096 N=4096 K=8192 dtype='fp16': ✅ Triton and Torch match
+  rocprofv3: collecting kernel trace for v1_buffer_load ...
+  rocprofv3: 1002 dispatches, final-100 avg=504.36 us, tflops=545.0
+  Running: v2 (v2_async_copy) config=base
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a16w16/tmp/base/v2_async_copy
+  [v2_async_copy] M=4096 N=4096 K=8192 dtype='fp16': ✅ Triton and Torch match
+  rocprofv3: collecting kernel trace for v2_async_copy ...
+  rocprofv3: 1002 dispatches, final-100 avg=409.95 us, tflops=670.5
+  Running: v3 (v3_lds) config=base
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a16w16/tmp/base/v3_lds
+  [v3_lds] M=4096 N=4096 K=8192 dtype='fp16': ✅ Triton and Torch match
+  rocprofv3: collecting kernel trace for v3_lds ...
+  rocprofv3: 1002 dispatches, final-100 avg=364.81 us, tflops=753.5
+  Running: v4 (v4_global_prefetch) config=base
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a16w16/tmp/base/v4_global_prefetch
+  [v4_global_prefetch] M=4096 N=4096 K=8192 dtype='fp16': ✅ Triton and Torch match
+  rocprofv3: collecting kernel trace for v4_global_prefetch ...
+  rocprofv3: 1002 dispatches, final-100 avg=258.90 us, tflops=1061.7
+  Running: v5 (v5_local_prefetch) config=base
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a16w16/tmp/base/v5_local_prefetch
+  [v5_local_prefetch] M=4096 N=4096 K=8192 dtype='fp16': ✅ Triton and Torch match
+  rocprofv3: collecting kernel trace for v5_local_prefetch ...
+  rocprofv3: 1002 dispatches, final-100 avg=256.51 us, tflops=1071.6
+  Running: v6 (v6_loop_unroll) config=base
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a16w16/tmp/base/v6_loop_unroll
+  [v6_loop_unroll] M=4096 N=4096 K=8192 dtype='fp16': ✅ Triton and Torch match
+  rocprofv3: collecting kernel trace for v6_loop_unroll ...
+  rocprofv3: 1002 dispatches, final-100 avg=1267.75 us, tflops=216.8
+  Running: v7 (v7_sliceN) config=base
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a16w16/tmp/base/v7_sliceN
+  [v7_sliceN] M=4096 N=4096 K=8192 dtype='fp16': ✅ Triton and Torch match
+  rocprofv3: collecting kernel trace for v7_sliceN ...
+  rocprofv3: 1002 dispatches, final-100 avg=249.42 us, tflops=1102.1
+  Running: v8 (v8_sliceMN) config=base
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a16w16/tmp/base/v8_sliceMN
+  [v8_sliceMN] M=4096 N=4096 K=8192 dtype='fp16': ✅ Triton and Torch match
+  rocprofv3: collecting kernel trace for v8_sliceMN ...
+  rocprofv3: 1002 dispatches, final-100 avg=232.55 us, tflops=1182.0
+  Running: v9 (v9_beyond_hotloop) config=base
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a16w16/tmp/base/v9_beyond_hotloop
+  [v9_beyond_hotloop] M=4096 N=4096 K=8192 dtype='fp16': ✅ Triton and Torch match
+  rocprofv3: collecting kernel trace for v9_beyond_hotloop ...
+  rocprofv3: 1002 dispatches, final-100 avg=230.71 us, tflops=1191.4
+
+============================================================
+Config: llir
+============================================================
+  Running: v5 (v5_local_prefetch) config=llir
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a16w16/tmp/llir/v5_local_prefetch
+  [v5_local_prefetch] M=4096 N=4096 K=8192 dtype='fp16': ✅ Triton and Torch match
+  rocprofv3: collecting kernel trace for v5_local_prefetch ...
+  rocprofv3: 1002 dispatches, final-100 avg=235.67 us, tflops=1166.4
+  Running: v6 (v6_loop_unroll) config=llir
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a16w16/tmp/llir/v6_loop_unroll
+  [v6_loop_unroll] M=4096 N=4096 K=8192 dtype='fp16': ✅ Triton and Torch match
+  rocprofv3: collecting kernel trace for v6_loop_unroll ...
+  rocprofv3: 1002 dispatches, final-100 avg=240.25 us, tflops=1144.1
+  Running: v7 (v7_sliceN) config=llir
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a16w16/tmp/llir/v7_sliceN
+  [v7_sliceN] M=4096 N=4096 K=8192 dtype='fp16': ✅ Triton and Torch match
+  rocprofv3: collecting kernel trace for v7_sliceN ...
+  rocprofv3: 1002 dispatches, final-100 avg=207.86 us, tflops=1322.4
+  Running: v8 (v8_sliceMN) config=llir
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a16w16/tmp/llir/v8_sliceMN
+  [v8_sliceMN] M=4096 N=4096 K=8192 dtype='fp16': ✅ Triton and Torch match
+  rocprofv3: collecting kernel trace for v8_sliceMN ...
+  rocprofv3: 1002 dispatches, final-100 avg=208.70 us, tflops=1317.1
+  Running: v9 (v9_beyond_hotloop) config=llir
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a16w16/tmp/llir/v9_beyond_hotloop
+  [v9_beyond_hotloop] M=4096 N=4096 K=8192 dtype='fp16': ✅ Triton and Torch match
+  rocprofv3: collecting kernel trace for v9_beyond_hotloop ...
+  rocprofv3: 1002 dispatches, final-100 avg=207.08 us, tflops=1327.4
+  Running: v10 (v10_persistant) config=llir
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a16w16/tmp/llir/v10_persistant
+  [v10_persistant] M=4096 N=4096 K=8192 dtype='fp16': ✅ Triton and Torch match
+  rocprofv3: collecting kernel trace for v10_persistant ...
+  rocprofv3: 1002 dispatches, final-100 avg=206.84 us, tflops=1328.9
+  Running: v11 (v11_persistant_overlap_global) config=llir
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a16w16/tmp/llir/v11_persistant_overlap_global
+  [v11_persistant_overlap_global] M=4096 N=4096 K=8192 dtype='fp16': ✅ Triton and Torch match
+  rocprofv3: collecting kernel trace for v11_persistant_overlap_global ...
+  rocprofv3: 1002 dispatches, final-100 avg=206.28 us, tflops=1332.6
+  Running: v12 (v12_persistant_overlap_lds) config=llir
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a16w16/tmp/llir/v12_persistant_overlap_lds
+  [v12_persistant_overlap_lds] M=4096 N=4096 K=8192 dtype='fp16': ✅ Triton and Torch match
+  rocprofv3: collecting kernel trace for v12_persistant_overlap_lds ...
+  rocprofv3: 1002 dispatches, final-100 avg=207.02 us, tflops=1327.8
+  Running: v13 (v13_persistant_peel_acc) config=llir
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a16w16/tmp/llir/v13_persistant_peel_acc
+  [v13_persistant_peel_acc] M=4096 N=4096 K=8192 dtype='fp16': ✅ Triton and Torch match
+  rocprofv3: collecting kernel trace for v13_persistant_peel_acc ...
+  rocprofv3: 1002 dispatches, final-100 avg=207.04 us, tflops=1327.7
+
+============================================================
+Config: llir+amdgcnas
+============================================================
+  Running: v7 (v7_sliceN) config=llir+amdgcnas
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a16w16/tmp/llir+amdgcnas/v7_sliceN
+  [v7_sliceN] M=4096 N=4096 K=8192 dtype='fp16': ✅ Triton and Torch match
+  rocprofv3: collecting kernel trace for v7_sliceN ...
+  rocprofv3: 1002 dispatches, final-100 avg=208.31 us, tflops=1319.6
+  Running: v8 (v8_sliceMN) config=llir+amdgcnas
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a16w16/tmp/llir+amdgcnas/v8_sliceMN
+  [v8_sliceMN] M=4096 N=4096 K=8192 dtype='fp16': ✅ Triton and Torch match
+  rocprofv3: collecting kernel trace for v8_sliceMN ...
+  rocprofv3: 1002 dispatches, final-100 avg=207.08 us, tflops=1327.4
+  Running: v9 (v9_beyond_hotloop) config=llir+amdgcnas
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a16w16/tmp/llir+amdgcnas/v9_beyond_hotloop
+  [v9_beyond_hotloop] M=4096 N=4096 K=8192 dtype='fp16': ✅ Triton and Torch match
+  rocprofv3: collecting kernel trace for v9_beyond_hotloop ...
+  rocprofv3: 1002 dispatches, final-100 avg=206.14 us, tflops=1333.4
+  Running: v10 (v10_persistant) config=llir+amdgcnas
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a16w16/tmp/llir+amdgcnas/v10_persistant
+  [v10_persistant] M=4096 N=4096 K=8192 dtype='fp16': ✅ Triton and Torch match
+  rocprofv3: collecting kernel trace for v10_persistant ...
+  rocprofv3: 1002 dispatches, final-100 avg=206.29 us, tflops=1332.5
+  Running: v11 (v11_persistant_overlap_global) config=llir+amdgcnas
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a16w16/tmp/llir+amdgcnas/v11_persistant_overlap_global
+  [v11_persistant_overlap_global] M=4096 N=4096 K=8192 dtype='fp16': ✅ Triton and Torch match
+  rocprofv3: collecting kernel trace for v11_persistant_overlap_global ...
+  rocprofv3: 1002 dispatches, final-100 avg=205.44 us, tflops=1338.0
+  Running: v12 (v12_persistant_overlap_lds) config=llir+amdgcnas
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a16w16/tmp/llir+amdgcnas/v12_persistant_overlap_lds
+  [v12_persistant_overlap_lds] M=4096 N=4096 K=8192 dtype='fp16': ✅ Triton and Torch match
+  rocprofv3: collecting kernel trace for v12_persistant_overlap_lds ...
+  rocprofv3: 1002 dispatches, final-100 avg=206.07 us, tflops=1333.9
+  Running: v13 (v13_persistant_peel_acc) config=llir+amdgcnas
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a16w16/tmp/llir+amdgcnas/v13_persistant_peel_acc
+  [v13_persistant_peel_acc] M=4096 N=4096 K=8192 dtype='fp16': ✅ Triton and Torch match
+  rocprofv3: collecting kernel trace for v13_persistant_peel_acc ...
+  rocprofv3: 1002 dispatches, final-100 avg=207.35 us, tflops=1325.7
+
+============================================================
+RESULTS SUMMARY
+============================================================
+
+Config: base
+| Version              | TFLOPS | VGPRs | Spills | MFMA Eff. |
+|----------------------|--------|-------|--------|-----------|
+| v0_naive             |    595 |   450 |      0 |    29.08% |
+| v1_buffer_load       |    545 |   512 |      0 |    25.64% |
+| v2_async_copy        |    671 |   358 |      0 |    32.83% |
+| v3_lds               |    753 |   420 |      0 |    42.08% |
+| v4_global_prefetch   |   1062 |   434 |      0 |    57.63% |
+| v5_local_prefetch    |   1072 |   452 |      0 |    58.56% |
+| v6_loop_unroll       |    217 |   512 |    241 |     8.42% |
+| v7_sliceN            |   1102 |   512 |      8 |    66.04% |
+| v8_sliceMN           |   1182 |   448 |      0 |    71.59% |
+| v9_beyond_hotloop    |   1191 |   448 |      0 |    71.82% |
+
+
+Config: llir
+| Version              | TFLOPS | VGPRs | Spills | MFMA Eff. |
+|----------------------|--------|-------|--------|-----------|
+| v5_local_prefetch    |   1166 |   512 |      0 |    80.37% |
+| v6_loop_unroll       |   1144 |   511 |      8 |    89.57% |
+| v7_sliceN            |   1322 |   512 |      8 |    97.30% |
+| v8_sliceMN           |   1317 |   448 |      0 |    95.71% |
+| v9_beyond_hotloop    |   1327 |   448 |      0 |    96.04% |
+| v10_persistant       |   1329 |   480 |      0 |    96.22% |
+| v11_persistant_overlap_global |   1333 |   452 |      0 |    96.07% |
+| v12_persistant_overlap_lds |   1328 |   440 |      0 |    95.93% |
+| v13_persistant_peel_acc |   1328 |   480 |      0 |    96.50% |
+
+
+Config: llir+amdgcnas
+| Version              | TFLOPS | VGPRs | Spills | MFMA Eff. |
+|----------------------|--------|-------|--------|-----------|
+| v7_sliceN            |   1320 |   512 |      8 |    97.79% |
+| v8_sliceMN           |   1327 |   448 |      0 |    98.35% |
+| v9_beyond_hotloop    |   1333 |   448 |      0 |    98.30% |
+| v10_persistant       |   1332 |   480 |      0 |    97.43% |
+| v11_persistant_overlap_global |   1338 |   452 |      0 |    98.17% |
+| v12_persistant_overlap_lds |   1334 |   440 |      0 |    97.88% |
+| v13_persistant_peel_acc |   1326 |   480 |      0 |    98.30% |
+

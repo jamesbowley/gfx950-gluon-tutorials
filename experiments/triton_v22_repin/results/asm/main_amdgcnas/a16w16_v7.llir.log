@@ -1,0 +1,6 @@
+[v7_sliceN] M=4096 N=4096 K=8192 dtype='fp16': ✅ Triton and Torch match
+
+v7_sliceN:
+matmul-performance-v7_sliceN:
+        M       N       K  fp16 (TFLOPS)
+0  4096.0  4096.0  8192.0     1298.05117

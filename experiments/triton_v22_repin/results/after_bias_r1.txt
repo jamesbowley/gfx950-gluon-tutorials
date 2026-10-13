@@ -1,0 +1,46 @@
+== a16w16_fp16_bias
+RESULTS SUMMARY
+============================================================
+
+Config: llir
+| Version              | TFLOPS | VGPRs | Spills | MFMA Eff. |
+|----------------------|--------|-------|--------|-----------|
+| v9_beyond_hotloop    |   1324 |   448 |      0 |    94.48% |
+| v10_persistant       |   1326 |   488 |      0 |    94.85% |
+| v11_persistant_overlap_global |   1322 |   464 |      0 |    95.01% |
+| v12_persistant_overlap_lds |   1323 |   444 |      0 |    95.17% |
+| v13_persistant_peel_acc |   1325 |   488 |      0 |    96.03% |
+
+
+Config: llir+amdgcnas
+| Version              | TFLOPS | VGPRs | Spills | MFMA Eff. |
+|----------------------|--------|-------|--------|-----------|
+| v9_beyond_hotloop    |   1326 |   448 |      0 |    97.92% |
+| v10_persistant       |   1325 |   488 |      0 |    97.32% |
+| v11_persistant_overlap_global |   1328 |   464 |      0 |    97.21% |
+| v12_persistant_overlap_lds |   1327 |   444 |      0 |    97.26% |
+| v13_persistant_peel_acc |   1331 |   488 |      0 |    98.22% |
+
+== a16w16_bf16_bias
+RESULTS SUMMARY
+============================================================
+
+Config: llir
+| Version              | TFLOPS | VGPRs | Spills | MFMA Eff. |
+|----------------------|--------|-------|--------|-----------|
+| v9_beyond_hotloop    |   1427 |   448 |      0 |    94.51% |
+| v10_persistant       |   1422 |   488 |      0 |    95.19% |
+| v11_persistant_overlap_global |   1419 |   464 |      0 |    94.88% |
+| v12_persistant_overlap_lds |   1418 |   444 |      0 |    95.27% |
+| v13_persistant_peel_acc |   1424 |   488 |      0 |    96.25% |
+
+
+Config: llir+amdgcnas
+| Version              | TFLOPS | VGPRs | Spills | MFMA Eff. |
+|----------------------|--------|-------|--------|-----------|
+| v9_beyond_hotloop    |   1432 |   448 |      0 |    98.09% |
+| v10_persistant       |   1427 |   488 |      0 |    97.22% |
+| v11_persistant_overlap_global |   1426 |   464 |      0 |    97.24% |
+| v12_persistant_overlap_lds |   1426 |   444 |      0 |    97.69% |
+| v13_persistant_peel_acc |   1426 |   488 |      0 |    97.54% |
+

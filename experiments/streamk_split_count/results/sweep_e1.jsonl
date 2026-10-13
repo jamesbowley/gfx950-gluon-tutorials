@@ -1,0 +1,326 @@
+{"S": 0, "M": 4096, "N": 8192, "K": 4096, "config": "v13 base", "n": "-", "snp": null, "us": 93.0, "round": 1, "limit": 256}
+{"S": 0, "M": 4096, "N": 8192, "K": 8192, "config": "v13 base", "n": "-", "snp": null, "us": 173.521, "round": 1, "limit": 256}
+{"S": 0, "M": 4096, "N": 8192, "K": 16384, "config": "v13 base", "n": "-", "snp": null, "us": 345.922, "round": 1, "limit": 256}
+{"S": 1, "M": 4096, "N": 8192, "K": 16384, "config": "v20 rs", "n": 32, "snp": 32, "us": 360.242, "round": 1, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 16384, "config": "v20 owner", "n": 32, "snp": 32, "us": 442.322, "round": 1, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 16384, "config": "v23 rs", "n": 32, "snp": 32, "us": 359.602, "round": 1, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 16384, "config": "v23 rs bf16", "n": 32, "snp": 32, "us": 356.922, "round": 1, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 16384, "config": "v23 rs bf16_pairs", "n": 32, "snp": 32, "us": 356.922, "round": 1, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 16384, "config": "v23 owner bf16_pairs", "n": 32, "snp": 32, "us": 427.522, "round": 1, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 16384, "config": "v22 atomic", "n": 32, "snp": 32, "us": 361.642, "round": 1, "limit": 257, "gemm_us": 357.122, "pre_us": 4.52}
+{"S": 1, "M": 4096, "N": 8192, "K": 16384, "config": "v22 atomic_iz", "n": 32, "snp": 32, "us": 357.082, "round": 1, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 16384, "config": "v20 rs", "n": 64, "snp": 64, "us": 357.322, "round": 1, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 16384, "config": "v20 owner", "n": 64, "snp": 64, "us": 515.403, "round": 1, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 16384, "config": "v23 rs", "n": 64, "snp": 64, "us": 355.521, "round": 1, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 16384, "config": "v23 rs bf16", "n": 64, "snp": 64, "us": 353.001, "round": 1, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 16384, "config": "v23 rs bf16_pairs", "n": 64, "snp": 64, "us": 354.641, "round": 1, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 16384, "config": "v23 owner bf16_pairs", "n": 64, "snp": 64, "us": 488.762, "round": 1, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 16384, "config": "v22 atomic", "n": 64, "snp": 64, "us": 357.082, "round": 1, "limit": 257, "gemm_us": 352.482, "pre_us": 4.64}
+{"S": 1, "M": 4096, "N": 8192, "K": 16384, "config": "v22 atomic_iz", "n": 64, "snp": 64, "us": 356.762, "round": 1, "limit": 257}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v20 rs", "n": 12, "snp": 96, "us": 198.041, "round": 1, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v20 owner", "n": 12, "snp": 96, "us": 222.241, "round": 1, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs all", "n": 12, "snp": 96, "us": 198.161, "round": 1, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs", "n": 12, "snp": 96, "us": 195.801, "round": 1, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16", "n": 12, "snp": 96, "us": 195.521, "round": 1, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16_pairs", "n": 12, "snp": 96, "us": 193.961, "round": 1, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v23 owner bf16_pairs", "n": 12, "snp": 96, "us": 216.481, "round": 1, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic", "n": 12, "snp": 96, "us": 196.121, "round": 1, "limit": 264, "gemm_us": 191.721, "pre_us": 4.4}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic_iz", "n": 12, "snp": 96, "us": 192.561, "round": 1, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v20 rs", "n": 16, "snp": 128, "us": 196.401, "round": 1, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v20 owner", "n": 16, "snp": 128, "us": 229.681, "round": 1, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs", "n": 16, "snp": 128, "us": 195.841, "round": 1, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16", "n": 16, "snp": 128, "us": 191.641, "round": 1, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16_pairs", "n": 16, "snp": 128, "us": 190.801, "round": 1, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v23 owner bf16_pairs", "n": 16, "snp": 128, "us": 222.241, "round": 1, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic", "n": 16, "snp": 128, "us": 197.841, "round": 1, "limit": 264, "gemm_us": 193.441, "pre_us": 4.4}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic_iz", "n": 16, "snp": 128, "us": 194.961, "round": 1, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v20 rs", "n": 32, "snp": 256, "us": 211.521, "round": 1, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v20 owner", "n": 32, "snp": 256, "us": 274.202, "round": 1, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs", "n": 32, "snp": 256, "us": 210.761, "round": 1, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16", "n": 32, "snp": 256, "us": 197.921, "round": 1, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16_pairs", "n": 32, "snp": 256, "us": 197.481, "round": 1, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v23 owner bf16_pairs", "n": 32, "snp": 256, "us": 255.801, "round": 1, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic", "n": 32, "snp": 256, "us": 209.881, "round": 1, "limit": 264, "gemm_us": 205.481, "pre_us": 4.36}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic_iz", "n": 32, "snp": 256, "us": 206.561, "round": 1, "limit": 264}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v20 rs", "n": 6, "snp": 96, "us": 208.081, "round": 1, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v20 owner", "n": 6, "snp": 96, "us": 218.041, "round": 1, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs all", "n": 6, "snp": 96, "us": 208.081, "round": 1, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs", "n": 6, "snp": 96, "us": 206.242, "round": 1, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16", "n": 6, "snp": 96, "us": 204.721, "round": 1, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16_pairs", "n": 6, "snp": 96, "us": 205.521, "round": 1, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v23 owner bf16_pairs", "n": 6, "snp": 96, "us": 214.721, "round": 1, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic", "n": 6, "snp": 96, "us": 205.601, "round": 1, "limit": 272, "gemm_us": 201.242, "pre_us": 4.32}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic_iz", "n": 6, "snp": 96, "us": 201.961, "round": 1, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v20 rs", "n": 8, "snp": 128, "us": 204.241, "round": 1, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v20 owner", "n": 8, "snp": 128, "us": 218.961, "round": 1, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs", "n": 8, "snp": 128, "us": 203.081, "round": 1, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16", "n": 8, "snp": 128, "us": 200.921, "round": 1, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16_pairs", "n": 8, "snp": 128, "us": 199.561, "round": 1, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v23 owner bf16_pairs", "n": 8, "snp": 128, "us": 215.041, "round": 1, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic", "n": 8, "snp": 128, "us": 202.881, "round": 1, "limit": 272, "gemm_us": 198.521, "pre_us": 4.32}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic_iz", "n": 8, "snp": 128, "us": 199.001, "round": 1, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v20 rs", "n": 12, "snp": 192, "us": 208.201, "round": 1, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v20 owner", "n": 12, "snp": 192, "us": 227.201, "round": 1, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs all", "n": 12, "snp": 192, "us": 208.321, "round": 1, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs", "n": 12, "snp": 192, "us": 207.201, "round": 1, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16", "n": 12, "snp": 192, "us": 199.401, "round": 1, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16_pairs", "n": 12, "snp": 192, "us": 198.881, "round": 1, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v23 owner bf16_pairs", "n": 12, "snp": 192, "us": 220.961, "round": 1, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic", "n": 12, "snp": 192, "us": 204.521, "round": 1, "limit": 272, "gemm_us": 200.081, "pre_us": 4.32}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic_iz", "n": 12, "snp": 192, "us": 202.441, "round": 1, "limit": 272}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v20 rs", "n": 3, "snp": 96, "us": 128.92, "round": 1, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v20 owner", "n": 3, "snp": 96, "us": 128.001, "round": 1, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v23 rs all", "n": 3, "snp": 96, "us": 128.641, "round": 1, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v23 rs", "n": 3, "snp": 96, "us": 126.401, "round": 1, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v23 rs bf16", "n": 3, "snp": 96, "us": 123.76, "round": 1, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v23 rs bf16_pairs", "n": 3, "snp": 96, "us": 122.6, "round": 1, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v23 owner bf16_pairs", "n": 3, "snp": 96, "us": 125.641, "round": 1, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v22 atomic", "n": 3, "snp": 96, "us": 124.32, "round": 1, "limit": 288, "gemm_us": 119.521, "pre_us": 4.76}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v22 atomic_iz", "n": 3, "snp": 96, "us": 120.521, "round": 1, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v20 rs", "n": 4, "snp": 128, "us": 126.161, "round": 1, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v20 owner", "n": 4, "snp": 128, "us": 128.321, "round": 1, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v23 rs", "n": 4, "snp": 128, "us": 123.441, "round": 1, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v23 rs bf16", "n": 4, "snp": 128, "us": 119.081, "round": 1, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v23 rs bf16_pairs", "n": 4, "snp": 128, "us": 120.761, "round": 1, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v23 owner bf16_pairs", "n": 4, "snp": 128, "us": 126.08, "round": 1, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v22 atomic", "n": 4, "snp": 128, "us": 124.6, "round": 1, "limit": 288, "gemm_us": 119.841, "pre_us": 4.76}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v22 atomic_iz", "n": 4, "snp": 128, "us": 121.121, "round": 1, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v20 rs", "n": 6, "snp": 192, "us": 133.121, "round": 1, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v20 owner", "n": 6, "snp": 192, "us": 135.801, "round": 1, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v23 rs all", "n": 6, "snp": 192, "us": 132.041, "round": 1, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v23 rs", "n": 6, "snp": 192, "us": 129.881, "round": 1, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v23 rs bf16", "n": 6, "snp": 192, "us": 122.321, "round": 1, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v23 rs bf16_pairs", "n": 6, "snp": 192, "us": 122.4, "round": 1, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v23 owner bf16_pairs", "n": 6, "snp": 192, "us": 129.561, "round": 1, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v22 atomic", "n": 6, "snp": 192, "us": 128.801, "round": 1, "limit": 288, "gemm_us": 124.2, "pre_us": 4.64}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v22 atomic_iz", "n": 6, "snp": 192, "us": 124.761, "round": 1, "limit": 288}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v20 rs", "n": 3, "snp": 192, "us": 240.921, "round": 1, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v20 owner", "n": 3, "snp": 192, "us": 236.281, "round": 1, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs all", "n": 3, "snp": 192, "us": 240.921, "round": 1, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs", "n": 3, "snp": 192, "us": 236.442, "round": 1, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16", "n": 3, "snp": 192, "us": 232.721, "round": 1, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16_pairs", "n": 3, "snp": 192, "us": 231.201, "round": 1, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v23 owner bf16_pairs", "n": 3, "snp": 192, "us": 233.562, "round": 1, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic", "n": 3, "snp": 192, "us": 233.001, "round": 1, "limit": 320, "gemm_us": 228.041, "pre_us": 4.96}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic_iz", "n": 3, "snp": 192, "us": 229.841, "round": 1, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v20 rs", "n": 4, "snp": 256, "us": 240.762, "round": 1, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v20 owner", "n": 4, "snp": 256, "us": 239.561, "round": 1, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs", "n": 4, "snp": 256, "us": 239.922, "round": 1, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16", "n": 4, "snp": 256, "us": 227.041, "round": 1, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16_pairs", "n": 4, "snp": 256, "us": 228.002, "round": 1, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v23 owner bf16_pairs", "n": 4, "snp": 256, "us": 235.961, "round": 1, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic", "n": 4, "snp": 256, "us": 231.241, "round": 1, "limit": 320, "gemm_us": 226.241, "pre_us": 5.0}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic_iz", "n": 4, "snp": 256, "us": 228.641, "round": 1, "limit": 320}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v20 rs", "n": 8, "snp": 96, "us": 202.401, "round": 1, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v20 owner", "n": 8, "snp": 96, "us": 218.281, "round": 1, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs", "n": 8, "snp": 96, "us": 201.201, "round": 1, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16", "n": 8, "snp": 96, "us": 200.721, "round": 1, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16_pairs", "n": 8, "snp": 96, "us": 199.441, "round": 1, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v23 owner bf16_pairs", "n": 8, "snp": 96, "us": 214.761, "round": 1, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic", "n": 8, "snp": 96, "us": 202.042, "round": 1, "limit": 268, "gemm_us": 197.641, "pre_us": 4.44}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic_iz", "n": 8, "snp": 96, "us": 198.801, "round": 1, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v20 rs", "n": 12, "snp": 144, "us": 203.961, "round": 1, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v20 owner", "n": 12, "snp": 144, "us": 225.721, "round": 1, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs all", "n": 12, "snp": 144, "us": 203.481, "round": 1, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs", "n": 12, "snp": 144, "us": 202.641, "round": 1, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16", "n": 12, "snp": 144, "us": 199.561, "round": 1, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16_pairs", "n": 12, "snp": 144, "us": 198.48, "round": 1, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v23 owner bf16_pairs", "n": 12, "snp": 144, "us": 220.762, "round": 1, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic", "n": 12, "snp": 144, "us": 202.001, "round": 1, "limit": 268, "gemm_us": 197.521, "pre_us": 4.48}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic_iz", "n": 12, "snp": 144, "us": 198.601, "round": 1, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v20 rs", "n": 16, "snp": 192, "us": 205.881, "round": 1, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v20 owner", "n": 16, "snp": 192, "us": 235.842, "round": 1, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs", "n": 16, "snp": 192, "us": 205.241, "round": 1, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16", "n": 16, "snp": 192, "us": 197.561, "round": 1, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16_pairs", "n": 16, "snp": 192, "us": 196.601, "round": 1, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v23 owner bf16_pairs", "n": 16, "snp": 192, "us": 227.241, "round": 1, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic", "n": 16, "snp": 192, "us": 204.401, "round": 1, "limit": 268, "gemm_us": 200.081, "pre_us": 4.32}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic_iz", "n": 16, "snp": 192, "us": 201.001, "round": 1, "limit": 268}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v20 rs", "n": 4, "snp": 96, "us": 217.761, "round": 1, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v20 owner", "n": 4, "snp": 96, "us": 222.081, "round": 1, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs", "n": 4, "snp": 96, "us": 215.001, "round": 1, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16", "n": 4, "snp": 96, "us": 212.761, "round": 1, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16_pairs", "n": 4, "snp": 96, "us": 214.081, "round": 1, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v23 owner bf16_pairs", "n": 4, "snp": 96, "us": 220.081, "round": 1, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic", "n": 4, "snp": 96, "us": 215.121, "round": 1, "limit": 280, "gemm_us": 210.402, "pre_us": 4.72}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic_iz", "n": 4, "snp": 96, "us": 211.321, "round": 1, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v20 rs", "n": 6, "snp": 144, "us": 216.041, "round": 1, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v20 owner", "n": 6, "snp": 144, "us": 223.721, "round": 1, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs all", "n": 6, "snp": 144, "us": 215.601, "round": 1, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs", "n": 6, "snp": 144, "us": 213.242, "round": 1, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16", "n": 6, "snp": 144, "us": 210.041, "round": 1, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16_pairs", "n": 6, "snp": 144, "us": 211.961, "round": 1, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v23 owner bf16_pairs", "n": 6, "snp": 144, "us": 220.321, "round": 1, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic", "n": 6, "snp": 144, "us": 211.642, "round": 1, "limit": 280, "gemm_us": 207.081, "pre_us": 4.6}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic_iz", "n": 6, "snp": 144, "us": 208.361, "round": 1, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v20 rs", "n": 8, "snp": 192, "us": 218.041, "round": 1, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v20 owner", "n": 8, "snp": 192, "us": 230.041, "round": 1, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs", "n": 8, "snp": 192, "us": 217.281, "round": 1, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16", "n": 8, "snp": 192, "us": 209.001, "round": 1, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16_pairs", "n": 8, "snp": 192, "us": 208.361, "round": 1, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v23 owner bf16_pairs", "n": 8, "snp": 192, "us": 223.721, "round": 1, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic", "n": 8, "snp": 192, "us": 213.561, "round": 1, "limit": 280, "gemm_us": 208.961, "pre_us": 4.6}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic_iz", "n": 8, "snp": 192, "us": 209.921, "round": 1, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic_iz", "n": 8, "snp": 192, "us": 210.002, "round": 2, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic", "n": 8, "snp": 192, "us": 214.121, "round": 2, "limit": 280, "gemm_us": 209.481, "pre_us": 4.6}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v23 owner bf16_pairs", "n": 8, "snp": 192, "us": 223.001, "round": 2, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16_pairs", "n": 8, "snp": 192, "us": 208.121, "round": 2, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16", "n": 8, "snp": 192, "us": 209.441, "round": 2, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs", "n": 8, "snp": 192, "us": 217.481, "round": 2, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v20 owner", "n": 8, "snp": 192, "us": 228.521, "round": 2, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v20 rs", "n": 8, "snp": 192, "us": 218.641, "round": 2, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic_iz", "n": 6, "snp": 144, "us": 208.001, "round": 2, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic", "n": 6, "snp": 144, "us": 212.681, "round": 2, "limit": 280, "gemm_us": 207.961, "pre_us": 4.68}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v23 owner bf16_pairs", "n": 6, "snp": 144, "us": 220.321, "round": 2, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16_pairs", "n": 6, "snp": 144, "us": 212.401, "round": 2, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16", "n": 6, "snp": 144, "us": 210.121, "round": 2, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs", "n": 6, "snp": 144, "us": 213.121, "round": 2, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs all", "n": 6, "snp": 144, "us": 216.321, "round": 2, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v20 owner", "n": 6, "snp": 144, "us": 223.202, "round": 2, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v20 rs", "n": 6, "snp": 144, "us": 215.081, "round": 2, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic_iz", "n": 4, "snp": 96, "us": 211.361, "round": 2, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic", "n": 4, "snp": 96, "us": 214.961, "round": 2, "limit": 280, "gemm_us": 210.401, "pre_us": 4.6}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v23 owner bf16_pairs", "n": 4, "snp": 96, "us": 220.601, "round": 2, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16_pairs", "n": 4, "snp": 96, "us": 213.361, "round": 2, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16", "n": 4, "snp": 96, "us": 213.521, "round": 2, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs", "n": 4, "snp": 96, "us": 214.521, "round": 2, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v20 owner", "n": 4, "snp": 96, "us": 222.561, "round": 2, "limit": 280}
+{"S": 24, "M": 4096, "N": 8192, "K": 8192, "config": "v20 rs", "n": 4, "snp": 96, "us": 217.681, "round": 2, "limit": 280}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic_iz", "n": 16, "snp": 192, "us": 201.721, "round": 2, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic", "n": 16, "snp": 192, "us": 204.641, "round": 2, "limit": 268, "gemm_us": 200.281, "pre_us": 4.32}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v23 owner bf16_pairs", "n": 16, "snp": 192, "us": 227.561, "round": 2, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16_pairs", "n": 16, "snp": 192, "us": 197.081, "round": 2, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16", "n": 16, "snp": 192, "us": 197.721, "round": 2, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs", "n": 16, "snp": 192, "us": 206.041, "round": 2, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v20 owner", "n": 16, "snp": 192, "us": 236.401, "round": 2, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v20 rs", "n": 16, "snp": 192, "us": 207.081, "round": 2, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic_iz", "n": 12, "snp": 144, "us": 199.281, "round": 2, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic", "n": 12, "snp": 144, "us": 202.081, "round": 2, "limit": 268, "gemm_us": 197.601, "pre_us": 4.441}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v23 owner bf16_pairs", "n": 12, "snp": 144, "us": 220.441, "round": 2, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16_pairs", "n": 12, "snp": 144, "us": 198.801, "round": 2, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16", "n": 12, "snp": 144, "us": 199.521, "round": 2, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs", "n": 12, "snp": 144, "us": 201.761, "round": 2, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs all", "n": 12, "snp": 144, "us": 204.201, "round": 2, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v20 owner", "n": 12, "snp": 144, "us": 225.921, "round": 2, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v20 rs", "n": 12, "snp": 144, "us": 203.801, "round": 2, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic_iz", "n": 8, "snp": 96, "us": 198.521, "round": 2, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic", "n": 8, "snp": 96, "us": 201.921, "round": 2, "limit": 268, "gemm_us": 197.601, "pre_us": 4.32}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v23 owner bf16_pairs", "n": 8, "snp": 96, "us": 214.801, "round": 2, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16_pairs", "n": 8, "snp": 96, "us": 199.482, "round": 2, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16", "n": 8, "snp": 96, "us": 200.441, "round": 2, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs", "n": 8, "snp": 96, "us": 201.321, "round": 2, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v20 owner", "n": 8, "snp": 96, "us": 219.161, "round": 2, "limit": 268}
+{"S": 12, "M": 4096, "N": 8192, "K": 8192, "config": "v20 rs", "n": 8, "snp": 96, "us": 201.961, "round": 2, "limit": 268}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic_iz", "n": 4, "snp": 256, "us": 228.001, "round": 2, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic", "n": 4, "snp": 256, "us": 231.601, "round": 2, "limit": 320, "gemm_us": 226.601, "pre_us": 5.04}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v23 owner bf16_pairs", "n": 4, "snp": 256, "us": 235.721, "round": 2, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16_pairs", "n": 4, "snp": 256, "us": 229.282, "round": 2, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16", "n": 4, "snp": 256, "us": 229.081, "round": 2, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs", "n": 4, "snp": 256, "us": 238.282, "round": 2, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v20 owner", "n": 4, "snp": 256, "us": 239.601, "round": 2, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v20 rs", "n": 4, "snp": 256, "us": 243.161, "round": 2, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic_iz", "n": 3, "snp": 192, "us": 230.841, "round": 2, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic", "n": 3, "snp": 192, "us": 235.081, "round": 2, "limit": 320, "gemm_us": 230.041, "pre_us": 5.04}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v23 owner bf16_pairs", "n": 3, "snp": 192, "us": 233.082, "round": 2, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16_pairs", "n": 3, "snp": 192, "us": 231.321, "round": 2, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16", "n": 3, "snp": 192, "us": 232.361, "round": 2, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs", "n": 3, "snp": 192, "us": 236.721, "round": 2, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs all", "n": 3, "snp": 192, "us": 240.921, "round": 2, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v20 owner", "n": 3, "snp": 192, "us": 236.722, "round": 2, "limit": 320}
+{"S": 64, "M": 4096, "N": 8192, "K": 8192, "config": "v20 rs", "n": 3, "snp": 192, "us": 241.041, "round": 2, "limit": 320}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v22 atomic_iz", "n": 6, "snp": 192, "us": 124.881, "round": 2, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v22 atomic", "n": 6, "snp": 192, "us": 128.12, "round": 2, "limit": 288, "gemm_us": 123.4, "pre_us": 4.76}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v23 owner bf16_pairs", "n": 6, "snp": 192, "us": 129.721, "round": 2, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v23 rs bf16_pairs", "n": 6, "snp": 192, "us": 122.401, "round": 2, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v23 rs bf16", "n": 6, "snp": 192, "us": 122.2, "round": 2, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v23 rs", "n": 6, "snp": 192, "us": 129.521, "round": 2, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v23 rs all", "n": 6, "snp": 192, "us": 131.321, "round": 2, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v20 owner", "n": 6, "snp": 192, "us": 134.88, "round": 2, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v20 rs", "n": 6, "snp": 192, "us": 132.16, "round": 2, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v22 atomic_iz", "n": 4, "snp": 128, "us": 120.6, "round": 2, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v22 atomic", "n": 4, "snp": 128, "us": 124.92, "round": 2, "limit": 288, "gemm_us": 120.2, "pre_us": 4.72}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v23 owner bf16_pairs", "n": 4, "snp": 128, "us": 125.401, "round": 2, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v23 rs bf16_pairs", "n": 4, "snp": 128, "us": 120.281, "round": 2, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v23 rs bf16", "n": 4, "snp": 128, "us": 119.881, "round": 2, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v23 rs", "n": 4, "snp": 128, "us": 124.201, "round": 2, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v20 owner", "n": 4, "snp": 128, "us": 129.001, "round": 2, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v20 rs", "n": 4, "snp": 128, "us": 126.041, "round": 2, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v22 atomic_iz", "n": 3, "snp": 96, "us": 120.441, "round": 2, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v22 atomic", "n": 3, "snp": 96, "us": 124.281, "round": 2, "limit": 288, "gemm_us": 119.521, "pre_us": 4.76}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v23 owner bf16_pairs", "n": 3, "snp": 96, "us": 124.922, "round": 2, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v23 rs bf16_pairs", "n": 3, "snp": 96, "us": 122.521, "round": 2, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v23 rs bf16", "n": 3, "snp": 96, "us": 123.482, "round": 2, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v23 rs", "n": 3, "snp": 96, "us": 124.561, "round": 2, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v23 rs all", "n": 3, "snp": 96, "us": 128.361, "round": 2, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v20 owner", "n": 3, "snp": 96, "us": 127.001, "round": 2, "limit": 288}
+{"S": 32, "M": 4096, "N": 8192, "K": 4096, "config": "v20 rs", "n": 3, "snp": 96, "us": 128.961, "round": 2, "limit": 288}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic_iz", "n": 12, "snp": 192, "us": 202.282, "round": 2, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic", "n": 12, "snp": 192, "us": 206.082, "round": 2, "limit": 272, "gemm_us": 201.642, "pre_us": 4.44}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v23 owner bf16_pairs", "n": 12, "snp": 192, "us": 220.642, "round": 2, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16_pairs", "n": 12, "snp": 192, "us": 198.962, "round": 2, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16", "n": 12, "snp": 192, "us": 199.802, "round": 2, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs", "n": 12, "snp": 192, "us": 207.042, "round": 2, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs all", "n": 12, "snp": 192, "us": 210.042, "round": 2, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v20 owner", "n": 12, "snp": 192, "us": 227.922, "round": 2, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v20 rs", "n": 12, "snp": 192, "us": 208.082, "round": 2, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic_iz", "n": 8, "snp": 128, "us": 199.561, "round": 2, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic", "n": 8, "snp": 128, "us": 202.962, "round": 2, "limit": 272, "gemm_us": 198.482, "pre_us": 4.52}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v23 owner bf16_pairs", "n": 8, "snp": 128, "us": 214.122, "round": 2, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16_pairs", "n": 8, "snp": 128, "us": 200.642, "round": 2, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16", "n": 8, "snp": 128, "us": 201.122, "round": 2, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs", "n": 8, "snp": 128, "us": 203.082, "round": 2, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v20 owner", "n": 8, "snp": 128, "us": 218.842, "round": 2, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v20 rs", "n": 8, "snp": 128, "us": 204.081, "round": 2, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic_iz", "n": 6, "snp": 96, "us": 201.842, "round": 2, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic", "n": 6, "snp": 96, "us": 205.482, "round": 2, "limit": 272, "gemm_us": 201.202, "pre_us": 4.32}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v23 owner bf16_pairs", "n": 6, "snp": 96, "us": 214.122, "round": 2, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16_pairs", "n": 6, "snp": 96, "us": 205.162, "round": 2, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16", "n": 6, "snp": 96, "us": 204.722, "round": 2, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs", "n": 6, "snp": 96, "us": 205.802, "round": 2, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs all", "n": 6, "snp": 96, "us": 207.602, "round": 2, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v20 owner", "n": 6, "snp": 96, "us": 217.882, "round": 2, "limit": 272}
+{"S": 16, "M": 4096, "N": 8192, "K": 8192, "config": "v20 rs", "n": 6, "snp": 96, "us": 208.081, "round": 2, "limit": 272}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic_iz", "n": 32, "snp": 256, "us": 205.082, "round": 2, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic", "n": 32, "snp": 256, "us": 208.202, "round": 2, "limit": 264, "gemm_us": 203.962, "pre_us": 4.2}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v23 owner bf16_pairs", "n": 32, "snp": 256, "us": 255.683, "round": 2, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16_pairs", "n": 32, "snp": 256, "us": 195.721, "round": 2, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16", "n": 32, "snp": 256, "us": 196.321, "round": 2, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs", "n": 32, "snp": 256, "us": 206.842, "round": 2, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v20 owner", "n": 32, "snp": 256, "us": 272.442, "round": 2, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v20 rs", "n": 32, "snp": 256, "us": 207.442, "round": 2, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic_iz", "n": 16, "snp": 128, "us": 193.321, "round": 2, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic", "n": 16, "snp": 128, "us": 196.602, "round": 2, "limit": 264, "gemm_us": 192.362, "pre_us": 4.24}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v23 owner bf16_pairs", "n": 16, "snp": 128, "us": 222.362, "round": 2, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16_pairs", "n": 16, "snp": 128, "us": 191.762, "round": 2, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16", "n": 16, "snp": 128, "us": 191.762, "round": 2, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs", "n": 16, "snp": 128, "us": 195.242, "round": 2, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v20 owner", "n": 16, "snp": 128, "us": 229.202, "round": 2, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v20 rs", "n": 16, "snp": 128, "us": 195.722, "round": 2, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic_iz", "n": 12, "snp": 96, "us": 192.401, "round": 2, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v22 atomic", "n": 12, "snp": 96, "us": 196.201, "round": 2, "limit": 264, "gemm_us": 191.841, "pre_us": 4.36}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v23 owner bf16_pairs", "n": 12, "snp": 96, "us": 216.522, "round": 2, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16_pairs", "n": 12, "snp": 96, "us": 194.242, "round": 2, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs bf16", "n": 12, "snp": 96, "us": 195.322, "round": 2, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs", "n": 12, "snp": 96, "us": 196.681, "round": 2, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v23 rs all", "n": 12, "snp": 96, "us": 197.641, "round": 2, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v20 owner", "n": 12, "snp": 96, "us": 220.962, "round": 2, "limit": 264}
+{"S": 8, "M": 4096, "N": 8192, "K": 8192, "config": "v20 rs", "n": 12, "snp": 96, "us": 198.322, "round": 2, "limit": 264}
+{"S": 1, "M": 4096, "N": 8192, "K": 16384, "config": "v22 atomic_iz", "n": 64, "snp": 64, "us": 355.203, "round": 2, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 16384, "config": "v22 atomic", "n": 64, "snp": 64, "us": 356.403, "round": 2, "limit": 257, "gemm_us": 351.843, "pre_us": 4.56}
+{"S": 1, "M": 4096, "N": 8192, "K": 16384, "config": "v23 owner bf16_pairs", "n": 64, "snp": 64, "us": 488.965, "round": 2, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 16384, "config": "v23 rs bf16_pairs", "n": 64, "snp": 64, "us": 354.923, "round": 2, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 16384, "config": "v23 rs bf16", "n": 64, "snp": 64, "us": 355.283, "round": 2, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 16384, "config": "v23 rs", "n": 64, "snp": 64, "us": 356.083, "round": 2, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 16384, "config": "v20 owner", "n": 64, "snp": 64, "us": 516.924, "round": 2, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 16384, "config": "v20 rs", "n": 64, "snp": 64, "us": 355.803, "round": 2, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 16384, "config": "v22 atomic_iz", "n": 32, "snp": 32, "us": 357.083, "round": 2, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 16384, "config": "v22 atomic", "n": 32, "snp": 32, "us": 362.283, "round": 2, "limit": 257, "gemm_us": 357.923, "pre_us": 4.36}
+{"S": 1, "M": 4096, "N": 8192, "K": 16384, "config": "v23 owner bf16_pairs", "n": 32, "snp": 32, "us": 426.963, "round": 2, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 16384, "config": "v23 rs bf16_pairs", "n": 32, "snp": 32, "us": 358.003, "round": 2, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 16384, "config": "v23 rs bf16", "n": 32, "snp": 32, "us": 358.283, "round": 2, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 16384, "config": "v23 rs", "n": 32, "snp": 32, "us": 358.843, "round": 2, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 16384, "config": "v20 owner", "n": 32, "snp": 32, "us": 442.323, "round": 2, "limit": 257}
+{"S": 1, "M": 4096, "N": 8192, "K": 16384, "config": "v20 rs", "n": 32, "snp": 32, "us": 360.483, "round": 2, "limit": 257}
+{"S": 0, "M": 4096, "N": 8192, "K": 16384, "config": "v13 base", "n": "-", "snp": null, "us": 347.882, "round": 2, "limit": 256}
+{"S": 0, "M": 4096, "N": 8192, "K": 8192, "config": "v13 base", "n": "-", "snp": null, "us": 173.362, "round": 2, "limit": 256}
+{"S": 0, "M": 4096, "N": 8192, "K": 4096, "config": "v13 base", "n": "-", "snp": null, "us": 93.801, "round": 2, "limit": 256}

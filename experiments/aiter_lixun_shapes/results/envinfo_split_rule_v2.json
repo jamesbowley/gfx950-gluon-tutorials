@@ -1,0 +1,13 @@
+{
+  "v20": {
+    "torch": "2.13.0+rocm7.14.0",
+    "hip": "7.14.60850",
+    "gpu_pci_bus": 117,
+    "gpu": "gfx950:sramecc+:xnack-",
+    "triton": "3.8.0 @ /home/jbowley/repos/triton_gfx950-tutorial-v2.2/python/triton",
+    "llir_plugin": "/home/jbowley/repos/gfx950-gluon-tutorials/plugins/llir_scheduler/libLlirSched_linked.so",
+    "amdgcnas": "1",
+    "v20_snapshot": "/home/jbowley/repos/gfx950-gluon-tutorials/experiments/aiter_lixun_shapes/v20_snapshot_split_rule_v2/matmul_kernel.py",
+    "v20_snapshot_sha256": "926bc1ffe0edf0bb"
+  }
+}

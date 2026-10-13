@@ -1,0 +1,98 @@
+[
+ {
+  "vgpr_count": 480,
+  "agpr_count": 256,
+  "vgpr_spill": 0,
+  "sgpr_spill": 0,
+  "arch_vgprs": 224,
+  "scratch": 0,
+  "spill_ops": {
+   "kloop": 0,
+   "tile_loop": 0,
+   "outside": 0
+  },
+  "kloop_mfma": 256,
+  "stack": "m1",
+  "kernel": "v10",
+  "bias": false,
+  "out": "bf16",
+  "M": 4096,
+  "N": 4096,
+  "K": 8192,
+  "ok": true,
+  "max_err": 1.000457763671875,
+  "amdgcn": "/home/jbowley/repos/gfx950-gluon-tutorials/experiments/aiter_bias_spills/tmp/spills_m1_v10_idbcuaq3/JA26Z7IIMEKPJWLW66WICZEHWCVG2PEAVUXEZWFWUPWVBQUI7YAA/_gemm_a16w16_v10_kernel.amdgcn"
+ },
+ {
+  "vgpr_count": 512,
+  "agpr_count": 256,
+  "vgpr_spill": 0,
+  "sgpr_spill": 0,
+  "arch_vgprs": 256,
+  "scratch": 0,
+  "spill_ops": {
+   "kloop": 0,
+   "tile_loop": 0,
+   "outside": 0
+  },
+  "kloop_mfma": 256,
+  "stack": "m1",
+  "kernel": "v10",
+  "bias": true,
+  "out": "bf16",
+  "M": 4096,
+  "N": 4096,
+  "K": 8192,
+  "ok": true,
+  "max_err": 1.0006103515625,
+  "amdgcn": "/home/jbowley/repos/gfx950-gluon-tutorials/experiments/aiter_bias_spills/tmp/spills_m1_v10_l9etidlp/JY4AUJHWVGYCGOK2RIVGNFK3FWEOVK6C6EW4SLZ7UK2DENU6XBAQ/_gemm_a16w16_v10_kernel.amdgcn"
+ },
+ {
+  "vgpr_count": 500,
+  "agpr_count": 256,
+  "vgpr_spill": 0,
+  "sgpr_spill": 0,
+  "arch_vgprs": 244,
+  "scratch": 0,
+  "spill_ops": {
+   "kloop": 0,
+   "tile_loop": 0,
+   "outside": 0
+  },
+  "kloop_mfma": 256,
+  "stack": "m1",
+  "kernel": "v10",
+  "bias": false,
+  "out": "fp32",
+  "M": 4096,
+  "N": 4096,
+  "K": 8192,
+  "ok": true,
+  "max_err": 0.00177001953125,
+  "amdgcn": "/home/jbowley/repos/gfx950-gluon-tutorials/experiments/aiter_bias_spills/tmp/spills_m1_v10_i8lrvqx9/WAANPG3Y4IP2BLQYLNRTTQN65JAW7RZGM43SM4S626WO4A4C56PA/_gemm_a16w16_v10_kernel.amdgcn"
+ },
+ {
+  "vgpr_count": 512,
+  "agpr_count": 256,
+  "vgpr_spill": 14,
+  "sgpr_spill": 0,
+  "arch_vgprs": 256,
+  "scratch": 60,
+  "spill_ops": {
+   "kloop": 0,
+   "tile_loop": 10,
+   "outside": 6
+  },
+  "kloop_mfma": 256,
+  "stack": "m1",
+  "kernel": "v10",
+  "bias": true,
+  "out": "fp32",
+  "M": 4096,
+  "N": 4096,
+  "K": 8192,
+  "ok": true,
+  "max_err": 0.00177001953125,
+  "amdgcn": "/home/jbowley/repos/gfx950-gluon-tutorials/experiments/aiter_bias_spills/tmp/spills_m1_v10_w8j_jxfq/RYXMXHWHHDFZLYKV6FX4RT37VAA64ELIDOOBF4RSRVH4NG6TR7EA/_gemm_a16w16_v10_kernel.amdgcn"
+ }
+]

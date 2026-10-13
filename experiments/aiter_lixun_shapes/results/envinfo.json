@@ -1,0 +1,23 @@
+{
+  "aiter": {
+    "torch": "2.10.0+rocm7.2.4.git3d3aa833",
+    "hip": "7.2.53211",
+    "gpu_pci_bus": 117,
+    "gpu": "gfx950:sramecc+:xnack-",
+    "hipblaslt": "100202 (dabb6df2b9)",
+    "hipblaslt_path": "/home/jbowley/rocm724_env/root/opt/rocm-7.2.4/lib/libhipblaslt.so.1.2.70204",
+    "triton": "3.8.0 @ /home/jbowley/repos/triton_gfx950-tutorial-v2.2/python/triton",
+    "aiter": "/home/jbowley/repos/aiter_llirsched_wt/aiter",
+    "llir_sched": "/root/.aiter/llir_sched/ccf9a789cf3f11ab/libLlirSched.so"
+  },
+  "v20": {
+    "torch": "2.10.0+rocm7.2.4.git3d3aa833",
+    "hip": "7.2.53211",
+    "gpu_pci_bus": 117,
+    "gpu": "gfx950:sramecc+:xnack-",
+    "triton": "3.8.0 @ /home/jbowley/repos/triton_gfx950-tutorial-v2.2/python/triton",
+    "llir_plugin": "/home/jbowley/repos/gfx950-gluon-tutorials/plugins/llir_scheduler/libLlirSched_linked.so",
+    "amdgcnas": "1",
+    "v20_snapshot_sha256": "93847ce6674f120e"
+  }
+}

@@ -1,0 +1,28 @@
+[v6_loop_unroll] M=4096 N=4096 K=512 dtype='fp16': ✅ Triton and Torch match
+[v6_loop_unroll] M=4096 N=4096 K=1024 dtype='fp16': ✅ Triton and Torch match
+[v6_loop_unroll] M=4096 N=4096 K=2048 dtype='fp16': ✅ Triton and Torch match
+[v6_loop_unroll] M=4096 N=4096 K=3072 dtype='fp16': ✅ Triton and Torch match
+[v6_loop_unroll] M=4096 N=4096 K=4096 dtype='fp16': ✅ Triton and Torch match
+[v6_loop_unroll] M=4096 N=4096 K=8192 dtype='fp16': ✅ Triton and Torch match
+[v6_loop_unroll] M=4096 N=4096 K=16384 dtype='fp16': ✅ Triton and Torch match
+[v6_loop_unroll] M=4096 N=4096 K=32768 dtype='fp16': ✅ Triton and Torch match
+[v6_loop_unroll] M=4096 N=4096 K=512 dtype='bf16': ✅ Triton and Torch match
+[v6_loop_unroll] M=4096 N=4096 K=1024 dtype='bf16': ✅ Triton and Torch match
+[v6_loop_unroll] M=4096 N=4096 K=2048 dtype='bf16': ✅ Triton and Torch match
+[v6_loop_unroll] M=4096 N=4096 K=3072 dtype='bf16': ✅ Triton and Torch match
+[v6_loop_unroll] M=4096 N=4096 K=4096 dtype='bf16': ✅ Triton and Torch match
+[v6_loop_unroll] M=4096 N=4096 K=8192 dtype='bf16': ✅ Triton and Torch match
+[v6_loop_unroll] M=4096 N=4096 K=16384 dtype='bf16': ✅ Triton and Torch match
+[v6_loop_unroll] M=4096 N=4096 K=32768 dtype='bf16': ✅ Triton and Torch match
+
+v6_loop_unroll:
+matmul-performance-v6_loop_unroll:
+        M       N        K  fp16 (TFLOPS)  bf16 (TFLOPS)
+0  4096.0  4096.0    512.0     646.820264     674.249175
+1  4096.0  4096.0   1024.0     877.396849     911.882651
+2  4096.0  4096.0   2048.0    1045.640252    1097.755190
+3  4096.0  4096.0   3072.0    1097.042546    1146.840954
+4  4096.0  4096.0   4096.0    1118.836161    1189.319513
+5  4096.0  4096.0   8192.0    1033.445515    1037.580549
+6  4096.0  4096.0  16384.0     914.972589     917.844538
+7  4096.0  4096.0  32768.0     800.244882     801.131113

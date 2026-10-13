@@ -1,0 +1,6 @@
+[aiter] [pid=862424 pname=MainProcess] start build [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/nightly/build/module_aiter_core
+[aiter] Current hipcc not support: -mllvm -amdgpu-coerce-illegal-types=1, skip it.
+[aiter] [pid=862424 pname=MainProcess] [32mfinish build [module_aiter_core], cost 9.1s [0m
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/nightly/module_aiter_core.so
+env=nightly torch=2.15.0a0+rocm10.2.0a20260929 hip=7.17.26386 hipblaslt=100500(6054c511) triton=3.8.0@/home/jbowley/repos/triton_gfx950-tutorial-v2.2/python/triton gpu_pci_bus=117 gpu=gfx950:sramecc+:xnack- cus=256
+EXIT=0

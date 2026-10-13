@@ -1,0 +1,112 @@
+== a16w16_fp16
+RESULTS SUMMARY
+============================================================
+
+Config: base
+| Version              | TFLOPS | VGPRs | Spills | MFMA Eff. |
+|----------------------|--------|-------|--------|-----------|
+| v0_naive             |    588 |   450 |      0 |    28.87% |
+| v1_buffer_load       |    555 |   512 |      0 |    25.90% |
+| v2_async_copy        |    664 |   358 |      0 |    32.52% |
+| v3_lds               |    742 |   420 |      0 |    41.76% |
+| v4_global_prefetch   |   1062 |   434 |      0 |    57.71% |
+| v5_local_prefetch    |   1062 |   452 |      0 |    58.56% |
+| v6_loop_unroll       |    217 |   512 |    241 |     8.48% |
+| v7_sliceN            |   1102 |   512 |      8 |    65.96% |
+| v8_sliceMN           |   1186 |   448 |      0 |    71.52% |
+| v9_beyond_hotloop    |   1193 |   448 |      0 |    71.76% |
+
+
+Config: llir
+| Version              | TFLOPS | VGPRs | Spills | MFMA Eff. |
+|----------------------|--------|-------|--------|-----------|
+| v5_local_prefetch    |   1167 |   512 |      0 |    80.41% |
+| v6_loop_unroll       |   1142 |   511 |      8 |    90.15% |
+| v7_sliceN            |   1322 |   512 |      8 |    97.40% |
+| v8_sliceMN           |   1326 |   448 |      0 |    95.41% |
+| v9_beyond_hotloop    |   1335 |   448 |      0 |    95.70% |
+| v10_persistant       |   1331 |   480 |      0 |    95.38% |
+| v11_persistant_overlap_global |   1328 |   452 |      0 |    95.65% |
+| v12_persistant_overlap_lds |   1328 |   440 |      0 |    95.70% |
+| v13_persistant_peel_acc |   1329 |   480 |      0 |    96.04% |
+
+
+Config: llir+amdgcnas
+| Version              | TFLOPS | VGPRs | Spills | MFMA Eff. |
+|----------------------|--------|-------|--------|-----------|
+| v7_sliceN            |   1317 |   512 |      8 |    98.10% |
+| v8_sliceMN           |   1327 |   448 |      0 |    98.76% |
+| v9_beyond_hotloop    |   1340 |   448 |      0 |    98.05% |
+| v10_persistant       |   1331 |   480 |      0 |    97.90% |
+| v11_persistant_overlap_global |   1331 |   452 |      0 |    97.89% |
+| v12_persistant_overlap_lds |   1330 |   440 |      0 |    97.72% |
+| v13_persistant_peel_acc |   1328 |   480 |      0 |    97.76% |
+
+== a16w16_bf16
+RESULTS SUMMARY
+============================================================
+
+Config: llir
+| Version              | TFLOPS | VGPRs | Spills | MFMA Eff. |
+|----------------------|--------|-------|--------|-----------|
+| v9_beyond_hotloop    |   1433 |   448 |      0 |    96.15% |
+| v10_persistant       |   1430 |   480 |      0 |    96.25% |
+| v11_persistant_overlap_global |   1427 |   452 |      0 |    96.32% |
+| v12_persistant_overlap_lds |   1426 |   440 |      0 |    95.67% |
+| v13_persistant_peel_acc |   1426 |   480 |      0 |    96.29% |
+
+
+Config: llir+amdgcnas
+| Version              | TFLOPS | VGPRs | Spills | MFMA Eff. |
+|----------------------|--------|-------|--------|-----------|
+| v9_beyond_hotloop    |   1439 |   448 |      0 |    98.40% |
+| v10_persistant       |   1434 |   480 |      0 |    98.75% |
+| v11_persistant_overlap_global |   1434 |   452 |      0 |    98.21% |
+| v12_persistant_overlap_lds |   1431 |   440 |      0 |    97.97% |
+| v13_persistant_peel_acc |   1430 |   480 |      0 |    97.71% |
+
+== a8w8
+RESULTS SUMMARY
+============================================================
+
+Config: base
+| Version              | TFLOPS | VGPRs | Spills | MFMA Eff. |
+|----------------------|--------|-------|--------|-----------|
+| a8w8_kernel          |   2708 |   448 |      0 |    72.10% |
+
+
+Config: llir
+| Version              | TFLOPS | VGPRs | Spills | MFMA Eff. |
+|----------------------|--------|-------|--------|-----------|
+| a8w8_kernel          |   2942 |   448 |      0 |    96.26% |
+
+
+Config: llir+amdgcnas
+| Version              | TFLOPS | VGPRs | Spills | MFMA Eff. |
+|----------------------|--------|-------|--------|-----------|
+| a8w8_kernel          |   2973 |   448 |      0 |    99.72% |
+
+== a4w4
+RESULTS SUMMARY
+============================================================
+
+Config: base
+| Version              | TFLOPS | VGPRs | Spills | MFMA Eff. |
+|----------------------|--------|-------|--------|-----------|
+| v0_sliceN            |   4200 |   512 |     16 |    58.59% |
+| v1_sliceMN           |   4389 |   452 |      0 |    67.75% |
+
+
+Config: llir
+| Version              | TFLOPS | VGPRs | Spills | MFMA Eff. |
+|----------------------|--------|-------|--------|-----------|
+| v0_sliceN            |   4535 |   512 |     28 |    76.02% |
+| v1_sliceMN           |   4712 |   456 |      0 |    83.86% |
+
+
+Config: llir+amdgcnas
+| Version              | TFLOPS | VGPRs | Spills | MFMA Eff. |
+|----------------------|--------|-------|--------|-----------|
+| v0_sliceN            |   4584 |   512 |     28 |    81.73% |
+| v1_sliceMN           |   4817 |   456 |      0 |    94.01% |
+

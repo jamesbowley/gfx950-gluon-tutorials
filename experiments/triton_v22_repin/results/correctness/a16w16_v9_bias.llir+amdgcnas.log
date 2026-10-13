@@ -1,0 +1,28 @@
+[v9_beyond_hotloop] M=4096 N=4096 K=512 dtype='fp16': ✅ Triton and Torch match
+[v9_beyond_hotloop] M=4096 N=4096 K=1024 dtype='fp16': ✅ Triton and Torch match
+[v9_beyond_hotloop] M=4096 N=4096 K=2048 dtype='fp16': ✅ Triton and Torch match
+[v9_beyond_hotloop] M=4096 N=4096 K=3072 dtype='fp16': ✅ Triton and Torch match
+[v9_beyond_hotloop] M=4096 N=4096 K=4096 dtype='fp16': ✅ Triton and Torch match
+[v9_beyond_hotloop] M=4096 N=4096 K=8192 dtype='fp16': ✅ Triton and Torch match
+[v9_beyond_hotloop] M=4096 N=4096 K=16384 dtype='fp16': ✅ Triton and Torch match
+[v9_beyond_hotloop] M=4096 N=4096 K=32768 dtype='fp16': ✅ Triton and Torch match
+[v9_beyond_hotloop] M=4096 N=4096 K=512 dtype='bf16': ✅ Triton and Torch match
+[v9_beyond_hotloop] M=4096 N=4096 K=1024 dtype='bf16': ✅ Triton and Torch match
+[v9_beyond_hotloop] M=4096 N=4096 K=2048 dtype='bf16': ✅ Triton and Torch match
+[v9_beyond_hotloop] M=4096 N=4096 K=3072 dtype='bf16': ✅ Triton and Torch match
+[v9_beyond_hotloop] M=4096 N=4096 K=4096 dtype='bf16': ✅ Triton and Torch match
+[v9_beyond_hotloop] M=4096 N=4096 K=8192 dtype='bf16': ✅ Triton and Torch match
+[v9_beyond_hotloop] M=4096 N=4096 K=16384 dtype='bf16': ✅ Triton and Torch match
+[v9_beyond_hotloop] M=4096 N=4096 K=32768 dtype='bf16': ✅ Triton and Torch match
+
+v9_beyond_hotloop (bias):
+matmul-performance-v9_beyond_hotloop-bias:
+        M       N        K  fp16 (TFLOPS)  bf16 (TFLOPS)
+0  4096.0  4096.0    512.0     142.122165     150.330058
+1  4096.0  4096.0   1024.0     318.381568     318.735979
+2  4096.0  4096.0   2048.0     668.217401     667.691488
+3  4096.0  4096.0   3072.0    1003.106394     998.819907
+4  4096.0  4096.0   4096.0    1239.081834    1324.572337
+5  4096.0  4096.0   8192.0    1325.856536    1417.758751
+6  4096.0  4096.0  16384.0    1360.705936    1455.913364
+7  4096.0  4096.0  32768.0    1256.231554    1238.460043

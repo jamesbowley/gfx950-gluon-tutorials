@@ -1,0 +1,38 @@
+M,N,K,bias,out,tiles,waves,bucket,csv_pick,csv_gluon,csv_aiter,csv_gap_pct,live_libtype,live_kernel,pick_tflops,v9_tflops,v10_tflops,v11_tflops,v12_tflops,v13_tflops,pick_ok,pick_maxerr,v9_ok,v9_maxerr,v10_ok,v10_maxerr,v11_ok,v11_maxerr,v12_ok,v12_maxerr,v13_ok,v13_maxerr
+32768,5120,640,False,bfloat16,2560,10.0,full waves,torch,1060.5,1096.6,3.4,torch,native,1089.2,1073.4,1091.1,1134.2,1136.5,1121.9,True,0.5,True,0.5,True,0.5,True,0.5,True,0.5,True,0.5
+4096,8192,1024,False,bfloat16,512,2.0,full waves,asm,1205.5,1208.5,0.2,asm,_ZN5aiter24bf16gemm_bf16_tn_256x256E,1182.6,1180.3,1179.0,1214.8,1207.8,1197.4,True,0.5,True,0.5,True,0.5,True,0.5,True,0.5,True,0.5
+16384,8192,1024,False,bfloat16,2048,8.0,full waves,torch,1255.2,1261.9,0.5,torch,native,1236.3,1243.8,1249.6,1294.9,1299.7,1280.7,True,0.5,True,0.5,True,0.5,True,0.5,True,0.5,True,0.5
+32768,7168,1024,False,bfloat16,3584,14.0,full waves,torch,1263.0,1282.1,1.5,torch,native,1102.0,1244.8,1249.6,1284.7,1288.1,1278.4,True,0.5,True,0.5,True,0.5,True,0.5,True,0.5,True,0.5
+32768,8192,1024,False,bfloat16,4096,16.0,full waves,torch,1243.6,1288.4,3.6,torch,native,1101.6,1233.3,1239.7,1292.0,1295.6,1279.2,True,0.5,True,0.5,True,0.5,True,0.5,True,0.5,True,0.5
+32768,5120,1280,False,bfloat16,2560,10.0,full waves,torch,1312.8,1336.2,1.8,torch,native,1309.3,1305.4,1317.0,1335.4,1341.5,1330.7,True,1,True,1,True,1,True,1,True,1,True,1
+32768,7168,1792,False,bfloat16,3584,14.0,full waves,torch,1404.3,1429.9,1.8,torch,native,1269.8,1382.0,1394.1,1418.9,1420.5,1412.2,True,1,True,1,True,1,True,1,True,1,True,1
+32768,8192,2048,False,bfloat16,4096,16.0,full waves,torch,1429.8,1454.9,1.8,torch,native,1305.3,1413.4,1425.4,1463.8,1466.4,1455.5,True,1,True,1,True,1,True,1,True,1,True,1
+2048,6144,3072,False,float32,192,0.75,few tiles (< 1 wave),asm,1147.4,1175.5,2.5,asm,_ZN5aiter24bf16gemm_bf16_tn_256x256E,1154.3,1196.9,1193.3,1184.2,1185.4,1174.3,True,0.000534,True,0.000534,True,0.000534,True,0.000534,True,0.000534,True,0.000534
+32768,5120,3200,False,bfloat16,2560,10.0,full waves,torch,1522.4,1522.7,0.0,torch,native,1477.9,1498.3,1506.9,1527.9,1529.8,1524.3,True,1,True,1,True,1,True,1,True,1,True,1
+6144,129280,4096,False,bfloat16,12120,47.344,partial waves,asm,1514.1,1517.7,0.2,asm,_ZN5aiter24bf16gemm_bf16_tn_256x256E,1491.0,1490.6,1499.4,1520.3,1518.9,1517.6,True,2,True,2,True,2,True,2,True,2,True,2
+16384,16384,4096,False,bfloat16,4096,16.0,full waves,torch,1554.8,1558.1,0.2,torch,native,1470.2,1520.6,1528.7,1557.9,1559.0,1551.5,True,2,True,2,True,2,True,2,True,2,True,2
+16384,5120,5120,False,bfloat16,1280,5.0,full waves,torch,1566.0,1566.3,0.0,torch,native,1549.9,1554.7,1562.0,1576.1,1574.3,1573.5,True,2,True,2,True,2,True,2,True,2,True,2
+16384,12800,5120,False,bfloat16,3200,12.5,partial waves,torch,1530.1,1533.9,0.3,torch,native,1401.8,1500.7,1509.7,1529.7,1529.2,1524.7,True,2,True,2,True,2,True,2,True,2,True,2
+32768,6400,5120,False,bfloat16,3200,12.5,partial waves,torch,1512.4,1526.6,0.9,torch,native,1430.0,1498.1,1504.2,1522.9,1524.7,1519.5,True,2,True,2,True,2,True,2,True,2,True,2
+32768,12800,5120,False,bfloat16,6400,25.0,full waves,torch,1562.0,1564.3,0.1,torch,native,1359.9,1536.1,1545.1,1566.4,1568.5,1562.5,True,2,True,2,True,2,True,2,True,2,True,2
+8192,9216,6144,False,bfloat16,1152,4.5,partial waves,asm,1504.1,1504.4,0.0,asm,_ZN5aiter24bf16gemm_bf16_tn_256x256E,1467.4,1472.6,1476.7,1495.2,1496.3,1490.4,True,2,True,2,True,2,True,2,True,2,True,2
+32768,9216,6144,False,bfloat16,4608,18.0,full waves,torch,1579.0,1580.5,0.1,torch,native,1450.4,1555.5,1559.9,1579.6,1580.7,1576.1,True,2,True,2,True,2,True,2,True,2,True,2
+16384,5120,6400,False,bfloat16,1280,5.0,full waves,torch,1578.1,1584.1,0.4,torch,native,1572.1,1556.1,1567.0,1575.1,1575.6,1576.4,True,2,True,2,True,2,True,2,True,2,True,2
+4096,16384,6656,False,bfloat16,1024,4.0,full waves,torch,1588.0,1607.9,1.3,torch,native,1575.9,1561.1,1566.3,1572.3,1573.8,1571.6,True,2,True,2,True,2,True,2,True,2,True,2
+10240,8448,7168,False,bfloat16,1320,5.156,partial waves,asm,1439.6,1457.7,1.3,asm,_ZN5aiter24bf16gemm_bf16_tn_256x256E,1431.7,1429.0,1432.8,1446.6,1444.3,1444.8,True,2,True,2,True,2,True,2,True,2,True,2
+10240,20480,7168,False,bfloat16,3200,12.5,partial waves,asm,1507.9,1542.5,2.3,asm,_ZN5aiter24bf16gemm_bf16_tn_256x256E,1519.6,1486.2,1491.9,1503.8,1505.2,1504.7,True,2,True,2,True,2,True,2,True,2,True,2
+16384,1024,7168,False,bfloat16,256,1.0,full waves,torch,1560.4,1572.2,0.8,torch,native,1548.2,1535.0,1536.2,1530.0,1531.3,1531.9,True,2,True,2,True,2,True,2,True,2,True,2
+16384,2048,7168,False,bfloat16,512,2.0,full waves,torch,1545.1,1590.4,2.9,torch,native,1564.3,1531.4,1539.8,1542.2,1539.9,1542.7,True,2,True,2,True,2,True,2,True,2,True,2
+16384,8192,7168,False,bfloat16,2048,8.0,full waves,torch,1586.2,1592.4,0.4,torch,native,1546.3,1570.2,1578.6,1591.9,1593.8,1590.0,True,2,True,2,True,2,True,2,True,2,True,2
+32768,3584,7168,False,bfloat16,1792,7.0,full waves,torch,1557.5,1558.1,0.0,torch,native,1406.4,1542.5,1550.7,1561.9,1561.8,1561.7,True,2,True,2,True,2,True,2,True,2,True,2
+32768,8192,7168,False,bfloat16,4096,16.0,full waves,torch,1591.9,1593.2,0.1,torch,native,1480.1,1577.5,1583.4,1601.0,1600.2,1596.1,True,2,True,2,True,2,True,2,True,2,True,2
+8192,8192,8192,False,bfloat16,1024,4.0,full waves,asm,1618.4,1623.8,0.3,asm,_ZN5aiter24bf16gemm_bf16_tn_256x256E,1576.0,1604.0,1609.7,1612.5,1613.7,1610.9,True,2,True,2,True,2,True,2,True,2,True,2
+16384,512,8192,False,bfloat16,128,0.5,few tiles (< 1 wave),torch,974.7,1075.6,10.4,torch,,1214.8,1000.3,999.8,1004.2,1004.0,1003.2,True,2,True,2,True,2,True,2,True,2,True,2
+16384,7168,8192,False,bfloat16,1792,7.0,full waves,torch,1598.4,1603.8,0.3,torch,native,1433.6,1581.5,1590.1,1601.0,1602.4,1600.4,True,2,True,2,True,2,True,2,True,2,True,2
+16384,8192,8192,False,bfloat16,2048,8.0,full waves,torch,1607.2,1609.3,0.1,torch,native,1583.8,1591.3,1599.9,1610.6,1612.2,1609.2,True,2,True,2,True,2,True,2,True,2,True,2
+32768,10240,8192,False,bfloat16,5120,20.0,full waves,torch,1620.2,1624.0,0.2,torch,native,1573.4,1599.8,1605.7,1618.2,1619.6,1616.9,True,2,True,2,True,2,True,2,True,2,True,2
+16384,6144,12288,False,bfloat16,1536,6.0,full waves,torch,1589.0,1604.8,1.0,torch,native,1467.1,1569.0,1573.6,1581.4,1581.2,1580.1,True,2,True,2,True,2,True,2,True,2,True,2
+32768,6144,12288,False,bfloat16,3072,12.0,full waves,asm,1592.5,1605.2,0.8,asm,_ZN5aiter24bf16gemm_bf16_tn_256x256E,1581.4,1578.8,1581.7,1588.8,1588.0,1589.3,True,2,True,2,True,2,True,2,True,2,True,2
+1024,2304,16384,False,bfloat16,36,0.141,few tiles (< 1 wave),torch,321.8,881.4,173.9,torch,native,973.1,321.6,323.5,323.9,323.6,323.6,True,2,True,2,True,2,True,2,True,2,True,2
+2048,2304,16384,False,bfloat16,72,0.281,few tiles (< 1 wave),torch,642.2,945.9,47.3,torch,native,466.0,636.9,640.9,641.9,641.8,641.1,True,2,True,2,True,2,True,2,True,2,True,2
+8192,5120,25600,False,bfloat16,640,2.5,partial waves,asm,1431.4,1431.7,0.0,asm,_ZN5aiter24bf16gemm_bf16_tn_256x256E,1407.5,1426.7,1428.6,1433.4,1430.9,1432.5,True,4,True,4,True,4,True,4,True,4,True,4

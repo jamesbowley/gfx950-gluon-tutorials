@@ -1,0 +1,67 @@
+
+============================================================
+Config: base
+============================================================
+  Running: v0 (v0_sliceN) config=base
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a4w4/tmp/base/v0_sliceN
+  [v0_sliceN] M=4096 N=4096 K=32768: Triton and Torch match
+  rocprofv3: collecting kernel trace for v0_sliceN ...
+  rocprofv3: 1002 dispatches, final-100 avg=261.91 us, tflops=4198.0
+  Running: v1 (v1_sliceMN) config=base
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a4w4/tmp/base/v1_sliceMN
+  [v1_sliceMN] M=4096 N=4096 K=32768: Triton and Torch match
+  rocprofv3: collecting kernel trace for v1_sliceMN ...
+  rocprofv3: 1002 dispatches, final-100 avg=249.89 us, tflops=4400.0
+
+============================================================
+Config: llir
+============================================================
+  Running: v0 (v0_sliceN) config=llir
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a4w4/tmp/llir/v0_sliceN
+  [v0_sliceN] M=4096 N=4096 K=32768: Triton and Torch match
+  rocprofv3: collecting kernel trace for v0_sliceN ...
+  rocprofv3: 1002 dispatches, final-100 avg=241.67 us, tflops=4549.6
+  Running: v1 (v1_sliceMN) config=llir
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a4w4/tmp/llir/v1_sliceMN
+  [v1_sliceMN] M=4096 N=4096 K=32768: Triton and Torch match
+  rocprofv3: collecting kernel trace for v1_sliceMN ...
+  rocprofv3: 1002 dispatches, final-100 avg=232.75 us, tflops=4724.1
+
+============================================================
+Config: llir+amdgcnas
+============================================================
+  Running: v0 (v0_sliceN) config=llir+amdgcnas
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a4w4/tmp/llir+amdgcnas/v0_sliceN
+  [v0_sliceN] M=4096 N=4096 K=32768: Triton and Torch differ (max_diff=2784.0000)
+  rocprofv3: collecting kernel trace for v0_sliceN ...
+  rocprofv3: 1002 dispatches, final-100 avg=239.01 us, tflops=4600.3
+  Running: v1 (v1_sliceMN) config=llir+amdgcnas
+  ATT trace: /home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a4w4/tmp/llir+amdgcnas/v1_sliceMN
+  [v1_sliceMN] M=4096 N=4096 K=32768: Triton and Torch match
+  rocprofv3: collecting kernel trace for v1_sliceMN ...
+  rocprofv3: 1002 dispatches, final-100 avg=228.22 us, tflops=4817.7
+
+============================================================
+RESULTS SUMMARY
+============================================================
+
+Config: base
+| Version              | TFLOPS | VGPRs | Spills | MFMA Eff. |
+|----------------------|--------|-------|--------|-----------|
+| v0_sliceN            |   4198 |   512 |     16 |    58.64% |
+| v1_sliceMN           |   4400 |   452 |      0 |    67.75% |
+
+
+Config: llir
+| Version              | TFLOPS | VGPRs | Spills | MFMA Eff. |
+|----------------------|--------|-------|--------|-----------|
+| v0_sliceN            |   4550 |   512 |     28 |    75.88% |
+| v1_sliceMN           |   4724 |   456 |      0 |    84.14% |
+
+
+Config: llir+amdgcnas
+| Version              | TFLOPS | VGPRs | Spills | MFMA Eff. |
+|----------------------|--------|-------|--------|-----------|
+| v0_sliceN            |   4600 |   512 |     28 |    82.76% |
+| v1_sliceMN           |   4818 |   456 |      0 |    93.02% |
+

@@ -1,0 +1,387 @@
+##############################################################################
+# MIT License
+#
+# Copyright (c) 2026 Advanced Micro Devices, Inc. All Rights Reserved.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+##############################################################################
+
+"""bench.py extended for the versions beyond the tutorial: v10-v26, v9_tile (--version 9t) and
+v9_ragged (9r), with --M / --N, --tile, --bias and optionally padded B / C rows (--pad).
+bench.py itself stays as on main, the baseline. See BENCH_EXT.md.
+
+TODO after rebasing onto main's gfx950-tutorial-v3.0 pin: main's bench.py dropped the
+LLVM_PASS_PLUGIN_PATH hook below and takes --schedule-hint instead, which it forwards to kernels
+whose matmul() has a schedule_hint parameter (v5-v9 default to "mfma-schedule"). Decide whether
+this script needs the same option once v9_tile, v9_ragged and v10-v26 pass schedule_hint.
+"""
+
+import argparse
+import importlib
+import inspect
+
+# The out-of-tree LLIR scheduler ships as an LLVM pass plugin (see ../../../../plugins/).
+# Loaded via LLVM_PASS_PLUGIN_PATH, it resolves LLVM symbols from libtriton at
+# dlopen time, which requires libtriton in the *global* symbol scope. CPython
+# loads C-extensions RTLD_LOCAL by default, so opt into RTLD_GLOBAL before the
+# first `import triton`. Only takes effect when the plugin is in use.
+import os
+import sys
+
+if os.environ.get("LLVM_PASS_PLUGIN_PATH"):
+    sys.setdlopenflags(os.RTLD_NOW | os.RTLD_GLOBAL)
+
+import triton
+import torch
+
+# Out-of-tree amdgcnas peephole (post-assembly): install the amdgcn-stage hook
+# when TRITON_AMDGCNAS_PLUGIN is set. Pure-Python text transform, no rebuild.
+if os.environ.get("TRITON_AMDGCNAS_PLUGIN"):
+    sys.path.insert(
+        0,
+        os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            "..",
+            "..",
+            "..",
+            "..",
+            "plugins",
+            "amdgcnas",
+        ),
+    )
+    import amdgcnas_plugin
+    from triton import knobs
+
+    knobs.runtime.add_stages_inspection_hook = amdgcnas_plugin.inspect_stages_hook
+
+# Put the shared kernels/gemm/utils/ on the path so each version's
+# `from common import get_pids` resolves to the shared helper.
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "utils"))
+
+from row_padding import empty_rows, padded_width  # noqa: E402
+
+VERSION_MAP = {
+    0: "v0_naive",
+    1: "v1_buffer_load",
+    2: "v2_async_copy",
+    3: "v3_lds",
+    4: "v4_global_prefetch",
+    5: "v5_local_prefetch",
+    6: "v6_loop_unroll",
+    7: "v7_sliceN",
+    8: "v8_sliceMN",
+    9: "v9_beyond_hotloop",
+    10: "v10_persistant",
+    11: "v11_persistant_overlap_global",
+    12: "v12_persistant_overlap_lds",
+    13: "v13_persistant_peel_acc",
+    14: "v14_streamk",
+    15: "v15_streamk_onetile",
+    16: "v16_streamk_lane_partials",
+    17: "v17_streamk_tile_aligned",
+    18: "v18_streamk_chunk_major",
+    19: "v19_streamk_two_tile_reversed",
+    20: "v20_streamk_reduce_scatter",
+    21: "v21_streamk_l2_partials",
+    22: "v22_streamk_atomic_c",
+    23: "v23_streamk_rs_band",
+    24: "v24_streamk_combined",
+    25: "v25_streamk_ragged_mn",
+    26: "v26_streamk_ragged_k",
+    "9t": "v9_tile",
+    "9r": "v9_ragged",
+}
+
+DEVICE = triton.runtime.driver.active.get_active_torch_device()
+
+name_to_torch_type = {"fp16": torch.float16, "bf16": torch.bfloat16}
+
+
+def get_x_vals():
+    return [
+        (4096, 4096, 512),
+        (4096, 4096, 1024),
+        (4096, 4096, 2048),
+        (4096, 4096, 3072),
+        (4096, 4096, 4096),
+        (4096, 4096, 8192),
+        (4096, 4096, 16384),
+        (4096, 4096, 32768),
+    ]
+
+
+def get_gemm_sizes(selected_k=None, M=None, N=None):
+    sizes = [(M or m, N or n, k) for m, n, k in get_x_vals()]
+
+    if selected_k is None:
+        return sizes
+
+    filtered = [s for s in sizes if s[2] == selected_k]
+
+    # The list only sets the default sweep; an explicit K outside it runs as given.
+    return filtered or [(M or 4096, N or 4096, selected_k)]
+
+
+def get_dtypes(selected_dtype=None):
+    default_dtypes = ["fp16", "bf16"]
+
+    if selected_dtype is None:
+        return default_dtypes
+
+    if isinstance(selected_dtype, str):
+        selected_dtype = [selected_dtype]
+
+    invalid = set(selected_dtype) - set(default_dtypes)
+    if invalid:
+        raise ValueError(
+            f"Unsupported dtype(s): {sorted(invalid)}. " f"Supported dtypes: {default_dtypes}"
+        )
+
+    return selected_dtype
+
+
+def parse_args():
+
+    parser = argparse.ArgumentParser(description="GEMM benchmark")
+    parser.add_argument("--K", type=int, default=None, help="Select GEMM problem size with given K")
+    parser.add_argument("--M", type=int, default=None, help="Override M (default: 4096)")
+    parser.add_argument("--N", type=int, default=None, help="Override N (default: 4096)")
+    parser.add_argument(
+        "--dtype",
+        nargs="+",
+        choices=["fp16", "bf16"],
+        default=None,
+        help="Data type(s) to benchmark (default: fp16 bf16)",
+    )
+    parser.add_argument(
+        "--version",
+        type=lambda s: int(s) if s.isdigit() else s,
+        default=9,
+        choices=list(VERSION_MAP),
+        help="Kernel version to benchmark (default: 9, the final version; 9t is v9_tile, 9r v9_ragged)",
+    )
+    parser.add_argument(
+        "--tile",
+        default=None,
+        help="v9_tile only: tile as BMxBN or BMxBNxBK (sets V9_TILE; default 256x256x64)",
+    )
+    parser.add_argument(
+        "--rocprof",
+        action="store_true",
+        help="Rocprof mode: run kernel 1000 times without do_bench. "
+        "Use with rocprofv3 --kernel-trace to measure timing externally.",
+    )
+    parser.add_argument(
+        "--rotating-buffer-size",
+        type=int,
+        default=512,
+        help="Total size (MB) of rotating tensors (a, b, c) for rocprof mode. "
+        "Should exceed GPU cache (L2+MALL) size. (default: 512)",
+    )
+    parser.add_argument(
+        "--bias",
+        action="store_true",
+        help="Add a bias[N] to the output (versions whose matmul() takes bias): correctness, "
+        "do_bench and rocprof mode.",
+    )
+    parser.add_argument(
+        "--pad",
+        action=argparse.BooleanOptionalAction,
+        default=False,
+        help="Pad a row of B (N, K) or C (M, N) that is a multiple of 512 bytes by 256 bytes "
+        "(kernels/gemm/utils/row_padding.py); unpadded, the time depends on where the buffers "
+        "land in memory. Default: contiguous B and C, as bench.py.",
+    )
+    return parser.parse_args()
+
+
+def make_b(N, K, dtype, pad, init):
+    """B as the (K, N) transpose of an (N, K) tensor, filled by init (in place)."""
+    b = empty_rows(N, K, dtype, DEVICE, pad)
+    init(b)
+    return b.T
+
+
+def make_c(M, N, dtype, pad):
+    return empty_rows(M, N, dtype, DEVICE, pad)
+
+
+def test_correctness(matmul, dtype, gemm_sizes, version_dir, bias=False, pad=False):
+    if dtype == "f8":
+        torch_dtype = torch.float16
+    else:
+        torch_dtype = name_to_torch_type[dtype]
+
+    for M, N, K in gemm_sizes:
+        a = torch.rand((M, K), device=DEVICE, dtype=torch_dtype) - 0.5
+        if dtype == "f8":
+            b = torch.rand((N, K), device=DEVICE, dtype=torch_dtype).T - 0.5
+            a = a.to(torch.float8_e5m2)
+            b = b.to(torch.float8_e5m2)
+        else:
+            b = make_b(N, K, torch_dtype, pad, lambda t: t.uniform_(-0.5, 0.5))
+        c = make_c(M, N, a.dtype if dtype != "f8" else torch_dtype, pad)
+        if bias:
+            bias_n = torch.rand((N,), device=DEVICE, dtype=torch_dtype) - 0.5
+            triton_output = matmul(a, b, c, bias=bias_n)
+            # fp32 reference: the kernel adds the bias to its fp32 accumulator.
+            torch_output = (torch.matmul(a.float(), b.float()) + bias_n.float()).to(torch_dtype)
+        elif dtype == "f8":
+            triton_output = matmul(a, b)
+            torch_output = torch.matmul(a.to(torch.float16), b.to(torch.float16))
+        else:
+            triton_output = matmul(a, b, c)
+            torch_output = torch.matmul(a, b)
+        # bf16 has an 8-bit mantissa: at large K the outputs are big enough that one ulp
+        # exceeds atol, so allow a relative tolerance of a couple of ulps.
+        rtol = 1e-2 if dtype == "bf16" else 0
+        if torch.allclose(triton_output, torch_output, atol=1e-1, rtol=rtol):
+            print(f"[{version_dir}] {M=} {N=} {K=} {dtype=}: ✅ Triton and Torch match")
+        else:
+            print(f"[{version_dir}] {M=} {N=} {K=} {dtype=}: ❌ Triton and Torch differ")
+
+
+def gen_rotating_tensors(M, N, K, torch_dtype, rotating_buffer_size_mb=512, pad=False):
+    """Allocate multiple copies of (a, b, c) tensors to exceed GPU cache size.
+
+    Each iteration of the benchmark loop uses a different copy via i % block_count,
+    so cached data from the previous iteration is useless and the kernel always
+    starts with cold caches. B and C rows are padded as in make_b / make_c if pad.
+    """
+    elem_bytes = torch.tensor([], dtype=torch_dtype).element_size()
+    a_size = M * K * elem_bytes
+    b_size = N * (padded_width(K, torch_dtype) if pad else K) * elem_bytes
+    c_size = M * (padded_width(N, torch_dtype) if pad else N) * elem_bytes
+    total_size = a_size + b_size + c_size
+
+    block_count = max(1, rotating_buffer_size_mb * 1024 * 1024 // total_size)
+
+    a_list, b_list, c_list = [], [], []
+    for _ in range(block_count):
+        a_list.append(torch.randn((M, K), device=DEVICE, dtype=torch_dtype))
+        b_list.append(make_b(N, K, torch_dtype, pad, lambda t: t.normal_()))
+        c_list.append(make_c(M, N, torch_dtype, pad))
+
+    return a_list, b_list, c_list, block_count
+
+
+def run_rocprof_iterations(
+    matmul, dtypes, gemm_sizes, version_dir, n_iters=1000, rotating_buffer_size_mb=512, bias=False, pad=False
+):
+    """Run the kernel n_iters times for each dtype/size combo using rotating tensors.
+
+    Rotating tensors ensure each iteration reads from different memory addresses,
+    defeating GPU cache and producing cold-cache timings similar to real workloads.
+    Designed to be wrapped by rocprofv3 --kernel-trace for external timing.
+    """
+    for dtype in dtypes:
+        torch_dtype = name_to_torch_type[dtype]
+        for M, N, K in gemm_sizes:
+            a_list, b_list, c_list, block_count = gen_rotating_tensors(
+                M, N, K, torch_dtype, rotating_buffer_size_mb, pad
+            )
+            copy_bytes = (M * K + N * b_list[0].stride(1) + M * c_list[0].stride(0)) * a_list[0].element_size()
+            print(
+                f"[{version_dir}] {M=} {N=} {K=} {dtype=}: "
+                f"rotating tensors: {block_count} copies, {block_count * copy_bytes / 1024**2:.0f} MB, "
+                f"B row stride {b_list[0].stride(1)}, C row stride {c_list[0].stride(0)}"
+            )
+            kwargs = {"bias": torch.randn((N,), device=DEVICE, dtype=torch_dtype)} if bias else {}
+            # Warmup
+            matmul(a_list[0], b_list[0], c_list[0], **kwargs)
+            torch.cuda.synchronize()
+            for i in range(n_iters):
+                idx = i % block_count
+                matmul(a_list[idx], b_list[idx], c_list[idx], **kwargs)
+            torch.cuda.synchronize()
+            print(f"[{version_dir}] {M=} {N=} {K=} {dtype=}: {n_iters} iterations done")
+
+
+def main():
+    args = parse_args()
+    if args.tile:
+        os.environ["V9_TILE"] = args.tile
+    version_dir = VERSION_MAP[args.version]
+    module = importlib.import_module(f"{version_dir}.matmul_kernel")
+    matmul = module.matmul
+    if args.bias and "bias" not in inspect.signature(matmul).parameters:
+        sys.exit(f"{version_dir} has no bias option")
+
+    gemm_sizes = get_gemm_sizes(args.K, args.M, args.N)
+    dtypes = get_dtypes(args.dtype)
+
+    pad = args.pad
+    for dtype in dtypes:
+        test_correctness(matmul, dtype, gemm_sizes, version_dir, bias=args.bias, pad=pad)
+
+    if args.rocprof:
+        run_rocprof_iterations(
+            matmul,
+            dtypes,
+            gemm_sizes,
+            version_dir,
+            rotating_buffer_size_mb=args.rotating_buffer_size,
+            bias=args.bias,
+            pad=pad,
+        )
+        return
+
+    configs = [
+        triton.testing.Benchmark(
+            x_names=["M", "N", "K"],
+            x_vals=gemm_sizes,
+            line_arg="dtype",
+            line_vals=dtypes,
+            line_names=dtypes,
+            styles=[("green", "-"), ("yellow", "--"), ("red", "--")],
+            ylabel="TFLOPS",
+            plot_name=f"matmul-performance-{version_dir}" + ("-bias" if args.bias else ""),
+            args={},
+        )
+    ]
+
+    @triton.testing.perf_report(configs)
+    def benchmark(M, N, K, dtype):
+        if dtype == "f8":
+            torch_dtype = torch.float16
+        else:
+            torch_dtype = name_to_torch_type[dtype]
+        a = torch.randn((M, K), device=DEVICE, dtype=torch_dtype)
+        b = make_b(N, K, torch_dtype, pad, lambda t: t.normal_())
+        c = make_c(M, N, torch_dtype, pad)
+        if dtype == "f8":
+            a = a.to(torch.float8_e5m2)
+            b = b.to(torch.float8_e5m2)
+        kwargs = {"bias": torch.randn((N,), device=DEVICE, dtype=torch_dtype)} if args.bias else {}
+        quantiles = [0.5, 0.2, 0.8]
+        ms, min_ms, max_ms = triton.testing.do_bench(
+            lambda: matmul(a, b, c, **kwargs), quantiles=quantiles
+        )
+
+        def perf(ms):
+            return 2 * M * N * K * 1e-12 / (ms * 1e-3)
+
+        return perf(ms), perf(max_ms), perf(min_ms)
+
+    print(f"\n{version_dir}" + (" (bias)" if args.bias else "") + ":")
+    benchmark.run(show_plots=False, print_data=True)
+
+
+if __name__ == "__main__":
+    main()

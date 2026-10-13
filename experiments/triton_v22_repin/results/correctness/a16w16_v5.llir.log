@@ -1,0 +1,28 @@
+[v5_local_prefetch] M=4096 N=4096 K=512 dtype='fp16': ✅ Triton and Torch match
+[v5_local_prefetch] M=4096 N=4096 K=1024 dtype='fp16': ✅ Triton and Torch match
+[v5_local_prefetch] M=4096 N=4096 K=2048 dtype='fp16': ✅ Triton and Torch match
+[v5_local_prefetch] M=4096 N=4096 K=3072 dtype='fp16': ✅ Triton and Torch match
+[v5_local_prefetch] M=4096 N=4096 K=4096 dtype='fp16': ✅ Triton and Torch match
+[v5_local_prefetch] M=4096 N=4096 K=8192 dtype='fp16': ✅ Triton and Torch match
+[v5_local_prefetch] M=4096 N=4096 K=16384 dtype='fp16': ✅ Triton and Torch match
+[v5_local_prefetch] M=4096 N=4096 K=32768 dtype='fp16': ✅ Triton and Torch match
+[v5_local_prefetch] M=4096 N=4096 K=512 dtype='bf16': ✅ Triton and Torch match
+[v5_local_prefetch] M=4096 N=4096 K=1024 dtype='bf16': ✅ Triton and Torch match
+[v5_local_prefetch] M=4096 N=4096 K=2048 dtype='bf16': ✅ Triton and Torch match
+[v5_local_prefetch] M=4096 N=4096 K=3072 dtype='bf16': ✅ Triton and Torch match
+[v5_local_prefetch] M=4096 N=4096 K=4096 dtype='bf16': ✅ Triton and Torch match
+[v5_local_prefetch] M=4096 N=4096 K=8192 dtype='bf16': ✅ Triton and Torch match
+[v5_local_prefetch] M=4096 N=4096 K=16384 dtype='bf16': ✅ Triton and Torch match
+[v5_local_prefetch] M=4096 N=4096 K=32768 dtype='bf16': ✅ Triton and Torch match
+
+v5_local_prefetch:
+matmul-performance-v5_local_prefetch:
+        M       N        K  fp16 (TFLOPS)  bf16 (TFLOPS)
+0  4096.0  4096.0    512.0     591.593302     609.215208
+1  4096.0  4096.0   1024.0     810.352059     840.502440
+2  4096.0  4096.0   2048.0     982.254115    1033.064925
+3  4096.0  4096.0   3072.0    1044.570000    1098.457074
+4  4096.0  4096.0   4096.0    1072.058416    1132.853779
+5  4096.0  4096.0   8192.0    1064.749714    1071.891093
+6  4096.0  4096.0  16384.0     943.553572     946.771774
+7  4096.0  4096.0  32768.0     814.833923     816.297902

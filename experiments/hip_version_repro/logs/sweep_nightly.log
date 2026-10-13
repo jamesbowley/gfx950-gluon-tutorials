@@ -1,0 +1,1979 @@
+[aiter] import [module_aiter_core] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/nightly/module_aiter_core.so
+[aiter] merge tuned file under model_configs/ and configs/ /home/jbowley/repos/aiter/aiter/configs/bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/kimi_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/gptoss_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/llama70B_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/qwen3_8_2p4t_a95b_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/flux2_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/qwen3_8b_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/qwen3_5_397b_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/dsv3_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/kimik3_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/kimik2_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/dsv4_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/glm53_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/q3vl_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/glm5_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/dsv41_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/llama405B_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/minimax_m3_eagle_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/minimax_m3_mxfp4_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/qwen32B_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/glm47_bf16_tuned_gemm.csv:/home/jbowley/repos/aiter/aiter/configs/model_configs/glm53_flash_bf16_tuned_gemm.csv
+torch=2.15.0a0+rocm10.2.0a20260929 hip=7.17.26386 hipblaslt=100500 (6054c511) triton=3.8.0 @ /home/jbowley/repos/triton_gfx950-tutorial-v2.2/python/triton llir_sched=/root/.aiter/llir_sched/ccf9a789cf3f11ab/libLlirSched.so gpu_pci_bus=117 gpu=gfx950:sramecc+:xnack-
+USDT:2026-09-29 09:03:57 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:03:57 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[1/630      2s] 1024x3072x512 bfloat16 pick=flydsl   463.7 gluon=  226.3
+USDT:2026-09-29 09:03:57 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:03:57 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[2/630      3s] 1024x4096x512 bfloat16 pick=flydsl   534.1 gluon=  286.6
+USDT:2026-09-29 09:03:58 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:03:58 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[3/630      4s] 1024x7168x512 bfloat16 pick=flydsl   615.9 gluon=  461.7
+USDT:2026-09-29 09:03:58 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:03:58 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[4/630      4s] 2048x2048x512 bfloat16 pick=flydsl   526.8 gluon=  285.6
+USDT:2026-09-29 09:04:00 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:00 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[5/630      6s] 2048x4096x512 bfloat16 pick=torch    654.9 gluon=  499.7
+USDT:2026-09-29 09:04:02 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:02 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[6/630      8s] 4096x2048x512 bfloat16 pick=torch    649.9 gluon=  498.1
+USDT:2026-09-29 09:04:03 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:03 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[7/630      9s] 4096x4096x512 bfloat16 pick=torch    811.2 gluon=  858.5
+USDT:2026-09-29 09:04:03 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:03 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[8/630      9s] 4096x7168x512 bfloat16 pick=flydsl   860.3 gluon=  879.6
+USDT:2026-09-29 09:04:04 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:04 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[9/630     10s] 8192x2048x512 bfloat16 pick=torch    807.9 gluon=  869.5
+USDT:2026-09-29 09:04:05 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:05 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[10/630     11s] 8192x4096x512 bfloat16 pick=flydsl   854.5 gluon=  922.0
+USDT:2026-09-29 09:04:05 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:05 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[11/630     12s] 16384x2048x512 bfloat16 pick=torch    870.4 gluon=  926.6
+USDT:2026-09-29 09:04:07 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:07 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[12/630     13s] 16384x4096x512 bfloat16 pick=torch    954.8 gluon=  980.5
+USDT:2026-09-29 09:04:08 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:08 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[13/630     14s] 16384x7168x512 bfloat16 pick=torch    979.8 gluon= 1015.4
+USDT:2026-09-29 09:04:09 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:09 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[14/630     15s] 32768x2048x512 bfloat16 pick=torch    959.9 gluon=  977.0
+USDT:2026-09-29 09:04:10 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:10 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[15/630     16s] 1024x5120x640 bfloat16 pick=torch    529.5 gluon=  378.3
+USDT:2026-09-29 09:04:11 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:11 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[16/630     17s] 2048x5120x640 bfloat16 pick=flydsl   679.3 gluon=  685.3
+USDT:2026-09-29 09:04:12 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:12 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[17/630     18s] 4096x5120x640 bfloat16 pick=flydsl   811.2 gluon=  756.7
+USDT:2026-09-29 09:04:13 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:13 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[18/630     20s] 8192x5120x640 bfloat16 pick=torch    793.5 gluon=  936.4
+USDT:2026-09-29 09:04:15 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:15 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[19/630     21s] 16384x5120x640 bfloat16 pick=torch   1042.4 gluon= 1080.9
+USDT:2026-09-29 09:04:16 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:16 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[20/630     22s] 32768x5120x640 bfloat16 pick=torch   1087.6 gluon= 1085.8
+USDT:2026-09-29 09:04:17 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:17 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[21/630     23s] 1024x7168x768 bfloat16 pick=flydsl   706.5 gluon=  546.2
+[aiter] import [module_deepgemm_opus] under /home/jbowley/repos/gfx950-gluon-tutorials/experiments/hip_version_repro/jit/nightly/module_deepgemm_opus.so
+USDT:2026-09-29 09:04:18 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:18 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[22/630     24s] 10240x7168x768 bfloat16 pick=opus     408.2 gluon= 1068.3
+[aiter] shape is M:512, N:4096, K:1024 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:512, N:4096, K:1024 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:04:19 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:19 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[23/630     25s] 512x4096x1024 bfloat16 pick=torch    459.1 gluon=  201.0
+USDT:2026-09-29 09:04:20 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:20 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[24/630     26s] 512x6144x1024 bfloat16 pick=flydsl   591.8 gluon=  298.8
+USDT:2026-09-29 09:04:21 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:21 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[25/630     27s] 512x7168x1024 bfloat16 pick=flydsl   642.9 gluon=  335.8
+USDT:2026-09-29 09:04:22 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:22 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[26/630     28s] 512x8192x1024 bfloat16 pick=flydsl   702.7 gluon=  375.5
+[aiter] shape is M:1024, N:4096, K:1024 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:1024, N:4096, K:1024 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:04:23 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:23 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[27/630     29s] 1024x4096x1024 bfloat16 pick=torch    665.1 gluon=  374.0
+USDT:2026-09-29 09:04:24 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:24 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[28/630     30s] 1024x7168x1024 bfloat16 pick=flydsl   787.0 gluon=  613.1
+USDT:2026-09-29 09:04:25 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:25 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[29/630     31s] 1024x8192x1024 bfloat16 pick=torch    913.3 gluon=  674.8
+[aiter] shape is M:2048, N:4096, K:1024 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:2048, N:4096, K:1024 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:04:25 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:25 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[30/630     31s] 2048x4096x1024 bfloat16 pick=torch    914.8 gluon=  672.3
+USDT:2026-09-29 09:04:26 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:26 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[31/630     32s] 2048x7168x1024 bfloat16 pick=flydsl  1042.7 gluon= 1074.9
+USDT:2026-09-29 09:04:27 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:27 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[32/630     33s] 2048x8192x1024 bfloat16 pick=flydsl  1109.1 gluon= 1148.3
+[aiter] shape is M:3072, N:4096, K:1024 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:3072, N:4096, K:1024 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:04:28 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:28 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[33/630     34s] 3072x4096x1024 bfloat16 pick=torch   1020.5 gluon=  956.7
+[aiter] shape is M:4096, N:4096, K:1024 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:4096, N:4096, K:1024 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:04:29 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:29 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[34/630     35s] 4096x4096x1024 bfloat16 pick=torch   1117.8 gluon= 1175.1
+USDT:2026-09-29 09:04:30 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:30 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[35/630     36s] 4096x7168x1024 bfloat16 pick=flydsl  1115.7 gluon= 1150.2
+[aiter] LoadKernel: _ZN5aiter24bf16gemm_bf16_tn_256x256E hsaco: /home/jbowley/repos/aiter/hsa//gfx950/bf16gemm/bf16gemm_bf16_tn_256x256.co
+USDT:2026-09-29 09:04:31 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:31 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[36/630     37s] 4096x8192x1024 bfloat16 pick=asm     1192.2 gluon= 1185.0
+[aiter] shape is M:5120, N:4096, K:1024 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:5120, N:4096, K:1024 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:04:32 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:32 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[37/630     38s] 5120x4096x1024 bfloat16 pick=torch   1017.1 gluon=  890.3
+[aiter] shape is M:7680, N:4096, K:1024 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:7680, N:4096, K:1024 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:04:33 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:33 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[38/630     40s] 7680x4096x1024 bfloat16 pick=torch   1050.1 gluon= 1172.6
+USDT:2026-09-29 09:04:34 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:34 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[39/630     41s] 8192x7168x1024 bfloat16 pick=asm     1101.1 gluon= 1166.7
+USDT:2026-09-29 09:04:35 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:35 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[40/630     42s] 8192x8192x1024 bfloat16 pick=asm     1220.6 gluon= 1227.7
+[aiter] shape is M:16384, N:4096, K:1024 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:16384, N:4096, K:1024 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:04:36 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:36 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[41/630     43s] 16384x4096x1024 bfloat16 pick=torch   1200.2 gluon= 1242.2
+USDT:2026-09-29 09:04:38 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:38 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[42/630     44s] 16384x7168x1024 bfloat16 pick=asm     1206.0 gluon= 1268.7
+USDT:2026-09-29 09:04:39 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:39 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[43/630     46s] 16384x8192x1024 bfloat16 pick=torch   1231.4 gluon= 1250.6
+USDT:2026-09-29 09:04:40 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:40 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[44/630     47s] 32768x7168x1024 bfloat16 pick=torch   1106.4 gluon= 1246.9
+USDT:2026-09-29 09:04:41 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:41 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[45/630     48s] 32768x8192x1024 bfloat16 pick=torch   1102.9 gluon= 1234.4
+USDT:2026-09-29 09:04:43 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:43 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[46/630     49s] 512x5120x1280 bfloat16 pick=flydsl   533.1 gluon=  264.1
+USDT:2026-09-29 09:04:44 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:44 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[47/630     50s] 1024x5120x1280 bfloat16 pick=torch    731.2 gluon=  488.6
+USDT:2026-09-29 09:04:45 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:45 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[48/630     51s] 2048x5120x1280 bfloat16 pick=torch    998.6 gluon=  885.0
+USDT:2026-09-29 09:04:46 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:46 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[49/630     53s] 4096x5120x1280 bfloat16 pick=torch   1119.4 gluon=  964.5
+USDT:2026-09-29 09:04:47 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:47 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[50/630     54s] 8192x5120x1280 bfloat16 pick=flydsl  1142.2 gluon= 1180.2
+USDT:2026-09-29 09:04:49 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:49 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[51/630     55s] 16384x5120x1280 bfloat16 pick=flydsl  1266.6 gluon= 1315.9
+USDT:2026-09-29 09:04:50 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:50 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[52/630     57s] 32768x5120x1280 bfloat16 pick=torch   1302.6 gluon= 1295.2
+USDT:2026-09-29 09:04:52 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:52 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[53/630     58s] 512x1536x1536 bfloat16 pick=flydsl   351.0 gluon=   85.8
+[aiter] shape is M:512, N:2048, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:512, N:2048, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:04:53 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:53 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[54/630     59s] 512x2048x1536 bfloat16 pick=torch    392.2 gluon=  113.7
+USDT:2026-09-29 09:04:54 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:54 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[55/630     60s] 512x2304x1536 bfloat16 pick=flydsl   392.6 gluon=  127.2
+[aiter] shape is M:512, N:4096, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:512, N:4096, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:04:55 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:55 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[56/630     61s] 512x4096x1536 bfloat16 pick=torch    562.0 gluon=  225.1
+USDT:2026-09-29 09:04:56 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:56 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[57/630     62s] 512x6144x1536 bfloat16 pick=flydsl   652.9 gluon=  330.3
+USDT:2026-09-29 09:04:57 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:57 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[58/630     63s] 512x7168x1536 bfloat16 pick=flydsl   677.8 gluon=  375.9
+USDT:2026-09-29 09:04:58 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:58 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[59/630     64s] 1024x1536x1536 bfloat16 pick=flydsl   509.6 gluon=  169.1
+[aiter] shape is M:1024, N:2048, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:1024, N:2048, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:04:58 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:58 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[60/630     64s] 1024x2048x1536 bfloat16 pick=torch    566.6 gluon=  221.2
+USDT:2026-09-29 09:04:59 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:04:59 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[61/630     65s] 1024x2304x1536 bfloat16 pick=torch    584.8 gluon=  249.3
+USDT:2026-09-29 09:05:00 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:00 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[62/630     66s] 1024x3072x1536 bfloat16 pick=flydsl   637.9 gluon=  329.3
+[aiter] shape is M:1024, N:4096, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:1024, N:4096, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:05:01 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:01 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[63/630     67s] 1024x4096x1536 bfloat16 pick=torch    755.0 gluon=  421.7
+USDT:2026-09-29 09:05:02 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:02 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[64/630     68s] 1024x7168x1536 bfloat16 pick=torch    874.7 gluon=  691.9
+USDT:2026-09-29 09:05:03 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:03 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[65/630     69s] 2048x1536x1536 bfloat16 pick=torch    667.9 gluon=  330.1
+[aiter] shape is M:2048, N:2048, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:2048, N:2048, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:05:03 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:03 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[66/630     69s] 2048x2048x1536 bfloat16 pick=torch    754.2 gluon=  420.2
+USDT:2026-09-29 09:05:04 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:04 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[67/630     70s] 2048x4096x1536 bfloat16 pick=torch   1043.2 gluon=  765.5
+USDT:2026-09-29 09:05:05 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:05 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[68/630     71s] 3072x2048x1536 bfloat16 pick=opus     884.4 gluon=  605.4
+USDT:2026-09-29 09:05:06 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:06 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[69/630     72s] 3072x4096x1536 bfloat16 pick=opus    1149.9 gluon= 1099.9
+USDT:2026-09-29 09:05:07 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:07 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[70/630     73s] 4096x1536x1536 bfloat16 pick=torch    819.5 gluon=  604.9
+USDT:2026-09-29 09:05:07 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:07 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[71/630     74s] 4096x2048x1536 bfloat16 pick=opus    1024.6 gluon=  763.7
+USDT:2026-09-29 09:05:08 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:08 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[72/630     74s] 4096x3072x1536 bfloat16 pick=flydsl  1050.6 gluon= 1079.5
+[aiter] shape is M:4096, N:4096, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:4096, N:4096, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:05:09 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:09 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[73/630     75s] 4096x4096x1536 bfloat16 pick=torch   1230.3 gluon= 1269.5
+[aiter] shape is M:5120, N:2048, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:5120, N:2048, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:05:10 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:10 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[74/630     77s] 5120x2048x1536 bfloat16 pick=torch   1041.9 gluon=  927.6
+[aiter] shape is M:5120, N:4096, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:5120, N:4096, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:05:12 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:12 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[75/630     78s] 5120x4096x1536 bfloat16 pick=torch   1217.4 gluon= 1002.8
+[aiter] shape is M:7680, N:2048, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:7680, N:2048, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:05:13 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:13 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[76/630     79s] 7680x2048x1536 bfloat16 pick=torch   1191.5 gluon= 1214.5
+[aiter] shape is M:7680, N:4096, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:7680, N:4096, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:05:14 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:14 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[77/630     81s] 7680x4096x1536 bfloat16 pick=torch   1168.9 gluon= 1261.6
+USDT:2026-09-29 09:05:15 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:15 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[78/630     81s] 8192x1536x1536 bfloat16 pick=torch   1139.3 gluon= 1077.9
+USDT:2026-09-29 09:05:16 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:16 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[79/630     83s] 10240x7168x1536 bfloat16 pick=asm     1217.7 gluon= 1257.0
+USDT:2026-09-29 09:05:18 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:18 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[80/630     84s] 16384x1536x1536 bfloat16 pick=torch   1192.1 gluon= 1166.8
+[aiter] shape is M:16384, N:2048, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:16384, N:2048, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:05:19 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:19 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[81/630     86s] 16384x2048x1536 bfloat16 pick=torch   1284.3 gluon= 1303.7
+USDT:2026-09-29 09:05:20 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:20 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[82/630     87s] 16384x3072x1536 bfloat16 pick=torch   1305.2 gluon= 1337.6
+[aiter] shape is M:16384, N:4096, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:16384, N:4096, K:1536 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:05:22 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:22 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[83/630     88s] 16384x4096x1536 bfloat16 pick=torch   1318.9 gluon= 1352.2
+USDT:2026-09-29 09:05:23 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:23 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[84/630     89s] 32768x1536x1536 bfloat16 pick=flydsl  1290.3 gluon= 1336.5
+USDT:2026-09-29 09:05:24 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:24 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[85/630     90s] 512x7168x1792 bfloat16 pick=flydsl   713.8 gluon=  391.9
+USDT:2026-09-29 09:05:26 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:26 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[86/630     92s] 1024x7168x1792 bfloat16 pick=flydsl   845.6 gluon=  722.4
+USDT:2026-09-29 09:05:27 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:27 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[87/630     93s] 2048x7168x1792 bfloat16 pick=flydsl  1198.5 gluon= 1265.2
+USDT:2026-09-29 09:05:28 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:28 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[88/630     94s] 4096x7168x1792 bfloat16 pick=flydsl  1260.4 gluon= 1292.1
+USDT:2026-09-29 09:05:31 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:31 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[89/630     97s] 8192x7168x1792 bfloat16 pick=asm     1273.4 gluon= 1320.0
+USDT:2026-09-29 09:05:32 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:32 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[90/630    100s] 16384x7168x1792 bfloat16 pick=torch   1376.5 gluon= 1394.4
+USDT:2026-09-29 09:05:37 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:37 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[91/630    103s] 32768x7168x1792 bfloat16 pick=torch   1278.9 gluon= 1402.8
+[aiter] shape is M:512, N:4096, K:2048 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:512, N:4096, K:2048 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:05:38 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:38 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[92/630    105s] 512x4096x2048 bfloat16 pick=torch    609.3 gluon=  237.4
+[aiter] LoadKernel: _ZN5aiter37bf16gemm_fp32bf16_tn_96x64_pf3_splitkE hsaco: /home/jbowley/repos/aiter/hsa//gfx950/bf16gemm/bf16gemm_fp32bf16_tn_96x64_pf3_splitk.co
+USDT:2026-09-29 09:05:42 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:42 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[93/630    108s] 512x6144x2048 float32  pick=asm      420.8 gluon=  316.0
+USDT:2026-09-29 09:05:44 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:44 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[94/630    110s] 512x6144x2048 bfloat16 pick=flydsl   672.4 gluon=  355.3
+USDT:2026-09-29 09:05:46 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:46 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[95/630    112s] 512x8192x2048 bfloat16 pick=flydsl   771.9 gluon=  453.2
+USDT:2026-09-29 09:05:47 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:47 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[96/630    114s] 512x16384x2048 bfloat16 pick=flydsl   811.8 gluon=  824.3
+[aiter] shape is M:1024, N:4096, K:2048 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:1024, N:4096, K:2048 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:05:48 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:48 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[97/630    114s] 1024x4096x2048 bfloat16 pick=torch    811.1 gluon=  453.6
+USDT:2026-09-29 09:05:48 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:48 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[98/630    115s] 1024x6144x2048 float32  pick=opus     671.2 gluon=  611.2
+USDT:2026-09-29 09:05:50 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:50 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[99/630    116s] 1024x6144x2048 bfloat16 pick=flydsl   805.9 gluon=  662.6 PICK-WRONG
+USDT:2026-09-29 09:05:51 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:51 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[100/630    117s] 1024x8192x2048 bfloat16 pick=flydsl  1056.7 gluon=  822.4
+USDT:2026-09-29 09:05:53 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:53 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[101/630    119s] 1024x16384x2048 bfloat16 pick=flydsl   937.6 gluon= 1373.9
+[aiter] shape is M:2048, N:4096, K:2048 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:2048, N:4096, K:2048 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:05:54 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:54 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[102/630    120s] 2048x4096x2048 bfloat16 pick=torch   1127.4 gluon=  828.1
+USDT:2026-09-29 09:05:54 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:54 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[103/630    121s] 2048x6144x2048 float32  pick=asm     1041.7 gluon= 1076.8
+USDT:2026-09-29 09:05:56 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:56 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[104/630    122s] 2048x6144x2048 bfloat16 pick=flydsl  1138.3 gluon= 1207.7
+USDT:2026-09-29 09:05:56 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:56 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[105/630    123s] 2048x8192x2048 bfloat16 pick=flydsl  1322.8 gluon= 1375.6
+USDT:2026-09-29 09:05:58 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:58 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[106/630    124s] 2048x16384x2048 bfloat16 pick=flydsl  1110.0 gluon= 1413.5
+[aiter] shape is M:3072, N:4096, K:2048 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:3072, N:4096, K:2048 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:05:59 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:05:59 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[107/630    125s] 3072x4096x2048 bfloat16 pick=torch   1244.3 gluon= 1191.3
+[aiter] shape is M:4096, N:4096, K:2048 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:4096, N:4096, K:2048 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:06:00 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:00 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[108/630    126s] 4096x4096x2048 bfloat16 pick=torch   1323.8 gluon= 1383.6
+USDT:2026-09-29 09:06:01 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:01 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[109/630    127s] 4096x6144x2048 float32  pick=asm     1055.5 gluon= 1099.5
+USDT:2026-09-29 09:06:03 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:03 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[110/630    129s] 4096x6144x2048 bfloat16 pick=flydsl  1057.8 gluon= 1239.3
+USDT:2026-09-29 09:06:03 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:03 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[111/630    130s] 4096x8192x2048 bfloat16 pick=flydsl  1349.2 gluon= 1398.6
+USDT:2026-09-29 09:06:05 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:05 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[112/630    131s] 4096x16384x2048 bfloat16 pick=flydsl   973.5 gluon= 1432.4
+[aiter] shape is M:5120, N:4096, K:2048 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:5120, N:4096, K:2048 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:06:06 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:06 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[113/630    133s] 5120x4096x2048 bfloat16 pick=torch   1220.5 gluon= 1070.4
+[aiter] shape is M:7680, N:4096, K:2048 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:7680, N:4096, K:2048 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:06:08 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:08 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[114/630    134s] 7680x4096x2048 bfloat16 pick=torch   1299.1 gluon= 1361.1
+USDT:2026-09-29 09:06:09 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:09 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[115/630    136s] 8192x6144x2048 float32  pick=asm     1232.3 gluon= 1265.8
+USDT:2026-09-29 09:06:11 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:11 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[116/630    137s] 8192x6144x2048 bfloat16 pick=flydsl   862.9 gluon= 1428.8 PICK-WRONG
+USDT:2026-09-29 09:06:12 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:12 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[117/630    138s] 8192x8192x2048 bfloat16 pick=asm     1403.2 gluon= 1422.8
+USDT:2026-09-29 09:06:13 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:13 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[118/630    139s] 8192x16384x2048 bfloat16 pick=triton  1030.4 gluon= 1374.5
+USDT:2026-09-29 09:06:13 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:13 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[119/630    140s] 16384x4096x2048 bfloat16 pick=torch   1374.6 gluon= 1439.9
+USDT:2026-09-29 09:06:15 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:15 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[120/630    141s] 16384x6144x2048 float32  pick=asm     1190.6 gluon= 1231.5
+USDT:2026-09-29 09:06:16 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:16 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[121/630    143s] 16384x6144x2048 bfloat16 pick=torch   1308.3 gluon= 1431.1
+USDT:2026-09-29 09:06:17 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:17 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[122/630    143s] 16384x8192x2048 bfloat16 pick=torch   1401.6 gluon= 1424.3
+USDT:2026-09-29 09:06:19 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:19 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[123/630    145s] 16384x16384x2048 bfloat16 pick=flydsl   979.1 gluon= 1376.6
+USDT:2026-09-29 09:06:21 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:21 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[124/630    147s] 32768x6144x2048 bfloat16 pick=flydsl  1011.3 gluon= 1416.8
+USDT:2026-09-29 09:06:21 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:21 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[125/630    148s] 32768x8192x2048 bfloat16 pick=torch   1316.4 gluon= 1418.1
+USDT:2026-09-29 09:06:23 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:23 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[126/630    150s] 32768x16384x2048 bfloat16 pick=flydsl   844.0 gluon= 1370.5
+USDT:2026-09-29 09:06:24 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:24 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[127/630    151s] 512x6144x3072 float32  pick=opus     386.4 gluon=  346.4
+USDT:2026-09-29 09:06:26 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:26 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[128/630    152s] 512x6144x3072 bfloat16 pick=flydsl   740.3 gluon=  380.1
+USDT:2026-09-29 09:06:27 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:27 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[129/630    153s] 1024x6144x3072 float32  pick=opus     616.9 gluon=  684.9
+USDT:2026-09-29 09:06:28 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:28 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[130/630    155s] 1024x6144x3072 bfloat16 pick=flydsl   885.6 gluon=  701.8 PICK-WRONG
+USDT:2026-09-29 09:06:29 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:29 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[131/630    155s] 2048x6144x3072 float32  pick=asm     1153.5 gluon= 1197.6
+USDT:2026-09-29 09:06:30 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:30 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[132/630    157s] 2048x6144x3072 bfloat16 pick=flydsl  1228.6 gluon= 1289.4
+USDT:2026-09-29 09:06:31 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:31 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[133/630    158s] 4096x6144x3072 float32  pick=asm     1151.8 gluon= 1200.6
+USDT:2026-09-29 09:06:33 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:33 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[134/630    160s] 4096x6144x3072 bfloat16 pick=flydsl  1109.0 gluon= 1305.7
+USDT:2026-09-29 09:06:35 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:35 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[135/630    161s] 8192x6144x3072 float32  pick=asm     1338.4 gluon= 1384.0
+USDT:2026-09-29 09:06:36 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:36 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[136/630    163s] 8192x6144x3072 bfloat16 pick=flydsl   861.8 gluon= 1511.0
+USDT:2026-09-29 09:06:38 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:38 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[137/630    164s] 16384x6144x3072 float32  pick=asm     1303.5 gluon= 1328.6
+USDT:2026-09-29 09:06:39 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:39 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[138/630    165s] 16384x6144x3072 bfloat16 pick=torch   1384.8 gluon= 1493.7
+USDT:2026-09-29 09:06:40 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:40 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[139/630    167s] 32768x6144x3072 bfloat16 pick=flydsl   876.4 gluon= 1497.2 PICK-WRONG
+USDT:2026-09-29 09:06:42 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:42 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[140/630    168s] 512x5120x3200 bfloat16 pick=flydsl   626.4 gluon=  319.1
+USDT:2026-09-29 09:06:43 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:43 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[141/630    170s] 1024x5120x3200 bfloat16 pick=torch    954.9 gluon=  607.1
+USDT:2026-09-29 09:06:44 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:44 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[142/630    171s] 2048x5120x3200 bfloat16 pick=torch   1278.5 gluon= 1159.4
+USDT:2026-09-29 09:06:46 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:46 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[143/630    172s] 4096x5120x3200 bfloat16 pick=torch   1357.3 gluon= 1122.9
+USDT:2026-09-29 09:06:47 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:47 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[144/630    174s] 8192x5120x3200 bfloat16 pick=asm     1331.2 gluon= 1379.5
+USDT:2026-09-29 09:06:49 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:49 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[145/630    175s] 16384x5120x3200 bfloat16 pick=torch   1467.9 gluon= 1522.1
+USDT:2026-09-29 09:06:50 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:50 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[146/630    176s] 32768x5120x3200 bfloat16 pick=torch   1477.3 gluon= 1493.8
+USDT:2026-09-29 09:06:51 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:51 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[147/630    177s] 512x7168x3584 bfloat16 pick=flydsl   842.6 gluon=  448.9
+USDT:2026-09-29 09:06:53 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:53 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[148/630    179s] 512x8192x3584 bfloat16 pick=flydsl   780.7 gluon=  506.2
+USDT:2026-09-29 09:06:54 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:54 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[149/630    180s] 1024x7168x3584 bfloat16 pick=torch   1111.0 gluon=  869.2
+USDT:2026-09-29 09:06:55 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:55 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[150/630    182s] 1024x8192x3584 bfloat16 pick=flydsl   886.9 gluon=  970.5
+USDT:2026-09-29 09:06:57 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:57 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[151/630    183s] 2048x8192x3584 bfloat16 pick=flydsl  1417.9 gluon= 1486.0
+USDT:2026-09-29 09:06:59 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:06:59 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[152/630    185s] 4096x8192x3584 bfloat16 pick=flydsl  1040.5 gluon= 1514.3
+USDT:2026-09-29 09:07:00 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:00 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[153/630    186s] 8192x8192x3584 bfloat16 pick=torch   1481.6 gluon= 1536.5
+USDT:2026-09-29 09:07:02 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:02 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[154/630    189s] 10240x7168x3584 bfloat16 pick=flydsl   841.1 gluon= 1424.9
+USDT:2026-09-29 09:07:04 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:04 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[155/630    190s] 16384x8192x3584 bfloat16 pick=flydsl   852.4 gluon= 1526.8
+USDT:2026-09-29 09:07:06 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:06 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[156/630    192s] 32768x8192x3584 bfloat16 pick=flydsl   879.5 gluon= 1522.9
+USDT:2026-09-29 09:07:07 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:07 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[157/630    194s] 512x1024x4096 bfloat16 pick=flydsl   347.1 gluon=   66.7 PICK-WRONG
+USDT:2026-09-29 09:07:09 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:09 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[158/630    195s] 512x2048x4096 bfloat16 pick=flydsl   513.9 gluon=  133.2
+USDT:2026-09-29 09:07:10 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:10 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[159/630    196s] 512x4096x4096 bfloat16 pick=flydsl   704.3 gluon=  265.1
+USDT:2026-09-29 09:07:11 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:11 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[160/630    197s] 512x8192x4096 bfloat16 pick=flydsl   902.4 gluon=  519.1
+USDT:2026-09-29 09:07:12 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:12 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[161/630    199s] 512x8704x4096 bfloat16 pick=torch    745.2 gluon=  555.7
+USDT:2026-09-29 09:07:14 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:14 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[162/630    200s] 512x10240x4096 bfloat16 pick=torch    872.7 gluon=  635.8
+USDT:2026-09-29 09:07:15 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:15 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[163/630    201s] 512x16384x4096 bfloat16 pick=flydsl   831.2 gluon=  994.0
+USDT:2026-09-29 09:07:16 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:16 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[164/630    203s] 512x129280x4096 bfloat16 pick=asm     1306.9 gluon= 1386.0
+USDT:2026-09-29 09:07:18 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:18 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[165/630    204s] 768x1024x4096 bfloat16 pick=torch    430.8 gluon=  100.1
+USDT:2026-09-29 09:07:19 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:19 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[166/630    205s] 768x2048x4096 bfloat16 pick=flydsl   544.6 gluon=  199.6
+USDT:2026-09-29 09:07:21 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:21 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[167/630    207s] 768x4096x4096 bfloat16 pick=flydsl   757.9 gluon=  394.9
+USDT:2026-09-29 09:07:22 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:22 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[168/630    208s] 768x8192x4096 bfloat16 pick=torch   1017.1 gluon=  767.4
+USDT:2026-09-29 09:07:23 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:23 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[169/630    209s] 768x8704x4096 bfloat16 pick=flydsl   957.6 gluon=  818.7 PICK-WRONG
+USDT:2026-09-29 09:07:25 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:25 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[170/630    211s] 768x10240x4096 bfloat16 pick=flydsl  1196.6 gluon=  952.0
+USDT:2026-09-29 09:07:26 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:26 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[171/630    213s] 768x129280x4096 bfloat16 pick=torch   1300.1 gluon= 1431.7
+USDT:2026-09-29 09:07:27 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:27 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[172/630    213s] 1024x512x4096 bfloat16 pick=flydsl   323.7 gluon=   66.6
+USDT:2026-09-29 09:07:28 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:28 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[173/630    214s] 1024x1024x4096 bfloat16 pick=flydsl   493.5 gluon=  133.1
+USDT:2026-09-29 09:07:29 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:29 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[174/630    215s] 1024x2048x4096 bfloat16 pick=flydsl   684.4 gluon=  264.1
+USDT:2026-09-29 09:07:29 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:29 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[175/630    215s] 1024x4096x4096 bfloat16 pick=flydsl   920.8 gluon=  518.6
+USDT:2026-09-29 09:07:30 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:30 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[176/630    216s] 1024x8192x4096 bfloat16 pick=flydsl  1218.7 gluon= 1003.7
+USDT:2026-09-29 09:07:31 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:31 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[177/630    217s] 1024x8704x4096 bfloat16 pick=torch   1217.7 gluon= 1067.3
+USDT:2026-09-29 09:07:32 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:32 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[178/630    219s] 1024x10240x4096 bfloat16 pick=torch   1346.6 gluon= 1186.2
+USDT:2026-09-29 09:07:34 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:34 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[179/630    220s] 1024x16384x4096 bfloat16 pick=flydsl   896.2 gluon= 1524.8
+USDT:2026-09-29 09:07:35 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:35 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[180/630    221s] 1024x129280x4096 bfloat16 pick=torch   1385.1 gluon= 1458.1
+USDT:2026-09-29 09:07:37 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:37 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[181/630    223s] 1280x512x4096 bfloat16 pick=flydsl   335.7 gluon=   83.5 PICK-WRONG
+USDT:2026-09-29 09:07:38 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:38 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[182/630    224s] 1280x1024x4096 bfloat16 pick=torch    556.7 gluon=  166.5
+USDT:2026-09-29 09:07:39 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:39 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[183/630    225s] 1280x2048x4096 bfloat16 pick=flydsl   656.8 gluon=  331.5
+USDT:2026-09-29 09:07:40 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:40 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[184/630    227s] 1280x129280x4096 bfloat16 pick=torch   1391.7 gluon= 1432.4
+USDT:2026-09-29 09:07:41 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:41 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[185/630    227s] 1536x512x4096 bfloat16 pick=torch    438.2 gluon=  100.3
+USDT:2026-09-29 09:07:42 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:42 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[186/630    228s] 1536x1024x4096 bfloat16 pick=flydsl   540.0 gluon=  200.2
+USDT:2026-09-29 09:07:42 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:42 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[187/630    228s] 1536x2048x4096 bfloat16 pick=flydsl   752.4 gluon=  395.2
+USDT:2026-09-29 09:07:43 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:43 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[188/630    230s] 1536x129280x4096 bfloat16 pick=torch   1358.7 gluon= 1447.4
+USDT:2026-09-29 09:07:45 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:45 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[189/630    231s] 1792x512x4096 bfloat16 pick=flydsl   415.1 gluon=  117.0
+USDT:2026-09-29 09:07:46 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:46 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[190/630    232s] 1792x1024x4096 bfloat16 pick=flydsl   601.7 gluon=  233.2
+USDT:2026-09-29 09:07:47 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:47 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[191/630    233s] 1792x2048x4096 bfloat16 pick=flydsl   815.1 gluon=  459.4
+USDT:2026-09-29 09:07:48 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:48 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[192/630    235s] 1792x129280x4096 bfloat16 pick=asm     1445.1 gluon= 1462.5
+USDT:2026-09-29 09:07:49 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:49 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[193/630    235s] 2048x512x4096 bfloat16 pick=flydsl   476.1 gluon=  133.1
+USDT:2026-09-29 09:07:50 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:50 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[194/630    236s] 2048x1024x4096 bfloat16 pick=flydsl   688.5 gluon=  264.5
+USDT:2026-09-29 09:07:51 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:51 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[195/630    237s] 2048x2048x4096 bfloat16 pick=flydsl   902.5 gluon=  520.5
+USDT:2026-09-29 09:07:51 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:51 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[196/630    237s] 2048x4096x4096 bfloat16 pick=opus    1214.4 gluon= 1000.2
+USDT:2026-09-29 09:07:52 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:52 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[197/630    238s] 2048x8192x4096 bfloat16 pick=flydsl  1451.2 gluon= 1518.4
+USDT:2026-09-29 09:07:53 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:53 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[198/630    239s] 2048x8704x4096 bfloat16 pick=torch   1413.0 gluon=  988.3
+USDT:2026-09-29 09:07:54 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:54 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[199/630    241s] 2048x10240x4096 bfloat16 pick=torch   1386.6 gluon= 1153.2
+USDT:2026-09-29 09:07:56 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:56 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[200/630    242s] 2048x16384x4096 bfloat16 pick=flydsl  1483.2 gluon= 1544.3
+USDT:2026-09-29 09:07:57 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:57 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[201/630    244s] 2048x129280x4096 bfloat16 pick=flydsl  1448.3 gluon= 1496.5
+USDT:2026-09-29 09:07:59 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:07:59 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[202/630    245s] 2304x512x4096 bfloat16 pick=flydsl   438.5 gluon=  149.4
+USDT:2026-09-29 09:08:00 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:00 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[203/630    246s] 2304x1024x4096 bfloat16 pick=flydsl   640.6 gluon=  296.6
+USDT:2026-09-29 09:08:01 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:01 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[204/630    247s] 2304x2048x4096 bfloat16 pick=opus     885.7 gluon=  583.1
+USDT:2026-09-29 09:08:02 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:02 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[205/630    248s] 2560x512x4096 bfloat16 pick=flydsl   477.4 gluon=  165.7
+USDT:2026-09-29 09:08:02 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:02 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[206/630    248s] 2560x1024x4096 bfloat16 pick=flydsl   681.8 gluon=  330.3
+USDT:2026-09-29 09:08:03 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:03 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[207/630    249s] 2560x2048x4096 bfloat16 pick=opus     968.0 gluon=  643.7
+USDT:2026-09-29 09:08:04 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:04 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[208/630    250s] 2816x512x4096 bfloat16 pick=flydsl   518.7 gluon=  182.7
+USDT:2026-09-29 09:08:05 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:05 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[209/630    251s] 2816x1024x4096 bfloat16 pick=flydsl   721.9 gluon=  363.1
+USDT:2026-09-29 09:08:06 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:06 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[210/630    253s] 2816x2048x4096 bfloat16 pick=opus    1021.0 gluon=  699.5
+USDT:2026-09-29 09:08:07 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:07 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[211/630    253s] 3072x512x4096 bfloat16 pick=flydsl   543.7 gluon=  200.1
+USDT:2026-09-29 09:08:08 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:08 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[212/630    254s] 3072x1024x4096 bfloat16 pick=flydsl   750.8 gluon=  396.2
+USDT:2026-09-29 09:08:08 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:08 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[213/630    255s] 3072x2048x4096 bfloat16 pick=opus    1128.7 gluon=  764.8
+USDT:2026-09-29 09:08:10 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:10 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[214/630    256s] 3328x512x4096 bfloat16 pick=flydsl   562.0 gluon=  217.0
+USDT:2026-09-29 09:08:11 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:11 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[215/630    257s] 3328x1024x4096 bfloat16 pick=flydsl   768.6 gluon=  427.4
+USDT:2026-09-29 09:08:12 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:12 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[216/630    258s] 3328x2048x4096 bfloat16 pick=opus    1102.3 gluon=  813.1
+USDT:2026-09-29 09:08:12 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:12 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[217/630    259s] 3584x512x4096 bfloat16 pick=flydsl   592.9 gluon=  233.6
+USDT:2026-09-29 09:08:13 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:13 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[218/630    259s] 3584x1024x4096 bfloat16 pick=flydsl   787.5 gluon=  458.5
+USDT:2026-09-29 09:08:14 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:14 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[219/630    260s] 3584x2048x4096 bfloat16 pick=opus    1158.7 gluon=  884.9
+USDT:2026-09-29 09:08:15 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:15 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[220/630    262s] 3840x512x4096 bfloat16 pick=flydsl   606.9 gluon=  250.3
+USDT:2026-09-29 09:08:16 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:16 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[221/630    263s] 3840x1024x4096 bfloat16 pick=flydsl   804.2 gluon=  490.3
+USDT:2026-09-29 09:08:17 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:17 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[222/630    263s] 3840x2048x4096 bfloat16 pick=opus    1192.2 gluon=  943.8
+USDT:2026-09-29 09:08:18 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:18 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[223/630    264s] 4096x512x4096 bfloat16 pick=flydsl   666.5 gluon=  264.9
+USDT:2026-09-29 09:08:18 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:18 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[224/630    264s] 4096x1024x4096 bfloat16 pick=flydsl   906.9 gluon=  516.0
+USDT:2026-09-29 09:08:19 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:19 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[225/630    265s] 4096x2048x4096 bfloat16 pick=opus    1248.3 gluon=  998.2
+USDT:2026-09-29 09:08:19 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:19 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[226/630    266s] 4096x4096x4096 bfloat16 pick=flydsl  1459.7 gluon= 1522.5
+USDT:2026-09-29 09:08:20 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:20 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[227/630    267s] 4096x8192x4096 bfloat16 pick=asm     1505.2 gluon= 1541.7
+USDT:2026-09-29 09:08:21 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:21 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[228/630    268s] 4096x8704x4096 bfloat16 pick=torch   1418.6 gluon= 1247.7
+USDT:2026-09-29 09:08:23 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:23 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[229/630    269s] 4096x10240x4096 bfloat16 pick=flydsl  1376.2 gluon= 1414.3
+USDT:2026-09-29 09:08:24 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:24 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[230/630    271s] 4096x16384x4096 bfloat16 pick=flydsl  1496.6 gluon= 1540.9
+USDT:2026-09-29 09:08:26 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:26 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[231/630    272s] 4096x129280x4096 bfloat16 pick=asm     1482.6 gluon= 1510.7
+USDT:2026-09-29 09:08:27 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:27 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[232/630    273s] 4352x512x4096 bfloat16 pick=flydsl   466.3 gluon=  281.5
+USDT:2026-09-29 09:08:28 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:28 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[233/630    274s] 4352x1024x4096 bfloat16 pick=opus     846.8 gluon=  547.9
+USDT:2026-09-29 09:08:29 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:29 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[234/630    275s] 4352x2048x4096 bfloat16 pick=torch   1189.3 gluon= 1055.7
+USDT:2026-09-29 09:08:29 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:29 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[235/630    276s] 5120x512x4096 bfloat16 pick=flydsl   539.4 gluon=  329.9
+USDT:2026-09-29 09:08:30 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:30 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[236/630    276s] 5120x1024x4096 bfloat16 pick=opus    1006.4 gluon=  643.9
+USDT:2026-09-29 09:08:31 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:31 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[237/630    277s] 5120x2048x4096 bfloat16 pick=torch   1281.9 gluon= 1173.8
+USDT:2026-09-29 09:08:32 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:32 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[238/630    278s] 6144x512x4096 bfloat16 pick=flydsl   748.5 gluon=  395.3
+USDT:2026-09-29 09:08:32 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:32 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[239/630    279s] 6144x1024x4096 bfloat16 pick=opus    1138.3 gluon=  760.1
+USDT:2026-09-29 09:08:34 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:34 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[240/630    280s] 6144x2048x4096 bfloat16 pick=opus    1376.5 gluon= 1319.4
+USDT:2026-09-29 09:08:35 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:35 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[241/630    281s] 6144x129280x4096 bfloat16 pick=asm     1486.0 gluon= 1491.9
+USDT:2026-09-29 09:08:36 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:36 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[242/630    283s] 6400x512x4096 bfloat16 pick=flydsl   490.5 gluon=  411.2
+USDT:2026-09-29 09:08:37 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:37 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[243/630    284s] 6400x1024x4096 bfloat16 pick=opus    1076.5 gluon=  788.5
+USDT:2026-09-29 09:08:39 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:39 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[244/630    285s] 6400x2048x4096 bfloat16 pick=torch   1363.2 gluon= 1334.5
+USDT:2026-09-29 09:08:40 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:40 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[245/630    286s] 6912x512x4096 bfloat16 pick=flydsl   701.6 gluon=  444.4
+USDT:2026-09-29 09:08:41 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:41 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[246/630    288s] 6912x1024x4096 bfloat16 pick=opus    1112.6 gluon=  860.8
+USDT:2026-09-29 09:08:43 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:43 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[247/630    289s] 6912x2048x4096 bfloat16 pick=torch   1415.5 gluon= 1378.9
+USDT:2026-09-29 09:08:43 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:43 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[248/630    290s] 7168x512x4096 bfloat16 pick=flydsl   481.4 gluon=  459.5
+USDT:2026-09-29 09:08:44 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:44 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[249/630    291s] 7168x1024x4096 bfloat16 pick=opus    1185.5 gluon=  896.1
+USDT:2026-09-29 09:08:45 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:45 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[250/630    292s] 7168x2048x4096 bfloat16 pick=torch   1438.2 gluon= 1408.8
+USDT:2026-09-29 09:08:47 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:47 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[251/630    293s] 7424x512x4096 bfloat16 pick=flydsl   715.5 gluon=  475.5
+USDT:2026-09-29 09:08:48 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:48 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[252/630    294s] 7424x1024x4096 bfloat16 pick=opus    1138.3 gluon=  927.4
+USDT:2026-09-29 09:08:49 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:49 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[253/630    296s] 7424x2048x4096 bfloat16 pick=torch   1407.8 gluon= 1432.6
+USDT:2026-09-29 09:08:50 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:50 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[254/630    296s] 7680x512x4096 bfloat16 pick=flydsl   511.8 gluon=  488.6
+USDT:2026-09-29 09:08:51 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:51 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[255/630    297s] 7680x1024x4096 bfloat16 pick=opus    1194.1 gluon=  960.4
+USDT:2026-09-29 09:08:52 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:52 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[256/630    299s] 7680x2048x4096 bfloat16 pick=torch   1430.8 gluon= 1461.6
+USDT:2026-09-29 09:08:54 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:54 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[257/630    300s] 7936x512x4096 bfloat16 pick=flydsl   794.1 gluon=  505.7
+USDT:2026-09-29 09:08:55 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:55 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[258/630    301s] 7936x1024x4096 bfloat16 pick=opus    1172.3 gluon=  982.2
+USDT:2026-09-29 09:08:56 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:56 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[259/630    302s] 7936x2048x4096 bfloat16 pick=torch   1452.7 gluon= 1488.7
+USDT:2026-09-29 09:08:57 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:57 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[260/630    303s] 8192x512x4096 bfloat16 pick=flydsl   863.8 gluon=  518.4
+USDT:2026-09-29 09:08:57 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:57 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[261/630    304s] 8192x1024x4096 bfloat16 pick=opus    1247.2 gluon=  976.2
+USDT:2026-09-29 09:08:58 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:58 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[262/630    305s] 8192x2048x4096 bfloat16 pick=torch   1478.2 gluon= 1525.8
+USDT:2026-09-29 09:08:59 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:08:59 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[263/630    305s] 8192x4096x4096 bfloat16 pick=flydsl  1496.7 gluon= 1547.8
+USDT:2026-09-29 09:09:00 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:00 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[264/630    306s] 8192x8192x4096 bfloat16 pick=asm     1527.5 gluon= 1553.3
+USDT:2026-09-29 09:09:01 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:01 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[265/630    308s] 8192x8704x4096 bfloat16 pick=asm     1401.9 gluon= 1428.1
+USDT:2026-09-29 09:09:02 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:02 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[266/630    309s] 8192x10240x4096 bfloat16 pick=torch   1428.7 gluon= 1546.2
+USDT:2026-09-29 09:09:04 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:04 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[267/630    310s] 8192x16384x4096 bfloat16 pick=torch   1522.0 gluon= 1522.1
+USDT:2026-09-29 09:09:05 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:05 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[268/630    312s] 8192x129280x4096 bfloat16 pick=flydsl  1477.2 gluon= 1523.9
+USDT:2026-09-29 09:09:06 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:06 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[269/630    313s] 10240x512x4096 bfloat16 pick=torch    881.9 gluon=  639.9
+USDT:2026-09-29 09:09:07 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:07 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[270/630    313s] 10240x1024x4096 bfloat16 pick=torch   1280.7 gluon= 1176.3
+USDT:2026-09-29 09:09:08 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:08 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[271/630    314s] 10240x2048x4096 bfloat16 pick=torch   1459.6 gluon= 1132.1
+USDT:2026-09-29 09:09:09 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:09 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[272/630    316s] 10240x129280x4096 bfloat16 pick=asm     1498.8 gluon= 1503.8
+USDT:2026-09-29 09:09:10 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:10 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[273/630    316s] 12288x512x4096 bfloat16 pick=opus    1127.8 gluon=  762.1
+USDT:2026-09-29 09:09:11 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:11 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[274/630    317s] 12288x1024x4096 bfloat16 pick=opus    1384.6 gluon= 1314.3
+USDT:2026-09-29 09:09:12 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:12 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[275/630    319s] 12288x2048x4096 bfloat16 pick=opus    1384.2 gluon= 1314.0
+USDT:2026-09-29 09:09:14 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:14 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[276/630    320s] 12288x129280x4096 bfloat16 pick=asm     1496.9 gluon= 1518.3
+USDT:2026-09-29 09:09:15 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:15 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[277/630    321s] 14336x512x4096 bfloat16 pick=opus    1172.2 gluon=  884.5
+USDT:2026-09-29 09:09:15 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:15 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[278/630    322s] 14336x1024x4096 bfloat16 pick=torch   1450.1 gluon= 1399.2
+USDT:2026-09-29 09:09:17 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:17 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[279/630    323s] 14336x2048x4096 bfloat16 pick=flydsl  1402.5 gluon= 1436.3
+USDT:2026-09-29 09:09:18 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:18 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[280/630    325s] 14336x129280x4096 bfloat16 pick=asm     1491.8 gluon= 1500.9
+USDT:2026-09-29 09:09:19 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:19 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[281/630    325s] 16384x512x4096 bfloat16 pick=opus    1251.9 gluon= 1007.5
+USDT:2026-09-29 09:09:20 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:20 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[282/630    326s] 16384x1024x4096 bfloat16 pick=flydsl  1464.5 gluon= 1520.4
+USDT:2026-09-29 09:09:20 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:20 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[283/630    327s] 16384x2048x4096 bfloat16 pick=torch   1347.9 gluon= 1545.4
+USDT:2026-09-29 09:09:22 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:22 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[284/630    328s] 16384x16384x4096 bfloat16 pick=torch   1462.4 gluon= 1522.1
+USDT:2026-09-29 09:09:23 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:23 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[285/630    330s] 16384x129280x4096 bfloat16 pick=asm     1495.4 gluon= 1532.8
+USDT:2026-09-29 09:09:25 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:25 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[286/630    331s] 32768x16384x4096 bfloat16 pick=flydsl  1498.9 gluon= 1520.0
+USDT:2026-09-29 09:09:26 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:26 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[287/630    332s] 512x7168x4224 bfloat16 pick=flydsl   846.4 gluon=  458.2
+USDT:2026-09-29 09:09:27 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:27 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[288/630    334s] 1024x7168x4224 bfloat16 pick=flydsl  1148.2 gluon=  884.6
+USDT:2026-09-29 09:09:28 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:28 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[289/630    335s] 10240x7168x4224 bfloat16 pick=opus     966.1 gluon= 1453.5
+USDT:2026-09-29 09:09:30 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:30 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[290/630    336s] 512x6144x4608 bfloat16 pick=flydsl   782.3 gluon=  398.8
+USDT:2026-09-29 09:09:31 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:31 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[291/630    337s] 1024x6144x4608 bfloat16 pick=torch   1014.0 gluon=  776.2
+USDT:2026-09-29 09:09:32 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:32 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[292/630    339s] 2048x6144x4608 bfloat16 pick=flydsl  1275.2 gluon= 1346.2
+USDT:2026-09-29 09:09:34 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:34 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[293/630    340s] 4096x6144x4608 bfloat16 pick=torch   1424.2 gluon= 1336.9
+USDT:2026-09-29 09:09:35 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:35 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[294/630    341s] 8192x6144x4608 bfloat16 pick=torch   1511.0 gluon= 1563.9
+USDT:2026-09-29 09:09:36 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:36 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[295/630    343s] 16384x6144x4608 bfloat16 pick=torch   1438.5 gluon= 1551.9
+USDT:2026-09-29 09:09:38 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:38 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[296/630    344s] 32768x6144x4608 bfloat16 pick=torch   1431.0 gluon= 1545.2
+[aiter] LoadKernel: _ZN5aiter39bf16gemm_fp32bf16_tn_64x64_splitk_cleanE hsaco: /home/jbowley/repos/aiter/hsa//gfx950/bf16gemm/bf16gemm_fp32bf16_tn_64x64_splitk_clean.co
+USDT:2026-09-29 09:09:39 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:39 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[297/630    345s] 512x1024x5120 float32  pick=asm      333.7 gluon=   65.4
+USDT:2026-09-29 09:09:40 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:40 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[298/630    347s] 512x5120x5120 bfloat16 pick=torch    725.3 gluon=  335.4
+USDT:2026-09-29 09:09:42 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:42 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[299/630    348s] 512x6400x5120 bfloat16 pick=flydsl   703.6 gluon=  419.3 PICK-WRONG
+USDT:2026-09-29 09:09:44 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:44 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[300/630    350s] 512x12800x5120 bfloat16 pick=flydsl   800.4 gluon=  822.6 PICK-WRONG
+USDT:2026-09-29 09:09:45 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:45 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[301/630    352s] 512x37888x5120 bfloat16 pick=torch   1183.2 gluon=  981.3
+USDT:2026-09-29 09:09:47 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:47 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[302/630    353s] 512x51200x5120 bfloat16 pick=flydsl  1144.4 gluon= 1211.9
+[aiter] LoadKernel: _ZN5aiter39bf16gemm_fp32bf16_tn_96x64_splitk_cleanE hsaco: /home/jbowley/repos/aiter/hsa//gfx950/bf16gemm/bf16gemm_fp32bf16_tn_96x64_splitk_clean.co
+USDT:2026-09-29 09:09:48 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:48 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[303/630    354s] 768x1024x5120 float32  pick=asm      409.5 gluon=   98.0
+[aiter] shape is M:768, N:37888, K:5120 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:768, N:37888, K:5120 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:09:49 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:49 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[304/630    356s] 768x37888x5120 bfloat16 pick=torch   1222.6 gluon= 1338.6
+[aiter] LoadKernel: _ZN5aiter37bf16gemm_fp32bf16_tn_64x64_pf3_splitkE hsaco: /home/jbowley/repos/aiter/hsa//gfx950/bf16gemm/bf16gemm_fp32bf16_tn_64x64_pf3_splitk.co
+USDT:2026-09-29 09:09:51 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:51 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[305/630    357s] 1024x1024x5120 float32  pick=asm      460.1 gluon=  130.5
+USDT:2026-09-29 09:09:52 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:52 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[306/630    358s] 1024x5120x5120 bfloat16 pick=torch   1008.6 gluon=  662.2
+USDT:2026-09-29 09:09:53 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:53 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[307/630    359s] 1024x6400x5120 bfloat16 pick=flydsl   958.0 gluon=  822.0 PICK-WRONG
+USDT:2026-09-29 09:09:54 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:54 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[308/630    361s] 1024x12800x5120 bfloat16 pick=flydsl   797.1 gluon= 1373.2
+[aiter] shape is M:1024, N:37888, K:5120 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:1024, N:37888, K:5120 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:09:56 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:56 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[309/630    362s] 1024x37888x5120 bfloat16 pick=torch   1309.7 gluon= 1273.3
+USDT:2026-09-29 09:09:57 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:57 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[310/630    363s] 1024x51200x5120 bfloat16 pick=asm     1218.8 gluon= 1272.6
+USDT:2026-09-29 09:09:58 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:09:58 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[311/630    365s] 1536x1024x5120 float32  pick=asm      579.9 gluon=  195.1
+[aiter] shape is M:1536, N:37888, K:5120 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:1536, N:37888, K:5120 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:10:00 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:00 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[312/630    366s] 1536x37888x5120 bfloat16 pick=torch   1367.7 gluon= 1361.6
+USDT:2026-09-29 09:10:01 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:01 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[313/630    368s] 2048x1024x5120 float32  pick=opus     632.9 gluon=  258.1
+USDT:2026-09-29 09:10:03 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:03 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[314/630    369s] 2048x5120x5120 bfloat16 pick=torch   1361.4 gluon= 1230.3
+USDT:2026-09-29 09:10:03 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:03 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[315/630    370s] 2048x6400x5120 bfloat16 pick=flydsl  1255.9 gluon= 1364.0
+USDT:2026-09-29 09:10:04 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:04 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[316/630    371s] 2048x12800x5120 bfloat16 pick=flydsl   798.3 gluon= 1387.5
+[aiter] shape is M:2048, N:37888, K:5120 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:2048, N:37888, K:5120 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:10:06 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:06 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[317/630    372s] 2048x37888x5120 bfloat16 pick=torch   1314.6 gluon= 1448.5
+[aiter] LoadKernel: _ZN5aiter37bf16gemm_fp32bf16_tn_48x64_pf3_splitkE hsaco: /home/jbowley/repos/aiter/hsa//gfx950/bf16gemm/bf16gemm_fp32bf16_tn_48x64_pf3_splitk.co
+USDT:2026-09-29 09:10:07 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:07 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[318/630    374s] 2048x51200x5120 bfloat16 pick=asm      214.0 gluon= 1421.5
+USDT:2026-09-29 09:10:09 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:09 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[319/630    375s] 4096x1024x5120 float32  pick=opus     962.2 gluon=  492.8
+USDT:2026-09-29 09:10:10 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:10 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[320/630    376s] 4096x5120x5120 bfloat16 pick=torch   1430.0 gluon= 1167.8
+USDT:2026-09-29 09:10:11 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:11 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[321/630    377s] 4096x6400x5120 bfloat16 pick=flydsl  1335.0 gluon= 1386.9
+USDT:2026-09-29 09:10:12 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:12 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[322/630    378s] 4096x12800x5120 bfloat16 pick=asm     1321.0 gluon= 1358.5
+USDT:2026-09-29 09:10:13 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:13 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[323/630    379s] 4096x51200x5120 bfloat16 pick=asm     1459.9 gluon= 1508.8
+USDT:2026-09-29 09:10:14 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:14 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[324/630    381s] 8192x1024x5120 float32  pick=opus    1242.3 gluon=  983.9
+USDT:2026-09-29 09:10:16 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:16 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[325/630    382s] 8192x5120x5120 bfloat16 pick=torch   1457.6 gluon= 1431.0
+USDT:2026-09-29 09:10:17 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:17 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[326/630    383s] 8192x6400x5120 bfloat16 pick=flydsl  1319.5 gluon= 1362.4
+USDT:2026-09-29 09:10:17 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:17 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[327/630    384s] 8192x12800x5120 bfloat16 pick=asm     1423.8 gluon= 1469.4
+USDT:2026-09-29 09:10:19 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:19 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[328/630    385s] 8192x51200x5120 bfloat16 pick=flydsl  1504.2 gluon= 1553.2
+USDT:2026-09-29 09:10:20 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:20 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[329/630    386s] 16384x1024x5120 float32  pick=opus    1330.4 gluon= 1465.6
+USDT:2026-09-29 09:10:21 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:21 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[330/630    387s] 16384x5120x5120 bfloat16 pick=torch   1548.6 gluon= 1552.8
+USDT:2026-09-29 09:10:22 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:22 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[331/630    388s] 16384x6400x5120 bfloat16 pick=flydsl  1392.7 gluon= 1452.5
+USDT:2026-09-29 09:10:23 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:23 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[332/630    389s] 16384x12800x5120 bfloat16 pick=torch   1406.7 gluon= 1503.3
+USDT:2026-09-29 09:10:24 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:24 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[333/630    391s] 16384x51200x5120 bfloat16 pick=flydsl  1499.7 gluon= 1547.4
+USDT:2026-09-29 09:10:26 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:26 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[334/630    392s] 32768x5120x5120 bfloat16 pick=torch   1514.7 gluon= 1541.6
+USDT:2026-09-29 09:10:26 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:26 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[335/630    393s] 32768x6400x5120 bfloat16 pick=torch   1436.7 gluon= 1499.8
+USDT:2026-09-29 09:10:27 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:27 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[336/630    394s] 32768x12800x5120 bfloat16 pick=torch   1446.9 gluon= 1536.9
+USDT:2026-09-29 09:10:29 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:29 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[337/630    395s] 32768x51200x5120 bfloat16 pick=flydsl  1500.9 gluon= 1549.2
+USDT:2026-09-29 09:10:31 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:31 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[338/630    397s] 512x1280x6144 bfloat16 pick=flydsl   403.9 gluon=   86.5 PICK-WRONG
+USDT:2026-09-29 09:10:32 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:32 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[339/630    398s] 512x1536x6144 bfloat16 pick=flydsl   432.2 gluon=  103.7 PICK-WRONG
+USDT:2026-09-29 09:10:33 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:33 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[340/630    400s] 512x2048x6144 float32  pick=asm      487.8 gluon=  133.6
+USDT:2026-09-29 09:10:35 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:35 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[341/630    401s] 512x2304x6144 bfloat16 pick=flydsl   514.4 gluon=  154.5 PICK-WRONG
+USDT:2026-09-29 09:10:36 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:36 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[342/630    402s] 512x2560x6144 bfloat16 pick=torch    486.5 gluon=  171.4
+USDT:2026-09-29 09:10:37 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:37 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[343/630    404s] 512x3072x6144 float32  pick=opus     495.8 gluon=  199.9
+USDT:2026-09-29 09:10:39 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:39 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[344/630    405s] 512x3072x6144 bfloat16 pick=flydsl   601.4 gluon=  206.2 PICK-WRONG
+USDT:2026-09-29 09:10:40 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:40 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[345/630    406s] 512x6144x6144 bfloat16 pick=flydsl   804.5 gluon=  407.3
+USDT:2026-09-29 09:10:41 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:41 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[346/630    407s] 512x9216x6144 bfloat16 pick=flydsl   896.4 gluon=  606.4
+USDT:2026-09-29 09:10:42 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:42 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[347/630    409s] 1024x2048x6144 float32  pick=opus     533.4 gluon=  264.4
+USDT:2026-09-29 09:10:44 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:44 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[348/630    410s] 1024x2304x6144 bfloat16 pick=torch    582.4 gluon=  306.1
+USDT:2026-09-29 09:10:45 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:45 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[349/630    412s] 1024x2560x6144 bfloat16 pick=torch    705.0 gluon=  340.5
+USDT:2026-09-29 09:10:46 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:46 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[350/630    413s] 1024x3072x6144 float32  pick=opus     548.4 gluon=  389.2
+USDT:2026-09-29 09:10:48 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:48 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[351/630    414s] 1024x6144x6144 bfloat16 pick=torch   1097.5 gluon=  798.0
+USDT:2026-09-29 09:10:49 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:49 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[352/630    416s] 1024x9216x6144 bfloat16 pick=torch   1329.4 gluon= 1164.5
+USDT:2026-09-29 09:10:50 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:50 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[353/630    417s] 2048x2048x6144 float32  pick=opus     896.8 gluon=  509.1
+USDT:2026-09-29 09:10:51 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:51 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[354/630    418s] 2048x2304x6144 bfloat16 pick=torch   1012.5 gluon=  606.3
+USDT:2026-09-29 09:10:53 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:53 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[355/630    419s] 2048x2560x6144 bfloat16 pick=torch   1051.7 gluon=  672.2
+USDT:2026-09-29 09:10:54 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:54 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[356/630    420s] 2048x3072x6144 float32  pick=opus     805.7 gluon=  777.6
+USDT:2026-09-29 09:10:55 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:55 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[357/630    422s] 2048x6144x6144 bfloat16 pick=torch   1325.5 gluon= 1359.8
+USDT:2026-09-29 09:10:57 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:57 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[358/630    423s] 2048x9216x6144 bfloat16 pick=torch   1455.5 gluon= 1066.4
+USDT:2026-09-29 09:10:58 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:58 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[359/630    424s] 4096x2048x6144 float32  pick=opus    1140.5 gluon= 1012.5
+USDT:2026-09-29 09:10:59 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:10:59 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[360/630    426s] 4096x2304x6144 bfloat16 pick=flydsl   783.7 gluon= 1169.8
+USDT:2026-09-29 09:11:01 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:01 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[361/630    427s] 4096x2560x6144 bfloat16 pick=flydsl   711.3 gluon= 1254.5
+USDT:2026-09-29 09:11:02 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:02 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[362/630    429s] 4096x3072x6144 float32  pick=asm     1239.5 gluon= 1326.4
+USDT:2026-09-29 09:11:04 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:04 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[363/630    430s] 4096x6144x6144 bfloat16 pick=torch   1446.3 gluon= 1380.5
+USDT:2026-09-29 09:11:05 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:05 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[364/630    431s] 4096x9216x6144 bfloat16 pick=torch   1444.6 gluon= 1344.2
+USDT:2026-09-29 09:11:06 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:06 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[365/630    433s] 8192x2048x6144 float32  pick=opus    1366.7 gluon= 1508.3
+USDT:2026-09-29 09:11:07 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:07 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[366/630    434s] 8192x2304x6144 bfloat16 pick=torch   1428.1 gluon= 1069.2
+USDT:2026-09-29 09:11:08 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:08 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[367/630    435s] 8192x2560x6144 bfloat16 pick=asm      520.5 gluon= 1184.2
+USDT:2026-09-29 09:11:10 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:10 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[368/630    436s] 8192x3072x6144 float32  pick=asm     1254.7 gluon= 1312.8
+USDT:2026-09-29 09:11:11 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:11 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[369/630    438s] 8192x6144x6144 bfloat16 pick=flydsl  1537.8 gluon= 1589.6
+USDT:2026-09-29 09:11:13 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:13 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[370/630    439s] 8192x9216x6144 bfloat16 pick=asm     1454.3 gluon= 1474.7
+USDT:2026-09-29 09:11:14 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:14 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[371/630    440s] 16384x2048x6144 float32  pick=opus    1345.5 gluon= 1424.6
+USDT:2026-09-29 09:11:15 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:15 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[372/630    441s] 16384x2304x6144 bfloat16 pick=flydsl  1053.8 gluon= 1329.0
+USDT:2026-09-29 09:11:16 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:16 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[373/630    443s] 16384x2560x6144 bfloat16 pick=flydsl  1380.4 gluon= 1415.0
+USDT:2026-09-29 09:11:18 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:18 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[374/630    444s] 16384x3072x6144 float32  pick=asm     1401.8 gluon= 1430.8
+USDT:2026-09-29 09:11:19 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:19 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[375/630    445s] 16384x6144x6144 bfloat16 pick=asm     1528.2 gluon= 1566.3
+USDT:2026-09-29 09:11:20 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:20 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[376/630    447s] 16384x9216x6144 bfloat16 pick=torch   1388.7 gluon= 1554.0
+USDT:2026-09-29 09:11:21 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:21 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[377/630    448s] 32768x2304x6144 bfloat16 pick=flydsl   660.6 gluon= 1426.2
+USDT:2026-09-29 09:11:23 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:23 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[378/630    449s] 32768x2560x6144 bfloat16 pick=flydsl  1466.3 gluon= 1520.4
+USDT:2026-09-29 09:11:24 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:24 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[379/630    451s] 32768x6144x6144 bfloat16 pick=torch   1457.1 gluon= 1568.9
+USDT:2026-09-29 09:11:26 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:26 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[380/630    452s] 32768x9216x6144 bfloat16 pick=torch   1447.4 gluon= 1558.0
+USDT:2026-09-29 09:11:27 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:27 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[381/630    454s] 512x5120x6400 bfloat16 pick=flydsl   719.4 gluon=  343.2 PICK-WRONG
+USDT:2026-09-29 09:11:28 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:28 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[382/630    455s] 1024x5120x6400 bfloat16 pick=flydsl   702.6 gluon=  670.2
+USDT:2026-09-29 09:11:30 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:30 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[383/630    456s] 2048x5120x6400 bfloat16 pick=flydsl   788.4 gluon= 1246.4
+USDT:2026-09-29 09:11:31 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:31 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[384/630    458s] 4096x5120x6400 bfloat16 pick=torch   1467.7 gluon= 1183.9
+USDT:2026-09-29 09:11:33 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:33 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[385/630    459s] 8192x5120x6400 bfloat16 pick=flydsl  1409.5 gluon= 1452.7
+USDT:2026-09-29 09:11:34 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:34 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[386/630    460s] 16384x5120x6400 bfloat16 pick=torch   1558.6 gluon= 1566.1
+USDT:2026-09-29 09:11:35 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:35 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[387/630    462s] 32768x5120x6400 bfloat16 pick=torch   1560.6 gluon= 1566.8
+USDT:2026-09-29 09:11:37 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:37 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[388/630    463s] 512x16384x6656 bfloat16 pick=flydsl   957.2 gluon= 1054.1
+USDT:2026-09-29 09:11:38 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:38 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[389/630    465s] 1024x16384x6656 bfloat16 pick=asm      443.3 gluon= 1574.0
+USDT:2026-09-29 09:11:39 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:39 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[390/630    466s] 2048x16384x6656 bfloat16 pick=asm     1478.6 gluon= 1537.6
+USDT:2026-09-29 09:11:41 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:41 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[391/630    467s] 4096x16384x6656 bfloat16 pick=torch   1570.1 gluon= 1563.9
+USDT:2026-09-29 09:11:42 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:42 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[392/630    469s] 8192x16384x6656 bfloat16 pick=asm     1536.1 gluon= 1584.2
+USDT:2026-09-29 09:11:44 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:44 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[393/630    470s] 16384x16384x6656 bfloat16 pick=asm     1546.8 gluon= 1579.9
+USDT:2026-09-29 09:11:45 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:45 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[394/630    472s] 32768x16384x6656 bfloat16 pick=asm      292.0 gluon= 1584.5
+USDT:2026-09-29 09:11:47 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:47 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[395/630    473s] 512x1024x7168 bfloat16 pick=torch    159.5 gluon=   70.0
+USDT:2026-09-29 09:11:49 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:49 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[396/630    475s] 512x1536x7168 bfloat16 pick=torch    229.9 gluon=  104.5
+USDT:2026-09-29 09:11:50 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:50 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[397/630    476s] 512x2048x7168 bfloat16 pick=torch    569.0 gluon=  139.0
+USDT:2026-09-29 09:11:52 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:52 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[398/630    478s] 512x3584x7168 bfloat16 pick=flydsl   612.6 gluon=  242.1
+USDT:2026-09-29 09:11:53 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:53 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[399/630    479s] 512x6144x7168 bfloat16 pick=flydsl   819.7 gluon=  413.0
+USDT:2026-09-29 09:11:54 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:54 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[400/630    481s] 512x8192x7168 bfloat16 pick=flydsl   868.7 gluon=  546.6
+USDT:2026-09-29 09:11:56 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:56 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[401/630    482s] 512x8448x7168 bfloat16 pick=flydsl   746.9 gluon=  565.3
+USDT:2026-09-29 09:11:57 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:57 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[402/630    483s] 512x20480x7168 bfloat16 pick=flydsl  1036.4 gluon= 1108.4
+USDT:2026-09-29 09:11:58 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:58 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[403/630    484s] 768x1024x7168 bfloat16 pick=torch    279.9 gluon=  104.9
+USDT:2026-09-29 09:11:59 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:11:59 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[404/630    486s] 768x2048x7168 bfloat16 pick=flydsl   603.7 gluon=  208.6 PICK-WRONG
+USDT:2026-09-29 09:12:00 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:00 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[405/630    486s] 1024x512x7168 bfloat16 pick=flydsl   373.1 gluon=   69.9 PICK-WRONG
+USDT:2026-09-29 09:12:01 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:01 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[406/630    487s] 1024x1024x7168 bfloat16 pick=torch    581.8 gluon=  139.3
+USDT:2026-09-29 09:12:02 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:02 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[407/630    488s] 1024x1536x7168 bfloat16 pick=flydsl   623.7 gluon=  208.8 PICK-WRONG
+USDT:2026-09-29 09:12:03 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:03 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[408/630    489s] 1024x2048x7168 bfloat16 pick=torch    588.8 gluon=  277.0
+USDT:2026-09-29 09:12:04 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:04 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[409/630    491s] 1024x3584x7168 bfloat16 pick=flydsl   869.1 gluon=  481.5
+USDT:2026-09-29 09:12:06 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:06 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[410/630    492s] 1024x6144x7168 bfloat16 pick=torch   1063.8 gluon=  811.4
+USDT:2026-09-29 09:12:07 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:07 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[411/630    493s] 1024x8192x7168 bfloat16 pick=flydsl  1099.3 gluon= 1067.2
+USDT:2026-09-29 09:12:08 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:08 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[412/630    495s] 1024x8448x7168 bfloat16 pick=torch   1300.6 gluon= 1095.2
+USDT:2026-09-29 09:12:10 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:10 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[413/630    497s] 1024x20480x7168 bfloat16 pick=flydsl   783.6 gluon= 1125.2
+USDT:2026-09-29 09:12:11 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:11 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[414/630    498s] 1280x512x7168 bfloat16 pick=torch    293.3 gluon=   87.5
+USDT:2026-09-29 09:12:13 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:13 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[415/630    499s] 1280x1024x7168 bfloat16 pick=torch    308.2 gluon=  173.7
+USDT:2026-09-29 09:12:14 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:14 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[416/630    501s] 1280x2048x7168 bfloat16 pick=torch    673.2 gluon=  345.5
+USDT:2026-09-29 09:12:15 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:15 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[417/630    501s] 1536x512x7168 bfloat16 pick=torch    279.7 gluon=  104.8
+USDT:2026-09-29 09:12:16 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:16 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[418/630    502s] 1536x1024x7168 bfloat16 pick=torch    749.0 gluon=  208.8
+USDT:2026-09-29 09:12:17 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:17 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[419/630    503s] 1536x2048x7168 bfloat16 pick=torch    961.4 gluon=  413.3
+USDT:2026-09-29 09:12:18 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:18 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[420/630    504s] 1792x512x7168 bfloat16 pick=torch    320.0 gluon=  122.1
+USDT:2026-09-29 09:12:19 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:19 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[421/630    505s] 1792x1024x7168 bfloat16 pick=flydsl   627.4 gluon=  243.1
+USDT:2026-09-29 09:12:20 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:20 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[422/630    506s] 1792x2048x7168 bfloat16 pick=flydsl   907.2 gluon=  479.9
+USDT:2026-09-29 09:12:20 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:20 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[423/630    507s] 2048x512x7168 bfloat16 pick=torch    572.1 gluon=  138.2
+USDT:2026-09-29 09:12:21 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:21 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[424/630    508s] 2048x1024x7168 bfloat16 pick=torch    596.5 gluon=  275.9
+USDT:2026-09-29 09:12:22 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:22 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[425/630    509s] 2048x2048x7168 bfloat16 pick=flydsl   983.0 gluon=  545.1
+USDT:2026-09-29 09:12:24 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:24 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[426/630    510s] 2048x3584x7168 bfloat16 pick=opus    1219.5 gluon=  939.3
+USDT:2026-09-29 09:12:25 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:25 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[427/630    511s] 2048x8192x7168 bfloat16 pick=asm     1541.2 gluon= 1578.9
+USDT:2026-09-29 09:12:27 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:27 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[428/630    513s] 2048x20480x7168 bfloat16 pick=flydsl   826.8 gluon= 1399.9
+USDT:2026-09-29 09:12:28 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:28 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[429/630    514s] 4096x512x7168 bfloat16 pick=flydsl   706.1 gluon=  276.2 PICK-WRONG
+USDT:2026-09-29 09:12:28 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:28 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[430/630    515s] 4096x1024x7168 bfloat16 pick=torch   1011.1 gluon=  546.3
+USDT:2026-09-29 09:12:29 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:29 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[431/630    515s] 4096x2048x7168 bfloat16 pick=torch   1317.6 gluon= 1072.5
+USDT:2026-09-29 09:12:30 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:30 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[432/630    517s] 4096x3584x7168 bfloat16 pick=flydsl  1403.6 gluon= 1474.6
+USDT:2026-09-29 09:12:32 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:32 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[433/630    518s] 4096x8192x7168 bfloat16 pick=flydsl  1538.8 gluon= 1596.4
+USDT:2026-09-29 09:12:33 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:33 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[434/630    519s] 4096x20480x7168 bfloat16 pick=flydsl  1527.6 gluon= 1580.0
+USDT:2026-09-29 09:12:34 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:34 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[435/630    520s] 6144x512x7168 bfloat16 pick=flydsl   797.5 gluon=  414.8
+USDT:2026-09-29 09:12:34 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:34 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[436/630    521s] 6144x1024x7168 bfloat16 pick=opus    1202.4 gluon=  816.3
+USDT:2026-09-29 09:12:36 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:36 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[437/630    522s] 6144x2048x7168 bfloat16 pick=opus    1455.9 gluon= 1362.3
+USDT:2026-09-29 09:12:37 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:37 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[438/630    523s] 8192x512x7168 bfloat16 pick=flydsl   970.0 gluon=  548.3
+USDT:2026-09-29 09:12:37 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:37 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[439/630    523s] 8192x1024x7168 bfloat16 pick=torch   1151.5 gluon= 1068.2
+USDT:2026-09-29 09:12:38 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:38 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[440/630    524s] 8192x2048x7168 bfloat16 pick=torch   1447.2 gluon= 1590.1
+USDT:2026-09-29 09:12:39 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:39 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[441/630    526s] 8192x3584x7168 bfloat16 pick=flydsl  1450.1 gluon= 1500.3
+USDT:2026-09-29 09:12:41 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:41 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[442/630    527s] 8192x8192x7168 bfloat16 pick=flydsl  1542.8 gluon= 1587.2
+USDT:2026-09-29 09:12:42 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:42 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[443/630    528s] 8192x20480x7168 bfloat16 pick=asm     1546.4 gluon= 1598.5
+USDT:2026-09-29 09:12:43 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:43 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[444/630    530s] 10240x512x7168 bfloat16 pick=torch    932.7 gluon=  683.6
+USDT:2026-09-29 09:12:44 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:44 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[445/630    530s] 10240x1024x7168 bfloat16 pick=torch   1357.3 gluon= 1247.5
+USDT:2026-09-29 09:12:45 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:45 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[446/630    531s] 10240x2048x7168 bfloat16 pick=torch   1532.4 gluon= 1179.5
+USDT:2026-09-29 09:12:46 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:46 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[447/630    533s] 10240x8448x7168 bfloat16 pick=asm     1435.0 gluon= 1435.0
+USDT:2026-09-29 09:12:48 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:48 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[448/630    534s] 10240x20480x7168 bfloat16 pick=asm     1517.1 gluon= 1490.2
+USDT:2026-09-29 09:12:48 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:48 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[449/630    535s] 12288x512x7168 bfloat16 pick=opus    1181.7 gluon=  812.4
+USDT:2026-09-29 09:12:49 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:49 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[450/630    536s] 12288x1024x7168 bfloat16 pick=opus    1477.0 gluon= 1362.1
+USDT:2026-09-29 09:12:50 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:50 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[451/630    537s] 12288x2048x7168 bfloat16 pick=opus    1470.7 gluon= 1372.8
+USDT:2026-09-29 09:12:51 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:51 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[452/630    538s] 14336x512x7168 bfloat16 pick=opus    1251.0 gluon=  946.9
+USDT:2026-09-29 09:12:52 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:52 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[453/630    538s] 14336x1024x7168 bfloat16 pick=torch   1518.9 gluon= 1444.1
+USDT:2026-09-29 09:12:53 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:53 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[454/630    539s] 14336x2048x7168 bfloat16 pick=flydsl  1428.9 gluon= 1467.7
+USDT:2026-09-29 09:12:54 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:54 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[455/630    540s] 16384x512x7168 bfloat16 pick=opus    1335.7 gluon= 1065.3
+USDT:2026-09-29 09:12:54 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:54 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[456/630    541s] 16384x1024x7168 bfloat16 pick=torch   1541.4 gluon= 1535.6
+USDT:2026-09-29 09:12:55 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:55 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[457/630    542s] 16384x2048x7168 bfloat16 pick=torch   1564.8 gluon= 1538.1
+USDT:2026-09-29 09:12:57 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:57 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[458/630    543s] 16384x3584x7168 bfloat16 pick=flydsl  1397.7 gluon= 1450.0
+USDT:2026-09-29 09:12:58 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:58 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[459/630    544s] 16384x8192x7168 bfloat16 pick=torch   1548.9 gluon= 1576.4
+USDT:2026-09-29 09:12:59 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:12:59 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[460/630    546s] 16384x20480x7168 bfloat16 pick=flydsl  1544.5 gluon= 1591.6
+USDT:2026-09-29 09:13:00 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:00 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[461/630    547s] 32768x512x7168 bfloat16 pick=torch   1401.2 gluon= 1402.6
+USDT:2026-09-29 09:13:01 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:01 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[462/630    548s] 32768x1024x7168 bfloat16 pick=torch   1480.0 gluon= 1504.0
+USDT:2026-09-29 09:13:02 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:02 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[463/630    548s] 32768x2048x7168 bfloat16 pick=torch   1526.1 gluon= 1539.6
+USDT:2026-09-29 09:13:03 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:03 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[464/630    550s] 32768x3584x7168 bfloat16 pick=torch   1402.8 gluon= 1542.9
+USDT:2026-09-29 09:13:05 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:05 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[465/630    551s] 32768x8192x7168 bfloat16 pick=torch   1479.7 gluon= 1575.1
+USDT:2026-09-29 09:13:06 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:06 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[466/630    553s] 32768x20480x7168 bfloat16 pick=asm     1560.8 gluon= 1594.7
+USDT:2026-09-29 09:13:08 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:08 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[467/630    554s] 512x1280x8192 bfloat16 pick=torch    308.3 gluon=   88.3
+USDT:2026-09-29 09:13:09 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:09 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[468/630    555s] 512x2560x8192 bfloat16 pick=torch    634.3 gluon=  175.2
+USDT:2026-09-29 09:13:10 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:10 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[469/630    557s] 512x4096x8192 bfloat16 pick=flydsl   753.7 gluon=  279.4 PICK-WRONG
+[aiter] shape is M:512, N:4608, K:8192 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:512, N:4608, K:8192 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:13:12 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:12 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[470/630    558s] 512x4608x8192 bfloat16 pick=torch    701.8 gluon=  313.6
+USDT:2026-09-29 09:13:13 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:13 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[471/630    559s] 512x7168x8192 bfloat16 pick=flydsl   923.2 gluon=  484.6
+USDT:2026-09-29 09:13:14 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:14 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[472/630    561s] 512x8192x8192 bfloat16 pick=flydsl   880.8 gluon=  554.3
+USDT:2026-09-29 09:13:16 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:16 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[473/630    562s] 512x10240x8192 bfloat16 pick=flydsl   690.3 gluon=  690.3
+USDT:2026-09-29 09:13:17 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:17 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[474/630    563s] 512x14336x8192 bfloat16 pick=torch    979.6 gluon=  953.5
+USDT:2026-09-29 09:13:19 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:19 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[475/630    565s] 512x16384x8192 bfloat16 pick=flydsl   686.0 gluon= 1016.3 PICK-WRONG
+USDT:2026-09-29 09:13:20 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:20 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[476/630    567s] 512x57344x8192 bfloat16 pick=flydsl  1301.0 gluon= 1340.0
+USDT:2026-09-29 09:13:21 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:21 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[477/630    568s] 768x4096x8192 bfloat16 pick=flydsl   840.2 gluon=  417.3
+[aiter] shape is M:1024, N:512, K:8192 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:1024, N:512, K:8192 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:13:23 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:23 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[478/630    569s] 1024x512x8192 bfloat16 pick=torch    309.6 gluon=   70.7
+USDT:2026-09-29 09:13:23 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:23 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[479/630    570s] 1024x1280x8192 bfloat16 pick=torch    636.9 gluon=  174.8
+USDT:2026-09-29 09:13:25 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:25 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[480/630    571s] 1024x2560x8192 bfloat16 pick=torch    823.7 gluon=  348.2
+USDT:2026-09-29 09:13:26 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:26 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[481/630    572s] 1024x4096x8192 bfloat16 pick=flydsl   992.0 gluon=  551.7
+[aiter] shape is M:1024, N:4608, K:8192 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:1024, N:4608, K:8192 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:13:27 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:27 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[482/630    573s] 1024x4608x8192 bfloat16 pick=torch    483.5 gluon=  619.8
+USDT:2026-09-29 09:13:28 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:28 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[483/630    574s] 1024x7168x8192 bfloat16 pick=flydsl   841.8 gluon=  956.2
+USDT:2026-09-29 09:13:29 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:29 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[484/630    575s] 1024x8192x8192 bfloat16 pick=flydsl  1157.5 gluon= 1079.7
+USDT:2026-09-29 09:13:31 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:31 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[485/630    577s] 1024x10240x8192 bfloat16 pick=flydsl   876.9 gluon= 1278.9 PICK-WRONG
+USDT:2026-09-29 09:13:32 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:32 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[486/630    578s] 1024x14336x8192 bfloat16 pick=flydsl  1417.6 gluon= 1450.5
+USDT:2026-09-29 09:13:33 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:33 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[487/630    580s] 1024x16384x8192 bfloat16 pick=torch   1497.4 gluon= 1529.1
+USDT:2026-09-29 09:13:35 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:35 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[488/630    581s] 1024x57344x8192 bfloat16 pick=asm     1377.7 gluon= 1424.5
+[aiter] shape is M:2048, N:512, K:8192 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:2048, N:512, K:8192 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:13:36 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:36 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[489/630    582s] 2048x512x8192 bfloat16 pick=torch    303.6 gluon=  140.3
+USDT:2026-09-29 09:13:37 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:37 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[490/630    583s] 2048x1280x8192 bfloat16 pick=torch    824.1 gluon=  348.6
+USDT:2026-09-29 09:13:38 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:38 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[491/630    584s] 2048x2560x8192 bfloat16 pick=torch   1091.8 gluon=  690.2
+USDT:2026-09-29 09:13:38 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:38 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[492/630    585s] 2048x4096x8192 bfloat16 pick=opus    1315.7 gluon= 1077.6
+[aiter] shape is M:2048, N:4608, K:8192 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:2048, N:4608, K:8192 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:13:40 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:40 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[493/630    586s] 2048x4608x8192 bfloat16 pick=torch   1363.6 gluon= 1192.5
+USDT:2026-09-29 09:13:40 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:40 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[494/630    587s] 2048x7168x8192 bfloat16 pick=asm     1459.4 gluon= 1486.3
+USDT:2026-09-29 09:13:41 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:41 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[495/630    588s] 2048x8192x8192 bfloat16 pick=torch   1566.2 gluon= 1596.5
+USDT:2026-09-29 09:13:43 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:43 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[496/630    590s] 2048x10240x8192 bfloat16 pick=flydsl   997.9 gluon= 1197.0
+USDT:2026-09-29 09:13:44 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:44 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[497/630    591s] 2048x14336x8192 bfloat16 pick=flydsl  1414.8 gluon= 1458.0
+USDT:2026-09-29 09:13:45 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:45 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[498/630    592s] 2048x16384x8192 bfloat16 pick=asm     1498.5 gluon= 1560.6
+USDT:2026-09-29 09:13:47 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:47 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[499/630    593s] 2048x57344x8192 bfloat16 pick=flydsl  1527.0 gluon= 1582.5
+USDT:2026-09-29 09:13:48 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:48 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[500/630    594s] 4096x512x8192 bfloat16 pick=flydsl   756.9 gluon=  280.5
+USDT:2026-09-29 09:13:49 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:49 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[501/630    595s] 4096x1280x8192 bfloat16 pick=torch   1094.8 gluon=  687.1
+USDT:2026-09-29 09:13:49 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:49 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[502/630    596s] 4096x2560x8192 bfloat16 pick=torch   1459.6 gluon= 1275.4
+USDT:2026-09-29 09:13:50 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:50 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[503/630    596s] 4096x4096x8192 bfloat16 pick=torch   1543.2 gluon= 1605.8
+[aiter] shape is M:4096, N:4608, K:8192 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:4096, N:4608, K:8192 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:13:51 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:51 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[504/630    598s] 4096x4608x8192 bfloat16 pick=torch   1456.8 gluon= 1086.7
+USDT:2026-09-29 09:13:52 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:52 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[505/630    599s] 4096x7168x8192 bfloat16 pick=flydsl  1462.6 gluon= 1506.7
+USDT:2026-09-29 09:13:53 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:53 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[506/630    599s] 4096x8192x8192 bfloat16 pick=asm     1572.2 gluon= 1606.2
+USDT:2026-09-29 09:13:54 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:54 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[507/630    601s] 4096x10240x8192 bfloat16 pick=flydsl  1401.0 gluon= 1434.2
+USDT:2026-09-29 09:13:55 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:55 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[508/630    602s] 4096x14336x8192 bfloat16 pick=flydsl  1433.5 gluon= 1475.6
+USDT:2026-09-29 09:13:57 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:57 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[509/630    603s] 4096x16384x8192 bfloat16 pick=flydsl  1533.5 gluon= 1590.7
+USDT:2026-09-29 09:13:58 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:58 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[510/630    604s] 4096x57344x8192 bfloat16 pick=flydsl  1552.2 gluon= 1601.2
+USDT:2026-09-29 09:13:59 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:59 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[511/630    605s] 8192x512x8192 bfloat16 pick=flydsl   984.3 gluon=  547.1
+USDT:2026-09-29 09:13:59 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:13:59 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[512/630    606s] 8192x1280x8192 bfloat16 pick=torch   1460.0 gluon= 1270.2
+USDT:2026-09-29 09:14:00 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:00 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[513/630    607s] 8192x2560x8192 bfloat16 pick=torch   1475.2 gluon= 1187.6
+USDT:2026-09-29 09:14:01 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:01 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[514/630    607s] 8192x4096x8192 bfloat16 pick=torch   1583.0 gluon= 1606.4
+[aiter] shape is M:8192, N:4608, K:8192 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:8192, N:4608, K:8192 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:14:02 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:02 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[515/630    609s] 8192x4608x8192 bfloat16 pick=torch   1464.8 gluon= 1361.3
+USDT:2026-09-29 09:14:03 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:03 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[516/630    609s] 8192x7168x8192 bfloat16 pick=asm     1446.2 gluon= 1479.9
+USDT:2026-09-29 09:14:04 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:04 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[517/630    610s] 8192x8192x8192 bfloat16 pick=asm     1578.2 gluon= 1604.4
+USDT:2026-09-29 09:14:05 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:05 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[518/630    612s] 8192x10240x8192 bfloat16 pick=flydsl  1553.2 gluon= 1602.8
+USDT:2026-09-29 09:14:06 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:06 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[519/630    612s] 8192x14336x8192 bfloat16 pick=flydsl  1551.7 gluon= 1606.9
+USDT:2026-09-29 09:14:07 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:07 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[520/630    614s] 8192x16384x8192 bfloat16 pick=asm     1561.9 gluon= 1594.0
+USDT:2026-09-29 09:14:09 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:09 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[521/630    615s] 8192x57344x8192 bfloat16 pick=asm     1561.4 gluon= 1612.3
+[aiter] shape is M:16384, N:512, K:8192 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+[aiter] shape is M:16384, N:512, K:8192 dtype='torch.bfloat16' otype='torch.bfloat16' bias=False, scaleAB=False, bpreshuffle=False, not found tuned config in /tmp/aiter_configs/bf16_tuned_gemm.csv, will use default config! using torch solution:0
+USDT:2026-09-29 09:14:10 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:10 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[522/630    616s] 16384x512x8192 bfloat16 pick=torch   1213.0 gluon=  995.2
+USDT:2026-09-29 09:14:10 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:10 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[523/630    617s] 16384x1280x8192 bfloat16 pick=torch   1399.7 gluon= 1180.4
+USDT:2026-09-29 09:14:11 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:11 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[524/630    618s] 16384x2560x8192 bfloat16 pick=flydsl  1354.1 gluon= 1391.5
+USDT:2026-09-29 09:14:13 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:13 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[525/630    619s] 16384x4608x8192 bfloat16 pick=flydsl  1435.9 gluon= 1475.2
+USDT:2026-09-29 09:14:14 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:14 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[526/630    620s] 16384x7168x8192 bfloat16 pick=torch   1433.7 gluon= 1585.5
+USDT:2026-09-29 09:14:14 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:14 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[527/630    621s] 16384x8192x8192 bfloat16 pick=torch   1582.8 gluon= 1597.2
+USDT:2026-09-29 09:14:16 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:16 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[528/630    622s] 16384x10240x8192 bfloat16 pick=torch   1455.6 gluon= 1599.7
+USDT:2026-09-29 09:14:17 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:17 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[529/630    623s] 16384x14336x8192 bfloat16 pick=asm     1565.1 gluon= 1607.6
+USDT:2026-09-29 09:14:18 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:18 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[530/630    624s] 16384x16384x8192 bfloat16 pick=asm     1567.4 gluon= 1606.2
+USDT:2026-09-29 09:14:20 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:20 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[531/630    626s] 16384x57344x8192 bfloat16 pick=asm     1568.4 gluon= 1607.9
+USDT:2026-09-29 09:14:21 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:21 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[532/630    627s] 32768x1280x8192 bfloat16 pick=flydsl  1321.2 gluon= 1360.9
+USDT:2026-09-29 09:14:21 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:21 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[533/630    628s] 32768x2560x8192 bfloat16 pick=torch   1561.4 gluon= 1544.2
+USDT:2026-09-29 09:14:22 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:22 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[534/630    629s] 32768x7168x8192 bfloat16 pick=torch   1484.0 gluon= 1592.5
+USDT:2026-09-29 09:14:23 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:23 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[535/630    630s] 32768x8192x8192 bfloat16 pick=flydsl  1565.3 gluon= 1602.2
+USDT:2026-09-29 09:14:25 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:25 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[536/630    631s] 32768x10240x8192 bfloat16 pick=torch   1569.4 gluon= 1602.6
+USDT:2026-09-29 09:14:25 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:25 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[537/630    632s] 32768x14336x8192 bfloat16 pick=asm     1572.2 gluon= 1606.6
+USDT:2026-09-29 09:14:27 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:27 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[538/630    633s] 32768x16384x8192 bfloat16 pick=asm     1569.2 gluon= 1607.1
+USDT:2026-09-29 09:14:29 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:29 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[539/630    636s] 32768x57344x8192 bfloat16 pick=asm     1560.9 gluon= 1593.3
+USDT:2026-09-29 09:14:31 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:31 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[540/630    637s] 512x6144x12288 bfloat16 pick=torch    944.6 gluon=  423.4
+USDT:2026-09-29 09:14:32 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:32 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[541/630    638s] 1024x6144x12288 bfloat16 pick=torch   1088.3 gluon=  835.0
+USDT:2026-09-29 09:14:33 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:33 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[542/630    640s] 2048x6144x12288 bfloat16 pick=torch   1520.2 gluon= 1413.7
+USDT:2026-09-29 09:14:35 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:35 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[543/630    641s] 4096x6144x12288 bfloat16 pick=torch   1520.8 gluon= 1378.4
+USDT:2026-09-29 09:14:36 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:36 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[544/630    642s] 8192x6144x12288 bfloat16 pick=torch   1587.0 gluon= 1590.4
+USDT:2026-09-29 09:14:37 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:37 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[545/630    644s] 16384x6144x12288 bfloat16 pick=torch   1469.2 gluon= 1575.6
+USDT:2026-09-29 09:14:39 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:39 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[546/630    645s] 32768x6144x12288 bfloat16 pick=asm     1574.2 gluon= 1576.0
+USDT:2026-09-29 09:14:40 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:40 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[547/630    647s] 512x16384x13312 bfloat16 pick=flydsl   710.6 gluon=  930.8
+USDT:2026-09-29 09:14:42 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:42 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[548/630    649s] 1024x16384x13312 bfloat16 pick=asm     1496.8 gluon= 1543.2
+USDT:2026-09-29 09:14:44 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:44 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[549/630    650s] 2048x16384x13312 bfloat16 pick=flydsl  1012.9 gluon= 1585.5
+USDT:2026-09-29 09:14:45 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:45 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[550/630    651s] 4096x16384x13312 bfloat16 pick=flydsl  1563.7 gluon= 1615.7
+USDT:2026-09-29 09:14:46 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:46 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[551/630    653s] 8192x16384x13312 bfloat16 pick=flydsl  1546.1 gluon= 1594.2
+USDT:2026-09-29 09:14:48 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:48 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[552/630    654s] 16384x16384x13312 bfloat16 pick=asm     1551.8 gluon= 1587.7
+USDT:2026-09-29 09:14:50 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:50 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[553/630    656s] 32768x16384x13312 bfloat16 pick=flydsl  1542.9 gluon= 1592.7
+USDT:2026-09-29 09:14:51 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:51 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[554/630    658s] 512x2304x16384 bfloat16 pick=torch    560.9 gluon=  162.4
+USDT:2026-09-29 09:14:53 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:53 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[555/630    659s] 512x4608x16384 bfloat16 pick=flydsl   582.9 gluon=  321.0
+USDT:2026-09-29 09:14:54 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:54 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[556/630    661s] 512x9216x16384 bfloat16 pick=flydsl   649.1 gluon=  593.3
+USDT:2026-09-29 09:14:56 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:56 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[557/630    663s] 512x13312x16384 bfloat16 pick=flydsl   541.7 gluon=  724.6 PICK-WRONG
+USDT:2026-09-29 09:14:58 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:14:58 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[558/630    665s] 512x26624x16384 bfloat16 pick=flydsl   764.8 gluon= 1292.0
+USDT:2026-09-29 09:15:00 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:00 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[559/630    666s] 512x53248x16384 bfloat16 pick=flydsl   657.1 gluon= 1320.5
+USDT:2026-09-29 09:15:01 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:01 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[560/630    667s] 1024x2304x16384 bfloat16 pick=torch    641.6 gluon=  320.4
+USDT:2026-09-29 09:15:02 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:02 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[561/630    668s] 1024x4608x16384 bfloat16 pick=flydsl   840.1 gluon=  640.1
+USDT:2026-09-29 09:15:03 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:03 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[562/630    670s] 1024x9216x16384 bfloat16 pick=flydsl   714.5 gluon= 1136.7
+USDT:2026-09-29 09:15:04 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:04 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[563/630    670s] 1024x13312x16384 bfloat16 pick=asm     1341.3 gluon= 1372.3
+USDT:2026-09-29 09:15:05 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:05 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[564/630    672s] 1024x26624x16384 bfloat16 pick=flydsl   959.8 gluon= 1387.3
+USDT:2026-09-29 09:15:07 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:07 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[565/630    673s] 1024x53248x16384 bfloat16 pick=triton   995.6 gluon= 1362.7
+USDT:2026-09-29 09:15:08 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:08 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[566/630    674s] 2048x2304x16384 bfloat16 pick=torch    505.9 gluon=  640.2
+USDT:2026-09-29 09:15:09 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:09 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[567/630    675s] 2048x4608x16384 bfloat16 pick=flydsl   730.6 gluon= 1221.5
+USDT:2026-09-29 09:15:11 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:11 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[568/630    677s] 2048x9216x16384 bfloat16 pick=flydsl   918.3 gluon= 1092.0
+USDT:2026-09-29 09:15:12 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:12 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[569/630    678s] 2048x13312x16384 bfloat16 pick=flydsl  1370.4 gluon= 1416.2
+USDT:2026-09-29 09:15:13 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:13 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[570/630    679s] 2048x26624x16384 bfloat16 pick=flydsl   915.3 gluon= 1418.5
+USDT:2026-09-29 09:15:15 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:15 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[571/630    681s] 2048x53248x16384 bfloat16 pick=flydsl   801.8 gluon= 1523.2
+USDT:2026-09-29 09:15:16 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:16 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[572/630    682s] 4096x2304x16384 bfloat16 pick=torch   1343.1 gluon= 1222.5
+USDT:2026-09-29 09:15:16 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:16 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[573/630    683s] 4096x4608x16384 bfloat16 pick=torch   1449.7 gluon= 1096.1
+USDT:2026-09-29 09:15:18 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:18 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[574/630    684s] 4096x9216x16384 bfloat16 pick=torch   1456.4 gluon= 1373.8
+USDT:2026-09-29 09:15:19 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:19 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[575/630    685s] 4096x13312x16384 bfloat16 pick=flydsl  1389.0 gluon= 1426.7
+USDT:2026-09-29 09:15:19 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:19 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[576/630    686s] 4096x26624x16384 bfloat16 pick=flydsl  1504.9 gluon= 1545.3
+USDT:2026-09-29 09:15:21 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:21 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[577/630    687s] 4096x53248x16384 bfloat16 pick=flydsl  1563.2 gluon= 1615.3
+USDT:2026-09-29 09:15:22 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:22 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[578/630    688s] 8192x2304x16384 bfloat16 pick=torch   1461.1 gluon=  968.6
+USDT:2026-09-29 09:15:23 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:23 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[579/630    689s] 8192x4608x16384 bfloat16 pick=torch   1455.0 gluon= 1327.7
+USDT:2026-09-29 09:15:24 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:24 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[580/630    690s] 8192x9216x16384 bfloat16 pick=flydsl  1426.1 gluon= 1472.1
+USDT:2026-09-29 09:15:25 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:25 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[581/630    691s] 8192x13312x16384 bfloat16 pick=flydsl  1468.9 gluon= 1503.4
+USDT:2026-09-29 09:15:26 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:26 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[582/630    692s] 8192x26624x16384 bfloat16 pick=flydsl  1541.4 gluon= 1575.6
+USDT:2026-09-29 09:15:27 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:27 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[583/630    694s] 8192x53248x16384 bfloat16 pick=flydsl  1543.9 gluon= 1568.3
+USDT:2026-09-29 09:15:28 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:28 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[584/630    695s] 16384x2304x16384 bfloat16 pick=torch   1470.6 gluon= 1312.4
+USDT:2026-09-29 09:15:29 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:29 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[585/630    695s] 16384x4608x16384 bfloat16 pick=flydsl  1437.9 gluon= 1474.5
+USDT:2026-09-29 09:15:30 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:30 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[586/630    697s] 16384x9216x16384 bfloat16 pick=flydsl  1533.7 gluon= 1578.7
+USDT:2026-09-29 09:15:31 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:31 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[587/630    698s] 16384x13312x16384 bfloat16 pick=asm     1541.5 gluon= 1582.6
+USDT:2026-09-29 09:15:32 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:32 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[588/630    699s] 16384x26624x16384 bfloat16 pick=flydsl  1551.9 gluon= 1583.5
+USDT:2026-09-29 09:15:34 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:34 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[589/630    701s] 16384x53248x16384 bfloat16 pick=asm     1529.5 gluon= 1576.8
+USDT:2026-09-29 09:15:35 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:35 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[590/630    702s] 32768x2304x16384 bfloat16 pick=flydsl  1424.5 gluon= 1458.0
+USDT:2026-09-29 09:15:36 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:36 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[591/630    703s] 32768x4608x16384 bfloat16 pick=torch   1498.7 gluon= 1568.0
+USDT:2026-09-29 09:15:38 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:38 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[592/630    704s] 32768x9216x16384 bfloat16 pick=asm     1508.1 gluon= 1579.1
+USDT:2026-09-29 09:15:39 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:39 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[593/630    705s] 32768x13312x16384 bfloat16 pick=asm     1539.6 gluon= 1570.6
+USDT:2026-09-29 09:15:40 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:40 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[594/630    707s] 32768x26624x16384 bfloat16 pick=flydsl  1550.2 gluon= 1578.5
+USDT:2026-09-29 09:15:42 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:42 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[595/630    710s] 32768x53248x16384 bfloat16 pick=flydsl  1544.8 gluon= 1571.3
+USDT:2026-09-29 09:15:46 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:46 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[596/630    712s] 512x6144x18432 bfloat16 pick=flydsl   925.8 gluon=  425.8 PICK-WRONG
+USDT:2026-09-29 09:15:47 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:47 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[597/630    713s] 1024x6144x18432 bfloat16 pick=torch   1293.9 gluon=  783.1
+USDT:2026-09-29 09:15:48 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:48 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[598/630    715s] 2048x6144x18432 bfloat16 pick=torch   1403.0 gluon= 1352.8
+USDT:2026-09-29 09:15:50 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:50 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[599/630    716s] 4096x6144x18432 bfloat16 pick=torch   1508.1 gluon= 1387.2
+USDT:2026-09-29 09:15:51 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:51 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[600/630    718s] 8192x6144x18432 bfloat16 pick=torch   1545.5 gluon= 1592.5
+USDT:2026-09-29 09:15:53 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:53 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[601/630    719s] 16384x6144x18432 bfloat16 pick=asm     1557.4 gluon= 1596.0
+USDT:2026-09-29 09:15:54 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:54 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[602/630    720s] 32768x6144x18432 bfloat16 pick=asm     1549.3 gluon= 1599.6
+USDT:2026-09-29 09:15:56 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:56 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[603/630    722s] 512x5120x25600 bfloat16 pick=flydsl   453.1 gluon=  334.4 PICK-WRONG
+USDT:2026-09-29 09:15:57 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:57 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[604/630    723s] 1024x5120x25600 bfloat16 pick=torch   1121.0 gluon=  653.9
+USDT:2026-09-29 09:15:58 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:15:58 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[605/630    725s] 2048x5120x25600 bfloat16 pick=torch   1363.1 gluon= 1181.1
+USDT:2026-09-29 09:16:00 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:16:00 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[606/630    726s] 4096x5120x25600 bfloat16 pick=torch   1538.1 gluon= 1159.3
+USDT:2026-09-29 09:16:01 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:16:01 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[607/630    728s] 8192x5120x25600 bfloat16 pick=asm     1396.6 gluon= 1423.2
+USDT:2026-09-29 09:16:03 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:16:03 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[608/630    729s] 16384x5120x25600 bfloat16 pick=torch   1511.1 gluon= 1586.7
+USDT:2026-09-29 09:16:04 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:16:04 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[609/630    730s] 32768x5120x25600 bfloat16 pick=torch   1502.2 gluon= 1600.1
+USDT:2026-09-29 09:16:06 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:16:06 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[610/630    732s] 512x16384x26624 bfloat16 pick=flydsl   651.8 gluon=  937.7 PICK-WRONG
+USDT:2026-09-29 09:16:07 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:16:07 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[611/630    734s] 1024x16384x26624 bfloat16 pick=flydsl   781.3 gluon= 1564.6
+USDT:2026-09-29 09:16:09 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:16:09 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[612/630    735s] 2048x16384x26624 bfloat16 pick=flydsl   815.5 gluon= 1599.2 PICK-WRONG
+USDT:2026-09-29 09:16:10 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:16:10 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[613/630    737s] 4096x16384x26624 bfloat16 pick=flydsl  1582.1 gluon= 1620.6
+USDT:2026-09-29 09:16:12 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:16:12 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[614/630    739s] 8192x16384x26624 bfloat16 pick=asm      238.3 gluon= 1607.0
+USDT:2026-09-29 09:16:14 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:16:14 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[615/630    740s] 16384x16384x26624 bfloat16 pick=asm     1581.0 gluon= 1612.3
+USDT:2026-09-29 09:16:15 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:16:15 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[616/630    742s] 32768x16384x26624 bfloat16 pick=asm     1578.0 gluon= 1614.3
+USDT:2026-09-29 09:16:18 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:16:18 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[617/630    744s] 512x8192x28672 bfloat16 pick=flydsl   798.0 gluon=  480.3 PICK-WRONG
+USDT:2026-09-29 09:16:19 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:16:19 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[618/630    746s] 1024x8192x28672 bfloat16 pick=triton   697.7 gluon=  954.4
+USDT:2026-09-29 09:16:21 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:16:21 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[619/630    747s] 2048x8192x28672 bfloat16 pick=flydsl  1037.0 gluon= 1600.6
+USDT:2026-09-29 09:16:22 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:16:22 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[620/630    749s] 4096x8192x28672 bfloat16 pick=flydsl  1572.9 gluon= 1615.7
+USDT:2026-09-29 09:16:24 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:16:24 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[621/630    750s] 8192x8192x28672 bfloat16 pick=asm     1576.7 gluon= 1611.0
+USDT:2026-09-29 09:16:25 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:16:25 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[622/630    752s] 16384x8192x28672 bfloat16 pick=asm     1578.6 gluon= 1613.1
+USDT:2026-09-29 09:16:27 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:16:27 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[623/630    753s] 32768x8192x28672 bfloat16 pick=asm     1582.9 gluon= 1618.1
+USDT:2026-09-29 09:16:28 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:16:28 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[624/630    755s] 512x7168x35840 bfloat16 pick=flydsl   821.8 gluon=  439.6 PICK-WRONG
+USDT:2026-09-29 09:16:30 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:16:30 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[625/630    756s] 1024x7168x35840 bfloat16 pick=flydsl   575.9 gluon=  870.4
+USDT:2026-09-29 09:16:31 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:16:31 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[626/630    758s] 2048x7168x35840 bfloat16 pick=asm     1459.4 gluon= 1498.4
+USDT:2026-09-29 09:16:33 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:16:33 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[627/630    759s] 4096x7168x35840 bfloat16 pick=flydsl  1472.3 gluon= 1509.3
+USDT:2026-09-29 09:16:34 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:16:34 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[628/630    760s] 8192x7168x35840 bfloat16 pick=asm     1427.2 gluon= 1477.7
+USDT:2026-09-29 09:16:35 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:16:35 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[629/630    762s] 16384x7168x35840 bfloat16 pick=torch   1460.8 gluon= 1608.6
+USDT:2026-09-29 09:16:37 890574:890574 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-09-29 09:16:37 890574:890574 SyncActivityProfilerHandler.cpp:46] profiler_stop
+[630/630    763s] 32768x7168x35840 bfloat16 pick=flydsl  1562.9 gluon= 1610.1
+DONE

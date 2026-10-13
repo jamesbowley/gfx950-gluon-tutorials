@@ -1,0 +1,6 @@
+[v1_sliceMN] M=4096 N=4096 K=32768: Triton and Torch match
+
+a4w4_kernel (v1_sliceMN):
+matmul-performance:
+        M       N        K  mxfp4 (TFLOPS)
+0  4096.0  4096.0  32768.0     4681.143361

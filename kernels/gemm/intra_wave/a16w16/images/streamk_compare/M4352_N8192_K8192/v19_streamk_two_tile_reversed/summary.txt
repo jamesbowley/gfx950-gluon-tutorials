@@ -1,0 +1,158 @@
+a16w16 v19_streamk_two_tile_reversed: two-tile, end-to-end split, reversed order. 4352x8192x8192 bf16: 544 tiles = 2 waves + S = 32; 1 data-parallel tile(s) per program, 288 stream-K tiles.
+ATT, 80 traced workgroups from 3 launches; one k-step = 2145 cycles (the last data-parallel tile's median).
+
+64-k-step partial + 80-k-step owner: 13 workgroups
+  DP -> SK MFMA idle: median 4.1 k-steps (min 3.9, max 4.5)
+  segment 0 (64 k-steps, partial): MAC 1.03 DP k-steps per k-step
+    ending: drain 0.4 [0.4-0.4], partial store 4.1 [3.6-5.3], store drain 0.9 [0.7-2.5], exit 0.4 [0.4-0.4]; total 6.0 [5.0-7.1] k-steps (median [min-max])
+    flag / barrier polls per workgroup: median 0; partial stores 256, partial reads 0, C stores 0 (all four waves)
+  segment 1 (80 k-steps, owner): MAC 1.01 DP k-steps per k-step
+    ending: drain 0.5 [0.4-0.5], spin on flags 0.4 [0.3-0.6], collect 15.0 [13.4-16.4], exit 0.3 [0.3-0.4]; total 16.2 [14.7-17.8] k-steps (median [min-max])
+    flag / barrier polls per workgroup: median 2; partial stores 0, partial reads 256, C stores 128 (all four waves)
+
+48-k-step partial + 96-k-step owner: 12 workgroups
+  DP -> SK MFMA idle: median 4.0 k-steps (min 4.0, max 4.7)
+  segment 0 (48 k-steps, partial): MAC 1.02 DP k-steps per k-step
+    ending: drain 0.4 [0.4-0.5], partial store 4.2 [3.9-5.6], store drain 1.3 [0.7-1.6], exit 0.4 [0.4-0.4]; total 6.2 [5.5-7.9] k-steps (median [min-max])
+    flag / barrier polls per workgroup: median 0; partial stores 256, partial reads 0, C stores 0 (all four waves)
+  segment 1 (96 k-steps, owner): MAC 1.01 DP k-steps per k-step
+    ending: drain 0.5 [0.4-0.7], spin on flags 0.3 [0.3-0.6], collect 15.2 [14.0-16.8], exit 0.4 [0.3-0.4]; total 16.5 [15.3-18.1] k-steps (median [min-max])
+    flag / barrier polls per workgroup: median 2; partial stores 0, partial reads 256, C stores 128 (all four waves)
+
+112-k-step partial + 32-k-step owner: 11 workgroups
+  DP -> SK MFMA idle: median 4.0 k-steps (min 3.9, max 4.3)
+  segment 0 (112 k-steps, partial): MAC 1.04 DP k-steps per k-step
+    ending: drain 0.4 [0.4-0.4], partial store 4.4 [4.1-4.9], store drain 1.1 [0.8-1.6], exit 0.4 [0.4-0.4]; total 6.2 [5.8-7.0] k-steps (median [min-max])
+    flag / barrier polls per workgroup: median 0; partial stores 256, partial reads 0, C stores 0 (all four waves)
+  segment 1 (32 k-steps, owner): MAC 0.99 DP k-steps per k-step
+    ending: drain 0.5 [0.4-0.5], spin on flags 0.4 [0.3-0.5], collect 14.7 [13.4-15.6], exit 0.3 [0.3-0.4]; total 15.7 [14.5-16.8] k-steps (median [min-max])
+    flag / barrier polls per workgroup: median 2; partial stores 0, partial reads 256, C stores 128 (all four waves)
+
+128-k-step whole + 16-k-step owner: 11 workgroups
+  DP -> SK MFMA idle: median 4.1 k-steps (min 3.9, max 4.3)
+  segment 0 (128 k-steps, whole): MAC 1.04 DP k-steps per k-step
+    ending: drain 3.8 [3.5-3.9], C store 4.4 [4.3-4.7], exit 0.3 [0.3-0.4]; total 8.5 [8.2-8.7] k-steps (median [min-max])
+    flag / barrier polls per workgroup: median 0; partial stores 0, partial reads 0, C stores 128 (all four waves)
+  segment 1 (16 k-steps, owner): MAC 0.99 DP k-steps per k-step
+    ending: drain 0.5 [0.4-0.5], spin on flags 0.3 [0.3-0.4], collect 11.2 [10.3-12.8], exit 0.3 [0.3-0.4]; total 12.4 [11.3-13.9] k-steps (median [min-max])
+    flag / barrier polls per workgroup: median 2; partial stores 0, partial reads 256, C stores 128 (all four waves)
+
+16-k-step partial + 128-k-step whole: 9 workgroups
+  DP -> SK MFMA idle: median 4.0 k-steps (min 3.9, max 4.4)
+  segment 0 (16 k-steps, partial): MAC 1.01 DP k-steps per k-step
+    ending: drain 0.4 [0.4-0.4], partial store 4.1 [3.6-4.7], store drain 1.2 [0.9-1.7], exit 0.4 [0.4-0.4]; total 6.0 [5.2-6.7] k-steps (median [min-max])
+    flag / barrier polls per workgroup: median 0; partial stores 256, partial reads 0, C stores 0 (all four waves)
+  segment 1 (128 k-steps, whole): MAC 1.02 DP k-steps per k-step
+    ending: drain 4.4 [3.9-5.4], C store 4.0 [3.9-4.1], exit 0.2 [0.1-0.2]; total 8.7 [8.0-9.6] k-steps (median [min-max])
+    flag / barrier polls per workgroup: median 0; partial stores 0, partial reads 0, C stores 128 (all four waves)
+
+32-k-step partial + 112-k-step owner: 8 workgroups
+  DP -> SK MFMA idle: median 3.9 k-steps (min 3.8, max 4.1)
+  segment 0 (32 k-steps, partial): MAC 1.02 DP k-steps per k-step
+    ending: drain 0.4 [0.4-0.4], partial store 4.0 [3.8-4.8], store drain 1.3 [1.0-1.5], exit 0.4 [0.4-0.4]; total 6.1 [5.6-7.0] k-steps (median [min-max])
+    flag / barrier polls per workgroup: median 0; partial stores 256, partial reads 0, C stores 0 (all four waves)
+  segment 1 (112 k-steps, owner): MAC 1.02 DP k-steps per k-step
+    ending: drain 0.5 [0.4-0.5], spin on flags 0.4 [0.3-0.6], collect 15.3 [14.0-16.5], exit 0.3 [0.3-0.4]; total 16.5 [15.1-17.6] k-steps (median [min-max])
+    flag / barrier polls per workgroup: median 2; partial stores 0, partial reads 256, C stores 128 (all four waves)
+
+80-k-step partial + 64-k-step owner: 8 workgroups
+  DP -> SK MFMA idle: median 4.0 k-steps (min 3.9, max 4.3)
+  segment 0 (80 k-steps, partial): MAC 1.03 DP k-steps per k-step
+    ending: drain 0.4 [0.4-0.4], partial store 4.2 [3.6-4.6], store drain 1.0 [0.8-1.2], exit 0.4 [0.4-0.4]; total 5.9 [5.3-6.3] k-steps (median [min-max])
+    flag / barrier polls per workgroup: median 0; partial stores 256, partial reads 0, C stores 0 (all four waves)
+  segment 1 (64 k-steps, owner): MAC 1.00 DP k-steps per k-step
+    ending: drain 0.5 [0.4-0.5], spin on flags 0.3 [0.3-0.4], collect 14.8 [14.2-16.8], exit 0.3 [0.3-0.4]; total 15.9 [15.2-18.0] k-steps (median [min-max])
+    flag / barrier polls per workgroup: median 2; partial stores 0, partial reads 256, C stores 128 (all four waves)
+
+96-k-step partial + 48-k-step owner: 8 workgroups
+  DP -> SK MFMA idle: median 4.1 k-steps (min 3.8, max 4.3)
+  segment 0 (96 k-steps, partial): MAC 1.03 DP k-steps per k-step
+    ending: drain 0.4 [0.4-0.4], partial store 4.3 [4.1-5.0], store drain 1.0 [0.9-1.5], exit 0.4 [0.4-0.4]; total 6.0 [5.7-6.6] k-steps (median [min-max])
+    flag / barrier polls per workgroup: median 0; partial stores 256, partial reads 0, C stores 0 (all four waves)
+  segment 1 (48 k-steps, owner): MAC 1.00 DP k-steps per k-step
+    ending: drain 0.5 [0.4-0.5], spin on flags 0.4 [0.3-0.5], collect 13.9 [12.6-16.4], exit 0.3 [0.3-0.4]; total 15.1 [13.8-17.7] k-steps (median [min-max])
+    flag / barrier polls per workgroup: median 2; partial stores 0, partial reads 256, C stores 128 (all four waves)
+
+stream-K phase per workgroup (last DP MFMA to wave end): median 174.4, max 179.7 k-steps
+
+workgroups:
+  c1 se1 cu1 xcd0  32P+112O  spid 1,9,17,25: DP end 134.6, end 307.2 k-steps; [32 partial: MAC 32.5, drain 0.4, partial store 3.9, store drain 1.0, exit 0.4] [112 owner: MAC 113.8, drain 0.4, spin on flags 0.3, collect 14.0, exit 0.3]
+  c1 se15 cu1 xcd3  32P+112O  spid 97,105,113,121: DP end 132.5, end 304.1 k-steps; [32 partial: MAC 32.3, drain 0.4, partial store 4.0, store drain 1.4, exit 0.4] [112 owner: MAC 111.3, drain 0.5, spin on flags 0.4, collect 15.2, exit 0.3]
+  c1 se19 cu1 xcd4  32P+112O  spid 129,137,145,153: DP end 134.2, end 310.4 k-steps; [32 partial: MAC 34.5, drain 0.4, partial store 4.8, store drain 1.0, exit 0.4] [112 owner: MAC 114.4, drain 0.5, spin on flags 0.4, collect 14.0, exit 0.4]
+  c1 se23 cu1 xcd5  32P+112O  spid 161,169,177,185: DP end 132.5, end 307.0 k-steps; [32 partial: MAC 33.2, drain 0.4, partial store 3.9, store drain 1.2, exit 0.4] [112 owner: MAC 113.2, drain 0.4, spin on flags 0.4, collect 15.2, exit 0.4]
+  c2 se1 cu2 xcd0  32P+112O  spid 1,9,17,25: DP end 133.7, end 312.5 k-steps; [32 partial: MAC 34.7, drain 0.4, partial store 4.1, store drain 1.4, exit 0.4] [112 owner: MAC 115.2, drain 0.5, spin on flags 0.6, collect 15.6, exit 0.3]
+  c2 se7 cu2 xcd1  32P+112O  spid 33,41,49,57: DP end 131.5, end 305.8 k-steps; [32 partial: MAC 32.5, drain 0.4, partial store 3.9, store drain 1.4, exit 0.4] [112 owner: MAC 113.7, drain 0.4, spin on flags 0.3, collect 15.5, exit 0.3]
+  c2 se23 cu2 xcd5  32P+112O  spid 161,169,177,185: DP end 132.1, end 305.4 k-steps; [32 partial: MAC 32.2, drain 0.4, partial store 3.8, store drain 1.1, exit 0.4] [112 owner: MAC 112.2, drain 0.4, spin on flags 0.4, collect 16.4, exit 0.4]
+  c2 se31 cu2 xcd7  32P+112O  spid 225,233,241,249: DP end 133.1, end 311.1 k-steps; [32 partial: MAC 32.0, drain 0.4, partial store 4.8, store drain 1.5, exit 0.4] [112 owner: MAC 115.3, drain 0.5, spin on flags 0.3, collect 16.5, exit 0.4]
+  c0 se10 cu0 xcd2  48P+96O  spid 66,74,82,90: DP end 132.3, end 306.2 k-steps; [48 partial: MAC 49.6, drain 0.4, partial store 4.0, store drain 1.4, exit 0.4] [96 owner: MAC 97.2, drain 0.4, spin on flags 0.3, collect 14.3, exit 0.3]
+  c0 se14 cu0 xcd3  48P+96O  spid 98,106,114,122: DP end 131.3, end 303.2 k-steps; [48 partial: MAC 48.2, drain 0.4, partial store 4.0, store drain 1.3, exit 0.4] [96 owner: MAC 96.1, drain 0.5, spin on flags 0.3, collect 14.9, exit 0.3]
+  c0 se22 cu0 xcd5  48P+96O  spid 162,170,178,186: DP end 130.5, end 303.8 k-steps; [48 partial: MAC 49.1, drain 0.4, partial store 4.0, store drain 0.7, exit 0.4] [96 owner: MAC 96.2, drain 0.7, spin on flags 0.6, collect 15.3, exit 0.4]
+  c0 se26 cu0 xcd6  48P+96O  spid 194,202,210,218: DP end 129.9, end 303.7 k-steps; [48 partial: MAC 49.4, drain 0.4, partial store 4.7, store drain 0.8, exit 0.4] [96 owner: MAC 96.7, drain 0.4, spin on flags 0.3, collect 14.6, exit 0.4]
+  c0 se30 cu0 xcd7  48P+96O  spid 226,234,242,250: DP end 130.1, end 308.2 k-steps; [48 partial: MAC 51.7, drain 0.4, partial store 4.3, store drain 1.2, exit 0.4] [96 owner: MAC 98.1, drain 0.7, spin on flags 0.3, collect 15.0, exit 0.3]
+  c1 se14 cu1 xcd3  48P+96O  spid 98,106,114,122: DP end 133.6, end 306.2 k-steps; [48 partial: MAC 48.2, drain 0.4, partial store 4.3, store drain 1.3, exit 0.4] [96 owner: MAC 95.6, drain 0.4, spin on flags 0.3, collect 15.7, exit 0.3]
+  c1 se18 cu1 xcd4  48P+96O  spid 130,138,146,154: DP end 134.7, end 310.6 k-steps; [48 partial: MAC 50.3, drain 0.4, partial store 4.5, store drain 1.0, exit 0.4] [96 owner: MAC 97.8, drain 0.4, spin on flags 0.3, collect 14.3, exit 0.4]
+  c1 se30 cu1 xcd7  48P+96O  spid 226,234,242,250: DP end 131.2, end 306.2 k-steps; [48 partial: MAC 48.7, drain 0.4, partial store 4.5, store drain 1.3, exit 0.4] [96 owner: MAC 98.4, drain 0.5, spin on flags 0.4, collect 14.0, exit 0.4]
+  c2 se3 cu2 xcd0  48P+96O  spid 2,10,18,26: DP end 130.3, end 308.9 k-steps; [48 partial: MAC 51.7, drain 0.4, partial store 4.2, store drain 1.6, exit 0.4] [96 owner: MAC 97.6, drain 0.4, spin on flags 0.3, collect 15.9, exit 0.3]
+  c2 se6 cu2 xcd1  48P+96O  spid 34,42,50,58: DP end 134.5, end 308.5 k-steps; [48 partial: MAC 47.9, drain 0.4, partial store 3.9, store drain 1.4, exit 0.4] [96 owner: MAC 96.0, drain 0.4, spin on flags 0.4, collect 16.3, exit 0.4]
+  c2 se18 cu2 xcd4  48P+96O  spid 130,138,146,154: DP end 133.5, end 310.0 k-steps; [48 partial: MAC 49.0, drain 0.4, partial store 4.0, store drain 1.1, exit 0.4] [96 owner: MAC 97.9, drain 0.5, spin on flags 0.4, collect 15.4, exit 0.4]
+  c2 se30 cu2 xcd7  48P+96O  spid 226,234,242,250: DP end 131.1, end 309.0 k-steps; [48 partial: MAC 48.0, drain 0.5, partial store 5.6, store drain 1.5, exit 0.4] [96 owner: MAC 97.3, drain 0.5, spin on flags 0.4, collect 16.8, exit 0.4]
+  c0 se2 cu0 xcd0  64P+80O  spid 3,11,19,27: DP end 130.7, end 303.1 k-steps; [64 partial: MAC 64.2, drain 0.4, partial store 4.3, store drain 1.3, exit 0.4] [80 owner: MAC 80.0, drain 0.4, spin on flags 0.4, collect 14.9, exit 0.3]
+  c0 se4 cu0 xcd1  64P+80O  spid 35,43,51,59: DP end 133.1, end 303.8 k-steps; [64 partial: MAC 63.1, drain 0.4, partial store 3.6, store drain 0.7, exit 0.4] [80 owner: MAC 79.7, drain 0.5, spin on flags 0.3, collect 15.8, exit 0.3]
+  c0 se8 cu0 xcd2  64P+80O  spid 67,75,83,91: DP end 133.2, end 309.9 k-steps; [64 partial: MAC 68.7, drain 0.4, partial store 5.1, store drain 0.9, exit 0.4] [80 owner: MAC 80.7, drain 0.5, spin on flags 0.3, collect 14.1, exit 0.3]
+  c0 se20 cu0 xcd5  64P+80O  spid 163,171,179,187: DP end 130.9, end 303.5 k-steps; [64 partial: MAC 63.7, drain 0.4, partial store 4.1, store drain 1.0, exit 0.4] [80 owner: MAC 80.6, drain 0.5, spin on flags 0.4, collect 15.0, exit 0.4]
+  c0 se24 cu0 xcd6  64P+80O  spid 195,203,211,219: DP end 130.6, end 306.0 k-steps; [64 partial: MAC 68.3, drain 0.4, partial store 4.5, store drain 0.8, exit 0.4] [80 owner: MAC 80.9, drain 0.5, spin on flags 0.4, collect 13.4, exit 0.4]
+  c1 se28 cu1 xcd7  64P+80O  spid 227,235,243,251: DP end 132.0, end 305.3 k-steps; [64 partial: MAC 65.3, drain 0.4, partial store 4.1, store drain 0.9, exit 0.4] [80 owner: MAC 81.2, drain 0.4, spin on flags 0.3, collect 13.7, exit 0.4]
+  c2 se2 cu2 xcd0  64P+80O  spid 3,11,19,27: DP end 133.7, end 311.8 k-steps; [64 partial: MAC 68.0, drain 0.4, partial store 4.0, store drain 2.3, exit 0.4] [80 owner: MAC 81.3, drain 0.4, spin on flags 0.6, collect 14.9, exit 0.3]
+  c2 se4 cu2 xcd1  64P+80O  spid 35,43,51,59: DP end 134.6, end 307.0 k-steps; [64 partial: MAC 64.5, drain 0.4, partial store 3.7, store drain 0.8, exit 0.4] [80 owner: MAC 80.0, drain 0.5, spin on flags 0.4, collect 14.8, exit 0.3]
+  c2 se8 cu2 xcd2  64P+80O  spid 67,75,83,91: DP end 135.2, end 314.0 k-steps; [64 partial: MAC 68.2, drain 0.4, partial store 3.9, store drain 2.5, exit 0.4] [80 owner: MAC 81.0, drain 0.4, spin on flags 0.4, collect 15.5, exit 0.3]
+  c2 se12 cu2 xcd3  64P+80O  spid 99,107,115,123: DP end 134.6, end 310.0 k-steps; [64 partial: MAC 65.9, drain 0.4, partial store 3.9, store drain 0.9, exit 0.4] [80 owner: MAC 81.5, drain 0.5, spin on flags 0.4, collect 15.1, exit 0.3]
+  c2 se16 cu2 xcd4  64P+80O  spid 131,139,147,155: DP end 134.2, end 312.4 k-steps; [64 partial: MAC 66.6, drain 0.4, partial store 5.3, store drain 0.9, exit 0.4] [80 owner: MAC 80.7, drain 0.4, spin on flags 0.5, collect 16.4, exit 0.4]
+  c2 se20 cu2 xcd5  64P+80O  spid 163,171,179,187: DP end 133.1, end 305.7 k-steps; [64 partial: MAC 63.8, drain 0.4, partial store 3.7, store drain 0.8, exit 0.4] [80 owner: MAC 80.1, drain 0.5, spin on flags 0.3, collect 15.5, exit 0.3]
+  c2 se28 cu2 xcd7  64P+80O  spid 227,235,243,251: DP end 132.5, end 307.5 k-steps; [64 partial: MAC 65.7, drain 0.4, partial store 4.2, store drain 1.2, exit 0.4] [80 owner: MAC 80.3, drain 0.4, spin on flags 0.3, collect 15.9, exit 0.4]
+  c1 se0 cu1 xcd0  80P+64O  spid 4,12,20,28: DP end 134.1, end 309.4 k-steps; [80 partial: MAC 82.7, drain 0.4, partial store 4.6, store drain 0.9, exit 0.4] [64 owner: MAC 65.0, drain 0.5, spin on flags 0.3, collect 14.2, exit 0.3]
+  c1 se5 cu1 xcd1  80P+64O  spid 36,44,52,60: DP end 134.4, end 303.9 k-steps; [80 partial: MAC 79.8, drain 0.4, partial store 3.6, store drain 0.9, exit 0.4] [64 owner: MAC 63.1, drain 0.4, spin on flags 0.4, collect 14.3, exit 0.3]
+  c1 se9 cu1 xcd2  80P+64O  spid 68,76,84,92: DP end 134.8, end 310.1 k-steps; [80 partial: MAC 82.3, drain 0.4, partial store 4.2, store drain 1.2, exit 0.4] [64 owner: MAC 64.6, drain 0.5, spin on flags 0.3, collect 14.8, exit 0.3]
+  c1 se13 cu1 xcd3  80P+64O  spid 100,108,116,124: DP end 134.0, end 304.9 k-steps; [80 partial: MAC 79.8, drain 0.4, partial store 3.7, store drain 0.8, exit 0.4] [64 owner: MAC 63.5, drain 0.5, spin on flags 0.4, collect 14.8, exit 0.3]
+  c1 se21 cu1 xcd5  80P+64O  spid 164,172,180,188: DP end 134.2, end 309.4 k-steps; [80 partial: MAC 82.8, drain 0.4, partial store 4.4, store drain 1.2, exit 0.4] [64 owner: MAC 64.4, drain 0.5, spin on flags 0.3, collect 14.7, exit 0.4]
+  c1 se29 cu1 xcd7  80P+64O  spid 228,236,244,252: DP end 131.6, end 307.9 k-steps; [80 partial: MAC 82.1, drain 0.4, partial store 4.1, store drain 0.9, exit 0.4] [64 owner: MAC 65.0, drain 0.5, spin on flags 0.3, collect 15.6, exit 0.4]
+  c2 se21 cu2 xcd5  80P+64O  spid 164,172,180,188: DP end 133.3, end 307.4 k-steps; [80 partial: MAC 80.1, drain 0.4, partial store 4.0, store drain 1.0, exit 0.4] [64 owner: MAC 64.1, drain 0.5, spin on flags 0.4, collect 16.8, exit 0.4]
+  c2 se25 cu2 xcd6  80P+64O  spid 196,204,212,220: DP end 133.6, end 310.4 k-steps; [80 partial: MAC 84.1, drain 0.4, partial store 4.3, store drain 1.0, exit 0.4] [64 owner: MAC 64.1, drain 0.4, spin on flags 0.3, collect 15.1, exit 0.4]
+  c1 se7 cu1 xcd1  96P+48O  spid 37,45,53,61: DP end 131.4, end 301.6 k-steps; [96 partial: MAC 96.1, drain 0.4, partial store 4.1, store drain 0.9, exit 0.4] [48 owner: MAC 47.5, drain 0.4, spin on flags 0.3, collect 14.2, exit 0.3]
+  c1 se11 cu1 xcd2  96P+48O  spid 69,77,85,93: DP end 132.8, end 305.9 k-steps; [96 partial: MAC 98.4, drain 0.4, partial store 4.1, store drain 1.1, exit 0.4] [48 owner: MAC 48.0, drain 0.5, spin on flags 0.4, collect 13.6, exit 0.3]
+  c1 se27 cu1 xcd6  96P+48O  spid 197,205,213,221: DP end 131.6, end 303.6 k-steps; [96 partial: MAC 97.3, drain 0.4, partial store 5.0, store drain 0.9, exit 0.4] [48 owner: MAC 48.1, drain 0.5, spin on flags 0.4, collect 13.2, exit 0.4]
+  c1 se31 cu1 xcd7  96P+48O  spid 229,237,245,253: DP end 131.2, end 305.7 k-steps; [96 partial: MAC 99.3, drain 0.4, partial store 4.4, store drain 1.5, exit 0.4] [48 owner: MAC 48.0, drain 0.5, spin on flags 0.5, collect 13.5, exit 0.4]
+  c2 se11 cu2 xcd2  96P+48O  spid 69,77,85,93: DP end 132.7, end 308.9 k-steps; [96 partial: MAC 101.7, drain 0.4, partial store 4.4, store drain 1.4, exit 0.4] [48 owner: MAC 48.4, drain 0.5, spin on flags 0.5, collect 12.6, exit 0.3]
+  c2 se15 cu2 xcd3  96P+48O  spid 101,109,117,125: DP end 131.8, end 308.8 k-steps; [96 partial: MAC 99.8, drain 0.4, partial store 4.4, store drain 1.0, exit 0.4] [48 owner: MAC 48.2, drain 0.5, spin on flags 0.3, collect 15.6, exit 0.3]
+  c2 se19 cu2 xcd4  96P+48O  spid 133,141,149,157: DP end 132.3, end 309.0 k-steps; [96 partial: MAC 98.8, drain 0.4, partial store 4.2, store drain 1.0, exit 0.4] [48 owner: MAC 48.0, drain 0.5, spin on flags 0.4, collect 16.2, exit 0.4]
+  c2 se27 cu2 xcd6  96P+48O  spid 197,205,213,221: DP end 132.3, end 311.5 k-steps; [96 partial: MAC 101.6, drain 0.4, partial store 4.3, store drain 0.9, exit 0.4] [48 owner: MAC 47.8, drain 0.4, spin on flags 0.5, collect 16.4, exit 0.4]
+  c0 se6 cu0 xcd1  112P+32O  spid 38,46,54,62: DP end 131.6, end 302.4 k-steps; [112 partial: MAC 111.6, drain 0.4, partial store 4.2, store drain 0.9, exit 0.4] [32 owner: MAC 31.8, drain 0.5, spin on flags 0.4, collect 14.8, exit 0.3]
+  c0 se18 cu0 xcd4  112P+32O  spid 134,142,150,158: DP end 131.1, end 307.9 k-steps; [112 partial: MAC 117.0, drain 0.4, partial store 4.9, store drain 1.3, exit 0.4] [32 owner: MAC 31.9, drain 0.5, spin on flags 0.3, collect 14.1, exit 0.4]
+  c1 se3 cu1 xcd0  112P+32O  spid 6,14,22,30: DP end 130.0, end 305.2 k-steps; [112 partial: MAC 116.6, drain 0.4, partial store 4.3, store drain 1.1, exit 0.4] [32 owner: MAC 31.6, drain 0.4, spin on flags 0.4, collect 13.4, exit 0.3]
+  c1 se6 cu1 xcd1  112P+32O  spid 38,46,54,62: DP end 135.3, end 306.1 k-steps; [112 partial: MAC 111.5, drain 0.4, partial store 4.1, store drain 1.1, exit 0.4] [32 owner: MAC 31.5, drain 0.5, spin on flags 0.4, collect 15.0, exit 0.3]
+  c1 se10 cu1 xcd2  112P+32O  spid 70,78,86,94: DP end 135.5, end 309.7 k-steps; [112 partial: MAC 115.0, drain 0.4, partial store 4.3, store drain 0.8, exit 0.4] [32 owner: MAC 31.9, drain 0.5, spin on flags 0.3, collect 14.3, exit 0.3]
+  c1 se22 cu1 xcd5  112P+32O  spid 166,174,182,190: DP end 132.5, end 307.9 k-steps; [112 partial: MAC 116.0, drain 0.4, partial store 4.4, store drain 0.8, exit 0.4] [32 owner: MAC 31.9, drain 0.4, spin on flags 0.5, collect 14.3, exit 0.4]
+  c1 se26 cu1 xcd6  112P+32O  spid 198,206,214,222: DP end 132.0, end 304.0 k-steps; [112 partial: MAC 113.1, drain 0.4, partial store 4.2, store drain 1.0, exit 0.4] [32 owner: MAC 31.7, drain 0.4, spin on flags 0.5, collect 13.9, exit 0.4]
+  c2 se10 cu2 xcd2  112P+32O  spid 70,78,86,94: DP end 134.8, end 314.4 k-steps; [112 partial: MAC 119.1, drain 0.4, partial store 4.6, store drain 1.6, exit 0.4] [32 owner: MAC 31.9, drain 0.5, spin on flags 0.3, collect 14.7, exit 0.3]
+  c2 se14 cu2 xcd3  112P+32O  spid 102,110,118,126: DP end 134.2, end 311.0 k-steps; [112 partial: MAC 116.3, drain 0.4, partial store 4.9, store drain 0.9, exit 0.4] [32 owner: MAC 31.9, drain 0.5, spin on flags 0.4, collect 15.0, exit 0.3]
+  c2 se22 cu2 xcd5  112P+32O  spid 166,174,182,190: DP end 133.1, end 307.4 k-steps; [112 partial: MAC 113.4, drain 0.4, partial store 4.8, store drain 1.3, exit 0.4] [32 owner: MAC 31.6, drain 0.5, spin on flags 0.3, collect 15.6, exit 0.4]
+  c2 se26 cu2 xcd6  112P+32O  spid 198,206,214,222: DP end 133.1, end 312.8 k-steps; [112 partial: MAC 118.6, drain 0.4, partial store 4.4, store drain 1.6, exit 0.4] [32 owner: MAC 31.6, drain 0.4, spin on flags 0.4, collect 15.6, exit 0.4]
+  c0 se12 cu0 xcd3  128W+16O  spid 103,111,119,127: DP end 131.9, end 301.6 k-steps; [128 whole: MAC 128.3, drain 3.5, C store 4.4, exit 0.3] [16 owner: MAC 15.8, drain 0.5, spin on flags 0.3, collect 10.6, exit 0.3]
+  c0 se16 cu0 xcd4  128W+16O  spid 135,143,151,159: DP end 131.6, end 309.8 k-steps; [128 whole: MAC 135.3, drain 3.8, C store 4.3, exit 0.3] [16 owner: MAC 15.8, drain 0.4, spin on flags 0.3, collect 11.8, exit 0.3]
+  c0 se28 cu0 xcd7  128W+16O  spid 231,239,247,255: DP end 130.7, end 308.9 k-steps; [128 whole: MAC 135.6, drain 3.7, C store 4.6, exit 0.3] [16 owner: MAC 15.9, drain 0.5, spin on flags 0.4, collect 11.1, exit 0.4]
+  c1 se2 cu1 xcd0  128W+16O  spid 7,15,23,31: DP end 134.0, end 310.3 k-steps; [128 whole: MAC 133.4, drain 3.8, C store 4.4, exit 0.3] [16 owner: MAC 15.9, drain 0.5, spin on flags 0.3, collect 11.9, exit 0.3]
+  c1 se4 cu1 xcd1  128W+16O  spid 39,47,55,63: DP end 135.6, end 303.8 k-steps; [128 whole: MAC 126.7, drain 3.6, C store 4.6, exit 0.3] [16 owner: MAC 15.9, drain 0.5, spin on flags 0.3, collect 10.3, exit 0.3]
+  c1 se8 cu1 xcd2  128W+16O  spid 71,79,87,95: DP end 134.9, end 310.1 k-steps; [128 whole: MAC 132.5, drain 3.7, C store 4.4, exit 0.3] [16 owner: MAC 15.9, drain 0.5, spin on flags 0.3, collect 11.4, exit 0.3]
+  c1 se12 cu1 xcd3  128W+16O  spid 103,111,119,127: DP end 134.7, end 305.9 k-steps; [128 whole: MAC 129.0, drain 3.8, C store 4.5, exit 0.3] [16 owner: MAC 15.7, drain 0.5, spin on flags 0.3, collect 11.2, exit 0.3]
+  c1 se16 cu1 xcd4  128W+16O  spid 135,143,151,159: DP end 135.8, end 314.3 k-steps; [128 whole: MAC 136.2, drain 3.9, C store 4.3, exit 0.3] [16 owner: MAC 15.8, drain 0.4, spin on flags 0.3, collect 11.3, exit 0.4]
+  c1 se20 cu1 xcd5  128W+16O  spid 167,175,183,191: DP end 134.6, end 310.6 k-steps; [128 whole: MAC 133.4, drain 3.6, C store 4.7, exit 0.3] [16 owner: MAC 15.8, drain 0.4, spin on flags 0.3, collect 11.2, exit 0.4]
+  c1 se24 cu1 xcd6  128W+16O  spid 199,207,215,223: DP end 132.4, end 304.0 k-steps; [128 whole: MAC 129.6, drain 3.9, C store 4.5, exit 0.4] [16 owner: MAC 15.8, drain 0.4, spin on flags 0.3, collect 10.6, exit 0.4]
+  c2 se24 cu2 xcd6  128W+16O  spid 199,207,215,223: DP end 133.6, end 312.8 k-steps; [128 whole: MAC 135.1, drain 3.8, C store 4.3, exit 0.3] [16 owner: MAC 15.9, drain 0.5, spin on flags 0.3, collect 12.8, exit 0.4]
+  c0 se0 cu0 xcd0  16P+128W  spid 0,8,16,24: DP end 131.3, end 295.4 k-steps; [16 partial: MAC 15.9, drain 0.4, partial store 4.1, store drain 1.2, exit 0.4] [128 whole: MAC 127.9, drain 4.4, C store 4.0, exit 0.2]
+  c1 se17 cu1 xcd4  16P+128W  spid 128,136,144,152: DP end 136.0, end 303.1 k-steps; [16 partial: MAC 16.2, drain 0.4, partial store 3.9, store drain 1.0, exit 0.4] [128 whole: MAC 130.2, drain 3.9, C store 4.0, exit 0.2]
+  c1 se25 cu1 xcd6  16P+128W  spid 192,200,208,216: DP end 131.8, end 297.3 k-steps; [16 partial: MAC 15.7, drain 0.4, partial store 3.8, store drain 0.9, exit 0.4] [128 whole: MAC 129.1, drain 4.9, C store 3.9, exit 0.2]
+  c2 se0 cu2 xcd0  16P+128W  spid 0,8,16,24: DP end 134.4, end 303.6 k-steps; [16 partial: MAC 17.8, drain 0.4, partial store 4.7, store drain 1.2, exit 0.4] [128 whole: MAC 130.5, drain 4.4, C store 4.0, exit 0.2]
+  c2 se5 cu2 xcd1  16P+128W  spid 32,40,48,56: DP end 134.7, end 302.2 k-steps; [16 partial: MAC 15.8, drain 0.4, partial store 3.6, store drain 0.9, exit 0.4] [128 whole: MAC 130.7, drain 5.4, C store 4.0, exit 0.2]
+  c2 se9 cu2 xcd2  16P+128W  spid 64,72,80,88: DP end 135.4, end 306.4 k-steps; [16 partial: MAC 17.8, drain 0.4, partial store 4.3, store drain 1.7, exit 0.4] [128 whole: MAC 132.2, drain 4.5, C store 4.0, exit 0.2]
+  c2 se13 cu2 xcd3  16P+128W  spid 96,104,112,120: DP end 134.2, end 300.9 k-steps; [16 partial: MAC 16.6, drain 0.4, partial store 4.3, store drain 1.4, exit 0.4] [128 whole: MAC 129.4, drain 4.1, C store 4.1, exit 0.2]
+  c2 se17 cu2 xcd4  16P+128W  spid 128,136,144,152: DP end 134.1, end 302.2 k-steps; [16 partial: MAC 16.2, drain 0.4, partial store 4.0, store drain 1.6, exit 0.4] [128 whole: MAC 130.5, drain 4.4, C store 4.0, exit 0.1]
+  c2 se29 cu2 xcd7  16P+128W  spid 224,232,240,248: DP end 132.4, end 298.1 k-steps; [16 partial: MAC 15.9, drain 0.4, partial store 4.1, store drain 1.0, exit 0.4] [128 whole: MAC 129.1, drain 5.0, C store 3.9, exit 0.1]

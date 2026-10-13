@@ -1,0 +1,29 @@
+[8wave] inter_wave/a16w16  kernel=a16w16_kernel
+[8wave] M=4096 N=4096 K=512 dtype='fp16': ✅ Triton and Torch match
+[8wave] M=4096 N=4096 K=1024 dtype='fp16': ✅ Triton and Torch match
+[8wave] M=4096 N=4096 K=2048 dtype='fp16': ✅ Triton and Torch match
+[8wave] M=4096 N=4096 K=3072 dtype='fp16': ✅ Triton and Torch match
+[8wave] M=4096 N=4096 K=4096 dtype='fp16': ✅ Triton and Torch match
+[8wave] M=4096 N=4096 K=8192 dtype='fp16': ✅ Triton and Torch match
+[8wave] M=4096 N=4096 K=16384 dtype='fp16': ✅ Triton and Torch match
+[8wave] M=4096 N=4096 K=32768 dtype='fp16': ✅ Triton and Torch match
+[8wave] M=4096 N=4096 K=512 dtype='bf16': ✅ Triton and Torch match
+[8wave] M=4096 N=4096 K=1024 dtype='bf16': ✅ Triton and Torch match
+[8wave] M=4096 N=4096 K=2048 dtype='bf16': ✅ Triton and Torch match
+[8wave] M=4096 N=4096 K=3072 dtype='bf16': ✅ Triton and Torch match
+[8wave] M=4096 N=4096 K=4096 dtype='bf16': ✅ Triton and Torch match
+[8wave] M=4096 N=4096 K=8192 dtype='bf16': ✅ Triton and Torch match
+[8wave] M=4096 N=4096 K=16384 dtype='bf16': ✅ Triton and Torch match
+[8wave] M=4096 N=4096 K=32768 dtype='bf16': ✅ Triton and Torch match
+
+inter_wave/a16w16 (a16w16_kernel):
+matmul-performance-inter_wave/a16w16:
+        M       N        K  fp16 (TFLOPS)  bf16 (TFLOPS)
+0  4096.0  4096.0    512.0     645.859755     668.971966
+1  4096.0  4096.0   1024.0     876.501604     914.795991
+2  4096.0  4096.0   2048.0    1065.087961    1125.810579
+3  4096.0  4096.0   3072.0    1138.732612    1207.582210
+4  4096.0  4096.0   4096.0    1179.525933    1255.379541
+5  4096.0  4096.0   8192.0    1255.368093    1342.957650
+6  4096.0  4096.0  16384.0    1302.112510    1297.441484
+7  4096.0  4096.0  32768.0    1282.431184    1273.753504

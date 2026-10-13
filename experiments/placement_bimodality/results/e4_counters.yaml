@@ -1,0 +1,843 @@
+rocprofiler-sdk:
+  counters-schema-version: 1
+  counters:
+  - name: PB_WR_CH0
+    description: TCC_EA0_WRREQ CH 0
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ,[DIMENSION_INSTANCE=[0]]),sum)
+  - name: PB_WR_CH1
+    description: TCC_EA0_WRREQ CH 1
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ,[DIMENSION_INSTANCE=[1]]),sum)
+  - name: PB_WR_CH2
+    description: TCC_EA0_WRREQ CH 2
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ,[DIMENSION_INSTANCE=[2]]),sum)
+  - name: PB_WR_CH3
+    description: TCC_EA0_WRREQ CH 3
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ,[DIMENSION_INSTANCE=[3]]),sum)
+  - name: PB_WR_CH4
+    description: TCC_EA0_WRREQ CH 4
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ,[DIMENSION_INSTANCE=[4]]),sum)
+  - name: PB_WR_CH5
+    description: TCC_EA0_WRREQ CH 5
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ,[DIMENSION_INSTANCE=[5]]),sum)
+  - name: PB_WR_CH6
+    description: TCC_EA0_WRREQ CH 6
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ,[DIMENSION_INSTANCE=[6]]),sum)
+  - name: PB_WR_CH7
+    description: TCC_EA0_WRREQ CH 7
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ,[DIMENSION_INSTANCE=[7]]),sum)
+  - name: PB_WR_CH8
+    description: TCC_EA0_WRREQ CH 8
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ,[DIMENSION_INSTANCE=[8]]),sum)
+  - name: PB_WR_CH9
+    description: TCC_EA0_WRREQ CH 9
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ,[DIMENSION_INSTANCE=[9]]),sum)
+  - name: PB_WR_CH10
+    description: TCC_EA0_WRREQ CH 10
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ,[DIMENSION_INSTANCE=[10]]),sum)
+  - name: PB_WR_CH11
+    description: TCC_EA0_WRREQ CH 11
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ,[DIMENSION_INSTANCE=[11]]),sum)
+  - name: PB_WR_CH12
+    description: TCC_EA0_WRREQ CH 12
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ,[DIMENSION_INSTANCE=[12]]),sum)
+  - name: PB_WR_CH13
+    description: TCC_EA0_WRREQ CH 13
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ,[DIMENSION_INSTANCE=[13]]),sum)
+  - name: PB_WR_CH14
+    description: TCC_EA0_WRREQ CH 14
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ,[DIMENSION_INSTANCE=[14]]),sum)
+  - name: PB_WR_CH15
+    description: TCC_EA0_WRREQ CH 15
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ,[DIMENSION_INSTANCE=[15]]),sum)
+  - name: PB_WR_XCC0
+    description: TCC_EA0_WRREQ XCC 0
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ,[DIMENSION_XCC=[0]]),sum)
+  - name: PB_WR_XCC1
+    description: TCC_EA0_WRREQ XCC 1
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ,[DIMENSION_XCC=[1]]),sum)
+  - name: PB_WR_XCC2
+    description: TCC_EA0_WRREQ XCC 2
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ,[DIMENSION_XCC=[2]]),sum)
+  - name: PB_WR_XCC3
+    description: TCC_EA0_WRREQ XCC 3
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ,[DIMENSION_XCC=[3]]),sum)
+  - name: PB_WR_XCC4
+    description: TCC_EA0_WRREQ XCC 4
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ,[DIMENSION_XCC=[4]]),sum)
+  - name: PB_WR_XCC5
+    description: TCC_EA0_WRREQ XCC 5
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ,[DIMENSION_XCC=[5]]),sum)
+  - name: PB_WR_XCC6
+    description: TCC_EA0_WRREQ XCC 6
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ,[DIMENSION_XCC=[6]]),sum)
+  - name: PB_WR_XCC7
+    description: TCC_EA0_WRREQ XCC 7
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ,[DIMENSION_XCC=[7]]),sum)
+  - name: PB_RD_CH0
+    description: TCC_EA0_RDREQ CH 0
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ,[DIMENSION_INSTANCE=[0]]),sum)
+  - name: PB_RD_CH1
+    description: TCC_EA0_RDREQ CH 1
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ,[DIMENSION_INSTANCE=[1]]),sum)
+  - name: PB_RD_CH2
+    description: TCC_EA0_RDREQ CH 2
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ,[DIMENSION_INSTANCE=[2]]),sum)
+  - name: PB_RD_CH3
+    description: TCC_EA0_RDREQ CH 3
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ,[DIMENSION_INSTANCE=[3]]),sum)
+  - name: PB_RD_CH4
+    description: TCC_EA0_RDREQ CH 4
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ,[DIMENSION_INSTANCE=[4]]),sum)
+  - name: PB_RD_CH5
+    description: TCC_EA0_RDREQ CH 5
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ,[DIMENSION_INSTANCE=[5]]),sum)
+  - name: PB_RD_CH6
+    description: TCC_EA0_RDREQ CH 6
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ,[DIMENSION_INSTANCE=[6]]),sum)
+  - name: PB_RD_CH7
+    description: TCC_EA0_RDREQ CH 7
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ,[DIMENSION_INSTANCE=[7]]),sum)
+  - name: PB_RD_CH8
+    description: TCC_EA0_RDREQ CH 8
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ,[DIMENSION_INSTANCE=[8]]),sum)
+  - name: PB_RD_CH9
+    description: TCC_EA0_RDREQ CH 9
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ,[DIMENSION_INSTANCE=[9]]),sum)
+  - name: PB_RD_CH10
+    description: TCC_EA0_RDREQ CH 10
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ,[DIMENSION_INSTANCE=[10]]),sum)
+  - name: PB_RD_CH11
+    description: TCC_EA0_RDREQ CH 11
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ,[DIMENSION_INSTANCE=[11]]),sum)
+  - name: PB_RD_CH12
+    description: TCC_EA0_RDREQ CH 12
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ,[DIMENSION_INSTANCE=[12]]),sum)
+  - name: PB_RD_CH13
+    description: TCC_EA0_RDREQ CH 13
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ,[DIMENSION_INSTANCE=[13]]),sum)
+  - name: PB_RD_CH14
+    description: TCC_EA0_RDREQ CH 14
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ,[DIMENSION_INSTANCE=[14]]),sum)
+  - name: PB_RD_CH15
+    description: TCC_EA0_RDREQ CH 15
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ,[DIMENSION_INSTANCE=[15]]),sum)
+  - name: PB_RD_XCC0
+    description: TCC_EA0_RDREQ XCC 0
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ,[DIMENSION_XCC=[0]]),sum)
+  - name: PB_RD_XCC1
+    description: TCC_EA0_RDREQ XCC 1
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ,[DIMENSION_XCC=[1]]),sum)
+  - name: PB_RD_XCC2
+    description: TCC_EA0_RDREQ XCC 2
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ,[DIMENSION_XCC=[2]]),sum)
+  - name: PB_RD_XCC3
+    description: TCC_EA0_RDREQ XCC 3
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ,[DIMENSION_XCC=[3]]),sum)
+  - name: PB_RD_XCC4
+    description: TCC_EA0_RDREQ XCC 4
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ,[DIMENSION_XCC=[4]]),sum)
+  - name: PB_RD_XCC5
+    description: TCC_EA0_RDREQ XCC 5
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ,[DIMENSION_XCC=[5]]),sum)
+  - name: PB_RD_XCC6
+    description: TCC_EA0_RDREQ XCC 6
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ,[DIMENSION_XCC=[6]]),sum)
+  - name: PB_RD_XCC7
+    description: TCC_EA0_RDREQ XCC 7
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ,[DIMENSION_XCC=[7]]),sum)
+  - name: PB_WRL_CH0
+    description: TCC_EA0_WRREQ_LEVEL CH 0
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_LEVEL,[DIMENSION_INSTANCE=[0]]),sum)
+  - name: PB_WRL_CH1
+    description: TCC_EA0_WRREQ_LEVEL CH 1
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_LEVEL,[DIMENSION_INSTANCE=[1]]),sum)
+  - name: PB_WRL_CH2
+    description: TCC_EA0_WRREQ_LEVEL CH 2
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_LEVEL,[DIMENSION_INSTANCE=[2]]),sum)
+  - name: PB_WRL_CH3
+    description: TCC_EA0_WRREQ_LEVEL CH 3
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_LEVEL,[DIMENSION_INSTANCE=[3]]),sum)
+  - name: PB_WRL_CH4
+    description: TCC_EA0_WRREQ_LEVEL CH 4
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_LEVEL,[DIMENSION_INSTANCE=[4]]),sum)
+  - name: PB_WRL_CH5
+    description: TCC_EA0_WRREQ_LEVEL CH 5
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_LEVEL,[DIMENSION_INSTANCE=[5]]),sum)
+  - name: PB_WRL_CH6
+    description: TCC_EA0_WRREQ_LEVEL CH 6
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_LEVEL,[DIMENSION_INSTANCE=[6]]),sum)
+  - name: PB_WRL_CH7
+    description: TCC_EA0_WRREQ_LEVEL CH 7
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_LEVEL,[DIMENSION_INSTANCE=[7]]),sum)
+  - name: PB_WRL_CH8
+    description: TCC_EA0_WRREQ_LEVEL CH 8
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_LEVEL,[DIMENSION_INSTANCE=[8]]),sum)
+  - name: PB_WRL_CH9
+    description: TCC_EA0_WRREQ_LEVEL CH 9
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_LEVEL,[DIMENSION_INSTANCE=[9]]),sum)
+  - name: PB_WRL_CH10
+    description: TCC_EA0_WRREQ_LEVEL CH 10
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_LEVEL,[DIMENSION_INSTANCE=[10]]),sum)
+  - name: PB_WRL_CH11
+    description: TCC_EA0_WRREQ_LEVEL CH 11
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_LEVEL,[DIMENSION_INSTANCE=[11]]),sum)
+  - name: PB_WRL_CH12
+    description: TCC_EA0_WRREQ_LEVEL CH 12
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_LEVEL,[DIMENSION_INSTANCE=[12]]),sum)
+  - name: PB_WRL_CH13
+    description: TCC_EA0_WRREQ_LEVEL CH 13
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_LEVEL,[DIMENSION_INSTANCE=[13]]),sum)
+  - name: PB_WRL_CH14
+    description: TCC_EA0_WRREQ_LEVEL CH 14
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_LEVEL,[DIMENSION_INSTANCE=[14]]),sum)
+  - name: PB_WRL_CH15
+    description: TCC_EA0_WRREQ_LEVEL CH 15
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_LEVEL,[DIMENSION_INSTANCE=[15]]),sum)
+  - name: PB_WRL_XCC0
+    description: TCC_EA0_WRREQ_LEVEL XCC 0
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_LEVEL,[DIMENSION_XCC=[0]]),sum)
+  - name: PB_WRL_XCC1
+    description: TCC_EA0_WRREQ_LEVEL XCC 1
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_LEVEL,[DIMENSION_XCC=[1]]),sum)
+  - name: PB_WRL_XCC2
+    description: TCC_EA0_WRREQ_LEVEL XCC 2
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_LEVEL,[DIMENSION_XCC=[2]]),sum)
+  - name: PB_WRL_XCC3
+    description: TCC_EA0_WRREQ_LEVEL XCC 3
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_LEVEL,[DIMENSION_XCC=[3]]),sum)
+  - name: PB_WRL_XCC4
+    description: TCC_EA0_WRREQ_LEVEL XCC 4
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_LEVEL,[DIMENSION_XCC=[4]]),sum)
+  - name: PB_WRL_XCC5
+    description: TCC_EA0_WRREQ_LEVEL XCC 5
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_LEVEL,[DIMENSION_XCC=[5]]),sum)
+  - name: PB_WRL_XCC6
+    description: TCC_EA0_WRREQ_LEVEL XCC 6
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_LEVEL,[DIMENSION_XCC=[6]]),sum)
+  - name: PB_WRL_XCC7
+    description: TCC_EA0_WRREQ_LEVEL XCC 7
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_LEVEL,[DIMENSION_XCC=[7]]),sum)
+  - name: PB_RDL_CH0
+    description: TCC_EA0_RDREQ_LEVEL CH 0
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ_LEVEL,[DIMENSION_INSTANCE=[0]]),sum)
+  - name: PB_RDL_CH1
+    description: TCC_EA0_RDREQ_LEVEL CH 1
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ_LEVEL,[DIMENSION_INSTANCE=[1]]),sum)
+  - name: PB_RDL_CH2
+    description: TCC_EA0_RDREQ_LEVEL CH 2
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ_LEVEL,[DIMENSION_INSTANCE=[2]]),sum)
+  - name: PB_RDL_CH3
+    description: TCC_EA0_RDREQ_LEVEL CH 3
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ_LEVEL,[DIMENSION_INSTANCE=[3]]),sum)
+  - name: PB_RDL_CH4
+    description: TCC_EA0_RDREQ_LEVEL CH 4
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ_LEVEL,[DIMENSION_INSTANCE=[4]]),sum)
+  - name: PB_RDL_CH5
+    description: TCC_EA0_RDREQ_LEVEL CH 5
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ_LEVEL,[DIMENSION_INSTANCE=[5]]),sum)
+  - name: PB_RDL_CH6
+    description: TCC_EA0_RDREQ_LEVEL CH 6
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ_LEVEL,[DIMENSION_INSTANCE=[6]]),sum)
+  - name: PB_RDL_CH7
+    description: TCC_EA0_RDREQ_LEVEL CH 7
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ_LEVEL,[DIMENSION_INSTANCE=[7]]),sum)
+  - name: PB_RDL_CH8
+    description: TCC_EA0_RDREQ_LEVEL CH 8
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ_LEVEL,[DIMENSION_INSTANCE=[8]]),sum)
+  - name: PB_RDL_CH9
+    description: TCC_EA0_RDREQ_LEVEL CH 9
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ_LEVEL,[DIMENSION_INSTANCE=[9]]),sum)
+  - name: PB_RDL_CH10
+    description: TCC_EA0_RDREQ_LEVEL CH 10
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ_LEVEL,[DIMENSION_INSTANCE=[10]]),sum)
+  - name: PB_RDL_CH11
+    description: TCC_EA0_RDREQ_LEVEL CH 11
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ_LEVEL,[DIMENSION_INSTANCE=[11]]),sum)
+  - name: PB_RDL_CH12
+    description: TCC_EA0_RDREQ_LEVEL CH 12
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ_LEVEL,[DIMENSION_INSTANCE=[12]]),sum)
+  - name: PB_RDL_CH13
+    description: TCC_EA0_RDREQ_LEVEL CH 13
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ_LEVEL,[DIMENSION_INSTANCE=[13]]),sum)
+  - name: PB_RDL_CH14
+    description: TCC_EA0_RDREQ_LEVEL CH 14
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ_LEVEL,[DIMENSION_INSTANCE=[14]]),sum)
+  - name: PB_RDL_CH15
+    description: TCC_EA0_RDREQ_LEVEL CH 15
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ_LEVEL,[DIMENSION_INSTANCE=[15]]),sum)
+  - name: PB_RDL_XCC0
+    description: TCC_EA0_RDREQ_LEVEL XCC 0
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ_LEVEL,[DIMENSION_XCC=[0]]),sum)
+  - name: PB_RDL_XCC1
+    description: TCC_EA0_RDREQ_LEVEL XCC 1
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ_LEVEL,[DIMENSION_XCC=[1]]),sum)
+  - name: PB_RDL_XCC2
+    description: TCC_EA0_RDREQ_LEVEL XCC 2
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ_LEVEL,[DIMENSION_XCC=[2]]),sum)
+  - name: PB_RDL_XCC3
+    description: TCC_EA0_RDREQ_LEVEL XCC 3
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ_LEVEL,[DIMENSION_XCC=[3]]),sum)
+  - name: PB_RDL_XCC4
+    description: TCC_EA0_RDREQ_LEVEL XCC 4
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ_LEVEL,[DIMENSION_XCC=[4]]),sum)
+  - name: PB_RDL_XCC5
+    description: TCC_EA0_RDREQ_LEVEL XCC 5
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ_LEVEL,[DIMENSION_XCC=[5]]),sum)
+  - name: PB_RDL_XCC6
+    description: TCC_EA0_RDREQ_LEVEL XCC 6
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ_LEVEL,[DIMENSION_XCC=[6]]),sum)
+  - name: PB_RDL_XCC7
+    description: TCC_EA0_RDREQ_LEVEL XCC 7
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_RDREQ_LEVEL,[DIMENSION_XCC=[7]]),sum)
+  - name: PB_WRS_CH0
+    description: TCC_EA0_WRREQ_DRAM_CREDIT_STALL CH 0
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_DRAM_CREDIT_STALL,[DIMENSION_INSTANCE=[0]]),sum)
+  - name: PB_WRS_CH1
+    description: TCC_EA0_WRREQ_DRAM_CREDIT_STALL CH 1
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_DRAM_CREDIT_STALL,[DIMENSION_INSTANCE=[1]]),sum)
+  - name: PB_WRS_CH2
+    description: TCC_EA0_WRREQ_DRAM_CREDIT_STALL CH 2
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_DRAM_CREDIT_STALL,[DIMENSION_INSTANCE=[2]]),sum)
+  - name: PB_WRS_CH3
+    description: TCC_EA0_WRREQ_DRAM_CREDIT_STALL CH 3
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_DRAM_CREDIT_STALL,[DIMENSION_INSTANCE=[3]]),sum)
+  - name: PB_WRS_CH4
+    description: TCC_EA0_WRREQ_DRAM_CREDIT_STALL CH 4
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_DRAM_CREDIT_STALL,[DIMENSION_INSTANCE=[4]]),sum)
+  - name: PB_WRS_CH5
+    description: TCC_EA0_WRREQ_DRAM_CREDIT_STALL CH 5
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_DRAM_CREDIT_STALL,[DIMENSION_INSTANCE=[5]]),sum)
+  - name: PB_WRS_CH6
+    description: TCC_EA0_WRREQ_DRAM_CREDIT_STALL CH 6
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_DRAM_CREDIT_STALL,[DIMENSION_INSTANCE=[6]]),sum)
+  - name: PB_WRS_CH7
+    description: TCC_EA0_WRREQ_DRAM_CREDIT_STALL CH 7
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_DRAM_CREDIT_STALL,[DIMENSION_INSTANCE=[7]]),sum)
+  - name: PB_WRS_CH8
+    description: TCC_EA0_WRREQ_DRAM_CREDIT_STALL CH 8
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_DRAM_CREDIT_STALL,[DIMENSION_INSTANCE=[8]]),sum)
+  - name: PB_WRS_CH9
+    description: TCC_EA0_WRREQ_DRAM_CREDIT_STALL CH 9
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_DRAM_CREDIT_STALL,[DIMENSION_INSTANCE=[9]]),sum)
+  - name: PB_WRS_CH10
+    description: TCC_EA0_WRREQ_DRAM_CREDIT_STALL CH 10
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_DRAM_CREDIT_STALL,[DIMENSION_INSTANCE=[10]]),sum)
+  - name: PB_WRS_CH11
+    description: TCC_EA0_WRREQ_DRAM_CREDIT_STALL CH 11
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_DRAM_CREDIT_STALL,[DIMENSION_INSTANCE=[11]]),sum)
+  - name: PB_WRS_CH12
+    description: TCC_EA0_WRREQ_DRAM_CREDIT_STALL CH 12
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_DRAM_CREDIT_STALL,[DIMENSION_INSTANCE=[12]]),sum)
+  - name: PB_WRS_CH13
+    description: TCC_EA0_WRREQ_DRAM_CREDIT_STALL CH 13
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_DRAM_CREDIT_STALL,[DIMENSION_INSTANCE=[13]]),sum)
+  - name: PB_WRS_CH14
+    description: TCC_EA0_WRREQ_DRAM_CREDIT_STALL CH 14
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_DRAM_CREDIT_STALL,[DIMENSION_INSTANCE=[14]]),sum)
+  - name: PB_WRS_CH15
+    description: TCC_EA0_WRREQ_DRAM_CREDIT_STALL CH 15
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_DRAM_CREDIT_STALL,[DIMENSION_INSTANCE=[15]]),sum)
+  - name: PB_WRS_XCC0
+    description: TCC_EA0_WRREQ_DRAM_CREDIT_STALL XCC 0
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_DRAM_CREDIT_STALL,[DIMENSION_XCC=[0]]),sum)
+  - name: PB_WRS_XCC1
+    description: TCC_EA0_WRREQ_DRAM_CREDIT_STALL XCC 1
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_DRAM_CREDIT_STALL,[DIMENSION_XCC=[1]]),sum)
+  - name: PB_WRS_XCC2
+    description: TCC_EA0_WRREQ_DRAM_CREDIT_STALL XCC 2
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_DRAM_CREDIT_STALL,[DIMENSION_XCC=[2]]),sum)
+  - name: PB_WRS_XCC3
+    description: TCC_EA0_WRREQ_DRAM_CREDIT_STALL XCC 3
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_DRAM_CREDIT_STALL,[DIMENSION_XCC=[3]]),sum)
+  - name: PB_WRS_XCC4
+    description: TCC_EA0_WRREQ_DRAM_CREDIT_STALL XCC 4
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_DRAM_CREDIT_STALL,[DIMENSION_XCC=[4]]),sum)
+  - name: PB_WRS_XCC5
+    description: TCC_EA0_WRREQ_DRAM_CREDIT_STALL XCC 5
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_DRAM_CREDIT_STALL,[DIMENSION_XCC=[5]]),sum)
+  - name: PB_WRS_XCC6
+    description: TCC_EA0_WRREQ_DRAM_CREDIT_STALL XCC 6
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_DRAM_CREDIT_STALL,[DIMENSION_XCC=[6]]),sum)
+  - name: PB_WRS_XCC7
+    description: TCC_EA0_WRREQ_DRAM_CREDIT_STALL XCC 7
+    properties: []
+    definitions:
+    - architectures:
+      - gfx950
+      expression: reduce(select(TCC_EA0_WRREQ_DRAM_CREDIT_STALL,[DIMENSION_XCC=[7]]),sum)
