@@ -45,6 +45,8 @@ contiguous, as bench_ext.py runs them.
   (kernel cycles x 1024 SIMDs): the whole kernel, idle CUs, prologue and epilogue included, unlike
   ATT's main-loop MFMA efficiency. Counter collection slows the kernel and changes the clock
   (pmc_clock_ghz), so the clock of the timing run is estimated as kernel cycles / timed duration.
+  Sets 5-7 (latency_columns) give the mean load round trips and, by Little's law, the bytes in
+  flight per CU, each at its own dispatch's clock.
 - clock: no profiler. Each point runs back to back (HIP graph replays) for --seconds (after a 1 s
   idle gap) while a
   thread polls the device's hwmon (freq1_input = graphics clock, power1_input = socket power)
@@ -58,6 +60,7 @@ import argparse
 import csv
 import glob
 import json
+import math
 import os
 import re
 import shutil
@@ -121,6 +124,36 @@ def pinnable(tile):
     return 2 * (-(-km // 16) * 16 + kn) * bk * 2 <= 160 * 1024 // (4 // w) and regs_ok(tile)
 
 
+def wg_per_cu(tile):
+    """Workgroups per CU: 4 / W pinned, else as many as the 160 KB of LDS holds (2 buffers; v9_tile pads
+    16 elements per 512, v9_tile_small pads the small side to 16 rows)."""
+    bm, bn, bk, _, w, pin = tile_spec(tile)
+    if pin:
+        return 4 // w
+    if is_small(tile):
+        lds = 2 * (-(-min(bm, bn) // 16) * 16 + max(bm, bn)) * bk * 2
+    else:
+        lds = 2 * (bm + bn) * bk * 2 * (1 + 16 / 512)
+    return max(1, int(160 * 1024 // lds))
+
+
+def full_wave_shape(tile, K=8192):
+    """M x N x K with exactly 256 x wg_per_cu tiles, as square as the block counts allow."""
+    bm, bn = tile_spec(tile)[:2]
+    T = 256 * wg_per_cu(tile)
+    pairs = [(mb * bm, T // mb * bn) for mb in range(1, T + 1) if T % mb == 0]
+    M, N = min(pairs, key=lambda p: (abs(math.log(p[0] / p[1])), -p[0]))
+    return f"{M}x{N}x{K}"
+
+
+# Per-tile latency (WORKLOG §16): the tiles two stages are enough for (§14.5), pinned where LDS allows,
+# on one full wave each and on §14.4's common compute-bound shape.
+LAT_TILES = ("256x256", "256x128", "128x256", "128x128x128", "64x64x128", "32x128x128", "32x64x128",
+             "32x32x128", "16x256x128", "16x128x128", "256x16x128", "16x64x128", "16x32x128")
+LAT_TILES = tuple(t + "p" if is_small(t) and pinnable(t) else t for t in LAT_TILES)
+LAT_CB_SHAPE = "2048x4096x8192"
+
+
 # Small tiles (v9_tile_small) against the anchors, on compute-bound shapes (~1000 FLOP/B at HBM):
 # each small tile with natural occupancy and pinned to one wave per SIMD ("p"), where LDS allows.
 SMALL_CB_TILES = ("32x256x64", "32x128x128", "32x64x128", "32x32x128", "16x256x128", "16x256x64w2",
@@ -169,12 +202,29 @@ POINTS = {
     # Run with --rotating-mb 0 (inputs warm in the MALL): the window ceiling with a shorter round trip.
     "SMALL_WARM": [f"{t}:2048x4096x8192" for t in ("256x256", "64x64x128", "32x32x128p", "16x256x128", "16x64x128p",
                                                    "16x16x128p", "1x256x128")],
+    "LAT_FW": [f"{t}:{full_wave_shape(t)}" for t in LAT_TILES],
+    "LAT_CB": [f"{t}:{LAT_CB_SHAPE}" for t in LAT_TILES],
     "A128": [f"{t}:2048x2048x{k}" for t in ("128x128", "128x128r2", "128x128x128") for k in KS],
     "B": [f"{t}:{m}x{n}x{k}" for m, n, k in SAME_SHAPE for t in ("256x256", "256x128", "128x256")],
     "B128": [f"{t}:{m}x{n}x{k}" for m, n, k in SAME_SHAPE for t in ("128x128", "128x128r2", "128x128x128")],
     **{f"WQ{k}": [f"{t}:4096x{n}x{k}" for t in WQ_TILES for n in WQ_N] for k in (4096, 8192)},
+    # Row-banded tiles (WORKLOG §17): each at an M of 16 of its tiles against 128x128 and 256x128 on
+    # the same shape, and at one full wave (256 tiles, one per CU) against 256x128's.
+    "BANDS": [f"{t}:{16 * int(bt.split('x')[0])}x4096x8192" for bt in ("144x128", "192x128", "224x128", "240x128")
+              for t in (bt, "128x128", "256x128")]
+    + [f"{t}:{16 * int(t.split('x')[0])}x2048x8192" for t in ("192x128", "224x128", "240x128", "256x128")],
+    # Column-banded tiles (WORKLOG §18), and 192x256 on the transposed shapes (the mirror check).
+    # 256x192 needs amdgcnas off: NBANDS_AS is the set without it, for the plugin's stack.
+    "NBANDS": [f"{t}:4096x{n}x8192" for n in (2304, 3072) for t in ("256x192", "256x256", "128x256", "256x128")]
+    + [f"{t}:4096x2304x8192" for t in ("128x144", "128x128")]
+    + [f"{t}:4096x3840x8192" for t in ("128x240", "128x128", "128x256", "256x256")]
+    + [f"192x256:{m}x4096x8192" for m in (2304, 3072)],
     **{f"WQSK{k}": [f"sk256:4096x{n}x{k}" for n in WQ_SK_N] for k in (4096, 8192)},
+    # 256x256 down to 256x128 in steps of 16 on N (WORKLOG §19), each on a 16x16 grid: 256 tiles, one per CU.
+    # 256x192 needs amdgcnas off, so the whole set runs without it.
+    "TILE_N": [f"256x{bn}:4096x{16 * bn}x8192" for bn in range(256, 127, -16)],
 }
+POINTS["NBANDS_AS"] = [p for p in POINTS["NBANDS"] if not p.startswith("256x192:")]
 # sk256 runs v26 with every leftover tile split over all 256 programs (the default capped policy
 # would use at most 128 of them for small S); the ending is the policy's (rs for n >= 8, else owner).
 SK_ENV = {"STREAMK_POLICY": "one_tile", "STREAMK_NUM_PROGRAMS": "256"}
@@ -185,8 +235,16 @@ COUNTER_SETS = [
     ["TCC_EA0_RDREQ_32B_sum", "TCC_EA0_RDREQ_64B_sum", "TCC_EA0_RDREQ_128B_sum"],
     ["MeanOccupancyPerActiveCU"],
     ["GRBM_GUI_ACTIVE", "SQ_LDS_BANK_CONFLICT", "SQ_LDS_IDX_ACTIVE", "SQ_INSTS_LDS"],
+    # Load latency (WORKLOG §16), each set one pass: the TCP->L2 round trip, the L2-miss round trip,
+    # and the VMEM instruction's from issue.
+    ["GRBM_GUI_ACTIVE", "TCP_TCC_READ_REQ_sum", "TCP_TCC_READ_REQ_LATENCY_sum", "TCP_PENDING_STALL_CYCLES_sum"],
+    ["GRBM_GUI_ACTIVE", "TCC_EA0_RDREQ_sum", "TCC_EA0_RDREQ_LEVEL_sum", "TCC_EA0_RDREQ_64B_sum",
+     "TCC_EA0_RDREQ_128B_sum"],  # the TCC takes 4 counters per pass: the hit rate is set 1's
+    ["GRBM_GUI_ACTIVE", "VmemLatency", "SQ_INSTS_VMEM", "SQ_INSTS_VMEM_RD"],
 ]
-DEFAULT_COUNTER_SETS = "0,1,2,3"  # --sets; 4 (LDS bank conflicts) on request
+DEFAULT_COUNTER_SETS = "0,1,2,3"  # --sets; 4 (LDS bank conflicts) and 5-7 (latency) on request
+TCP_REQ_BYTES = 128  # one TCP->L2 read request: TCP_TCC_READ_REQ x 128 B = the bytes the kernel loads (§16)
+VMEM_INST_BYTES = 1024  # one buffer_load_dwordx4 per wave
 GRAPH_LEN = 100
 ROTATING_MB = 512  # --rotating-mb; 0 reuses one set of inputs (warm caches)
 NUM_SIMDS = 1024
@@ -236,6 +294,43 @@ def busy_cus(tile, tiles):
     """Average busy CUs: stream-K keeps all 256 busy; a non-persistent launch runs its tiles in
     ceil(tiles / 256) waves."""
     return 256 if tile == "sk256" else tiles / -(-tiles // 256)
+
+
+def loaded_cus(tiles):
+    """CUs holding at least one workgroup: the dispatcher spreads the workgroups over the CUs first."""
+    return min(256, tiles)
+
+
+def latency_columns(i, v, t_ns, cus):
+    """Derived columns of latency counter set i (5-7) for one dispatch: v the counters, t_ns its duration,
+    cus the CUs loading. Latencies in shader cycles and in ns at this dispatch's own clock (counter runs
+    serialise the dispatches and change the clock); bytes in flight per CU by Little's law, from the same
+    accumulated counter: sum of per-request latency / kernel cycles = mean requests in flight."""
+    cyc = v["GRBM_GUI_ACTIVE"] / NUM_XCDS
+    ghz = cyc / t_ns
+    r = {}
+    if i == 5:
+        req, lat = v["TCP_TCC_READ_REQ_sum"], v["TCP_TCC_READ_REQ_LATENCY_sum"]
+        r["l_tcp_cyc"] = lat / max(1.0, req)
+        r["l_tcp_ns"] = r["l_tcp_cyc"] / ghz
+        r["inflight_tcp_kb"] = lat * TCP_REQ_BYTES / (cyc * cus) / 1024
+        r["tcp_bns_per_cu"] = req * TCP_REQ_BYTES / t_ns / cus
+        r["tcp_pending_stall"] = v["TCP_PENDING_STALL_CYCLES_sum"] / (cyc * 256)
+        r["lat_clock_ghz"] = ghz
+    elif i == 6:
+        req = max(1.0, v["TCC_EA0_RDREQ_sum"])
+        r["l_miss_cyc"] = v["TCC_EA0_RDREQ_LEVEL_sum"] / req
+        r["l_miss_ns"] = r["l_miss_cyc"] / ghz
+        r["ea_128b_share"] = v["TCC_EA0_RDREQ_128B_sum"] / req
+        r["ea_64b_share"] = v["TCC_EA0_RDREQ_64B_sum"] / req
+        r["miss_inflight_per_xcd"] = v["TCC_EA0_RDREQ_LEVEL_sum"] / cyc / NUM_XCDS
+    elif i == 7:
+        # VmemLatency averages over every VMEM instruction (the C stores too); the loads dominate.
+        r["l_vmem_cyc"] = v["VmemLatency"]
+        r["l_vmem_ns"] = v["VmemLatency"] / ghz
+        r["inflight_vmem_kb"] = v["VmemLatency"] * v["SQ_INSTS_VMEM"] * VMEM_INST_BYTES / (cyc * cus) / 1024
+        r["vmem_rd_share"] = v["SQ_INSTS_VMEM_RD"] / max(1.0, v["SQ_INSTS_VMEM"])
+    return r
 
 
 # ---------------------------------------------------------------------------------------------
@@ -396,7 +491,7 @@ def counters(args):
             elif i == 3:
                 # Reads 1.0 at one wave per SIMD (the pinned runs, 4 waves per CU): waves per SIMD.
                 r["waves_per_simd"] = round(med(lambda v, t: v["MeanOccupancyPerActiveCU"]), 2)
-            else:
+            elif i == 4:
                 # LDS bank conflicts, summed over the CUs: conflict cycles per conflict-free LDS cycle
                 # (rocprof's LDS_BANK_CONFLICT_ACCESS), and as a share of every CU's kernel cycles.
                 cu_cycles = lambda v: v["GRBM_GUI_ACTIVE"] / NUM_XCDS * 256  # noqa: E731
@@ -406,6 +501,11 @@ def counters(args):
                 r["lds_active_pct"] = round(med(lambda v, t: v["SQ_LDS_IDX_ACTIVE"] / cu_cycles(v)), 4)
                 r["lds_conflict_per_inst"] = round(med(lambda v, t: v["SQ_LDS_BANK_CONFLICT"] / max(
                     1.0, v["SQ_INSTS_LDS"])), 3)
+            else:
+                cus = loaded_cus(r["tiles"])
+                cols = [latency_columns(i, vals[d], dur[d], cus) for d in disp]
+                for k in cols[0]:
+                    r[k] = round(S.median(c[k] for c in cols), 4)
     return res
 
 
@@ -468,6 +568,7 @@ def clock(args):
 
     th = threading.Thread(target=poll, daemon=True)
     th.start()
+    os.makedirs(TMP, exist_ok=True)
     manifest = os.path.join(TMP, "sweep_clock.json")
     p = subprocess.run([sys.executable, os.path.abspath(__file__), "clock_worker", "--points", ",".join(args.points),
                         "--manifest", manifest, "--seconds", str(args.seconds), "--rotating-mb", str(ROTATING_MB)],
@@ -499,6 +600,32 @@ ATT_JOB = {"jobs": [{"kernel_include_regex": "", "kernel_exclude_regex": "", "ke
                      "att_simd_select": "0xF", "att_buffer_size": "0x60000000"}]}
 
 
+def att_dispatch(ui, out_dir, row):
+    """The traced launch's clock and time: the clock from realtime.json (shader cycles against the 100 MHz
+    realtime counter at the trace's start and stop, median over shader engines, as
+    experiments/tcp_latency/att_latency.py), the duration from the kernel trace's row for the dispatch
+    the ui directory is named after, and the chip-wide MFMA utilisation of that launch from the two."""
+    r = {}
+    rt = json.load(open(os.path.join(ui, "realtime.json")))
+    ghz = [(se[1][0] - se[0][0]) / max(1, se[1][1] - se[0][1]) / 10.0
+           for k, se in rt.items() if k.startswith("SE") and len(se) >= 2]
+    if ghz:
+        r["att_ghz"] = round(S.median(ghz), 3)
+    m = re.search(r"dispatch_(\d+)", os.path.basename(ui))
+    try:
+        trace = read_csv(out_dir, "kernel_trace.csv")
+    except AssertionError:
+        trace = []
+    hit = [t for t in trace if m and int(t["Dispatch_Id"]) == int(m.group(1))]
+    if hit:
+        us = (int(hit[0]["End_Timestamp"]) - int(hit[0]["Start_Timestamp"])) / 1e3
+        r["att_us"] = round(us, 3)
+        r["att_tflops"] = round(2 * row["M"] * row["N"] * row["K"] / (us * 1e-6) / 1e12, 1)
+        if ghz:
+            r["att_chip_eff"] = round(r["att_tflops"] / (PEAK_TFLOPS_PER_GHZ * r["att_ghz"]), 4)
+    return r
+
+
 def att(args):
     res = []
     env = {**os.environ, "ROCPROF_ATT_LIBRARY_PATH": os.environ.get("ROCPROF_ATT_LIBRARY_PATH", "/opt/rocm/lib/")}
@@ -509,11 +636,13 @@ def att(args):
         os.makedirs(out_dir)
         job = json.loads(json.dumps(ATT_JOB))
         job["jobs"][0]["kernel_include_regex"] = kernel_name(tile)
+        job["jobs"][0]["kernel_iteration_range"] = f"[{args.att_launch}]"
         cfg = os.path.join(out_dir, "att.json")
         json.dump(job, open(cfg, "w"))
         manifest = os.path.join(out_dir, "manifest.json")
-        cmd = ["rocprofv3", "--att", "-i", cfg, "-d", out_dir, "--", sys.executable, os.path.abspath(__file__),
-               "worker", "--iters", "11", "--manifest", manifest, "--points", p, "--rotating-mb", str(ROTATING_MB)]
+        cmd = ["rocprofv3", "--att", "-i", cfg, "--kernel-trace", "--output-format", "csv", "-d", out_dir, "--",
+               sys.executable, os.path.abspath(__file__), "worker", "--iters", "11", "--manifest", manifest,
+               "--points", p, "--rotating-mb", str(ROTATING_MB)]
         pr = subprocess.run(cmd, cwd=A16, env=env, capture_output=True, text=True)
         row = base_row(p, None)
         ui = glob.glob(os.path.join(out_dir, "**", "ui_*"), recursive=True)
@@ -540,7 +669,14 @@ def att(args):
                     "pro_ratio": j["pro_ratio"], "loop_ratio": j["loop_ratio"], "epi_ratio": j["epi_ratio"],
                     "prologue_cycles": round(j["average_prologue_duration"]),
                     "epilogue_cycles": round(j["average_epilogue_duration"])})
-        print(f"{p}: {j['mfma efficiency']}", flush=True)
+        if "e2e mfma efficiency" in j:
+            row.update({"att_e2e_eff": round(float(j["e2e mfma efficiency"].rstrip("%")) / 100, 4),
+                        "mfma_per_wave": round(j["mfma_count_wave"]),
+                        "wave_cycles": round(j["average_wave_duration"]), "waves": j["waves_whole"]})
+        row.update(att_dispatch(ui[0], out_dir, row))
+        row["ui"] = os.path.relpath(ui[0], A16)
+        print(f"{p}: {j['mfma efficiency']} loop, {j.get('e2e mfma efficiency')} whole wave, "
+              f"{row.get('att_ghz')} GHz, {row.get('att_tflops')} TFLOPS", flush=True)
         res.append(row)
     return res
 
@@ -556,7 +692,9 @@ def main():
     ap.add_argument("--seconds", type=float, default=3.0)
     ap.add_argument("--graph", action="store_true", help="timing: launch from a HIP graph, back to back")
     ap.add_argument("--sets", default=DEFAULT_COUNTER_SETS,
-                    help="counters: indices into COUNTER_SETS (4: LDS bank conflicts)")
+                    help="counters: indices into COUNTER_SETS (4: LDS bank conflicts, 5-7: load latency)")
+    ap.add_argument("--att-launch", type=int, default=10,
+                    help="att: the launch to trace (the first ones run before the power cap lowers the clock)")
     ap.add_argument("--manifest")
     ap.add_argument("--tmp", default=TMP, help="scratch directory (one per concurrent sweep)")
     args = ap.parse_args()

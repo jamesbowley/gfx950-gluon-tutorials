@@ -25,6 +25,7 @@
 
     source v9_tile/env.sh
     python v9_tile/asm_check.py 256x256,256x128,128x256 > v9_tile/results/asm_check.md
+    python v9_tile/asm_check.py 256x240,256x224 --grid16    # each tile on its 16x16 grid of tiles
 
 Compiles each tile (one launch, 4096x4096x8192 bf16 or the smallest multiple of the tile) into
 its own Triton cache, then reads the K loop (the block that branches back to itself and holds
@@ -58,11 +59,11 @@ torch.cuda.synchronize()
 """
 
 
-def compile_tile(tile, K=8192):
+def compile_tile(tile, K=8192, M=4096, N=4096):
     cache = os.path.join(HERE, "tmp", "asm_cache", tile)
     subprocess.run(["rm", "-rf", cache])
     env = {**os.environ, "TRITON_CACHE_DIR": cache}
-    subprocess.run([sys.executable, "-c", COMPILE % (A16, 4096, 4096, K, tile)], env=env, check=True,
+    subprocess.run([sys.executable, "-c", COMPILE % (A16, M, N, K, tile)], env=env, check=True,
                    capture_output=True)
     return glob.glob(os.path.join(cache, "*", f"{kernel_name(tile)}.amdgcn"))[0]
 
@@ -127,8 +128,9 @@ def wg_per_cu(regs, lds, w):
     return min(by_lds, 8 * 4 // w, by_regs)
 
 
-def summarize(tile):
-    path = compile_tile(tile)
+def summarize(tile, grid16=False):
+    bm, bn = mk.parse_tile(tile)[:2]
+    path = compile_tile(tile, M=16 * bm, N=16 * bn) if grid16 else compile_tile(tile)
     body = loop_body(path)
     ops = [i.split()[0] for i in body]
     count = lambda p: sum(o.startswith(p) for o in ops)  # noqa: E731
@@ -159,15 +161,17 @@ def summarize(tile):
 
 def main():
     tiles = sys.argv[1].split(",")
+    grid16 = "--grid16" in sys.argv  # compile each tile on (16 BM) x (16 BN), so banded tiles run without EDGE
     # matmul() always launches with schedule_hint="mfma-schedule" (the "llir" config since v3.0).
     stack = "llir" + ("+amdgcnas" if os.environ.get("TRITON_AMDGCNAS_PLUGIN") else "")
-    print(f"Stack: `{stack}`, K = 8192, one loop iteration = two k-steps.\n")
+    shape = "16 BM x 16 BN" if grid16 else "4096x4096"
+    print(f"Stack: `{stack}`, {shape} x 8192, one loop iteration = two k-steps.\n")
     print("| tile | waves | VGPRs | AGPRs | spills | LDS KB | WGs per CU | loop insts | MFMAs | buffer loads | "
           "ds_reads | s_waitcnt | s_barrier | s_nop | v_accvgpr | scratch | longest non-MFMA run | "
           "MFMAs between buffer loads |")
     print("|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|")
     for t in tiles:
-        r = summarize(t)
+        r = summarize(t, grid16)
         print("| {tile} | {w} | {vgpr} | {agpr} | {spill} | {lds} | {wgs} | {insts} | {mfma} | {bload} | {dsread} | "
               "{wait} | {barrier} | {nop} | {acc} | {scratch} | {maxgap} | {per_load} |".format(**r), flush=True)
 

@@ -39,6 +39,12 @@ EDGE_M and EDGE_N, which clamp A rows past M and B columns past N to the tile's 
 (every load reads valid memory) and mask the C stores and the bias load to M x N. With both off the
 kernels are unchanged. V9_FORCE_EDGE=1 sets them for any shape.
 
+BLOCK_M may also be a multiple of 16 between 128 and 256 ("192x128", "240x128"; row_bands): Gluon
+tensors have power-of-two sides, so v9_tile runs the quadrants of a 128-row tile and row bands of
+64, 32 and 16 rows under them, every band split over all four waves (WORKLOG §17). BLOCK_N may be
+one instead ("256x192", "128x240"; col_bands): column bands right of a 128-column tile (WORKLOG
+§18), not both. Power-of-two tiles compile to the same code as before.
+
 K need not be a multiple of 2 BLOCK_K (EDGE_K, set by the host): K is rounded up to K_PAD, a whole
 number of K-step pairs, and the last, partial pair goes first (v9_ragged's handling): the prologue
 loads it with the lanes at or past K masked to zero, and the main loop then covers columns
@@ -48,7 +54,8 @@ Tiles with a side of 32 or less ("16x256x128", "1x256x128", "256x8x128") run v9_
 small side is the kernel's M, padded to a 16-row MFMA, and W waves ("w1", "w2", "w4"; by default one
 per 64 columns) sit side by side along the other. A small BN runs as C^T = B^T A^T. A trailing "p"
 (or V9_TILE_PIN=1) pads LDS so that exactly 4 / W workgroups fit in a CU, one wave per SIMD. N (M
-when swapped) must be a multiple of the long side and K of 2 BLOCK_K. Comparisons with Triton's own
+when swapped) need not be a multiple of the long side, nor K of 2 BLOCK_K (EDGE_N and EDGE_K, as
+v9_tile's); K must be a multiple of 16. Comparisons with Triton's own
 choices (WORKLOG §14.9): "m4" uses the 4x64 MFMA instead of the 16-row padding, "wW" above BN / 16
 replicates the tile over the waves, and "eE" launches with waves_per_eu = E (E = 4 / W pins one wave
 per SIMD without the LDS pad).
@@ -93,53 +100,85 @@ def v9_tile(
     EDGE_M: gl.constexpr = False,
     EDGE_N: gl.constexpr = False,
     EDGE_K: gl.constexpr = False,
+    MAIN_M: gl.constexpr = 0,
+    BAND64: gl.constexpr = False,
+    BAND32: gl.constexpr = False,
+    BAND16: gl.constexpr = False,
+    MAIN_N: gl.constexpr = 0,
+    NBAND64: gl.constexpr = False,
+    NBAND32: gl.constexpr = False,
+    NBAND16: gl.constexpr = False,
 ):
-    pid_m, pid_n = get_pids(M, N, BLOCK_M, BLOCK_N, GRID_MN, NUM_XCDS, GROUP_SIZE_M)
+    """Four quadrants of (MAIN_M / 2) x (MAIN_N / 2), MAIN_M = BLOCK_M and MAIN_N = BLOCK_N unless set.
 
-    sharedLayoutA: gl.constexpr = tile_shared_layout(BLOCK_M // 2, BLOCK_K, False, MFMA_32, a_ptr.dtype.element_ty)
-    sharedLayoutB: gl.constexpr = tile_shared_layout(BLOCK_N // 2, BLOCK_K, True, MFMA_32, b_ptr.dtype.element_ty)
+    BLOCK_M = 128 + 64 BAND64 + 32 BAND32 + 16 BAND16 (MAIN_M = 128) adds row bands under the
+    quadrants, each split into a left and right half against the same B: a 64-row band (A_mid) and
+    a 32-row band (A_s32) with the quadrants' 2x2 waves and B registers, and a 16-row band (A_s16)
+    with the waves side by side (v9_tile_small's strip layouts) and its own read of B. A_mid's copy
+    shares A_top's commit group, A_s32's and A_s16's A_bot's, so the wait counts are v9's.
+
+    BLOCK_N = 128 + 64 NBAND64 + 32 NBAND32 + 16 NBAND16 (MAIN_N = 128) mirrors them: column bands to
+    the right of the quadrants, each split into a top and bottom half against A_top and A_bot. B_mid
+    (64 columns) and B_s32 (32) take the 2x2 waves and the quadrants' A registers; B_s16 (16) stacks
+    the waves along M and reads A again. B_mid's copy shares B_left's commit group, B_s32's and
+    B_s16's B_right's. Row and column bands do not combine.
+    """
+    pid_m, pid_n = get_pids(M, N, BLOCK_M, BLOCK_N, GRID_MN, NUM_XCDS, GROUP_SIZE_M)
+    QUAD_M: gl.constexpr = MAIN_M if MAIN_M > 0 else BLOCK_M
+    HALF_M: gl.constexpr = QUAD_M // 2
+    R_MID: gl.constexpr = QUAD_M
+    R_32: gl.constexpr = R_MID + HALF_M if BAND64 else R_MID
+    R_16: gl.constexpr = R_32 + 32 if BAND32 else R_32
+    QUAD_N: gl.constexpr = MAIN_N if MAIN_N > 0 else BLOCK_N
+    HALF_N: gl.constexpr = QUAD_N // 2
+    C_MID: gl.constexpr = QUAD_N
+    C_32: gl.constexpr = C_MID + HALF_N if NBAND64 else C_MID
+    C_16: gl.constexpr = C_32 + 32 if NBAND32 else C_32
+
+    sharedLayoutA: gl.constexpr = tile_shared_layout(HALF_M, BLOCK_K, False, MFMA_32, a_ptr.dtype.element_ty)
+    sharedLayoutB: gl.constexpr = tile_shared_layout(HALF_N, BLOCK_K, True, MFMA_32, b_ptr.dtype.element_ty)
     gLoadLayoutA: gl.constexpr = tile_load_layout(sharedLayoutA)
     gLoadLayoutB: gl.constexpr = tile_load_layout(sharedLayoutB)
     mfmaLayout: gl.constexpr = mfma_layout(MFMA_32)
-    gStoreLayoutC: gl.constexpr = store_layout(BLOCK_N // 2)
+    gStoreLayoutC: gl.constexpr = store_layout(HALF_N)
 
     nBuffers: gl.constexpr = 2
     smemA_top = gl.allocate_shared_memory(
-        a_ptr.dtype.element_ty, [nBuffers, BLOCK_M // 2, BLOCK_K], sharedLayoutA
+        a_ptr.dtype.element_ty, [nBuffers, HALF_M, BLOCK_K], sharedLayoutA
     )
     smemA_bot = gl.allocate_shared_memory(
-        a_ptr.dtype.element_ty, [nBuffers, BLOCK_M // 2, BLOCK_K], sharedLayoutA
+        a_ptr.dtype.element_ty, [nBuffers, HALF_M, BLOCK_K], sharedLayoutA
     )
     smemB_left = gl.allocate_shared_memory(
-        b_ptr.dtype.element_ty, [nBuffers, BLOCK_K, BLOCK_N // 2], sharedLayoutB
+        b_ptr.dtype.element_ty, [nBuffers, BLOCK_K, HALF_N], sharedLayoutB
     )
     smemB_right = gl.allocate_shared_memory(
-        b_ptr.dtype.element_ty, [nBuffers, BLOCK_K, BLOCK_N // 2], sharedLayoutB
+        b_ptr.dtype.element_ty, [nBuffers, BLOCK_K, HALF_N], sharedLayoutB
     )
 
-    offs_am = gl.arange(0, BLOCK_M // 2, gl.SliceLayout(1, gLoadLayoutA))
+    offs_am = gl.arange(0, HALF_M, gl.SliceLayout(1, gLoadLayoutA))
     offs_ak = gl.arange(0, BLOCK_K, gl.SliceLayout(0, gLoadLayoutA))
 
-    offs_bn = gl.arange(0, BLOCK_N // 2, gl.SliceLayout(0, gLoadLayoutB))
+    offs_bn = gl.arange(0, HALF_N, gl.SliceLayout(0, gLoadLayoutB))
     offs_bk = gl.arange(0, BLOCK_K, gl.SliceLayout(1, gLoadLayoutB))
 
-    a_base = a_ptr + pid_m * BLOCK_M * stride_am
-    b_base = b_ptr + pid_n * BLOCK_N * stride_bn
+    a_base = a_ptr + pid_m.to(gl.int64) * BLOCK_M * stride_am
+    b_base = b_ptr + pid_n.to(gl.int64) * BLOCK_N * stride_bn
 
     if EDGE_M:
         lim_m = M - 1 - pid_m * BLOCK_M
         a_top_offsets = gl.minimum(offs_am, lim_m)[:, None] * stride_am + offs_ak[None, :] * stride_ak
-        a_bot_offsets = gl.minimum(offs_am + BLOCK_M // 2, lim_m)[:, None] * stride_am + offs_ak[None, :] * stride_ak
+        a_bot_offsets = gl.minimum(offs_am + HALF_M, lim_m)[:, None] * stride_am + offs_ak[None, :] * stride_ak
     else:
         a_top_offsets = offs_am[:, None] * stride_am + offs_ak[None, :] * stride_ak
-        a_bot_offsets = a_top_offsets + BLOCK_M * stride_am // 2
+        a_bot_offsets = a_top_offsets + QUAD_M * stride_am // 2
     if EDGE_N:
         lim_n = N - 1 - pid_n * BLOCK_N
         b_left_offsets = offs_bk[:, None] * stride_bk + gl.minimum(offs_bn, lim_n)[None, :] * stride_bn
-        b_right_offsets = offs_bk[:, None] * stride_bk + gl.minimum(offs_bn + BLOCK_N // 2, lim_n)[None, :] * stride_bn
+        b_right_offsets = offs_bk[:, None] * stride_bk + gl.minimum(offs_bn + HALF_N, lim_n)[None, :] * stride_bn
     else:
         b_left_offsets = offs_bk[:, None] * stride_bk + offs_bn[None, :] * stride_bn
-        b_right_offsets = b_left_offsets + BLOCK_N * stride_bn // 2
+        b_right_offsets = b_left_offsets + QUAD_N * stride_bn // 2
 
     a_top_offsets_next = a_top_offsets + BLOCK_K * stride_ak
     a_bot_offsets_next = a_bot_offsets + BLOCK_K * stride_ak
@@ -149,9 +188,115 @@ def v9_tile(
     dotOpLayoutA: gl.constexpr = gl.DotOperandLayout(operand_index=0, parent=mfmaLayout, k_width=8)
     dotOpLayoutB: gl.constexpr = gl.DotOperandLayout(operand_index=1, parent=mfmaLayout, k_width=8)
 
-    acc_tl, acc_bl, acc_tr, acc_br = init_acc_edge(
-        bias_ptr, pid_n, N - pid_n * BLOCK_N, BLOCK_M, BLOCK_N, mfmaLayout, ADD_BIAS, EDGE_N
-    )
+    if MAIN_N > 0:
+        acc_tl = init_band_n(bias_ptr, pid_n, 0, HALF_N, HALF_M, BLOCK_N, mfmaLayout, ADD_BIAS, N - pid_n * BLOCK_N,
+                             EDGE_N)
+        acc_tr = init_band_n(bias_ptr, pid_n, HALF_N, HALF_N, HALF_M, BLOCK_N, mfmaLayout, ADD_BIAS,
+                             N - pid_n * BLOCK_N, EDGE_N)
+        acc_bl = acc_tl
+        acc_br = acc_tr
+    else:
+        acc_tl, acc_bl, acc_tr, acc_br = init_acc_edge(
+            bias_ptr, pid_n, N - pid_n * BLOCK_N, QUAD_M, BLOCK_N, mfmaLayout, ADD_BIAS, EDGE_N
+        )
+
+    # Row bands under the quadrants (rows R_MID, R_32, R_16 of the tile); EDGE_M clamps their rows
+    # to the tile's last in-bounds one, as A_top's and A_bot's.
+    if BAND64:
+        smemA_mid = gl.allocate_shared_memory(a_ptr.dtype.element_ty, [nBuffers, HALF_M, BLOCK_K], sharedLayoutA)
+        if EDGE_M:
+            a_mid_offsets = gl.minimum(offs_am + R_MID, lim_m)[:, None] * stride_am + offs_ak[None, :] * stride_ak
+        else:
+            a_mid_offsets = a_top_offsets + R_MID * stride_am
+        a_mid_offsets_next = a_mid_offsets + BLOCK_K * stride_ak
+        acc_ml = acc_tl
+        acc_mr = acc_tr
+    if BAND32:
+        sharedLayoutA32: gl.constexpr = tile_shared_layout(32, BLOCK_K, False, MFMA_32, a_ptr.dtype.element_ty)
+        gLoadLayoutA32: gl.constexpr = tile_load_layout(sharedLayoutA32)
+        smemA_s32 = gl.allocate_shared_memory(a_ptr.dtype.element_ty, [nBuffers, 32, BLOCK_K], sharedLayoutA32)
+        rows32 = gl.arange(0, 32, gl.SliceLayout(1, gLoadLayoutA32)) + R_32
+        if EDGE_M:
+            rows32 = gl.minimum(rows32, lim_m)
+        a_s32_offsets = (rows32[:, None] * stride_am
+                         + gl.arange(0, BLOCK_K, gl.SliceLayout(0, gLoadLayoutA32))[None, :] * stride_ak)
+        a_s32_offsets_next = a_s32_offsets + BLOCK_K * stride_ak
+        acc_s32l, _, acc_s32r, _ = init_acc_edge(
+            bias_ptr, pid_n, N - pid_n * BLOCK_N, 64, BLOCK_N, mfmaLayout, ADD_BIAS, EDGE_N
+        )
+    if BAND16:
+        # 16 rows: the waves sit side by side along N (16 columns of each B half each), so the band
+        # reads B again in its own operand layout. A wave's copy (16 B per lane) covers
+        # 512 / BLOCK_K rows: at BLOCK_K = 64 two waves fill the band and the other two are predicated off.
+        mfma16: gl.constexpr = small_mfma_layout(False, 4)
+        dotOpLayoutA16: gl.constexpr = gl.DotOperandLayout(operand_index=0, parent=mfma16, k_width=8)
+        dotOpLayoutB16: gl.constexpr = gl.DotOperandLayout(operand_index=1, parent=mfma16, k_width=8)
+        gLoadLayoutA16: gl.constexpr = strip_load_layout(16, BLOCK_K, False, 4, replicate=True)
+        smemA_s16 = gl.allocate_shared_memory(a_ptr.dtype.element_ty, [nBuffers, 16, BLOCK_K],
+                                              strip_shared_layout(BLOCK_K, False, False))
+        smemA_s16_rd = smemA_s16.reinterpret(a_ptr.dtype.element_ty, [nBuffers, 16, BLOCK_K],
+                                             strip_shared_layout(BLOCK_K, False, True))
+        offs_a16r = gl.arange(0, 16, gl.SliceLayout(1, gLoadLayoutA16))
+        a16_k = swizzled_k(gl.arange(0, BLOCK_K, gl.SliceLayout(0, gLoadLayoutA16))[None, :], offs_a16r[:, None],
+                           BLOCK_K)
+        rows16 = offs_a16r + R_16
+        if EDGE_M:
+            rows16 = gl.minimum(rows16, lim_m)
+        a_s16_offsets = rows16[:, None] * stride_am + a16_k * stride_ak
+        a_s16_offsets_next = a_s16_offsets + BLOCK_K * stride_ak
+        acc_s16l, _, acc_s16r, _ = init_acc_edge(
+            bias_ptr, pid_n, N - pid_n * BLOCK_N, 32, BLOCK_N, mfma16, ADD_BIAS, EDGE_N
+        )
+
+    # Column bands right of the quadrants (columns C_MID, C_32, C_16 of the tile); EDGE_N clamps
+    # their columns to the tile's last in-bounds one, as B_left's and B_right's.
+    if NBAND64:
+        smemB_mid = gl.allocate_shared_memory(b_ptr.dtype.element_ty, [nBuffers, BLOCK_K, HALF_N], sharedLayoutB)
+        if EDGE_N:
+            b_mid_offsets = offs_bk[:, None] * stride_bk + gl.minimum(offs_bn + C_MID, lim_n)[None, :] * stride_bn
+        else:
+            b_mid_offsets = b_left_offsets + C_MID * stride_bn
+        b_mid_offsets_next = b_mid_offsets + BLOCK_K * stride_bk
+        acc_n64t = init_band_n(bias_ptr, pid_n, C_MID, HALF_N, HALF_M, BLOCK_N, mfmaLayout, ADD_BIAS,
+                               N - pid_n * BLOCK_N, EDGE_N)
+        acc_n64b = acc_n64t
+    if NBAND32:
+        sharedLayoutB32: gl.constexpr = tile_shared_layout(32, BLOCK_K, True, MFMA_32, b_ptr.dtype.element_ty)
+        gLoadLayoutB32: gl.constexpr = tile_load_layout(sharedLayoutB32)
+        smemB_s32 = gl.allocate_shared_memory(b_ptr.dtype.element_ty, [nBuffers, BLOCK_K, 32], sharedLayoutB32)
+        cols32 = gl.arange(0, 32, gl.SliceLayout(0, gLoadLayoutB32)) + C_32
+        if EDGE_N:
+            cols32 = gl.minimum(cols32, lim_n)
+        b_s32_offsets = (gl.arange(0, BLOCK_K, gl.SliceLayout(1, gLoadLayoutB32))[:, None] * stride_bk
+                         + cols32[None, :] * stride_bn)
+        b_s32_offsets_next = b_s32_offsets + BLOCK_K * stride_bk
+        acc_n32t = init_band_n(bias_ptr, pid_n, C_32, 32, HALF_M, BLOCK_N, mfmaLayout, ADD_BIAS, N - pid_n * BLOCK_N,
+                               EDGE_N)
+        acc_n32b = acc_n32t
+    if NBAND16:
+        # 16 columns: the waves stack along M (HALF_M / 4 rows of each A half each), so the band reads
+        # A again in its own operand layout. B_s16 is v9_tile_small's swizzled strip, copied by
+        # 512 / BLOCK_K columns per wave (the waves past 16 columns predicated off).
+        mfma16n: gl.constexpr = gl.amd.AMDMFMALayout(version=4, instr_shape=[16, 16, 32], transposed=True,
+                                                     warps_per_cta=[4, 1])
+        dotOpLayoutA16n: gl.constexpr = gl.DotOperandLayout(operand_index=0, parent=mfma16n, k_width=8)
+        dotOpLayoutB16n: gl.constexpr = gl.DotOperandLayout(operand_index=1, parent=mfma16n, k_width=8)
+        gLoadLayoutB16: gl.constexpr = strip_load_layout(16, BLOCK_K, True, 4, replicate=True)
+        smemB_s16 = gl.allocate_shared_memory(b_ptr.dtype.element_ty, [nBuffers, BLOCK_K, 16],
+                                              strip_shared_layout(BLOCK_K, True, False))
+        smemB_s16_rd = smemB_s16.reinterpret(b_ptr.dtype.element_ty, [nBuffers, BLOCK_K, 16],
+                                             strip_shared_layout(BLOCK_K, True, True))
+        offs_b16c = gl.arange(0, 16, gl.SliceLayout(0, gLoadLayoutB16))
+        b16_k = swizzled_k(gl.arange(0, BLOCK_K, gl.SliceLayout(1, gLoadLayoutB16))[:, None], offs_b16c[None, :],
+                           BLOCK_K)
+        cols16 = offs_b16c + C_16
+        if EDGE_N:
+            cols16 = gl.minimum(cols16, lim_n)
+        b_s16_offsets = b16_k * stride_bk + cols16[None, :] * stride_bn
+        b_s16_offsets_next = b_s16_offsets + BLOCK_K * stride_bk
+        acc_n16t = init_band_n(bias_ptr, pid_n, C_16, 16, HALF_M, BLOCK_N, mfma16n, ADD_BIAS, N - pid_n * BLOCK_N,
+                               EDGE_N)
+        acc_n16b = acc_n16t
 
     # Ragged K: the prologue loads the last, partial pair (masked at K); the main loop then starts
     # at column 0. K-step 1 of that pair always reaches past K, K-step 0 only when K_RES > BLOCK_K.
@@ -161,41 +306,88 @@ def v9_tile(
     a_first = a_base
     b_first = b_base
     mA0, mB0, mA1, mB1 = None, None, None, None
+    m32_0, m32_1, m16_0, m16_1 = None, None, None, None
+    mn32_0, mn32_1, mn16_0, mn16_1 = None, None, None, None
     if EDGE_K:
         a_first = a_base + (K_PAD - 2 * BLOCK_K) * stride_ak
         b_first = b_base + (K_PAD - 2 * BLOCK_K) * stride_bk
-        mA1 = k_tail_mask(2 * BLOCK_K - K_RES, 1, BLOCK_M // 2, BLOCK_K, gLoadLayoutA, False)
-        mB1 = k_tail_mask(2 * BLOCK_K - K_RES, 1, BLOCK_N // 2, BLOCK_K, gLoadLayoutB, True)
+        mA1 = k_tail_mask(2 * BLOCK_K - K_RES, 1, HALF_M, BLOCK_K, gLoadLayoutA, False)
+        mB1 = k_tail_mask(2 * BLOCK_K - K_RES, 1, HALF_N, BLOCK_K, gLoadLayoutB, True)
         if K_RES > BLOCK_K:
-            mA0 = k_tail_mask(2 * BLOCK_K - K_RES, 0, BLOCK_M // 2, BLOCK_K, gLoadLayoutA, False)
-            mB0 = k_tail_mask(2 * BLOCK_K - K_RES, 0, BLOCK_N // 2, BLOCK_K, gLoadLayoutB, True)
+            mA0 = k_tail_mask(2 * BLOCK_K - K_RES, 0, HALF_M, BLOCK_K, gLoadLayoutA, False)
+            mB0 = k_tail_mask(2 * BLOCK_K - K_RES, 0, HALF_N, BLOCK_K, gLoadLayoutB, True)
+        if BAND32:
+            m32_1 = k_tail_mask(2 * BLOCK_K - K_RES, 1, 32, BLOCK_K, gLoadLayoutA32, False)
+            if K_RES > BLOCK_K:
+                m32_0 = k_tail_mask(2 * BLOCK_K - K_RES, 0, 32, BLOCK_K, gLoadLayoutA32, False)
+        if BAND16:
+            # The column a lane loads is the swizzled one (as v9_tile_small).
+            m16_1 = (a16_k + BLOCK_K < 2 * BLOCK_K - K_RES) & (offs_a16r >= 0)[:, None]
+            if K_RES > BLOCK_K:
+                m16_0 = (a16_k < 2 * BLOCK_K - K_RES) & (offs_a16r >= 0)[:, None]
+        if NBAND32:
+            mn32_1 = k_tail_mask(2 * BLOCK_K - K_RES, 1, 32, BLOCK_K, gLoadLayoutB32, True)
+            if K_RES > BLOCK_K:
+                mn32_0 = k_tail_mask(2 * BLOCK_K - K_RES, 0, 32, BLOCK_K, gLoadLayoutB32, True)
+        if NBAND16:
+            mn16_1 = (b16_k + BLOCK_K < 2 * BLOCK_K - K_RES) & (offs_b16c >= 0)[None, :]
+            if K_RES > BLOCK_K:
+                mn16_0 = (b16_k < 2 * BLOCK_K - K_RES) & (offs_b16c >= 0)[None, :]
 
     g_idx = 0
     gl.amd.cdna4.async_copy.buffer_load_to_shared(smemB_left.index(g_idx), b_first, b_left_offsets, mask=mB0)
+    if NBAND64:
+        gl.amd.cdna4.async_copy.buffer_load_to_shared(smemB_mid.index(g_idx), b_first, b_mid_offsets, mask=mB0)
     gl.amd.cdna4.async_copy.commit_group()
     gl.amd.cdna4.async_copy.buffer_load_to_shared(smemA_top.index(g_idx), a_first, a_top_offsets, mask=mA0)
+    if BAND64:
+        gl.amd.cdna4.async_copy.buffer_load_to_shared(smemA_mid.index(g_idx), a_first, a_mid_offsets, mask=mA0)
     gl.amd.cdna4.async_copy.commit_group()
     gl.amd.cdna4.async_copy.buffer_load_to_shared(smemA_bot.index(g_idx), a_first, a_bot_offsets, mask=mA0)
+    if BAND32:
+        gl.amd.cdna4.async_copy.buffer_load_to_shared(smemA_s32.index(g_idx), a_first, a_s32_offsets, mask=m32_0)
+    if BAND16:
+        gl.amd.cdna4.async_copy.buffer_load_to_shared(smemA_s16.index(g_idx), a_first, a_s16_offsets, mask=m16_0)
     gl.amd.cdna4.async_copy.commit_group()
     gl.amd.cdna4.async_copy.buffer_load_to_shared(smemB_right.index(g_idx), b_first, b_right_offsets, mask=mB0)
+    if NBAND32:
+        gl.amd.cdna4.async_copy.buffer_load_to_shared(smemB_s32.index(g_idx), b_first, b_s32_offsets, mask=mn32_0)
+    if NBAND16:
+        gl.amd.cdna4.async_copy.buffer_load_to_shared(smemB_s16.index(g_idx), b_first, b_s16_offsets, mask=mn16_0)
     gl.amd.cdna4.async_copy.commit_group()
 
     g_idx = 1
     gl.amd.cdna4.async_copy.buffer_load_to_shared(
         smemB_left.index(g_idx), b_first, b_left_offsets_next, mask=mB1
     )
+    if NBAND64:
+        gl.amd.cdna4.async_copy.buffer_load_to_shared(smemB_mid.index(g_idx), b_first, b_mid_offsets_next, mask=mB1)
     gl.amd.cdna4.async_copy.commit_group()
     gl.amd.cdna4.async_copy.buffer_load_to_shared(
         smemA_top.index(g_idx), a_first, a_top_offsets_next, mask=mA1
     )
+    if BAND64:
+        gl.amd.cdna4.async_copy.buffer_load_to_shared(smemA_mid.index(g_idx), a_first, a_mid_offsets_next, mask=mA1)
     gl.amd.cdna4.async_copy.commit_group()
     gl.amd.cdna4.async_copy.buffer_load_to_shared(
         smemA_bot.index(g_idx), a_first, a_bot_offsets_next, mask=mA1
     )
+    if BAND32:
+        gl.amd.cdna4.async_copy.buffer_load_to_shared(smemA_s32.index(g_idx), a_first, a_s32_offsets_next,
+                                                      mask=m32_1)
+    if BAND16:
+        gl.amd.cdna4.async_copy.buffer_load_to_shared(smemA_s16.index(g_idx), a_first, a_s16_offsets_next,
+                                                      mask=m16_1)
     gl.amd.cdna4.async_copy.commit_group()
     gl.amd.cdna4.async_copy.buffer_load_to_shared(
         smemB_right.index(g_idx), b_first, b_right_offsets_next, mask=mB1
     )
+    if NBAND32:
+        gl.amd.cdna4.async_copy.buffer_load_to_shared(smemB_s32.index(g_idx), b_first, b_s32_offsets_next,
+                                                      mask=mn32_1)
+    if NBAND16:
+        gl.amd.cdna4.async_copy.buffer_load_to_shared(smemB_s16.index(g_idx), b_first, b_s16_offsets_next,
+                                                      mask=mn16_1)
     gl.amd.cdna4.async_copy.commit_group()
 
     if not EDGE_K:
@@ -205,122 +397,309 @@ def v9_tile(
     gl.amd.cdna4.async_copy.wait_group(6)
     b_left = smemB_left.index(0).load(dotOpLayoutB)
     a_top = smemA_top.index(0).load(dotOpLayoutA)
+    if BAND64:
+        a_mid = smemA_mid.index(0).load(dotOpLayoutA)
+    if BAND16:
+        b_left_s = smemB_left.index(0).load(dotOpLayoutB16)
+    if NBAND64:
+        b_mid = smemB_mid.index(0).load(dotOpLayoutB)
+    if NBAND16:
+        a_top_s = smemA_top.index(0).load(dotOpLayoutA16n)
 
     gl.assume(iterMax > 3)
 
     for k in range(0, iterMax - 2, 2):
-        # Sub-iteration 0: consume buffer 0, prefetch into buffer 0.
+        # Sub-iteration 0: consume buffer 0, prefetch into buffer 0. A band's operands are read with
+        # the quadrant operand of the same commit group, before the copy that refills their buffer.
         acc_tl = gl.amd.cdna3.mfma(a_top, b_left, acc_tl, cd_regclass="a")
+        if NBAND64:
+            acc_n64t = gl.amd.cdna3.mfma(a_top, b_mid, acc_n64t, cd_regclass="a")
 
         gl.amd.cdna4.async_copy.wait_group(5)
         a_bot = smemA_bot.index(0).load(dotOpLayoutA)
+        if BAND32:
+            a_s32 = smemA_s32.index(0).load(dotOpLayoutA)
+        if BAND16:
+            a_s16 = smemA_s16_rd.index(0).load(dotOpLayoutA16)
+        if NBAND16:
+            a_bot_s = smemA_bot.index(0).load(dotOpLayoutA16n)
 
         gl.amd.cdna4.async_copy.buffer_load_to_shared(smemB_left.index(0), b_base, b_left_offsets)
+        if NBAND64:
+            gl.amd.cdna4.async_copy.buffer_load_to_shared(smemB_mid.index(0), b_base, b_mid_offsets)
         gl.amd.cdna4.async_copy.commit_group()
 
         acc_bl = gl.amd.cdna3.mfma(a_bot, b_left, acc_bl, cd_regclass="a")
+        if BAND64:
+            acc_ml = gl.amd.cdna3.mfma(a_mid, b_left, acc_ml, cd_regclass="a")
+        if BAND32:
+            acc_s32l = gl.amd.cdna3.mfma(a_s32, b_left, acc_s32l, cd_regclass="a")
+        if BAND16:
+            acc_s16l = gl.amd.cdna3.mfma(a_s16, b_left_s, acc_s16l, cd_regclass="a")
+        if NBAND64:
+            acc_n64b = gl.amd.cdna3.mfma(a_bot, b_mid, acc_n64b, cd_regclass="a")
 
         gl.amd.cdna4.async_copy.wait_group(5)
         b_right = smemB_right.index(0).load(dotOpLayoutB)
+        if BAND16:
+            b_right_s = smemB_right.index(0).load(dotOpLayoutB16)
+        if NBAND32:
+            b_s32 = smemB_s32.index(0).load(dotOpLayoutB)
+        if NBAND16:
+            b_s16 = smemB_s16_rd.index(0).load(dotOpLayoutB16n)
 
         gl.amd.cdna4.async_copy.buffer_load_to_shared(smemA_top.index(0), a_base, a_top_offsets)
+        if BAND64:
+            gl.amd.cdna4.async_copy.buffer_load_to_shared(smemA_mid.index(0), a_base, a_mid_offsets)
         gl.amd.cdna4.async_copy.commit_group()
 
         acc_tr = gl.amd.cdna3.mfma(a_top, b_right, acc_tr, cd_regclass="a")
+        if NBAND32:
+            acc_n32t = gl.amd.cdna3.mfma(a_top, b_s32, acc_n32t, cd_regclass="a")
+        if NBAND16:
+            acc_n16t = gl.amd.cdna3.mfma(a_top_s, b_s16, acc_n16t, cd_regclass="a")
 
         gl.amd.cdna4.async_copy.wait_group(5)
         b_left = smemB_left.index(1).load(dotOpLayoutB)
+        if BAND16:
+            b_left_s = smemB_left.index(1).load(dotOpLayoutB16)
+        if NBAND64:
+            b_mid = smemB_mid.index(1).load(dotOpLayoutB)
 
         gl.amd.cdna4.async_copy.buffer_load_to_shared(smemA_bot.index(0), a_base, a_bot_offsets)
+        if BAND32:
+            gl.amd.cdna4.async_copy.buffer_load_to_shared(smemA_s32.index(0), a_base, a_s32_offsets)
+        if BAND16:
+            gl.amd.cdna4.async_copy.buffer_load_to_shared(smemA_s16.index(0), a_base, a_s16_offsets)
         gl.amd.cdna4.async_copy.commit_group()
 
         acc_br = gl.amd.cdna3.mfma(a_bot, b_right, acc_br, cd_regclass="a")
+        if BAND64:
+            acc_mr = gl.amd.cdna3.mfma(a_mid, b_right, acc_mr, cd_regclass="a")
+        if BAND32:
+            acc_s32r = gl.amd.cdna3.mfma(a_s32, b_right, acc_s32r, cd_regclass="a")
+        if BAND16:
+            acc_s16r = gl.amd.cdna3.mfma(a_s16, b_right_s, acc_s16r, cd_regclass="a")
+        if NBAND32:
+            acc_n32b = gl.amd.cdna3.mfma(a_bot, b_s32, acc_n32b, cd_regclass="a")
+        if NBAND16:
+            acc_n16b = gl.amd.cdna3.mfma(a_bot_s, b_s16, acc_n16b, cd_regclass="a")
 
         gl.amd.cdna4.async_copy.wait_group(5)
         a_top = smemA_top.index(1).load(dotOpLayoutA)
+        if BAND64:
+            a_mid = smemA_mid.index(1).load(dotOpLayoutA)
+        if NBAND16:
+            a_top_s = smemA_top.index(1).load(dotOpLayoutA16n)
 
         gl.amd.cdna4.async_copy.buffer_load_to_shared(smemB_right.index(0), b_base, b_right_offsets)
+        if NBAND32:
+            gl.amd.cdna4.async_copy.buffer_load_to_shared(smemB_s32.index(0), b_base, b_s32_offsets)
+        if NBAND16:
+            gl.amd.cdna4.async_copy.buffer_load_to_shared(smemB_s16.index(0), b_base, b_s16_offsets)
         gl.amd.cdna4.async_copy.commit_group()
 
         # Sub-iteration 1: consume buffer 1, prefetch into buffer 1 (odd K-step offsets).
         acc_tl = gl.amd.cdna3.mfma(a_top, b_left, acc_tl, cd_regclass="a")
+        if NBAND64:
+            acc_n64t = gl.amd.cdna3.mfma(a_top, b_mid, acc_n64t, cd_regclass="a")
 
         gl.amd.cdna4.async_copy.wait_group(5)
         a_bot = smemA_bot.index(1).load(dotOpLayoutA)
+        if BAND32:
+            a_s32 = smemA_s32.index(1).load(dotOpLayoutA)
+        if BAND16:
+            a_s16 = smemA_s16_rd.index(1).load(dotOpLayoutA16)
+        if NBAND16:
+            a_bot_s = smemA_bot.index(1).load(dotOpLayoutA16n)
 
         gl.amd.cdna4.async_copy.buffer_load_to_shared(
             smemB_left.index(1), b_base, b_left_offsets_next
         )
+        if NBAND64:
+            gl.amd.cdna4.async_copy.buffer_load_to_shared(smemB_mid.index(1), b_base, b_mid_offsets_next)
         gl.amd.cdna4.async_copy.commit_group()
 
         acc_bl = gl.amd.cdna3.mfma(a_bot, b_left, acc_bl, cd_regclass="a")
+        if BAND64:
+            acc_ml = gl.amd.cdna3.mfma(a_mid, b_left, acc_ml, cd_regclass="a")
+        if BAND32:
+            acc_s32l = gl.amd.cdna3.mfma(a_s32, b_left, acc_s32l, cd_regclass="a")
+        if BAND16:
+            acc_s16l = gl.amd.cdna3.mfma(a_s16, b_left_s, acc_s16l, cd_regclass="a")
+        if NBAND64:
+            acc_n64b = gl.amd.cdna3.mfma(a_bot, b_mid, acc_n64b, cd_regclass="a")
 
         gl.amd.cdna4.async_copy.wait_group(5)
         b_right = smemB_right.index(1).load(dotOpLayoutB)
+        if BAND16:
+            b_right_s = smemB_right.index(1).load(dotOpLayoutB16)
+        if NBAND32:
+            b_s32 = smemB_s32.index(1).load(dotOpLayoutB)
+        if NBAND16:
+            b_s16 = smemB_s16_rd.index(1).load(dotOpLayoutB16n)
 
         gl.amd.cdna4.async_copy.buffer_load_to_shared(
             smemA_top.index(1), a_base, a_top_offsets_next
         )
+        if BAND64:
+            gl.amd.cdna4.async_copy.buffer_load_to_shared(smemA_mid.index(1), a_base, a_mid_offsets_next)
         gl.amd.cdna4.async_copy.commit_group()
 
         acc_tr = gl.amd.cdna3.mfma(a_top, b_right, acc_tr, cd_regclass="a")
+        if NBAND32:
+            acc_n32t = gl.amd.cdna3.mfma(a_top, b_s32, acc_n32t, cd_regclass="a")
+        if NBAND16:
+            acc_n16t = gl.amd.cdna3.mfma(a_top_s, b_s16, acc_n16t, cd_regclass="a")
 
         gl.amd.cdna4.async_copy.wait_group(5)
         b_left = smemB_left.index(0).load(dotOpLayoutB)
+        if BAND16:
+            b_left_s = smemB_left.index(0).load(dotOpLayoutB16)
+        if NBAND64:
+            b_mid = smemB_mid.index(0).load(dotOpLayoutB)
 
         gl.amd.cdna4.async_copy.buffer_load_to_shared(
             smemA_bot.index(1), a_base, a_bot_offsets_next
         )
+        if BAND32:
+            gl.amd.cdna4.async_copy.buffer_load_to_shared(smemA_s32.index(1), a_base, a_s32_offsets_next)
+        if BAND16:
+            gl.amd.cdna4.async_copy.buffer_load_to_shared(smemA_s16.index(1), a_base, a_s16_offsets_next)
         gl.amd.cdna4.async_copy.commit_group()
 
         acc_br = gl.amd.cdna3.mfma(a_bot, b_right, acc_br, cd_regclass="a")
+        if BAND64:
+            acc_mr = gl.amd.cdna3.mfma(a_mid, b_right, acc_mr, cd_regclass="a")
+        if BAND32:
+            acc_s32r = gl.amd.cdna3.mfma(a_s32, b_right, acc_s32r, cd_regclass="a")
+        if BAND16:
+            acc_s16r = gl.amd.cdna3.mfma(a_s16, b_right_s, acc_s16r, cd_regclass="a")
+        if NBAND32:
+            acc_n32b = gl.amd.cdna3.mfma(a_bot, b_s32, acc_n32b, cd_regclass="a")
+        if NBAND16:
+            acc_n16b = gl.amd.cdna3.mfma(a_bot_s, b_s16, acc_n16b, cd_regclass="a")
 
         gl.amd.cdna4.async_copy.wait_group(5)
         a_top = smemA_top.index(0).load(dotOpLayoutA)
+        if BAND64:
+            a_mid = smemA_mid.index(0).load(dotOpLayoutA)
+        if NBAND16:
+            a_top_s = smemA_top.index(0).load(dotOpLayoutA16n)
 
         gl.amd.cdna4.async_copy.buffer_load_to_shared(
             smemB_right.index(1), b_base, b_right_offsets_next
         )
+        if NBAND32:
+            gl.amd.cdna4.async_copy.buffer_load_to_shared(smemB_s32.index(1), b_base, b_s32_offsets_next)
+        if NBAND16:
+            gl.amd.cdna4.async_copy.buffer_load_to_shared(smemB_s16.index(1), b_base, b_s16_offsets_next)
         gl.amd.cdna4.async_copy.commit_group()
 
         a_base += BLOCK_K * stride_ak * 2
         b_base += BLOCK_K * stride_bk * 2
 
-    offs_cm = gl.arange(0, BLOCK_M // 2, gl.SliceLayout(1, gStoreLayoutC))
-    offs_cn = gl.arange(0, BLOCK_N // 2, gl.SliceLayout(0, gStoreLayoutC))
-    c_base = c_ptr + pid_m * BLOCK_M * stride_cm + pid_n * BLOCK_N * stride_cn
+    offs_cm = gl.arange(0, HALF_M, gl.SliceLayout(1, gStoreLayoutC))
+    offs_cn = gl.arange(0, HALF_N, gl.SliceLayout(0, gStoreLayoutC))
+    c_base = c_ptr + pid_m.to(gl.int64) * BLOCK_M * stride_cm + pid_n.to(gl.int64) * BLOCK_N * stride_cn
     c_tl_offsets = stride_cm * offs_cm[:, None] + stride_cn * offs_cn[None, :]
-    c_tr_offsets = c_tl_offsets + BLOCK_N * stride_cn // 2
-    c_bl_offsets = c_tl_offsets + BLOCK_M * stride_cm // 2
-    c_br_offsets = c_bl_offsets + BLOCK_N * stride_cn // 2
+    c_tr_offsets = c_tl_offsets + QUAD_N * stride_cn // 2
+    c_bl_offsets = c_tl_offsets + QUAD_M * stride_cm // 2
+    c_br_offsets = c_bl_offsets + QUAD_N * stride_cn // 2
     rows_left = M - pid_m * BLOCK_M
     cols_left = N - pid_n * BLOCK_N
 
     acc_tl = gl.amd.cdna3.mfma(a_top, b_left, acc_tl, cd_regclass="a")
+    if NBAND64:
+        acc_n64t = gl.amd.cdna3.mfma(a_top, b_mid, acc_n64t, cd_regclass="a")
     gl.amd.cdna4.async_copy.wait_group(5)
     l_idx = (iterMax - 2) % 2
     a_bot = smemA_bot.index(l_idx).load(dotOpLayoutA)
+    if BAND32:
+        a_s32 = smemA_s32.index(l_idx).load(dotOpLayoutA)
+    if BAND16:
+        a_s16 = smemA_s16_rd.index(l_idx).load(dotOpLayoutA16)
+    if NBAND16:
+        a_bot_s = smemA_bot.index(l_idx).load(dotOpLayoutA16n)
 
     acc_bl = gl.amd.cdna3.mfma(a_bot, b_left, acc_bl, cd_regclass="a")
+    if BAND64:
+        acc_ml = gl.amd.cdna3.mfma(a_mid, b_left, acc_ml, cd_regclass="a")
+    if BAND32:
+        acc_s32l = gl.amd.cdna3.mfma(a_s32, b_left, acc_s32l, cd_regclass="a")
+    if BAND16:
+        acc_s16l = gl.amd.cdna3.mfma(a_s16, b_left_s, acc_s16l, cd_regclass="a")
+    if NBAND64:
+        acc_n64b = gl.amd.cdna3.mfma(a_bot, b_mid, acc_n64b, cd_regclass="a")
     gl.amd.cdna4.async_copy.wait_group(4)
     b_right = smemB_right.index(l_idx).load(dotOpLayoutB)
+    if BAND16:
+        b_right_s = smemB_right.index(l_idx).load(dotOpLayoutB16)
+    if NBAND32:
+        b_s32 = smemB_s32.index(l_idx).load(dotOpLayoutB)
+    if NBAND16:
+        b_s16 = smemB_s16_rd.index(l_idx).load(dotOpLayoutB16n)
 
     acc_tr = gl.amd.cdna3.mfma(a_top, b_right, acc_tr, cd_regclass="a")
+    if NBAND32:
+        acc_n32t = gl.amd.cdna3.mfma(a_top, b_s32, acc_n32t, cd_regclass="a")
+    if NBAND16:
+        acc_n16t = gl.amd.cdna3.mfma(a_top_s, b_s16, acc_n16t, cd_regclass="a")
     gl.amd.cdna4.async_copy.wait_group(3)
     g_idx = 1 - l_idx
     b_left = smemB_left.index(g_idx).load(dotOpLayoutB)
+    if BAND16:
+        b_left_s = smemB_left.index(g_idx).load(dotOpLayoutB16)
+    if NBAND64:
+        b_mid = smemB_mid.index(g_idx).load(dotOpLayoutB)
 
     acc_br = gl.amd.cdna3.mfma(a_bot, b_right, acc_br, cd_regclass="a")
+    if BAND64:
+        acc_mr = gl.amd.cdna3.mfma(a_mid, b_right, acc_mr, cd_regclass="a")
+    if BAND32:
+        acc_s32r = gl.amd.cdna3.mfma(a_s32, b_right, acc_s32r, cd_regclass="a")
+    if BAND16:
+        acc_s16r = gl.amd.cdna3.mfma(a_s16, b_right_s, acc_s16r, cd_regclass="a")
+    if NBAND32:
+        acc_n32b = gl.amd.cdna3.mfma(a_bot, b_s32, acc_n32b, cd_regclass="a")
+    if NBAND16:
+        acc_n16b = gl.amd.cdna3.mfma(a_bot_s, b_s16, acc_n16b, cd_regclass="a")
     gl.amd.cdna4.async_copy.wait_group(2)
     a_top = smemA_top.index(g_idx).load(dotOpLayoutA)
+    if BAND64:
+        a_mid = smemA_mid.index(g_idx).load(dotOpLayoutA)
+    if NBAND16:
+        a_top_s = smemA_top.index(g_idx).load(dotOpLayoutA16n)
 
     acc_tl = gl.amd.cdna3.mfma(a_top, b_left, acc_tl, cd_regclass="a")
+    if NBAND64:
+        acc_n64t = gl.amd.cdna3.mfma(a_top, b_mid, acc_n64t, cd_regclass="a")
     gl.amd.cdna4.async_copy.wait_group(1)
     a_bot = smemA_bot.index(g_idx).load(dotOpLayoutA)
+    if BAND32:
+        a_s32 = smemA_s32.index(g_idx).load(dotOpLayoutA)
+    if BAND16:
+        a_s16 = smemA_s16_rd.index(g_idx).load(dotOpLayoutA16)
+    if NBAND16:
+        a_bot_s = smemA_bot.index(g_idx).load(dotOpLayoutA16n)
 
     acc_bl = gl.amd.cdna3.mfma(a_bot, b_left, acc_bl, cd_regclass="a")
+    if BAND64:
+        acc_ml = gl.amd.cdna3.mfma(a_mid, b_left, acc_ml, cd_regclass="a")
+    if BAND32:
+        acc_s32l = gl.amd.cdna3.mfma(a_s32, b_left, acc_s32l, cd_regclass="a")
+    if BAND16:
+        acc_s16l = gl.amd.cdna3.mfma(a_s16, b_left_s, acc_s16l, cd_regclass="a")
+    if NBAND64:
+        acc_n64b = gl.amd.cdna3.mfma(a_bot, b_mid, acc_n64b, cd_regclass="a")
     gl.amd.cdna4.async_copy.wait_group(0)
     b_right = smemB_right.index(g_idx).load(dotOpLayoutB)
+    if BAND16:
+        b_right_s = smemB_right.index(g_idx).load(dotOpLayoutB16)
+    if NBAND32:
+        b_s32 = smemB_s32.index(g_idx).load(dotOpLayoutB)
+    if NBAND16:
+        b_s16 = smemB_s16_rd.index(g_idx).load(dotOpLayoutB16n)
 
     c_tl = acc_tl.to(c_ptr.dtype.element_ty)
     c_tl = gl.convert_layout(c_tl, layout=gStoreLayoutC)
@@ -330,18 +709,72 @@ def v9_tile(
 
     c_bl = acc_bl.to(c_ptr.dtype.element_ty)
     c_bl = gl.convert_layout(c_bl, layout=gStoreLayoutC)
-    store_edge(c_bl, c_base, c_bl_offsets, gStoreLayoutC, rows_left - BLOCK_M // 2, cols_left, EDGE_M, EDGE_N)
+    store_edge(c_bl, c_base, c_bl_offsets, gStoreLayoutC, rows_left - HALF_M, cols_left, EDGE_M, EDGE_N)
 
     acc_br = gl.amd.cdna3.mfma(a_bot, b_right, acc_br, cd_regclass="a")
 
     c_tr = acc_tr.to(c_ptr.dtype.element_ty)
     c_tr = gl.convert_layout(c_tr, layout=gStoreLayoutC)
-    store_edge(c_tr, c_base, c_tr_offsets, gStoreLayoutC, rows_left, cols_left - BLOCK_N // 2, EDGE_M, EDGE_N)
+    store_edge(c_tr, c_base, c_tr_offsets, gStoreLayoutC, rows_left, cols_left - HALF_N, EDGE_M, EDGE_N)
 
     c_br = acc_br.to(c_ptr.dtype.element_ty)
     c_br = gl.convert_layout(c_br, layout=gStoreLayoutC)
-    store_edge(c_br, c_base, c_br_offsets, gStoreLayoutC, rows_left - BLOCK_M // 2, cols_left - BLOCK_N // 2, EDGE_M,
+    store_edge(c_br, c_base, c_br_offsets, gStoreLayoutC, rows_left - HALF_M, cols_left - HALF_N, EDGE_M,
                EDGE_N)
+
+    if BAND64:
+        acc_mr = gl.amd.cdna3.mfma(a_mid, b_right, acc_mr, cd_regclass="a")
+        store_band(acc_ml, acc_mr, c_base, R_MID, stride_cm, stride_cn, rows_left, cols_left, BLOCK_N, gStoreLayoutC,
+                   EDGE_M, EDGE_N)
+    if BAND32:
+        acc_s32r = gl.amd.cdna3.mfma(a_s32, b_right, acc_s32r, cd_regclass="a")
+        store_band(acc_s32l, acc_s32r, c_base, R_32, stride_cm, stride_cn, rows_left, cols_left, BLOCK_N,
+                   gStoreLayoutC, EDGE_M, EDGE_N)
+    if BAND16:
+        acc_s16r = gl.amd.cdna3.mfma(a_s16, b_right_s, acc_s16r, cd_regclass="a")
+        store_band(acc_s16l, acc_s16r, c_base, R_16, stride_cm, stride_cn, rows_left, cols_left, BLOCK_N,
+                   gStoreLayoutC, EDGE_M, EDGE_N)
+
+    if NBAND64:
+        store_col_band(acc_n64t, acc_n64b, c_base, C_MID, HALF_M, stride_cm, stride_cn, rows_left, cols_left,
+                       gStoreLayoutC, EDGE_M, EDGE_N)
+    if NBAND32:
+        acc_n32t = gl.amd.cdna3.mfma(a_top, b_s32, acc_n32t, cd_regclass="a")
+        acc_n32b = gl.amd.cdna3.mfma(a_bot, b_s32, acc_n32b, cd_regclass="a")
+        store_col_band(acc_n32t, acc_n32b, c_base, C_32, HALF_M, stride_cm, stride_cn, rows_left, cols_left,
+                       store_layout(32), EDGE_M, EDGE_N)
+    if NBAND16:
+        acc_n16t = gl.amd.cdna3.mfma(a_top_s, b_s16, acc_n16t, cd_regclass="a")
+        acc_n16b = gl.amd.cdna3.mfma(a_bot_s, b_s16, acc_n16b, cd_regclass="a")
+        store_col_band(acc_n16t, acc_n16b, c_base, C_16, HALF_M, stride_cm, stride_cn, rows_left, cols_left,
+                       store_layout(16), EDGE_M, EDGE_N)
+
+
+@gluon.jit
+def store_col_band(acc_t, acc_b, c_base, COL0: gl.constexpr, HALF_M: gl.constexpr, stride_cm, stride_cn, rows_left,
+                   cols_left, layout: gl.constexpr, EDGE_M: gl.constexpr, EDGE_N: gl.constexpr):
+    """C store of a column band of v9_tile: its top and bottom halves, columns COL0 .. COL0 + width."""
+    offs_m = gl.arange(0, HALF_M, gl.SliceLayout(1, layout))
+    offs_n = gl.arange(0, acc_t.shape[1], gl.SliceLayout(0, layout))
+    offs_t = stride_cm * offs_m[:, None] + stride_cn * (offs_n + COL0)[None, :]
+    c_t = gl.convert_layout(acc_t.to(c_base.dtype.element_ty), layout=layout)
+    store_edge(c_t, c_base, offs_t, layout, rows_left, cols_left - COL0, EDGE_M, EDGE_N)
+    c_b = gl.convert_layout(acc_b.to(c_base.dtype.element_ty), layout=layout)
+    store_edge(c_b, c_base, offs_t + HALF_M * stride_cm, layout, rows_left - HALF_M, cols_left - COL0, EDGE_M, EDGE_N)
+
+
+@gluon.jit
+def store_band(acc_l, acc_r, c_base, ROW0: gl.constexpr, stride_cm, stride_cn, rows_left, cols_left,
+               BLOCK_N: gl.constexpr, layout: gl.constexpr, EDGE_M: gl.constexpr, EDGE_N: gl.constexpr):
+    """C store of a row band of v9_tile: its left and right halves, rows ROW0 .. ROW0 + rows of the tile."""
+    offs_m = gl.arange(0, acc_l.shape[0], gl.SliceLayout(1, layout))
+    offs_n = gl.arange(0, BLOCK_N // 2, gl.SliceLayout(0, layout))
+    offs_l = stride_cm * (offs_m + ROW0)[:, None] + stride_cn * offs_n[None, :]
+    c_l = gl.convert_layout(acc_l.to(c_base.dtype.element_ty), layout=layout)
+    store_edge(c_l, c_base, offs_l, layout, rows_left - ROW0, cols_left, EDGE_M, EDGE_N)
+    c_r = gl.convert_layout(acc_r.to(c_base.dtype.element_ty), layout=layout)
+    store_edge(c_r, c_base, offs_l + BLOCK_N * stride_cn // 2, layout, rows_left - ROW0, cols_left - BLOCK_N // 2,
+               EDGE_M, EDGE_N)
 
 
 @gluon.jit
@@ -400,8 +833,8 @@ def v9_tile_2r(
     offs_bn = gl.arange(0, BLOCK_N // 2, gl.SliceLayout(0, gLoadLayoutB))
     offs_bk = gl.arange(0, BLOCK_K, gl.SliceLayout(1, gLoadLayoutB))
 
-    a_base = a_ptr + pid_m * BLOCK_M * stride_am
-    b_base = b_ptr + pid_n * BLOCK_N * stride_bn
+    a_base = a_ptr + pid_m.to(gl.int64) * BLOCK_M * stride_am
+    b_base = b_ptr + pid_n.to(gl.int64) * BLOCK_N * stride_bn
     if EDGE_M:
         a_offsets = gl.minimum(offs_am, M - 1 - pid_m * BLOCK_M)[:, None] * stride_am + offs_ak[None, :] * stride_ak
     else:
@@ -478,7 +911,7 @@ def v9_tile_2r(
 
     offs_cm = gl.arange(0, BLOCK_M, gl.SliceLayout(1, gStoreLayoutC))
     offs_cn = gl.arange(0, BLOCK_N // 2, gl.SliceLayout(0, gStoreLayoutC))
-    c_base = c_ptr + pid_m * BLOCK_M * stride_cm + pid_n * BLOCK_N * stride_cn
+    c_base = c_ptr + pid_m.to(gl.int64) * BLOCK_M * stride_cm + pid_n.to(gl.int64) * BLOCK_N * stride_cn
     c_left_offsets = stride_cm * offs_cm[:, None] + stride_cn * offs_cn[None, :]
     c_right_offsets = c_left_offsets + BLOCK_N * stride_cn // 2
     rows_left = M - pid_m * BLOCK_M
@@ -536,6 +969,8 @@ def v9_tile_small(
     PAD1: gl.constexpr = 0,
     PAD2: gl.constexpr = 0,
     MFMA4: gl.constexpr = False,
+    EDGE_N: gl.constexpr = False,
+    EDGE_K: gl.constexpr = False,
 ):
     """Tiles with BLOCK_M = 1 .. 32: one region per k-step, the W waves side by side along N.
 
@@ -548,6 +983,12 @@ def v9_tile_small(
     share a CU. MFMA4: the 4x64 MFMA (mfma_f32_4x4x4bf16_1k, 16 blocks along N, A broadcast to all of
     them), as Triton picks for 4 <= M < 16: the MFMA rows are BLOCK_M rounded up to 4, read from the
     top of the 16-row strip the copies fill.
+
+    EDGE_N: B's columns past N are clamped to the tile's last in-bounds one (every load reads valid
+    memory), and the C store and, without C_T, the bias load are masked to N. EDGE_K: K is rounded up
+    to K_PAD, a whole number of K-step pairs, and the prologue loads the last, partial pair first (as
+    v9_tile), its lanes at or past K masked to zero; the mask compares the column a lane actually
+    loads (the swizzle is folded into the copy offsets). The main loop then covers 0 .. K_PAD - 2 BLOCK_K.
     """
     pid_m, pid_n = get_pids(M, N, BLOCK_M, BLOCK_N, GRID_MN, NUM_XCDS, GROUP_SIZE_M)
     MP: gl.constexpr = (BLOCK_M + 15) // 16 * 16
@@ -581,13 +1022,18 @@ def v9_tile_small(
     offs_bk = gl.arange(0, BLOCK_K, gl.SliceLayout(1, gLoadLayoutB))
 
     rows_left = M - pid_m * BLOCK_M
-    a_base = a_ptr + pid_m * BLOCK_M * stride_am
-    b_base = b_ptr + pid_n * BLOCK_N * stride_bn
+    cols_left = N - pid_n * BLOCK_N
+    a_base = a_ptr + pid_m.to(gl.int64) * BLOCK_M * stride_am
+    b_base = b_ptr + pid_n.to(gl.int64) * BLOCK_N * stride_bn
     if MFMA4:
         a_offsets = offs_am[:, None] * stride_am + offs_ak[None, :] * stride_ak
     else:
         a_offsets = offs_am[:, None] * stride_am + swizzled_k(offs_ak[None, :], offs_am[:, None], BLOCK_K) * stride_ak
-    b_offsets = swizzled_k(offs_bk[:, None], offs_bn[None, :], BLOCK_K) * stride_bk + offs_bn[None, :] * stride_bn
+    if EDGE_N:
+        b_offsets = (swizzled_k(offs_bk[:, None], offs_bn[None, :], BLOCK_K) * stride_bk
+                     + gl.minimum(offs_bn, cols_left - 1)[None, :] * stride_bn)
+    else:
+        b_offsets = swizzled_k(offs_bk[:, None], offs_bn[None, :], BLOCK_K) * stride_bk + offs_bn[None, :] * stride_bn
     mA = None
     if MASK_A:
         a_rows = offs_am < BLOCK_M
@@ -604,21 +1050,52 @@ def v9_tile_small(
             acc = acc + bias.to(gl.float32)[:, None]
         else:
             offs_bias = gl.arange(0, BLOCK_N, gl.SliceLayout(0, mfmaLayout))
-            bias = gl.amd.cdna3.buffer_load(ptr=bias_ptr + pid_n * BLOCK_N, offsets=offs_bias)
+            if EDGE_N:
+                bias = gl.amd.cdna3.buffer_load(ptr=bias_ptr + pid_n * BLOCK_N, offsets=offs_bias,
+                                                mask=offs_bias < cols_left, other=0.0)
+            else:
+                bias = gl.amd.cdna3.buffer_load(ptr=bias_ptr + pid_n * BLOCK_N, offsets=offs_bias)
             acc = acc + bias.to(gl.float32)[None, :]
 
-    for s in gl.static_range(2):
-        gl.amd.cdna4.async_copy.buffer_load_to_shared(smemA.index(s), a_base, a_offsets, mask=mA)
-        gl.amd.cdna4.async_copy.buffer_load_to_shared(smemB.index(s), b_base, b_offsets)
-        gl.amd.cdna4.async_copy.commit_group()
-        a_base += BLOCK_K * stride_ak
-        b_base += BLOCK_K * stride_bk
+    K_PAD: gl.constexpr = (K + 2 * BLOCK_K - 1) // (2 * BLOCK_K) * (2 * BLOCK_K) if EDGE_K else K
+    K_RES: gl.constexpr = K_PAD - K
+    if EDGE_K:
+        # The last, partial pair first; K-step 1 of it always reaches past K, K-step 0 only when
+        # K_RES > BLOCK_K. The main loop then starts at column 0 (a_base, b_base unmoved).
+        if MFMA4:
+            a_k = offs_ak[None, :]
+        else:
+            a_k = swizzled_k(offs_ak[None, :], offs_am[:, None], BLOCK_K)
+        b_k = swizzled_k(offs_bk[:, None], offs_bn[None, :], BLOCK_K)
+        for s in gl.static_range(2):
+            tail = K_PAD - 2 * BLOCK_K + s * BLOCK_K
+            if s == 1 or K_RES > BLOCK_K:
+                k_hi = 2 * BLOCK_K - K_RES - s * BLOCK_K
+                mA_s = (a_k < k_hi) & (offs_am >= 0)[:, None]
+                if MASK_A:
+                    mA_s = mA_s & mA
+                gl.amd.cdna4.async_copy.buffer_load_to_shared(smemA.index(s), a_base + tail * stride_ak, a_offsets,
+                                                              mask=mA_s)
+                gl.amd.cdna4.async_copy.buffer_load_to_shared(smemB.index(s), b_base + tail * stride_bk, b_offsets,
+                                                              mask=b_k < k_hi)
+            else:
+                gl.amd.cdna4.async_copy.buffer_load_to_shared(smemA.index(s), a_base + tail * stride_ak, a_offsets,
+                                                              mask=mA)
+                gl.amd.cdna4.async_copy.buffer_load_to_shared(smemB.index(s), b_base + tail * stride_bk, b_offsets)
+            gl.amd.cdna4.async_copy.commit_group()
+    else:
+        for s in gl.static_range(2):
+            gl.amd.cdna4.async_copy.buffer_load_to_shared(smemA.index(s), a_base, a_offsets, mask=mA)
+            gl.amd.cdna4.async_copy.buffer_load_to_shared(smemB.index(s), b_base, b_offsets)
+            gl.amd.cdna4.async_copy.commit_group()
+            a_base += BLOCK_K * stride_ak
+            b_base += BLOCK_K * stride_bk
 
     gl.amd.cdna4.async_copy.wait_group(1)
     a = a_rows_view(smemA_rd.index(0), MR, MP).load(dotOpLayoutA)
     b = smemB_rd.index(0).load(dotOpLayoutB)
 
-    iterMax: gl.constexpr = K // BLOCK_K
+    iterMax: gl.constexpr = K_PAD // BLOCK_K
     for k in range(0, iterMax - 2, 2):
         for s in gl.static_range(2):
             gl.amd.cdna4.async_copy.buffer_load_to_shared(smemA.index(s), a_base, a_offsets, mask=mA)
@@ -643,14 +1120,17 @@ def v9_tile_small(
     c = gl.convert_layout(acc.to(c_ptr.dtype.element_ty), layout=gStoreLayoutC)
     offs_cm = gl.arange(0, MR, gl.SliceLayout(1, gStoreLayoutC))
     offs_cn = gl.arange(0, BLOCK_N, gl.SliceLayout(0, gStoreLayoutC))
-    c_base = c_ptr + pid_m * BLOCK_M * stride_cm + pid_n * BLOCK_N * stride_cn
+    c_base = c_ptr + pid_m.to(gl.int64) * BLOCK_M * stride_cm + pid_n.to(gl.int64) * BLOCK_N * stride_cn
     c_offsets = stride_cm * offs_cm[:, None] + stride_cn * offs_cn[None, :]
-    if MASK_A:
+    if MASK_A or EDGE_N:
         c_rows = offs_cm < BLOCK_M
         if EDGE_M:
             c_rows = c_rows & (offs_cm < rows_left)
+        c_cols = offs_cn < BLOCK_N
+        if EDGE_N:
+            c_cols = offs_cn < cols_left
         gl.amd.cdna3.buffer_store(ptr=c_base, offsets=c_offsets, stored_value=c,
-                                  mask=c_rows[:, None] & (offs_cn < BLOCK_N)[None, :])
+                                  mask=c_rows[:, None] & c_cols[None, :])
     else:
         gl.amd.cdna3.buffer_store(ptr=c_base, offsets=c_offsets, stored_value=c)
 
@@ -738,6 +1218,23 @@ def init_acc_edge(bias_ptr, pid_n, cols_left, BLOCK_M: gl.constexpr, BLOCK_N: gl
 
 
 @gluon.jit
+def init_band_n(bias_ptr, pid_n, C0: gl.constexpr, WIDTH: gl.constexpr, ROWS: gl.constexpr, BLOCK_N: gl.constexpr,
+                MFMA: gl.constexpr, ADD_BIAS: gl.constexpr, cols_left, EDGE_N: gl.constexpr):
+    """The [ROWS, WIDTH] accumulator of the columns C0 .. C0 + WIDTH of a v9_tile tile, from bias[N]
+    or zero; with EDGE_N the bias is loaded only for the tile's first cols_left columns."""
+    acc = gl.zeros((ROWS, WIDTH), gl.float32, MFMA)
+    if ADD_BIAS:
+        offs = gl.arange(0, WIDTH, gl.SliceLayout(0, MFMA))
+        base = bias_ptr + pid_n * BLOCK_N + C0
+        if EDGE_N:
+            bias = gl.amd.cdna3.buffer_load(ptr=base, offsets=offs, mask=offs < cols_left - C0, other=0.0)
+        else:
+            bias = gl.amd.cdna3.buffer_load(ptr=base, offsets=offs)
+        acc = acc + bias.to(gl.float32)[None, :]
+    return acc
+
+
+@gluon.jit
 def k_tail_mask(k_hi, STEP: gl.constexpr, ROWS: gl.constexpr, BLOCK_K: gl.constexpr, layout: gl.constexpr,
                 K_FIRST: gl.constexpr):
     """Load mask of K-step STEP (0 or 1) of a block in the last pair, of whose 2 BLOCK_K K values only
@@ -809,12 +1306,14 @@ def store_layout(cols):
 
 
 @gluon.constexpr_function
-def strip_load_layout(rows, block_k, k_first, num_warps):
+def strip_load_layout(rows, block_k, k_first, num_warps, replicate=False):
     """Global-load layout of a [rows, block_k] strip (k_first: B's [block_k, rows]), K contiguous:
     8 K values per lane, min(64, block_k / 8) lanes along K, the rest of the lanes and then the
-    warps along the rows. A warp's buffer_load_to_lds_dwordx4 then covers whole rows, 1 KB."""
+    warps along the rows. A warp's buffer_load_to_lds_dwordx4 then covers whole rows, 1 KB.
+    replicate: allow fewer rows than one load per warp (the warps past them hold copies, which
+    the copies predicate off)."""
     tk = min(64, block_k // 8)
-    assert rows >= num_warps * (64 // tk), f"{rows} rows x {block_k} K is less than one load per warp"
+    assert replicate or rows >= num_warps * (64 // tk), f"{rows} rows x {block_k} K is less than one load per warp"
     if k_first:
         return gl.BlockedLayout([8, 1], [tk, 64 // tk], [1, num_warps], [0, 1])
     return gl.BlockedLayout([1, 8], [64 // tk, tk], [num_warps, 1], [1, 0])
@@ -912,6 +1411,25 @@ def tile_config(tile=None):
     return (*tile, 4) if len(tile) == 3 else tuple(tile)
 
 
+def row_bands(bm):
+    """v9_tile's arguments for BLOCK_M = 128 + 64 a + 32 b + 16 c (a, b, c in {0, 1}): the quadrants
+    of a 128-row tile and the row bands under them. Empty for a power of two."""
+    if bm & (bm - 1) == 0:
+        return {}
+    assert 128 < bm < 256 and bm % 16 == 0, f"BLOCK_M={bm}: a power of two or a multiple of 16 in (128, 256)"
+    extra = bm - 128
+    return dict(MAIN_M=128, BAND64=bool(extra & 64), BAND32=bool(extra & 32), BAND16=bool(extra & 16))
+
+
+def col_bands(bn):
+    """row_bands for BLOCK_N: the quadrants of a 128-column tile and the column bands to their right."""
+    if bn & (bn - 1) == 0:
+        return {}
+    assert 128 < bn < 256 and bn % 16 == 0, f"BLOCK_N={bn}: a power of two or a multiple of 16 in (128, 256)"
+    extra = bn - 128
+    return dict(MAIN_N=128, NBAND64=bool(extra & 64), NBAND32=bool(extra & 32), NBAND16=bool(extra & 16))
+
+
 def is_small(bm, bn, regions=4):
     """Tiles with a side of 32 or less run v9_tile_small (r2 keeps v9_tile_2r)."""
     return regions != 2 and min(bm, bn) <= 32
@@ -954,24 +1472,27 @@ def matmul_small(a, b, c, bias, bm, bn, bk, w, pin, mfma4=False, waves_per_eu=0,
         a, b, c = b.T, a.T, c.T
         M, N = N, M
     assert a.stride(1) == 1 and b.stride(0) == 1, "A and B must be K-contiguous"
-    assert N % kn == 0, f"{'M' if swap else 'N'}={N} must be a multiple of {kn}"
-    assert K % (2 * bk) == 0, f"K={K} must be a multiple of {2 * bk}"
+    # Other N and K run with EDGE_N / EDGE_K. K must keep 16-byte rows (as matmul's tiles).
+    assert K % 16 == 0, f"K={K} must be a multiple of 16 (pad A and B)"
     if mfma4:
         assert km <= 8 and kn % (64 * w) == 0, f"4x64 MFMA: BM <= 8 and 64 columns per wave ({km}x{kn}, {w} waves)"
     else:
         # W x 16 > BN replicates: the waves hold copies of the tile (Triton's warps on a 16x16 dot).
         assert kn % (16 * w) == 0 or (16 * w) % kn == 0, f"{kn} columns do not split over {w} waves"
-    grid_m, grid_n = triton.cdiv(M, km), N // kn
+    grid_m, grid_n = triton.cdiv(M, km), triton.cdiv(N, kn)
     GRID_MN = grid_m * grid_n
     gm_env = os.environ.get("V9_TILE_GM")
     GROUP_SIZE_M = int(gm_env) if gm_env else group_size_m(km, kn, grid_m, GRID_MN, 8, tiles_per_cu=4 // w)
     pin = pin or os.environ.get("V9_TILE_PIN") == "1"
+    force_edge = os.environ.get("V9_FORCE_EDGE") == "1"
     k = v9_tile_small[(GRID_MN, 1)](
         a, b, c, bias, M, N, K,
         a.stride(0), a.stride(1), b.stride(0), b.stride(1), c.stride(0), c.stride(1),
         BLOCK_M=km, BLOCK_N=kn, BLOCK_K=bk, GRID_MN=GRID_MN, NUM_XCDS=8, GROUP_SIZE_M=GROUP_SIZE_M,
         ADD_BIAS=bias is not None, NUM_WARPS=w,
-        EDGE_M=os.environ.get("V9_FORCE_EDGE") == "1" or M % km != 0, C_T=swap,
+        EDGE_M=force_edge or M % km != 0, C_T=swap,
+        EDGE_N=force_edge or N % kn != 0,
+        EDGE_K=force_edge or K % (2 * bk) != 0,
         MFMA4=mfma4,
         num_warps=w,
         waves_per_eu=waves_per_eu,
@@ -1015,6 +1536,29 @@ def matmul(a, b, c=None, bias=None, tile=None, schedule_hint="mfma-schedule"):
 
     # Ragged M / N: clamped loads and masked stores, on both dimensions if either is ragged (as v25).
     EDGE_M = EDGE_N = os.environ.get("V9_FORCE_EDGE") == "1" or M % BLOCK_M != 0 or N % BLOCK_N != 0
+    mfma_32 = os.environ.get("V9_TILE_MFMA") == "32"
+    bands = row_bands(BLOCK_M)
+    if bands:
+        assert regions == 4, f"BLOCK_M={BLOCK_M}: row bands need the four-quadrant kernel (no r2)"
+        # The 32x32x16 MFMA needs 32 rows per wave, and Triton has no 32-row padded layout for it.
+        assert not (mfma_32 and (bands["BAND32"] or bands["BAND16"])), "V9_TILE_MFMA=32: BLOCK_M = 128 + 64 only"
+        # The 16-row band puts the 4 waves side by side over each B half: 16 columns each.
+        assert not bands["BAND16"] or BLOCK_N >= 128, f"BLOCK_M={BLOCK_M} needs BLOCK_N >= 128"
+        assert BLOCK_M * BLOCK_N <= 256 * 256, f"{BLOCK_M}x{BLOCK_N}: more than 256 accumulator registers"
+    nbands = col_bands(BLOCK_N)
+    if nbands:
+        assert regions == 4, f"BLOCK_N={BLOCK_N}: column bands need the four-quadrant kernel (no r2)"
+        # A band of rows and one of columns would meet in corner pieces, which v9_tile does not build.
+        assert not bands, f"{BLOCK_M}x{BLOCK_N}: BLOCK_M and BLOCK_N cannot both be banded"
+        assert not (mfma_32 and (nbands["NBAND32"] or nbands["NBAND16"])), "V9_TILE_MFMA=32: BLOCK_N = 128 + 64 only"
+        # The 16-column band stacks the 4 waves over each A half: BLOCK_M / 8 rows each.
+        assert not nbands["NBAND16"] or BLOCK_M >= 128, f"BLOCK_N={BLOCK_N} needs BLOCK_M >= 128"
+        assert BLOCK_M * BLOCK_N <= 256 * 256, f"{BLOCK_M}x{BLOCK_N}: more than 256 accumulator registers"
+        # amdgcnas's lgkmcnt rotation leaves 46 MFMA operands of 256x192's loop unwaited after their
+        # ds_read, and C comes out wrong (WORKLOG §18). Without the plugin the kernel is correct.
+        assert not ((BLOCK_M, BLOCK_N) == (256, 192) and os.environ.get("TRITON_AMDGCNAS_PLUGIN")), \
+            "256x192 is miscompiled by the amdgcnas plugin: unset TRITON_AMDGCNAS_PLUGIN"
+        bands = nbands
     kernel = v9_tile_2r if regions == 2 else v9_tile
     kernel[(GRID_MN, 1)](
         a,
@@ -1037,11 +1581,12 @@ def matmul(a, b, c=None, bias=None, tile=None, schedule_hint="mfma-schedule"):
         NUM_XCDS=NUM_XCDS,
         GROUP_SIZE_M=GROUP_SIZE_M,
         ADD_BIAS=bias is not None,
-        MFMA_32=os.environ.get("V9_TILE_MFMA") == "32",
+        MFMA_32=mfma_32,
         EDGE_M=EDGE_M,
         EDGE_N=EDGE_N,
         EDGE_K=EDGE_K,
         schedule_hint=schedule_hint,
         num_warps=num_warps,
+        **bands,
     )
     return c

@@ -28,13 +28,16 @@
     HIP_VISIBLE_DEVICES=2 python regress.py --versions 13 14 15
     HIP_VISIBLE_DEVICES=2 python regress.py --versions 13 9 14 15 --streamk   # partial last waves
     HIP_VISIBLE_DEVICES=2 python regress.py --versions 13 17 19 --leftover-sweep  # S = 2 .. 255
+    HIP_VISIBLE_DEVICES=2 python regress.py --versions 26 27 27@128x256 --streamk  # v27 at a tile
 
-Needs v10+'s published stack (Triton v2.2 + llir + amdgcnas); the venv's default Triton is
-v2.1, which has no mfma(cd_regclass=...):
+A version `27@TILE` (or `9t@TILE`) runs that version with STREAMK_TILE (V9_TILE) = TILE, in v9_tile's
+spec format (`27@16x256x128`).
 
-    export PYTHONPATH=<repo>/scripts/triton_deepbind_shim:<triton_gfx950-tutorial-v2.2>/python
-    export LLVM_PASS_PLUGIN_PATH=<repo>/plugins/llir_scheduler/libLlirSched.so
-    export TRITON_AMDGCNAS_PLUGIN=1
+Runs on the gfx950-tutorial-v3.0 stack: the installed Triton (with the MFMA scheduler, which each
+matmul() turns on with schedule_hint) and no plugins, as v27_streamk_tile/env.sh sets up:
+
+    export PYTHONPATH=<repo>/scripts/triton_deepbind_shim
+    unset LLVM_PASS_PLUGIN_PATH TRITON_AMDGCNAS_PLUGIN
 
 Prints one markdown table; TFLOPS deltas are against the first version, per shape. Every
 (version, shape) runs in its own subprocess with a fresh TRITON_CACHE_DIR, so the one
@@ -109,7 +112,10 @@ def worker(case):
     import triton
     from check_spills import parse_amdgcn
 
-    version_dir = bench.VERSION_MAP[case["version"]]
+    version, _, tile = str(case["version"]).partition("@")
+    version_dir = bench.VERSION_MAP[int(version) if version.isdigit() else version]
+    if tile:
+        os.environ["STREAMK_TILE"] = os.environ["V9_TILE"] = tile
     matmul = importlib.import_module(f"{version_dir}.matmul_kernel").matmul
     M, N, K = case["shape"]
     dtype = bench.name_to_torch_type[case["dtype"]]
@@ -174,7 +180,8 @@ def fmt_row(shape, version, r, base_tflops):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--versions", type=lambda s: int(s) if s.isdigit() else s, nargs="+", default=[13, 14])
+    parser.add_argument("--versions", type=lambda s: int(s) if s.isdigit() else s, nargs="+", default=[13, 14],
+                        help="versions (VERSION_MAP keys), or VERSION@TILE for v27 / v9_tile at a tile")
     parser.add_argument("--extra", nargs="*", default=[], help="Extra MxNxK shapes")
     parser.add_argument("--only-extra", action="store_true", help="Skip the fixed regression shapes")
     parser.add_argument(

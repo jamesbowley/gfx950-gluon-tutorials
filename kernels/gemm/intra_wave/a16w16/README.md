@@ -27,6 +27,10 @@ a16w16/
 └── v9_beyond_hotloop/    # L2 cache locality via XCD-aware PID remapping
 ```
 
+The stream-K versions that follow (v14-v29; v29_streamk_compact is the current, compact one) are described in
+[STREAMK.md](STREAMK.md). Open items are in [TODO.md](TODO.md), and what was tried and dropped, and why, in
+[DROPPED.md](DROPPED.md).
+
 ## 2. How to Run
 
 From the `a16w16` directory:

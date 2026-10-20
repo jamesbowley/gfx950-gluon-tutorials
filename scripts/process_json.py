@@ -40,6 +40,8 @@ Description:
         - computes loop duration = epilogue_clock - loop_clock
   4. Reports per-wave durations, average loop duration,
      and average duration per iteration.
+  5. Over every traced wave (all SIMDs): the MFMAs each executed and the
+     whole-wave ("e2e") MFMA efficiency, MFMA cycles / wave lifetime.
 """
 
 import argparse
@@ -395,6 +397,42 @@ def analyze_waves(folder, loop_index, epilogue_index, loop_last_index=None):
     return durations, avg_duration, pro_dur, avg_pro_dur, epi_dur, avg_epi_dur, avg_wave_iters
 
 
+def analyze_whole_waves(folder, code_list):
+    """MFMA cycles over each wave's lifetime, for every traced wave (all SIMDs, unlike analyze_waves).
+
+    A wave's lifetime runs from its first instruction's clock to its last instruction's clock plus
+    duration (s_endpgm's duration covers the stores draining). Every MFMA the wave executed counts,
+    the prologue's and the epilogue's included.
+    """
+    cycles_of = {ins[2]: get_mfma_cycles(ins[0]) for ins in code_list}
+    per_wave = {}
+    for path in sorted(glob(os.path.join(folder, "se*_sm*_sl*_wv*.json"))):
+        with open(path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        instructions = data.get("wave", {}).get("instructions")
+        if not instructions:
+            continue
+        count = cycles = 0
+        for _, _, _, _, idx in instructions:
+            c = cycles_of.get(idx, 0)
+            if c > 0:
+                count += 1
+                cycles += c
+        lifetime = instructions[-1][0] + instructions[-1][3] - instructions[0][0]
+        per_wave[os.path.basename(path)] = (count, cycles, lifetime)
+    if not per_wave:
+        return None
+    n = len(per_wave)
+    return {
+        "waves_whole": n,
+        "mfma_count_wave": sum(v[0] for v in per_wave.values()) / n,
+        "mfma_cycles_wave": sum(v[1] for v in per_wave.values()) / n,
+        "average_wave_duration": sum(v[2] for v in per_wave.values()) / n,
+        "e2e_mfma_efficiency_per_wave": {k: v[1] / v[2] for k, v in per_wave.items() if v[2] > 0},
+        "e2e mfma efficiency": f"{sum(v[1] / v[2] for v in per_wave.values() if v[2] > 0) / n * 100:.2f}%",
+    }
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Compute average loop and per-iteration durations."
@@ -443,6 +481,7 @@ def main():
             "mfma efficiency": (
                 f"{mfma_efficiency * 100:.2f}%" if mfma_efficiency is not None else "N/A"
             ),
+            **(analyze_whole_waves(args.folder, code_list) or {}),
         }
 
         print(json.dumps(result, indent=2))

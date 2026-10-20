@@ -1,7 +1,25 @@
 # To do: open items from the a16w16 studies
 
 Things measured but not explained, or fixes not yet made, with enough detail to pick them up later.
-Newest first.
+Newest first. What was tried and dropped, and why, is in [DROPPED.md](DROPPED.md).
+
+## Stream-K on more than 256 programs for skinny, memory-bound shapes (2026-10-20)
+
+**What.** v27's `STREAMK_PERSISTENT_PROGRAMS=P` (`pdp{P}`) ran the persistent data-parallel loop on P = 512, 768 or
+1024 programs, 2-4 workgroups per CU. On the small quadrant tiles, where one workgroup per CU cannot hide latency, it
+closed the 1.1-1.35x gap to v9_tile: 4096³ at 128x128x64 took 145 us on 256 programs, 130 on 512 and 129 for v9_tile;
+2048x4096x4096 at 64x64x64 took 173, 122 (512), 119 (768), 121 (1024) and 118 for v9_tile
+([v27 WORKLOG](v27_streamk_tile/WORKLOG.md), "Persistent data-parallel on more programs"). It only ever applied to
+dp. v29 dropped it to keep the code short.
+
+**To try.** Extend `NUM_PROGRAMS > 256` to the stream-K phase.
+1. **The split.** S = `total_tiles % NUM_PROGRAMS` and the program counts (`capped_policy`, `rs_split`) then use P,
+   and the workspace grows to P slots.
+2. **Residency.** Every stream-K program must be resident at once, or the endings' waits never return. So check both
+   LDS and VGPRs for ceil(P / 256) workgroups per CU, as `check_residency` did with `vgprs=True` (v28's
+   `build_vgprs`).
+3. **Where to measure first.** The shapes the held-out rule sent to `pdp512` (15 of 617, v27 WORKLOG §15), and
+   skinny, memory-bound shapes at 64x64 and 128x128x64, against v9_tile and v29's capped rule.
 
 ## 64x64x128 is faster with the old hand-built LDS layout (2026-10-13)
 

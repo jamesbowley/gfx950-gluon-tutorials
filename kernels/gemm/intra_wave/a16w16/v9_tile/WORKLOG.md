@@ -36,6 +36,20 @@ This round has no stream-K; shapes with M or N of 256 or less are left for later
 - **aiter's derived layouts (§15).** Ours has two-way LDS bank conflicts at a tile side of 128 and at
   BK = 128, and aiter's has none. Removing them moves throughput by -2% to +4%, because the window binds.
   v9_tile now uses aiter's layouts for every tile.
+- **The round trip, measured (§16).** Hardware counters, calibrated on the tcp_latency probe, give the
+  round trip per tile:
+  - 130-280 ns from the TCP to L2 and back.
+  - 410-670 ns from issue.
+  - Up to ~45 KB in flight per CU from issue, but never 32 KB between the TCP and L2.
+
+  The inferred 550 ns holds for tiles with one 4-wave workgroup per CU (490-580 ns). Tiles with 2-4
+  workgroups per CU get 330-440 ns, and the L2 hit rate barely matters. On the v3.0 stack the tiles reach
+  what this window allows, and two stages are enough down to 16x64x128 (16x32x128 is borderline).
+- **256x256 down to 256x128, 16 columns at a time (§19).** On one full wave each, plugin off, the hot loop
+  falls from 95.6% to 71.7% in a sawtooth: the 16-column band tiles (240, 208, 176, 144) sit at or below the
+  next narrower tile. Down to 256x176 the loss is the schedule, fixed in cycles: exposed issue, the band's
+  `ds_read` stalls, `v_add` + `ds_read` address holes and barriers, with every region's work fitting its MFMA
+  shadow. The TCP window binds from 256x160 down: the loop sits at 60 B/ns per CU whatever the clock.
 
 ## 1. Predictions (written before any measurement)
 
@@ -1384,3 +1398,687 @@ Open: main's amdgcnas lacks the §2 and §14.3 fixes (they are in d6873fa).
 - v9_tile_small still needs the peephole skipped (§14.3).
 
 This branch keeps main's files unchanged.
+
+## 16. Load latency per tile, measured (2026-10-13)
+
+Two questions before the tiles go into v26 and the other stream-K kernels:
+
+- Do the tiles reach the MFMA efficiency the model says they can, on the current stack?
+- What is the load round trip L for each tile on a compute-bound shape? Everything so far *inferred*
+  L = 550 ns from 32 KB / (bytes per ns), which assumes the 32 KB window is full.
+
+Only tiles that two stages are enough for (§14.5): 256x256, 256x128, 128x256, 128x128x128, 64x64x128,
+32x{128, 64, 32}x128, 16x256x128, 16x128x128, 256x16x128, and as boundary points 16x64x128 and 16x32x128.
+The small tiles are pinned to one wave per SIMD (`p`) where LDS allows (all but 32x64x128, which runs
+3 workgroups per CU). Two shapes, both K = 8192 with 2 GB of rotating inputs:
+
+- `LAT_FW`: one full wave per tile, 256 x (workgroups per CU) tiles, as square as the block counts allow
+  (`sweep.full_wave_shape`; 16x256 runs on 1024x1024).
+- `LAT_CB`: 2048x4096x8192 for every tile, §14.4's shape.
+
+The stack is v3.0 with the MFMA scheduler alone (`source v9_tile/env.sh; unset TRITON_AMDGCNAS_PLUGIN`),
+as in §15. `LAT_FW` and the calibration ran on GPU 3, and `LAT_CB` on GPU 4. Four `LAT_CB` points
+repeated on GPU 3 agree within 0.5%. Scripts:
+
+- `GPU=3 bash v9_tile/run_latency.sh calib|fw|cb`;
+- [calib_latency.py](calib_latency.py);
+- [sweep.py](sweep.py) counter sets 5-7 (`latency_columns`);
+- [report_latency.py](report_latency.py), which writes [latency_report.md](results/latency_report.md) and
+  `images/latency/`.
+
+**In short:**
+
+- **L is not one number, and 550 ns is the number for one workgroup per CU.** Inferred the old way
+  (32 KB over the measured bytes per ns), the tiles that run one 4-wave workgroup per CU (256x128,
+  128x256, 128x128x128, 16x256, 256x16) give 410-580 ns. The tiles with 2-4 workgroups per CU give
+  330-440 ns.
+- **The counters measure L directly, and it is shorter on the L2 side and longer from issue:**
+  - The TCP->L2 round trip of a 128 B request is 130-280 ns.
+  - A load instruction's round trip from issue is 410-670 ns.
+  - The gap between the two, about 340 ns, is the same for every tile: loads queueing inside the CU.
+- **The 32 KB window is never full, so the 550 ns is not a physical round trip.** Between the TCP and L2
+  the CU holds 8-18 KB. Counted from issue it holds 33-44 KB, up to the ~44-45 KB cap that the
+  tcp_latency experiment found. That cap, over the round trip from issue, is the per-CU limit.
+- **The L2 hit rate barely moves L; the workgroup structure does.**
+  - The correlation of L with the miss rate is 0.37 on `LAT_FW` and -0.14 on `LAT_CB`.
+  - At the same 91% hit rate, 16x256x128p (one workgroup of 4 waves) has a TCP-side L of 257 ns and
+    16x64x128p (4 one-wave workgroups) 129 ns, with about the same bytes in flight.
+  - The likely cause: the one-workgroup tiles issue a k-step's loads from 4 waves in step, between
+    barriers, so they queue in bursts.
+- **The efficiency is what the window allows, and the current stack is no slower:**
+  - The four-quadrant tiles are within -1.2% to +0.9% of §15.4, and 128x128x128 is +9% over §14.4.
+  - The small tiles are +1% to +10% over §14.4, except 16x32x128p (-6.5%).
+  - The loops stall mostly on `buffer_load` issue (the window), not on `vmcnt`, LDS or barriers. The
+    one exception is 128x128x128 on 2048x4096, where LDS reads lead.
+- **Two stages are enough down to 16x64x128.** 16x32x128p is borderline: 12% of its stalls are `vmcnt`,
+  and its two k-steps last only 2.2-2.4 round trips. 16x16x128 was already out (§14.5).
+
+### 16.1 The counters, and a calibration on known latencies
+
+| measure | counters | what it is |
+|---|---|---|
+| L_tcp | `TCP_TCC_READ_REQ_LATENCY_sum / TCP_TCC_READ_REQ_sum` | mean TCP->L2->TCP round trip of one 128 B request |
+| L_issue | `VmemLatency` = accumulated `SQ_INST_LEVEL_VMEM` / `SQ_INSTS_VMEM` | mean round trip of a VMEM instruction from issue |
+| L_miss | `TCC_EA0_RDREQ_LEVEL_sum / TCC_EA0_RDREQ_sum` | mean L2-miss round trip (relative only, below) |
+| in flight per CU | latency sum x bytes per request / (kernel cycles x CUs loading) | Little's law on the same counters |
+
+Each set is one rocprofv3 pass. The TCC takes 4 counters per pass, so the hit rate comes from set 1. A
+TCP->L2 request is 128 B: on 256x128 at 4096x2048x8192, 1.258e7 requests x 128 B is the 1.61 GB the
+tiles load, and 1.573e6 VMEM reads x 1 KB is the same.
+
+[calib_latency.py](calib_latency.py) runs experiments/tcp_latency's kernels under the same sets
+([latency_calib.csv](results/latency_calib.csv)):
+
+| run | probe's own mean, cycles | L_issue, cycles | L_tcp, cycles | L2 hit | in flight from issue / TCP-side, KB per CU | B/clk per CU |
+|---|---|---|---|---|---|---|
+| probe, 1 MB x 32 passes (L2) | 222 (passes 1-31) | 221 | 115 | 95% | | |
+| probe, 16 MB x 8 passes (MALL) | 553 (passes 1-7) | 402 (reads and stores) | 457 | 11% | | |
+| probe, 64 MB once (HBM) | 943 | 575 (reads and stores) | 759 | 11% | | |
+| stream, 1 CU, HBM | | 1662 | 834 | 1% | 45.7 / 20.2 | 25.2 |
+| stream, 1 CU, L2 | | 725 | 106 | 98% | 46.0 / 6.3 | 62.3 |
+| stream, 256 CUs, HBM | | 4464 | 1633 | 0% | 38.2 / 13.3 | 9.2 |
+| stream, 256 CUs, L2 | | 854 | 271 | 98% | 26.8 / 8.3 | 49.2 |
+
+- **`VmemLatency` is the probe's own timer.** On L2 hits it reads 221 cycles against the probe's 222. On
+  the MALL and HBM runs it averages the probe's loads with the stores of its samples, which return in
+  ~210 cycles.
+- **L_tcp is the part beyond the TCP:** an L2 hit is ~110 cycles of the ~220 from issue.
+- **Little's law closes in both views.** One CU streaming from HBM holds 45.7 KB from issue over 1662
+  cycles, and 20.2 KB TCP-side over 834. Both give its 25 B/clk. The 45.7 KB is the ~44-entry cap that the
+  ATT traces in [tcp_latency](../../../../../experiments/tcp_latency/README.md) found. The 32 KB the
+  README assumed is never held between the TCP and L2.
+- **L_miss does not close.** It reads 1.5-2x the miss time that L_tcp and the hit rate imply, although
+  every EA request is 128 B (`TCC_EA0_RDREQ_128B`: 97-100%). It is reported as a relative number only.
+
+### 16.2 Latency per tile
+
+`LAT_FW` / `LAT_CB` in each cell (ns at the counter run's clock; B/ns per CU from the timed run):
+
+| tile | WG/CU | L2 hit | B/ns per CU | L inferred, 32 KB / (B/ns) | L_tcp (TCP to L2) | L_issue (from issue) | KB in flight per CU, from issue / TCP-side |
+|---|---|---|---|---|---|---|---|
+| 256x256 | 1 | 80% / 74% | 44 / 57 | 750 / 577 | 203 / 261 | 411 / 501 | 17 / 9, 28 / 15 |
+| 256x128 | 1 | 83% / 83% | 56 / 57 | 581 / 576 | 271 / 278 | 654 / 663 | 35 / 14, 36 / 15 |
+| 128x256 | 1 | 83% / 83% | 57 / 58 | 574 / 569 | 261 / 257 | 606 / 627 | 34 / 14, 36 / 15 |
+| 128x128x128 | 1 | 81% / 81% | 63 / 67 | 517 / 491 | 216 / 203 | 545 / 526 | 33 / 13, 34 / 13 |
+| 64x64x128 | 2 | 82% / 81% | 74 / 82 | 444 / 398 | 187 / 179 | 522 / 544 | 37 / 13, 42 / 14 |
+| 32x128x128p | 2 | 90% / 90% | 84 / 91 | 389 / 362 | 153 / 156 | 481 / 492 | 38 / 12, 42 / 13 |
+| 32x64x128 | 3 | 88% / 89% | 87 / 90 | 376 / 362 | 136 / 141 | 460 / 463 | 38 / 10, 39 / 11 |
+| 32x32x128p | 4 | 87% / 64% | 90 / 75 | 364 / 439 | 133 / 198 | 472 / 593 | 39 / 8, 43 / 14 |
+| 16x256x128p | 1 | 91% / 91% | 65 / 67 | 503 / 490 | 257 / 283 | 611 / 667 | 39 / 16, 43 / 18 |
+| 16x128x128p | 2 | 90% / 84% | 79 / 100 | 412 / 328 | 161 / 131 | 467 / 412 | 36 / 12, 38 / 12 |
+| 256x16x128p | 1 | 91% / 91% | 65 / 80 | 505 / 409 | 254 / 213 | 610 / 525 | 38 / 16, 40 / 16 |
+| 16x64x128p | 4 | 92% / 71% | 91 / 84 | 359 / 389 | 129 / 167 | 459 / 519 | 40 / 10, 43 / 13 |
+| 16x32x128p | 4 | 90% / 78% | 83 / 88 | 394 / 374 | 142 / 160 | 492 / 518 | 37 / 9, 44 / 13 |
+
+256x256 is not load-bound: on its full wave it holds 17 KB from issue and runs at 96% loop efficiency.
+Its inferred 750 ns there is not a latency.
+
+![latency per tile](images/latency/latency_by_tile.png)
+
+(Each bar of L_tcp is split into h x the unloaded L2-hit round trip of 110 cycles and the rest:
+misses plus queueing. The hit part is 30-45 ns, so almost all of L_tcp is misses and queueing.)
+
+![bytes in flight per CU](images/latency/inflight.png)
+
+### 16.3 What moves L
+
+![latency against the miss rate and the bytes per CU](images/latency/latency_drivers.png)
+
+- **Not the L2 hit rate, within the 64-92% range here.** L_tcp correlates with the miss rate at 0.37
+  (`LAT_FW`) and -0.14 (`LAT_CB`).
+  - 256x128 and 128x256 (83% hits) and 16x256x128p (91%) all have L_tcp of 255-285 ns.
+  - 16x64x128p at the same 91-92% hits has 129 ns.
+  - Where the hit rate does fall a long way, L rises. 32x32x128p goes from 87% to 64% hits between the
+    two shapes and from 133 to 198 ns.
+- **The workgroup structure.** One 4-wave workgroup per CU means 203-283 ns TCP-side and 525-667 ns from
+  issue. Two to four smaller workgroups mean 129-198 ns and 412-593 ns.
+  - The bytes in flight do not separate the two groups:
+    - The four-quadrant one-workgroup tiles hold less from issue (33-36 KB).
+    - 16x256 and 256x16 hold 38-43 KB, as much as the multi-workgroup tiles (37-44 KB), and still take
+      the longer round trip.
+  - The likely difference is burstiness. One workgroup issues a k-step's loads from 4 waves at once,
+    between barriers, so each request queues behind a burst. Independent one-wave workgroups spread
+    their requests out. ATT timelines of a load burst would confirm it.
+  - That is §14.4's open question: the one-wave tiles beat the 60 B/ns model not because Q is larger,
+    but because their L is shorter.
+- **The grid order matters as much.** 16x256x128p and its mirror 256x16x128p are the same kernel at the
+  same 91% hit rate. At 2048x4096 their L_tcp is 283 and 213 ns, and their bandwidth 67 and 80 B/ns,
+  which is §14.6's `GROUP_SIZE_M` effect. On 1024x1024 they are the same (257 and 254 ns).
+- **About 340 ns of every round trip is spent inside the CU.** L_issue - L_tcp is 280-395 ns on every tile,
+  and the TCP reports a `TCP_PENDING_STALL` (data pending from L2) on 26-54% of its cycles. A load waits
+  that long before reaching L2 and after its data returns (the LDS write that `vmcnt` waits for), however
+  short its L2 trip.
+
+### 16.4 MFMA efficiency on the current stack
+
+TFLOPS (sustained), the clock run's whole-kernel MFMA utilisation, and ATT loop efficiency (CU 0), against
+the model at the clock run's clock with the documented window (Q = 32 KB, L = 550 ns) and with the measured
+one (Q = 45 KB, L = L_issue). The last column compares back-to-back TFLOPS with the earlier run of the same
+point: §15.4 is this stack with the same layouts, §14.4 is Triton v2.2 + llirSched + amdgcnas with the
+hand-built layouts.
+
+| tile | fw: TFLOPS, useful, ATT loop | model fw: 550 ns / own L | cb: TFLOPS, useful, ATT loop | model cb: 550 ns / own L | TFLOPS now / before |
+|---|---|---|---|---|---|
+| 256x256 | 1428, 72%, 96% | 99% / 100% | 937, 41%, (CU 0 idle) | 43% / 50% | cb 0.968 (§14.4); fw 0.988 (§15.4) |
+| 256x128 | 1232, 62%, 73% | 65% / 77% | 1215, 59%, 72% | 63% / 74% | cb 1.009 (§15.4, mirror); fw 1.000 (§15.4) |
+| 128x256 | 1237, 61%, 70% | 65% / 83% | 1256, 63%, 73% | 65% / 80% | cb 1.006 (§15.4); fw 0.997 (§15.4, mirror) |
+| 128x128x128 | 1035, 48%, 55% | 45% / 64% | 1090, 53%, 66% | 47% / 70% | cb 1.090 (§14.4); fw 0.996 (§15.4) |
+| 64x64x128 | 601, 25%, 19% | 20% / 30% | 674, 29%, 21% | 21% / 30% | cb 0.998 (§15.4) |
+| 32x128x128p | 548, 22%, 25% | 16% / 25% | 591, 24%, 29% | 16% / 25% | cb 1.103 (§14.4) |
+| 32x64x128 | 474, 19%, 29% | 13% / 22% | 494, 20%, 33% | 12% / 19% | cb 1.050 (§14.4) |
+| 32x32x128p | 366, 15%, 16% | 10% / 16% | 305, 12%, 17% | 10% / 13% | cb 1.028 (§14.4) |
+| 16x256x128p | 250, 10%, 11% | 9% / 12% | 259, 10%, 11% | 9% / 11% | cb 1.070 (§14.4) |
+| 16x128x128p | 289, 11%, 18% | 9% / 14% | 362, 14%, 18% | 9% / 16% | cb 1.100 (§14.4) |
+| 256x16x128p | 250, 10%, 11% | 9% / 12% | 308, 12%, 13% | 9% / 13% | cb 1.008 (§14.4) |
+| 16x64x128p | 298, 12%, 13% | 8% / 13% | 275, 11%, 16% | 8% / 12% | cb 1.029 (§14.4) |
+| 16x32x128p | 225, 9%, 9% | 6% / 10% | 239, 10%, 12% | 6% / 10% | cb 0.936 (§14.4) |
+
+![measured against the model](images/latency/model.png)
+
+- **The tiles reach what the window allows.** Per loop iteration and wave, the largest stall is waiting to
+  issue a `buffer_load` (the window): 310-3300 cycles, against 8-135 on `vmcnt` and 130-430 on LDS reads.
+  There are two exceptions:
+  - 128x128x128 on 2048x4096 (issue 178, LDS 425), the tile's fastest point: 66% loop efficiency;
+  - 16x32x128p's `vmcnt` (§16.5).
+- **The documented model (550 ns) still predicts the one-workgroup tiles:** 63-65% against 59-63% useful
+  for 256x128 and 128x256, and 45-47% against 48-53% for 128x128x128. It under-predicts the multi-workgroup
+  tiles by 1.2-1.7x, as in §14.4, because their L is shorter.
+- **The measured pair (45 KB over L_issue) fits the multi-workgroup tiles:** within 0-22% of useful, closest
+  on 2048x4096, since they hold close to the cap (37-44 KB). It over-predicts the one-workgroup tiles by
+  20-36%. The four-quadrant ones hold only 33-36 KB, and the counter runs that measured L_issue ran
+  0.2 GHz faster than the 1.9 GHz power-capped clock runs.
+- **This stack is not slower.**
+  - The four-quadrant tiles are within -1.2% to +0.9% of §15.4.
+  - 128x128x128 at 2048x4096 is +9% over §14.4: the layouts of §15 plus the scheduler.
+  - The small tiles, compiled without the peephole on both stacks (§14.3), gain 1-10% from the v3.0
+    scheduler, except 16x32x128p, which loses 6.5%. On GPU 3 too it is 238 against 256 TFLOPS. Its
+    `vmcnt` stalls rose from 151 of 1968 cycles per iteration (§14.4) to 199 of 2100.
+- 256x256 on 2048x4096 is 2-3% under §14.4 on both GPUs. That is the stack, not v9_tile: its code is v9's
+  (§15.2). ATT on CU 0 has no waves there, since 128 tiles leave half the CUs idle.
+
+### 16.5 Which tiles two stages are enough for
+
+The pipeline leads by about two k-steps, so 2 T_k must cover L_issue. T_k is the k-step time of the timed
+run.
+
+| tile | 2 T_k / L_issue (fw / cb) | `vmcnt` share of the loop's stalls (fw / cb) |
+|---|---|---|
+| 256x128, 128x256, 128x128x128 | 2.6-3.8 | 1.9-2.7% |
+| 64x64x128 | 3.4 / 2.9 | 4.7% / 3.4% |
+| 32x{128, 64, 32}x128 | 3.0-4.0 | 0.3-2.5% |
+| 16x256x128p, 256x16x128p | 3.1-3.5 | 0.2-0.3% |
+| 16x128x128p | 4.0 / 3.6 | 4.9% / 0.7% |
+| 16x64x128p | 3.9 / 3.8 | 0.3% / 0.8% |
+| **16x32x128p** | **2.4 / 2.2** | **12.6% / 11.9%** |
+
+Two stages are enough for every tile down to 16x64x128. 16x32x128p is the first where the round trip
+shows: it is borderline and the most sensitive to the schedule (§16.4). 16x16x128 is pipeline-bound
+(§14.5). A shorter round trip would move this boundary: the warm inputs of §14.6 would, a more
+loaded L2 the other way.
+
+### 16.6 What this means
+
+- **For the model:**
+  - Keep `L` = 550 ns for tiles that run one 4-wave workgroup per CU (256x128, 128x256: 570-580 ns
+    inferred; 128x128x128: 490-520). Use ~360-440 ns for tiles with 2-4 workgroups per CU.
+  - Physically: ~45 KB in flight per CU from issue, over a 410-670 ns round trip from issue, of which
+    130-280 ns is the trip to L2.
+- **For the stream-K port:**
+  - The tile list two stages support is 256x256, 256x128, 128x256, 128x128x128, 64x64x128, and the small
+    tiles down to 16x64x128 (or 32x32). Treat 16x32x128 as borderline.
+  - The stream-K fixup's latency costs (flag polls, partial reads from L2) scale with this L_issue, not with
+    550 ns. A one-workgroup tile pays ~600-670 ns per dependent global round trip under load.
+  - A tile with several workgroups per CU (§14.4's one-wave structure) has a shorter round trip, ~400-500
+    ns. Keep that structure where the tile allows it.
+- **Open:**
+  - Why `TCC_EA0_RDREQ_LEVEL` reads 1.5-2x what the TCP side implies.
+  - Where the ~340 ns inside the CU goes, between TA queueing and the LDS write of `buffer_load ... lds`.
+    ATT on a one-wave tile could split it.
+
+## 17. BLOCK_M a multiple of 16: row bands (2026-10-19)
+
+Every Gluon tensor and layout has power-of-two sides (`validate_block_shape`; linear layouts are maps over
+GF(2)), so a 240-row tile cannot be one accumulator. v9_tile now builds BLOCK_M = 128 + 64 a + 32 b + 16 c
+(a, b, c in {0, 1}) from the quadrants of a 128-row tile and up to three row bands under them, each split
+into a left and right half against the same B (`row_bands`, the `BAND64` / `BAND32` / `BAND16` constexprs).
+All runs on physical GPU 1 (`GPU=1 source v9_tile/env.sh`), the v3.0 stack with amdgcnas.
+
+### 17.1 The bands
+
+| band | rows | LDS (per buffer, BK 64) | waves | operands |
+|---|---|---|---|---|
+| quadrants | 128 | A_top, A_bot: 8 KB each | 2x2 | v9's |
+| BAND64 | 64 | A_mid: 8 KB, the quadrants' layout | 2x2 | A_mid, the quadrants' B registers |
+| BAND32 | 32 | A_s32: 4 KB, `tile_shared_layout(32)` | 2x2 | A_s32, the quadrants' B registers |
+| BAND16 | 16 | A_s16: 2 KB, v9_tile_small's swizzle | 1x4 | A_s16, B read again in the 1x4 operand layout |
+
+- **Even waves.** Every band is split over all four waves. A 16-row band cannot take the 2x2 grid: a wave
+  would hold 8 rows, less than one 16-row MFMA, so two waves would compute the same rows. Side by side
+  each wave holds 16 x 16 of each half.
+- **Wait counts unchanged.** A_mid's copy shares A_top's commit group and A_s32's and A_s16's share
+  A_bot's, so there are still four groups per k-step. Each band operand is read with the quadrant operand
+  of the same group (a_mid with a_top, a_s32 and a_s16 with a_bot, b_left_s and b_right_s with b_left and
+  b_right), before the copy that refills its buffer.
+- **The 16-row copy.** 2 KB is two 1 KB wave loads at BK 64; gfx950's direct-to-LDS loads are 4 or 16 B
+  per lane, so `strip_load_layout(..., replicate=True)` gives waves 2 and 3 copies of rows 0-15, which
+  `buffer_load_to_shared` predicates off.
+- **Limits.** BLOCK_N >= 128 with BAND16 (16 columns per wave per half); no BAND32 / BAND16 with the 32x32x16
+  MFMA (32 rows per wave, no 32-row layout); BLOCK_M x BLOCK_N <= 65536 (256 accumulator registers).
+  240x128x128 needs 190 KB of LDS (as 256x128x128 does) and does not launch.
+
+### 17.2 Gates
+
+- **Power-of-two tiles unchanged.** 128x128, 256x128, 128x256, 256x256, 128x128x128 and 64x64, each plain,
+  with bias, ragged M / N and ragged K: all 24 `.amdgcn` byte-identical before and after.
+- **Correctness:** 880 cases, no failures ([check_tiles_bands.md](results/check_tiles_bands.md) and
+  the runs below): 144, 160, 176, 192, 208, 224 and 240 x 128 over SHAPES, RAGGED_SHAPES and BAND_SHAPES
+  (M a multiple of the tile), bf16 and fp16, with and without bias; 192x256; 240x128 and 144x128 under
+  `V9_FORCE_EDGE=1`; 192x128 with `V9_TILE_MFMA=32`.
+
+### 17.3 The compiled loop
+
+One iteration = two k-steps ([asm_check.py](asm_check.py), 4096x4096x8192, so the banded tiles run EDGE_M):
+
+| tile | VGPRs | AGPRs | spills | LDS KB | WGs per CU | loop insts | MFMAs | buffer loads | ds_reads | s_waitcnt | s_nop | longest non-MFMA run |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 128x128 | 164 | 68 | 0 | 65.9 | 2 | 155 | 64 | 16 | 32 | 8 | 0 | 8 |
+| 144x128 | 212 | 76 | 0 | 69.9 | 2 | 181 | 72 | 18 | 44 | 8 | 2 | 11 |
+| 192x128 | 276 | 124 | 0 | 82.3 | 1 | 203 | 96 | 20 | 40 | 8 | 0 | 8 |
+| 224x128 | 280 | 140 | 0 | 90.6 | 1 | 229 | 112 | 22 | 44 | 8 | 2 | 10 |
+| 240x128 | 360 | 152 | 0 | 94.6 | 1 | 255 | 120 | 24 | 56 | 8 | 4 | 14 |
+| 256x128 | 348 | 160 | 0 | 98.9 | 1 | 251 | 128 | 24 | 48 | 8 | 0 | 8 |
+
+MFMAs, loads and LDS reads are the predicted ones: 60 MFMAs, 12 loads and 28 `ds_read_b128` per wave per
+k-step at 240x128 (16 of A, 8 of B for the 2x2 operands, 4 of B again for the 16-row band).
+
+### 17.4 Measurements
+
+`sweep.py --points BANDS`, K = 8192, rotating inputs ([bands_timing.csv](results/bands_timing.csv),
+[bands_timing_graph.csv](results/bands_timing_graph.csv)), microseconds, back-to-back launches (HIP
+graph); one launch at a time in brackets:
+
+| shape | banded tile | 128x128 | 256x128 | banded / faster power of two |
+|---|---|---|---|---|
+| 2304x4096 | 144x128: 137.2 (134.3) | 155.1 (156.3) | 170.8 (176.0) | 1.13x (1.16x) |
+| 3072x4096 | 192x128: 167.9 (169.4) | 173.4 (173.7) | 181.3 (179.6) | 1.03x (1.03x) |
+| 3584x4096 | 224x128: 188.6 (190.8) | 213.2 (216.0) | 196.5 (195.3) | 1.04x (1.02x) |
+| 3840x4096 | 240x128: 203.3 (204.5) | 221.3 (229.2) | 201.8 (203.2) | 0.99x (0.99x) |
+
+One full wave (256 tiles, N = 2048), graph TFLOPS and ATT main-loop MFMA efficiency on CU 0
+([bands_att.csv](results/bands_att.csv)):
+
+| tile | TFLOPS | ATT loop eff | epilogue cycles |
+|---|---|---|---|
+| 192x128 | 1113 | 57.4% | 5267 |
+| 224x128 | 1191 | 64.9% | 6660 |
+| 240x128 | 1215 | 69.0% | 7060 |
+| 256x128 | 1240 | 65.5% | 6703 |
+| 144x128 (2304x4096, 512 tiles) | 1127 | 42.9% | 5623 |
+| 128x128 (2304x4096, 576 tiles) | 997 | 40.1% | 4844 |
+
+LDS bank conflicts (`--sets 4`, [bands_lds_conflicts.csv](results/bands_lds_conflicts.csv)): 0 for every
+banded tile, as §15.3's model predicts for the 1x4 B read (each `ds_read_b128` still covers one aligned
+16-row block; the block's start shifts every lane alike). LDS busy rises with the extra reads: 35% of CU
+cycles at 144x128 (128x128: 24%), 30% at 240x128 (256x128: 23%).
+
+### 17.5 What it means
+
+- **The full-wave TFLOPS follow §3's window.** Against 256x128, the MFMA time per byte loaded is 0.90 at
+  192x128, 0.95 at 224x128 and 0.98 at 240x128; measured 0.90, 0.96, 0.98. 240x128's loop is the most
+  efficient of all (69%), but its epilogue (ten stores) costs back the difference.
+- **The gains are smaller than whole rounds predict.** A round model (time = rounds x tile time) gives
+  192x128 25% over 256x128 on 3072x4096 (2 rounds of 0.75 against 2 rounds); measured 8%. Two reasons:
+  - The banded tile is less efficient (above): 10% at 192x128.
+  - A partly empty last round costs less than a full one. 256x128's 384 tiles take 181 us against 111 for
+    one full wave, so the half-full second round takes 63% of a round; at 480 tiles the 7/8-full one takes
+    82%. Fewer active CUs share the clock budget and L2.
+- **Among 128-wide tiles, banded tiles pay** where the power-of-two tile's last round is nearly empty and
+  the banded tile's efficiency is close to it. 144x128 on 2304x4096 is the clear case: 128x128 needs 576
+  tiles over 512 slots (2 per CU), a 1/8-full second round, while 144x128 fits 512, at 7% higher loop
+  efficiency. 240x128 on 3840x4096 gains nothing: 256x128's 480 tiles are nearly two full rounds already.
+- **But the 128-wide comparison above misses the best tile.** With 256-wide tiles
+  ([bands_192x256_graph.csv](results/bands_192x256_graph.csv),
+  [bands_256wide_graph.csv](results/bands_256wide_graph.csv); graph, µs):
+
+  | shape | 192x256 | 256x256 | 128x256 | best 128-wide |
+  |---|---|---|---|---|
+  | 2304x4096 | **125.5** (192 tiles) | 145.2 (144) | 169.0 (288) | 144x128: 135.7 |
+  | 3072x4096 | **136.8** (256) | 149.8 (192) | 177.5 (384) | 192x128: 168.7 |
+  | 3584x4096 | 224.8 (304) | **163.6** (224) | 193.3 (448) | 224x128: 189.0 |
+  | 3840x4096 | 225.0 (320) | **169.4** (240) | 213.5 (480) | 256x128: 202.0 |
+
+  The rule these follow: take the largest tile whose count stays at or under 256 (one 1-workgroup tile per
+  CU). 256x256 leaves 64-112 CUs idle at 2304 and 3072, and 192x256 fills them (16% and 9% faster).
+  At 3584 and 3840, 256x256 fits in one round and 192x256 spills 48-64 tiles into a second, so it
+  takes 33-37% longer. The banded tile is the win when it turns an underfilled round of 256x256 into a full one;
+  BLOCK_N bands (256x192, 192x192) would add the same choice along N.
+- **Open:**
+  - The 16-row band's extra B read and its two-wave copy are the only parts with new access patterns; the
+    loop at 240x128 has the longest non-MFMA run (14) and 4 `s_nop`s, so its schedule may have room.
+  - N bands (128x144) are the mirror (an A read in a 4x1 layout; §18); a 16x16 corner (144x144) cannot be
+    split over four waves without splitting K.
+
+## 18. BLOCK_N a multiple of 16: column bands (2026-10-19)
+
+§17's bands turned sideways: BLOCK_N = 128 + 64 a + 32 b + 16 c (`col_bands`, the `NBAND64` / `NBAND32` /
+`NBAND16` constexprs) puts up to three column bands right of a 128-column quadrant tile, each split into a
+top and bottom half against A_top and A_bot. BLOCK_M stays a power of two (row and column bands together
+would need corner pieces; `matmul()` rejects them). GPU 1, the v3.0 stack, amdgcnas on unless stated.
+
+### 18.1 The bands
+
+| band | columns | LDS (per buffer, BK 64) | waves | operands | commit group |
+|---|---|---|---|---|---|
+| NBAND64 | 64 | B_mid: the quadrants' B layout | 2x2 | B_mid, the quadrants' A registers | B_left's |
+| NBAND32 | 32 | B_s32: `tile_shared_layout(32, ..., True)` | 2x2 | B_s32, the quadrants' A registers | B_right's |
+| NBAND16 | 16 | B_s16: v9_tile_small's swizzled strip | 4x1 | B_s16, A read again in the 4x1 operand layout | B_right's |
+
+- Triton has a 32-column padded layout for B at 16x16x32, so B_s32 needs no fallback to the strip layouts.
+- The 16-column band stacks the waves along M: HALF_M / 4 rows of each half per wave, so BLOCK_M >= 128.
+  Its copy (16 B per lane) covers 512 / BK columns per wave: at BK 64 two waves, the others predicated off.
+- Each band operand is read with the quadrant operand of its group (b_mid with b_left, b_s32 and b_s16
+  with b_right, a_top_s and a_bot_s with a_top and a_bot); the wait counts are v9's. The quadrant halves
+  are QUAD_N / 2 = 64 wide whatever BLOCK_N is (`HALF_N`); their bias goes through `init_band_n`.
+
+### 18.2 Gates
+
+- **Earlier tiles unchanged.** The 24 power-of-two variants of §17.2 plus 144x128, 192x128, 240x128 and
+  192x256 (plain, bias, edge, ragged K): all 40 instruction streams identical before and after
+  ([tmp/gate_cmp.py](tmp/gate_cmp.py) compares the `.amdgcn` without its DWARF sections: inserting a
+  function above `k_tail_mask` moves its source lines, which changes one debug abbreviation in the
+  ragged-K variants and nothing else).
+- **Correctness:** 1040 cases, no failures ([check_tiles_nbands.md](results/check_tiles_nbands.md)):
+  128x144 to 128x240 in steps of 16 and 256x240 over SHAPES, RAGGED_SHAPES and BAND_N_SHAPES (N a multiple
+  of the tile), bf16 and fp16, with and without bias; 128x240 and 256x240 under `V9_FORCE_EDGE=1`;
+  256x192 with amdgcnas off, plain, under `V9_FORCE_EDGE=1` and with `V9_TILE_MFMA=32`.
+
+### 18.3 256x192 and the amdgcnas plugin
+
+With amdgcnas on, 256x192 is wrong in rows 224-255, columns 128-191 of every tile (in the bottom half of
+the 64-column band, half of one wave row's share); with it off the same kernel is correct. Bisecting the plugin's
+passes ([tmp/bisect_band.py](tmp/bisect_band.py)): disabling any one of `optimize_nops`, `rotate_lgkmcnt`
+or `optimize_mfma_density` gives the right answer.
+
+The cause: [tmp/lgkm_check.py](tmp/lgkm_check.py) walks the compiled kernel, retires ds_reads at each
+`s_waitcnt lgkmcnt(N)` and flags any use of a destination still in flight. Without the plugin no tile has
+one. With it, 256x192 has 46 in every variant (an MFMA right after the `ds_read_b128` that fills its
+operand, the `lgkmcnt(0)` moved to the barrier 35 instructions later), 256x256 has 2 (at the loop head,
+long since validated), and every other tile of §17 and §18 has none. `rotate_lgkmcnt` assumes a region's
+MFMAs do not use that region's own LDS reads, which the scheduler's order for 256x192 breaks; with one of
+the three passes off, 2-30 unwaited uses remain and the result is right only because the reads return in
+time. The plugin is not changed here; `matmul()` refuses 256x192 while `TRITON_AMDGCNAS_PLUGIN` is set.
+
+### 18.4 The compiled loop
+
+One iteration = two k-steps ([asm_check.py](asm_check.py), 4096x4096x8192; 256x192, 192x256 and the second
+256x256 row with amdgcnas off):
+
+| tile | VGPRs | AGPRs | spills | LDS KB | WGs per CU | loop insts | MFMAs | buffer loads | ds_reads | s_waitcnt | s_nop |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 128x128 | 164 | 68 | 0 | 65.9 | 2 | 155 | 64 | 16 | 32 | 8 | 0 |
+| 128x144 | 204 | 76 | 0 | 69.9 | 2 | 181 | 72 | 18 | 44 | 8 | 2 |
+| 128x192 | 240 | 120 | 0 | 82.3 | 1 | 203 | 96 | 20 | 40 | 8 | 0 |
+| 128x224 | 272 | 136 | 0 | 90.6 | 1 | 227 | 112 | 22 | 44 | 8 | 0 |
+| 128x240 | 352 | 152 | 0 | 94.6 | 1 | 253 | 120 | 24 | 56 | 8 | 2 |
+| 256x240 | 476 | 256 | 0 | 127.6 | 1 | 415 | 240 | 32 | 80 | 12 | 0 |
+| 256x256 | 456 | 256 | 0 | 131.9 | 1 | 423 | 256 | 32 | 64 | 20 | 0 |
+| 256x192 (off) | 416 | 256 | 0 | 115.3 | 1 | 417 | 192 | 28 | 56 | 16 | 76 |
+| 192x256 (off) | 420 | 252 | 0 | 115.3 | 1 | 417 | 192 | 28 | 56 | 12 | 80 |
+| 256x256 (off) | 456 | 256 | 0 | 131.9 | 1 | 527 | 256 | 32 | 64 | 20 | 97 |
+
+The mirror pairs have the same counts (128x240 against 240x128 of §17.3: 120 MFMAs, 24 loads, 56
+ds_reads); the 128-row tiles keep v9's 8 waits.
+
+### 18.5 Measurements
+
+`sweep.py timing --graph --points NBANDS` (amdgcnas off, every tile;
+[nbands_timing_graph_noas.csv](results/nbands_timing_graph_noas.csv)) and `NBANDS_AS` (on, without
+256x192; [nbands_timing_graph.csv](results/nbands_timing_graph.csv)), µs, K = 8192; on in brackets:
+
+| shape | banded tile | 256x256 | 128x256 | 256x128 | 128x128 | mirror |
+|---|---|---|---|---|---|---|
+| 4096x2304 | 256x192: **128.4** | 148.6 (145.5) | 172.1 (171.2) | 184.1 (183.6) | | 192x256 on 2304x4096: 126.7 (125.9) |
+| 4096x3072 | 256x192: **141.6** | 152.5 (150.6) | 203.4 (201.1) | 187.4 (185.9) | | 192x256 on 3072x4096: 139.2 (138.2) |
+| 4096x2304 | 128x144: 137.5 (138.9) | | | | 163.1 (164.4) | 144x128 on 2304x4096: 137.2 (§17) |
+| 4096x3840 | 128x240: 210.3 (209.2) | **171.8** (166.5) | 211.9 (213.8) | | 225.0 (226.2) | 240x128 on 3840x4096: 203.3 (§17) |
+
+- **256x192 is to 4096xN what 192x256 is to Mx4096:** 1.16x over 256x256 at 2304 columns and 1.08x at
+  3072 (1.13x and 1.06x against 256x256 with the plugin on), and within 1.3-1.7% of its mirror.
+- **128x144 is 1.19x over 128x128**, the same win as 144x128 on the transposed shape.
+- **128x240 is no use on 4096x3840**, as 240x128 was not on 3840x4096: 256x256 fits that shape in 240 tiles.
+- LDS bank conflicts ([nbands_lds_conflicts.csv](results/nbands_lds_conflicts.csv),
+  [nbands_lds_conflicts_noas.csv](results/nbands_lds_conflicts_noas.csv)): 0 for every column-banded tile;
+  LDS busy 34% at 128x144 (128x128: 22%), 30% at 128x240, 27% at 256x240 (256x256: 20%).
+- ATT main-loop MFMA efficiency ([nbands_att.csv](results/nbands_att.csv),
+  [nbands_att_noas.csv](results/nbands_att_noas.csv)): 128x144 42.9% (128x128 41.6%), 128x240 65.5%,
+  256x240 93.9%; with the plugin off, 256x192 82.4% against 192x256's 89.1% and 256x256's 90.5%.
+
+### 18.6 What it means
+
+- The column bands give the same tile choice along N that §17.5 found along M: a banded tile pays where it
+  turns an underfilled round of 256x256 into a full one (4096x2304, 4096x3072), and loses where 256x256
+  already fits in one round.
+- **Open:**
+  - 256x192's loop is 7% less efficient than 192x256's on ATT (82% against 89%) for the same instruction
+    counts; the end-to-end gap is only 1.3-1.7%. Its group sizes differ (B_left + B_mid is 16 KB, B_right
+    8 KB; 192x256's A_bot is the small one), and it has 16 waits to 12.
+  - The amdgcnas `rotate_lgkmcnt` assumption (§18.3) wants a check in the plugin itself; `lgkm_check.py`
+    is one.
+
+## 19. 256x256 down to 256x128 in steps of 16 (2026-10-20)
+
+How hot-loop and end-to-end MFMA efficiency, TFLOPS and the clock change as the tile narrows from 256x256
+to 256x128, 16 columns at a time, and whether the loss is the TCP window (the working theory) or the
+schedule. Every tile runs on a 16x16 grid, `4096 x 16 BN x 8192`: 256 tiles, and since each needs 99-132 KB
+of LDS, exactly one per CU. K, the k-step count and the GROUP_SIZE_M placement are the same for all.
+Physical GPU 1, the v3.0 stack with the MFMA scheduler alone (`GPU=1 source v9_tile/env.sh; unset
+TRITON_AMDGCNAS_PLUGIN`: 256x192 is miscompiled with the plugin, §18.3, so no tile uses it), cold inputs
+(`--rotating-mb 2048`). [run_tile_n.sh](run_tile_n.sh) runs it; [report_tile_n.py](report_tile_n.py) merges it.
+
+Three MFMA efficiencies:
+
+- **hot loop** (ATT): loop MFMA cycles / cycles per iteration, as before (`att_mfma_eff`);
+- **whole wave** (ATT): every MFMA a traced wave executed x 16 cycles / the wave's lifetime, first
+  instruction to the end of the last (`att_e2e_eff`; `process_json.py`'s new `e2e mfma efficiency`, over all
+  traced waves). It adds the prologue, the epilogue with its peeled k-steps, and the stores;
+- **chip-wide**: TFLOPS / (1048.576 TFLOPS per GHz x clock), 1048.576 = 256 CUs x 4096 FLOP per clock.
+  For the ATT launch (its kernel-trace duration and the clock from `realtime.json`) and for back-to-back
+  launches (graph TFLOPS, hwmon clock). The gap to the whole-wave number is what CU 0's waves do not
+  see: the slowest CU, dispatch, launch overhead.
+
+[att_gaps.py](att_gaps.py) splits each traced wave's MFMA idle time (one wave per SIMD, so each wave owns
+its MFMA pipe) into what the MFMAs failed to hide: issue cycles, `ds_read` stalls, barriers, `vmcnt` waits,
+`buffer_load` issue stalls (the window), by code index; per region between waits it compares the non-MFMA
+issue cycles with the MFMA shadow, measures the distance from each stalled wait to the load it waits on,
+and the barrier arrival skew.
+
+### 19.1 Predictions (written before any measurement)
+
+Per k-step: `BM BN / 512` MFMAs per wave (`C_cyc` = 16 x that), `B = (256 + BN) x 64 x 2` bytes. The README §3
+ceilings, with the clock interpolated linearly between §4's power-capped 1.71 GHz (256x256) and 1.92 GHz
+(256x128), Q = 32 KB, L = 550 ns:
+
+| tile | MFMAs / wave / k-step | C_cyc | B (KB) | B/clk at 100% | 1. processing | window at 1.71 | window at 1.92 | clock (interp.) | window there | 3. two buffers | predicted loop eff |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 256x256 | 128 | 2048 | 64 | 32.0 | 100% | 100% | 97% | 1.71 | 100% | 100% | **100%** |
+| 256x240 | 120 | 1920 | 62 | 33.1 | 100% | 100% | 94% | 1.74 | 100% | 100% | **100%** |
+| 256x224 | 112 | 1792 | 60 | 34.3 | 100% | 100% | 91% | 1.76 | 99% | 100% | **99%** |
+| 256x208 | 104 | 1664 | 58 | 35.7 | 100% | 98% | 87% | 1.79 | 93% | 100% | **93%** |
+| 256x192 | 96 | 1536 | 56 | 37.3 | 100% | 93% | 83% | 1.81 | 88% | 100% | **88%** |
+| 256x176 | 88 | 1408 | 54 | 39.3 | 100% | 89% | 79% | 1.84 | 82% | 100% | **82%** |
+| 256x160 | 80 | 1280 | 52 | 41.6 | 100% | 84% | 75% | 1.87 | 77% | 100% | **77%** |
+| 256x144 | 72 | 1152 | 50 | 44.4 | 100% | 78% | 70% | 1.89 | 71% | 100% | **71%** |
+| 256x128 | 64 | 1024 | 48 | 48.0 | 100% | 73% | 65% | 1.92 | 65% | 100% | **65%** |
+
+- **If the window is what binds,** the loop efficiency falls smoothly from ~100% to ~65%, crossing below 95%
+  between 256x224 and 256x208, the loss shows up in att_gaps as `buffer_load` issue stalls, and a tile's
+  efficiency tracks `59.6 B/ns x C_cyc / (B x clock)` at its own clock.
+- **If issue and schedule bind,** the loss shows up as exposed issue cycles, `ds_read` stalls and barrier
+  waits in regions whose work fits their shadow, does not track the clock, and steps with the code: the
+  16-column band tiles (240, 208, 176, 144) carry an extra A read for the band and should sit below a
+  smooth curve; 256x192 was already 7 points under its mirror on ATT (§18.6).
+- **The clock** rises as the tile narrows (less MFMA power per cycle under the 1400 W cap), 1.7 to ~1.9 GHz
+  back to back. The ATT launch (the 10th of 12 isolated launches) ran at 1.36 GHz and 1.95 GHz on
+  launch 1 ([tcpL_report.md](results/tcpL_report.md)), so the ATT clock will not be the back-to-back one; isolated-launch timing without ATT tells the
+  ATT overhead apart from the launch pattern.
+- **Whole wave against loop:** about loop eff x 94% (the loop's share at K = 8192) plus the epilogue's MFMAs,
+  so 1-2 points above that product.
+
+### 19.2 Gates and the compiled loop
+
+- **Correctness:** 688 cases, no failures ([check_tiles_tile_n.md](results/check_tiles_tile_n.md)): the nine tiles
+  over SHAPES, RAGGED_SHAPES and (banded) BAND_N_SHAPES, bf16 and fp16, with and without bias, plugin off. 256x144,
+  256x160, 256x176, 256x208 and 256x224 had not been gated before.
+- **The loop** ([asm_tile_n.md](results/asm_tile_n.md); `asm_check.py --grid16` compiles each tile on its own
+  16x16 grid, so the banded tiles run without EDGE_N, as in the sweep). One iteration = two k-steps, per wave:
+
+| tile | loop insts | MFMAs | non-MFMA | per MFMA | buffer loads | ds_reads | s_waitcnt | s_nop | longest non-MFMA run | VGPRs / AGPRs |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 256x256 | 527 | 256 | 271 | 1.06 | 32 | 64 | 20 | 97 | 5 | 456 / 256 |
+| 256x240 | 522 | 240 | 282 | 1.18 | 32 | 80 | 12 | 92 | 6 | 468 / 256 |
+| 256x224 | 480 | 224 | 256 | 1.14 | 30 | 60 | 16 | 90 | 7 | 424 / 256 |
+| 256x208 | 470 | 208 | 262 | 1.26 | 30 | 76 | 12 | 82 | 12 | 456 / 256 |
+| 256x192 | 422 | 192 | 230 | 1.20 | 28 | 56 | 16 | 76 | 15 | 412 / 256 |
+| 256x176 | 426 | 176 | 250 | 1.42 | 28 | 72 | 12 | 78 | 22 | 400 / 208 |
+| 256x160 | 366 | 160 | 206 | 1.29 | 26 | 52 | 8 | 70 | 15 | 428 / 200 |
+| 256x144 | 368 | 144 | 224 | 1.56 | 26 | 68 | 8 | 66 | 19 | 432 / 180 |
+| 256x128 | 311 | 128 | 183 | 1.43 | 24 | 48 | 8 | 58 | 13 | 348 / 160 |
+
+  No spills, no `v_accvgpr` copies. MFMAs scale with BN, loads with 256 + BN, so the non-MFMA instructions per
+  MFMA rise from 1.06 to 1.43. The tiles with a 16-column band (240, 208, 176, 144) carry 16-20 more `ds_read`s
+  than their neighbours (A read again in the 4x1 layout, §18.1) and the highest ratio of their pair.
+
+### 19.3 Measurements
+
+[report.md](results/tile_n/report.md) has every column; CSVs `results/tile_n_*.csv`. ATT: median of three runs
+(range in the report), clock from `realtime.json`. Back to back: HIP graph; clock and power from hwmon.
+
+![efficiency and clock against BN](images/tile_n/efficiency.png)
+
+| tile | ATT loop | ATT whole wave | ATT GHz | ATT TFLOPS | ATT chip-wide | back-to-back TFLOPS | hwmon GHz | back-to-back chip-wide | window at ATT / hwmon clock | loop B/ns per CU | cycles / iteration |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 256x256 | 95.6% | 90.7% | 1.44 | 1237 | 82.8% | 1579 | 1.80 | 83.5% | 100% / 100% | 40-47 | 4277-4291 |
+| 256x240 | 92.2% | 87.4% | 1.42 | 1169 | 77.9% | 1500 | 1.74 | 82.3% | 100% / 100% | 43-48 | 4154-4267 |
+| 256x224 | 91.8% | 87.3% | 1.48 | 1238 | 79.8% | 1515 | 1.75 | 82.4% | 100% / 99% | 42-47 | 3892-3921 |
+| 256x208 | 85.1% | 81.0% | 1.56 | 1206 | 74.1% | 1430 | 1.83 | 74.7% | 100% / 91% | 44-49 | 3898-3918 |
+| 256x192 | 86.7% | 82.3% | 1.52 | 1229 | 75.8% | 1442 | 1.82 | 75.3% | 100% / 87% | 48-55 | 3495-3562 |
+| 256x176 | 82.3% | 78.2% | 1.46 | 1094 | 71.3% | 1376 | 1.84 | 71.4% | 100% / 83% | 47-55 | 3411-3492 |
+| 256x160 | 81.6% | 77.7% | 1.75 | 1298 | 70.6% | 1382 | 1.82 | 72.4% | 82% / 79% | 60-62 | 3093-3139 |
+| 256x144 | 74.7% | 71.2% | 1.68 | 1127 | 64.0% | 1278 | 1.86 | 65.6% | 80% / 72% | 52-57 | 3057-3132 |
+| 256x128 | 71.7% | 68.6% | 1.75 | 1149 | 62.4% | 1243 | 1.90 | 62.4% | 71% / 65% | 60-62 | 2684-2908 |
+
+(All back-to-back runs at 1397-1400 W. Isolated-launch timing came out within 1.5% of back to back: these
+kernels, 110-175 µs, outlast the ~135 µs host launch, so the queue never empties and `gap_us` is 0.)
+
+- **Hot loop:** 95.6% at 256x256 falls to 71.7% at 256x128, in a sawtooth. Each 16-column band tile sits at
+  or below the next narrower tile: 256x208 (85.1%) under 256x192 (86.7%), 256x176 (82.3%) level with 256x160
+  (81.6%), 256x240 level with 256x224. The repeats agree within 0.5-2 points except 256x128 (70.4-76.3%,
+  below).
+- **Whole wave** is loop x share + 1.0-1.3 points on every tile (the epilogue's MFMAs), so prologue and
+  epilogue cost the same ~5 points everywhere.
+- **Chip-wide** is 4-10 points under the whole wave on every tile (26 of 27 traces past the 5-point flag), for
+  the ATT launch and back to back alike: the kernel lasts ~10% longer than CU 0's waves (dispatch ramp, the
+  slowest CUs). Not tile-dependent.
+- **Clock:** back to back it rises from 1.74-1.80 GHz (256x256-256x224) to 1.82-1.90 (256x208-256x128), at the
+  1400 W cap throughout. The ATT launch runs 0.1-0.5 GHz lower, and moves by up to 0.3 GHz between repeats
+  (256x256: 1.30-1.53). Its chip-wide efficiency is within 2 points of back to back except 256x240 and
+  256x224 (4.4 and 2.6 points lower under ATT).
+- **TFLOPS** back to back fall from 1579 to 1243 (79%); the clock rise hides part of the efficiency drop
+  (83.5% to 62.4% chip-wide, 75%).
+
+### 19.4 Where the loop loses (att_gaps.py)
+
+MFMA idle per iteration and wave, by what was exposed (cycles, median of three):
+
+![MFMA idle by cause](images/tile_n/idle.png)
+
+| tile | cycles / iter | MFMA idle | issue | dependency hole | ds_read stall | barrier | buffer_load issue stall (window) | vmcnt wait | lgkmcnt wait | other stall |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 256x256 | 4283 | 187 | 69 | 48 | 8 | 19 | 7 | 0 | 20 | 16 |
+| 256x240 | 4165 | 325 | 128 | 80 | 29 | 30 | 10 | 20 | 0 | 25 |
+| 256x224 | 3901 | 317 | 119 | 55 | 28 | 40 | 21 | 0 | 20 | 34 |
+| 256x208 | 3911 | 583 | 205 | 80 | 150 | 67 | 27 | 20 | 0 | 27 |
+| 256x192 | 3544 | 472 | 169 | 43 | 96 | 60 | 51 | 0 | 19 | 25 |
+| 256x176 | 3423 | 607 | 260 | 80 | 139 | 55 | 25 | 20 | 0 | 26 |
+| 256x160 | 3136 | 576 | 171 | 25 | 61 | 84 | 183 | 20 | 0 | 24 |
+| 256x144 | 3084 | 780 | 298 | 63 | 203 | 76 | 90 | 20 | 0 | 29 |
+| 256x128 | 2856 | 808 | 218 | 6 | 80 | 114 | 341 | 20 | 0 | 28 |
+
+- **Nothing is left unattributed** once dependency holes count: a hole is the time between an instruction's end
+  and the next one's clock, which ATT records as neither stall nor issue. Almost all of it is a `v_add_u32 vN,
+  offset, vM` immediately followed by `ds_read_b128 ..., vN` (8 cycles each), and 12 cycles between an
+  `s_waitcnt` and the MFMA after it.
+- **Every MFMA region fits its shadow.** In every tile and repeat, the non-MFMA issue cycles of each region between
+  waits are under the shadow the region's MFMAs leave; no region is short of room. The idle is placement: where
+  the schedule puts address arithmetic, LDS reads, waits and barriers relative to the MFMAs.
+- **256x256-256x176: the schedule binds, not the window.** Cycles per iteration are fixed while the ATT clock moves
+  0.2-0.3 GHz (256x208: 3898-3918 cycles at 1.46-1.61 GHz), so the limit is in cycles. The window ceiling at the
+  median ATT clock is 100% for all of them (88-93% for the two repeats at 1.72-1.73 GHz), 4-18 points above the
+  measured loop; `buffer_load` issue stalls are 3-11% of the idle. The idle is issue (35-43%), `ds_read` stalls
+  (up to 26%), dependency holes (9-26%) and barriers (9-13%).
+- **The 16-column band is the sawtooth.** Against the next narrower tile, 256x208, 256x176 and 256x144 have 54-123
+  more cycles of `ds_read` stall (11-12 cycles on each of the A reads at offsets such as 17664 and 34528) and
+  37-57 more of dependency holes. 256x240 shows the holes (80 against 55) but not the `ds_read` stalls.
+- **256x160 and 256x128: the window binds.** The loop moves 59.5-62 B/ns per CU in all six traces, at clocks from
+  1.64 to 1.83 GHz, against the model's 59.6. The window model at each trace's own clock predicts the loop within
+  3.2 points for both tiles (the loop at or slightly above it), including 256x128's spread: 76.3% at 1.64 GHz, 71.7% at 1.75 and 70.4% at 1.83 GHz
+  (efficiency x clock = 1.25-1.29 in all three). `buffer_load` issue stalls are 32% and 42% of the idle.
+- **256x144** is between: 52-57 B/ns, 4-11 points under the window at its ATT clock, with both the band's
+  `ds_read` stalls (203) and window stalls (90).
+- **Barriers:** arrival skew across a CU's four waves is 15-45 cycles, and SIMD 1 or 3 arrives last in 85-100% of
+  barriers on every tile. Barrier stalls grow from 19 to 114 cycles per iteration as more waves wait on loads.
+- **Waits:** the only stalling waits are the loop-top `s_waitcnt vmcnt(N) lgkmcnt(0)` or `lgkmcnt(7)`, 20 cycles
+  once per iteration, with the awaited `buffer_load` issued 1800-2650 cycles (86-154 MFMAs) earlier and the
+  awaited `ds_read` 268-490 cycles (11-29 MFMAs) earlier. No load arrives late in any tile.
+
+### 19.5 What it means
+
+- **The TCP-window theory holds only from 256x160 down, at these clocks.** 256x256 reaches 95.6% (a schedule
+  ceiling, the window does not bind at 1.3-1.5 GHz); between 256x240 and 256x176 the loop loses a further 3.4-13
+  points to the schedule while the window allows ~100% at the ATT clock. At 256x160 and 256x128 the loop sits exactly at
+  ~60 B/ns per CU, the window.
+- **At the back-to-back clock the window would bind earlier.** At 1.82-1.84 GHz its ceiling for 256x208-256x176 is
+  83-91%, about the schedule ceiling measured under ATT (82-87%). That the chip-wide efficiency back to back
+  matches the ATT launch's within 1-2 points suggests the loop runs about as efficiently at the higher clock, but
+  the trace does not see that clock, and ATT at the power-capped clock (a pinned clock) would settle it.
+- **The 256x128 discrepancy (59-73% on 4096x2048, §4 and §16; 81-84% on 4096x4096 in tcpL_report.md):** on this
+  shape the loop is the window at ~60 B/ns per CU, so its efficiency is set by the clock: 70-76% at 1.64-1.83 GHz.
+  The tcpL traces ran at 1.42 GHz (launch 10, where the window allows 87%) or on launch 1 with the memory system
+  otherwise idle; §4's 64% was the v2.2 stack.
+- **What the schedule could win back** (for 256x240-256x176, where it binds): the dependency holes (43-80 cycles
+  per iteration, 1.2-2.3%; hoist the `v_add` address computation away from its `ds_read`, which 256x256 pays too:
+  48 cycles), the band's `ds_read` stalls (up to 150 cycles at 256x208, ~4%), and the post-wait hole before the
+  first MFMA. None of these change what the window allows at 256x160 and below.
+
+### 19.6 Traces to investigate
+
+[report.md](results/tile_n/report.md) ("Traces to investigate") lists every tile with the location of its three
+traces (`v9_tile/tmp/tile_n/att_r{1,2,3}/sweep_att/<tile>_<shape>/ui_output_*`, wave files `se{0,2,3}_sm{0-3}_sl0_wv0.json`),
+the rules each trips, the median repeat's idle split and its hot spots by code index. The ones that stand out:
+
+- **256x208** (`att_r2/.../256x208_4096x3328x8192/ui_output_agent_*_dispatch_62`): 15 points under the window at
+  1.46 GHz and under the narrower 256x192; 150 cycles per iteration of `ds_read` stall on the A reads (code indices
+  808-809, 1037; 11-12 cycles each), 80 of dependency holes, 67 of barriers.
+- **256x176 and 256x144** (`dispatch_64`, `dispatch_68`): the same band `ds_read` stalls (139 and 203 cycles per
+  iteration; 256x144's at code indices 539, 673, 850), 256x176 17 points under the window at 1.44-1.46 GHz.
+- **256x240 and 256x224** (`dispatch_60`): 8-10 points under the window; the hot spots are the loop-top wait (code
+  index 658 / 604, 20 cycles) and four `v_add` + `ds_read` address holes (e.g. 732, 798, 990, 1052 in 256x240).
+  256x240 repeat 1 (`att_r1`, 1.62 GHz) has 87 cycles of `buffer_load` issue stall where repeats 2-3 have 8-10.
+- **256x256** (`dispatch_58`): of its 187 idle cycles per iteration, 48 are four address holes (code indices 707,
+  774, 967, 1030) and 20 the `lgkmcnt(7)` wait at 634 with the 12-cycle hole after it (635).
+- **256x128** (`dispatch_70`): repeats spread 5.9 points with the ATT clock (window-bound, above); the hot spots are
+  `buffer_load` issue stalls (code indices 773, 532, 540, 765, 719: 23-54 cycles each per iteration).
+
+### 19.7 Caveats
+
+- ATT is one launch on CU 0 of three shader engines, at a clock 0.1-0.5 GHz under the back-to-back one, and the
+  clock moves between repeats. Since the window is fixed in ns, the window-bound tiles' ATT efficiency depends on
+  that clock (256x128: 70-76%).
+- The ATT clock is the trace window's average (it spans a little more than the kernel).
+- Without a pinned clock, the efficiency against BN includes the power-cap feedback (less efficient tiles clock
+  higher, 1.74 to 1.90 GHz back to back).
+- Plugin off throughout: 256x256's loop is 95.6% here against 96% with amdgcnas (§16.4); the plugin changes the
+  schedule, which binds for most of these tiles.
+- **Open:** §18.5 traced the same plugin-off kernels lower: 256x256 90.5% and 256x192 82.4% on one ATT run each,
+  against 95.5-95.8% and 86.2-87.9% here over three (same GPU, same instruction counts). Not investigated; the
+  ATT clocks of §18.5 were not recorded.

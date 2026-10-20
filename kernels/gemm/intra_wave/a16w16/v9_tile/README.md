@@ -19,7 +19,7 @@ limits in the CU's L1 (the TCP) set that speed, and the kernel's LDS buffering a
 | `v_mfma_f32_16x16x32_bf16` | 16x16x32 = 8192 MACs = 16,384 FLOP in 16 cycles | [v8 README](../v8_sliceMN/README.md), [process_json.py](../../../../../scripts/process_json.py) |
 | one `buffer_load_dwordx4` | 64 lanes x 16 B = **1 KB** per wave | |
 | TCP processing rate | one 64 B line per clock = **64 B/clk**, so 1 KB takes 16 cycles | [v8 README §4.3](../v8_sliceMN/README.md); measured as 153 GB/s per CU on L2 hits in hbm_bandwidth_xcd sweep I |
-| TCP capacity | **32 KB** in flight per CU | [v8 README §4.5](../v8_sliceMN/README.md), [memory_bandwidth_model.md](../../../../../docs/memory_bandwidth_model.md) |
+| TCP capacity | **32 KB** in flight per CU, the model's `Q`; measured, a CU holds up to ~45 KB from issue and 8-20 KB between the TCP and L2 | [v8 README §4.5](../v8_sliceMN/README.md), [memory_bandwidth_model.md](../../../../../docs/memory_bandwidth_model.md); WORKLOG §16 |
 | `ds_read_b128` | 1 KB per wave, one every 16 cycles per wave with 4 waves | [v3 README](../v3_lds/README.md) |
 | L2 | 2 KB/clk per XCD; 38.8 TB/s measured (39.3 at 2.4 GHz theoretical) | [hbm_bandwidth_xcd](../../../../../experiments/hbm_bandwidth_xcd/README.md) |
 | MALL (Infinity Cache), as the XCDs see it | 7.0-7.9 TB/s (fabric-limited), ~110 GB/s per CU | same |
@@ -50,6 +50,22 @@ limits in the CU's L1 (the TCP) set that speed, and the kernel's LDS buffering a
 are what turns 32 KB in flight into the measured ~60 and ~85 GB/s per CU (WORKLOG §4, §9). They are
 averages over L2 hits and misses. A miss holds its slot several times longer than a hit, so with 80%
 L2 hits the misses still occupy most of the window.
+
+**Measured (WORKLOG §16).** Hardware counters, calibrated on single loads of known latency, measure the
+round trip directly on compute-bound shapes (cold, K = 8192):
+
+| tiles | `L` inferred, 32 KB / (B/ns) | TCP to L2 and back | from issue | KB in flight per CU, from issue |
+|---|---|---|---|---|
+| one 4-wave workgroup per CU: 256x128, 128x256, 128x128x128, 16x256, 256x16 | 410-580 ns | 200-285 ns | 525-670 ns | 33-43 |
+| 2-4 workgroups per CU: 64x64x128, 32x{128, 64, 32}x128, 16x{128, 64, 32}x128 | 330-440 ns | 130-200 ns | 410-595 ns | 36-44 |
+
+- **The 32 KB / 550 ns pair is a fit, not a mechanism.** The TCP never holds 32 KB toward L2 (8-18 KB).
+  The per-CU limit is the ~45 KB a CU can have issued and not returned, over a round trip from issue that
+  includes ~340 ns inside the CU.
+- **What sets `L` is the workgroup structure, not the L2 hit rate.** At the same 91% hits, 16x256x128
+  (one workgroup) takes 257 ns to L2 and back, and 16x64x128 (four) 129 ns.
+- **For the formulas below,** `L` = 550 ns stays right for one 4-wave workgroup per CU (§4's tables).
+  Several workgroups per CU need ~360-440 ns, which is why §14.4's one-wave tiles beat the cold model.
 
 ## 2. Per k-step quantities for a tile
 
@@ -119,6 +135,9 @@ Reading it:
   percent.
 - **64x64x64** asks for 128 B/clk, twice what the TCP can process: at most 50% even with zero latency
   and unlimited slots.
+- **The measured round trip agrees for these tiles** (WORKLOG §16, the v3.0 stack). The cold `L` inferred
+  per tile is 570-580 ns for 256x128 and 128x256, and 490-520 ns for 128x128x128. Their loop efficiency
+  is 70-73% and 55-66% there; these ATT numbers are newer than the table's.
 
 Warm (operands in the MALL, `L` = 385 ns, measured warm clocks):
 
@@ -164,7 +183,9 @@ On 2048x4096x8192 (cold, 2.4 GHz, pinned):
 - **Every small tile is load-bound at 8-22% MFMA busy on a compute-bound shape.** One 4-wave workgroup per
   CU lands on the window model at ~60 B/ns per CU. Several one-wave workgroups per CU move 72-111 B/ns,
   so they beat the cold model, and warm inputs barely raise them: for that structure the 60 is not the
-  limit.
+  limit. Measured (WORKLOG §16), their round trip is shorter: 130-200 ns to L2 and back, against 255-285
+  for 16x256. On the full wave, 16x64x128 and 16x256x128 hold the same ~40 KB in flight at the same 91%
+  hit rate.
 - **Two buffers are enough** for BK >= 128 except 16x16x128, which waits on `vmcnt`. BK = 256 removes the
   waits (+10%).
 - **Below 16 rows** the MFMA runs as busy as at 16 rows while the useful work shrinks to BM / 16.
@@ -177,6 +198,42 @@ On 2048x4096x8192 (cold, 2.4 GHz, pinned):
     `ds_bpermute` and LDS reads.
   - `waves_per_eu = 4 / W` pins one wave per SIMD exactly, without the LDS pad.
   - One-wave workgroups beat replicated warps for 16x16.
+
+### Tiles with BLOCK_M a multiple of 16 (144 to 240 rows)
+
+Gluon tensors have power-of-two sides, so `--tile 240x128` runs as the quadrants of a 128-row tile plus
+row bands of 64, 32 and 16 rows under them (240 = 128 + 64 + 32 + 16). Every band is split over all four
+waves, so the work stays even (WORKLOG §17). Per k-step, from the compiled loop:
+
+| tile | MFMAs / wave | `B` | `ds_read_b128` / wave | LDS | WGs per CU | full wave TFLOPS (256 tiles) | ATT loop eff |
+|---|---|---|---|---|---|---|---|
+| 128x128 | 32 | 32 KB | 16 | 66 KB | 2 | | 40% |
+| 144x128 | 36 | 34 KB | 22 | 70 KB | 2 | | 43% |
+| 192x128 | 48 | 40 KB | 20 | 82 KB | 1 | 1113 | 57% |
+| 224x128 | 56 | 44 KB | 22 | 91 KB | 1 | 1191 | 65% |
+| 240x128 | 60 | 46 KB | 28 | 95 KB | 1 | 1215 | 69% |
+| 256x128 | 64 | 48 KB | 24 | 99 KB | 1 | 1240 | 66% |
+
+The TFLOPS are back-to-back launches (`sweep.py timing --graph`) over rotating inputs, K = 8192, GPU 1.
+What wins on these shapes is the tile count: the largest efficient tile with at most 256 tiles (one per
+CU), µs:
+
+| shape | 192x256 | 256x256 | best 128-wide tile | fastest |
+|---|---|---|---|---|
+| 2304x4096 | **125.5** (192 tiles) | 145.2 (144) | 144x128: 135.7 | 192x256, 1.16x over 256x256 |
+| 3072x4096 | **136.8** (256) | 149.8 (192) | 192x128: 168.7 | 192x256, 1.09x over 256x256 |
+| 3584x4096 | 224.8 (304) | **163.6** (224) | 224x128: 189.0 | 256x256 |
+| 3840x4096 | 225.0 (320) | **169.4** (240) | 256x128: 202.0 | 256x256 |
+
+Among 128-wide tiles alone the banded ones win too (144x128 1.13x over 128x128 on 2304x4096, 192x128 and
+224x128 1.03-1.04x), but 192x256, or 256x256 where its tiles fit one round, is faster still.
+
+BLOCK_N can be banded the same way instead (`--tile 256x192`, `128x240`: column bands right of a
+128-column tile, WORKLOG §18; not both sides at once). They mirror the row bands: 256x192 on 4096x2304
+is 128.4 µs against 148.6 for 256x256 (1.16x), within 1.3% of 192x256 on 2304x4096, and 128x144 on
+4096x2304 is 1.19x over 128x128. **256x192 needs `unset TRITON_AMDGCNAS_PLUGIN`**: the plugin's
+lgkmcnt rotation leaves 46 of its MFMA operands unwaited after their `ds_read`, and C comes out wrong
+(`matmul()` refuses it while the plugin is on). Every other banded tile is correct with it.
 
 ## 5. From one CU to the chip
 

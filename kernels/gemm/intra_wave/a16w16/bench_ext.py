@@ -22,8 +22,8 @@
 # THE SOFTWARE.
 ##############################################################################
 
-"""bench.py extended for the versions beyond the tutorial: v10-v26, v9_tile (--version 9t) and
-v9_ragged (9r), with --M / --N, --tile, --bias and optionally padded B / C rows (--pad).
+"""bench.py extended for the versions beyond the tutorial: v10-v27, v9_tile (--version 9t) and
+v9_ragged (9r), with --M / --N, --tile (v9_tile and v27), --bias and optionally padded B / C rows (--pad).
 bench.py itself stays as on main, the baseline. See BENCH_EXT.md. As in bench.py, --schedule-hint
 overrides the schedule_hint the kernel's matmul() passes to its launch (v5 on: "mfma-schedule").
 """
@@ -92,6 +92,7 @@ VERSION_MAP = {
     24: "v24_streamk_combined",
     25: "v25_streamk_ragged_mn",
     26: "v26_streamk_ragged_k",
+    27: "v27_streamk_tile",
     "9t": "v9_tile",
     "9r": "v9_ragged",
 }
@@ -167,7 +168,8 @@ def parse_args():
     parser.add_argument(
         "--tile",
         default=None,
-        help="v9_tile only: tile as BMxBN or BMxBNxBK (sets V9_TILE; default 256x256x64)",
+        help="v9_tile and v27: tile as BMxBN or BMxBNxBK, v9_tile's spec (sets V9_TILE and STREAMK_TILE; "
+        "default 256x256x64)",
     )
     parser.add_argument(
         "--rocprof",
@@ -311,6 +313,7 @@ def main():
     args = parse_args()
     if args.tile:
         os.environ["V9_TILE"] = args.tile
+        os.environ["STREAMK_TILE"] = args.tile
     version_dir = VERSION_MAP[args.version]
     module = importlib.import_module(f"{version_dir}.matmul_kernel")
     matmul = module.matmul
