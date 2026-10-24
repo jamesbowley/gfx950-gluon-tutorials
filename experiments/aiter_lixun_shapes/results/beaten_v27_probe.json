@@ -1,0 +1,5651 @@
+{
+ "device": {
+  "torch": "2.10.0+rocm7.2.4.git3d3aa833",
+  "hip": "7.2.53211",
+  "hip_device": "3",
+  "gpu_pci_bus": 21,
+  "gpu": "gfx950:sramecc+:xnack-"
+ },
+ "shapes": {
+  "512x1024x4096:bfloat16": {
+   "cfg": {
+    "libtype": "flydsl",
+    "solidx": 1816,
+    "splitK": 1,
+    "us": 14.9911,
+    "kernelName": "flydsl_hgemm_abf16_wbf16_bf16_t32x64x128x4_ks1_w1x2x2_bias0_ktail0_gm4_pft_gfx950",
+    "err_ratio": 0.0051,
+    "tflops": 286.5,
+    "bw": 909.31
+   },
+   "pick": [
+    {
+     "name": "hgemm_bf16_t32x64x128x4_ks1_w1x2x2_gm4_bias0_lnt_pft_0",
+     "dur_us": 15.719,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 3,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       256,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT64x32x256_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR0_CADS0_DTLA1_DTLB1_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT2_1_MO40_NTn1_NTA0_NTB0_NTC3_NTD1_NTM0_NEPBS10_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW2_SK3_SKFTR0_SKXCCM0_TLDS2_ULSGRO0_USL1_UIOFGRO0_USFGROn1_VSn1_VWA2_VWB1_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 16.079,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 10,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "512x2048x1536:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT64x64x256_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR0_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV1_MIWT2_2_MO40_NTn1_NTA0_NTB0_NTC3_NTD3_NTM0_NEPBS16_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW2_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA2_VWB2_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 10.799,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 17,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT64x64x256_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR0_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV1_MIWT2_2_MO40_NTn1_NTA0_NTB0_NTC3_NTD3_NTM0_NEPBS16_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW2_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA2_VWB2_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 10.959,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 24,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "512x2048x4096:bfloat16": {
+   "cfg": {
+    "libtype": "flydsl",
+    "solidx": 2810,
+    "splitK": 1,
+    "us": 19.0732,
+    "kernelName": "flydsl_hgemm_abf16_wbf16_bf16_t64x64x64x6_ks1_w4x2x1_bias0_ktail0_gm0_pft_gfx950",
+    "err_ratio": 0.0,
+    "tflops": 450.37,
+    "bw": 1209.48
+   },
+   "pick": [
+    {
+     "name": "hgemm_bf16_t64x64x64x6_ks1_w4x2x1_gm0_bias0_lnt_pft_0",
+     "dur_us": 18.879,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 28,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       256,
+       1,
+       1
+      ],
+      "block": [
+       512,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT64x64x256_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR0_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV1_MIWT2_2_MO40_NTn1_NTA0_NTB0_NTC3_NTD3_NTM0_NEPBS16_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW2_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA2_VWB2_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 19.359,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 35,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "512x3072x6144:bfloat16": {
+   "cfg": {
+    "libtype": "flydsl",
+    "solidx": 2351,
+    "splitK": 1,
+    "us": 35.9095,
+    "kernelName": "flydsl_hgemm_abf16_wbf16_bf16_t64x96x128x3_ks1_w2x2x2_bias0_ktail0_gm4_pft_gfx950",
+    "err_ratio": 0.0057,
+    "tflops": 538.22,
+    "bw": 1314.02
+   },
+   "pick": [
+    {
+     "name": "hgemm_bf16_t64x96x128x3_ks1_w2x2x2_gm4_bias0_lnt_pft_0",
+     "dur_us": 35.84,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 39,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       256,
+       1,
+       1
+      ],
+      "block": [
+       512,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT192x128x128_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR0_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA512_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT6_4_MO40_NTn1_NTA0_NTB0_NTC1_NTD4_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO1_SVW2_SK3_SKFTR0_SKXCCM0_TLDS2_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA2_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 39.199,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 46,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "512x4096x1024:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT128x64x128_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT4_2_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW4_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA4_VWB2_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 11.68,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 53,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT128x64x128_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT4_2_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW4_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA4_VWB2_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 11.679,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 60,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "512x4096x1536:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT128x64x128_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT4_2_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW4_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA4_VWB2_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 14.56,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 67,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT128x64x128_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT4_2_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW4_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA4_VWB2_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 14.399,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 74,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "512x4096x2048:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT128x64x128_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT4_2_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW4_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA4_VWB2_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 17.079,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 81,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT128x64x128_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT4_2_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW4_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA4_VWB2_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 16.92,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 88,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "512x5120x3200:bfloat16": {
+   "cfg": {
+    "libtype": "flydsl",
+    "solidx": 229,
+    "splitK": 1,
+    "us": 28.8908,
+    "kernelName": "flydsl_hgemm_abf16_wbf16_bf16_t128x64x64x3_ks1_w2x2x1_bias0_ktail0_gm0_pft_gfx950",
+    "err_ratio": 0.0,
+    "tflops": 580.71,
+    "bw": 1429.09
+   },
+   "pick": [
+    {
+     "name": "hgemm_bf16_t128x64x64x3_ks1_w2x2x1_gm0_bias0_lnt_pft_0",
+     "dur_us": 29.319,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 92,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       320,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT160x64x128_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA256_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT5_2_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW1_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA1_VWB2_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 27.039,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 99,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "512x8192x1024:bfloat16": {
+   "cfg": {
+    "libtype": "flydsl",
+    "solidx": 46,
+    "splitK": 1,
+    "us": 14.2657,
+    "kernelName": "flydsl_hgemm_abf16_wbf16_bf16_t128x128x64x4_ks1_w4x4x1_bias0_ktail0_gm0_pft_gfx950",
+    "err_ratio": 0.0,
+    "tflops": 602.14,
+    "bw": 1837.58
+   },
+   "pick": [
+    {
+     "name": "hgemm_bf16_t128x128x64x4_ks1_w4x4x1_gm0_bias0_lnt_pft_0",
+     "dur_us": 14.119,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 103,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       256,
+       1,
+       1
+      ],
+      "block": [
+       1024,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT128x128x128_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT4_4_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW4_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA4_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 15.479,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 110,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "512x8192x2048:bfloat16": {
+   "cfg": {
+    "libtype": "flydsl",
+    "solidx": 36,
+    "splitK": 1,
+    "us": 22.8542,
+    "kernelName": "flydsl_hgemm_abf16_wbf16_bf16_t128x128x64x3_ks1_w4x4x1_bias0_ktail0_gm0_pft_gfx950",
+    "err_ratio": 0.0,
+    "tflops": 751.72,
+    "bw": 1927.01
+   },
+   "pick": [
+    {
+     "name": "hgemm_bf16_t128x128x64x3_ks1_w4x4x1_gm0_bias0_lnt_pft_0",
+     "dur_us": 23.519,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 114,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       256,
+       1,
+       1
+      ],
+      "block": [
+       1024,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT128x128x256_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR0_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA2048_LBSPPB2048_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT4_4_MO40_NTn1_NTA0_NTB0_NTC1_NTD1_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO1_SRVW0_SSO4_SVW4_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA4_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 26.759,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 121,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "512x8192x4096:bfloat16": {
+   "cfg": {
+    "libtype": "flydsl",
+    "solidx": 47,
+    "splitK": 1,
+    "us": 40.5329,
+    "kernelName": "flydsl_hgemm_abf16_wbf16_bf16_t128x128x64x4_ks1_w4x4x1_bias0_ktail0_gm4_pft_gfx950",
+    "err_ratio": 0.0,
+    "tflops": 847.7,
+    "bw": 1966.1
+   },
+   "pick": [
+    {
+     "name": "hgemm_bf16_t128x128x64x4_ks1_w4x4x1_gm4_bias0_lnt_pft_0",
+     "dur_us": 40.479,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 125,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       256,
+       1,
+       1
+      ],
+      "block": [
+       1024,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT128x128x256_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR0_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA2048_LBSPPB2048_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT4_4_MO40_NTn1_NTA0_NTB0_NTC1_NTD1_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO1_SRVW0_SSO4_SVW4_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA4_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 44.359,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 132,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "512x16384x2048:bfloat16": {
+   "cfg": {
+    "libtype": "flydsl",
+    "solidx": 40,
+    "splitK": 1,
+    "us": 47.5056,
+    "kernelName": "flydsl_hgemm_abf16_wbf16_bf16_t128x128x64x4_ks1_w2x4x1_bias0_ktail0_gm0_pft_gfx950",
+    "err_ratio": 0.0,
+    "tflops": 723.28,
+    "bw": 1809.96
+   },
+   "pick": [
+    {
+     "name": "hgemm_bf16_t128x128x64x4_ks1_w2x4x1_gm0_bias0_lnt_pft_0",
+     "dur_us": 44.839,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 136,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       512,
+       1,
+       1
+      ],
+      "block": [
+       512,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x128x64_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_4_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 37.679,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 143,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "512x20480x7168:bfloat16": {
+   "cfg": {
+    "libtype": "flydsl",
+    "solidx": 95,
+    "splitK": 1,
+    "us": 151.3497,
+    "kernelName": "flydsl_hgemm_abf16_wbf16_bf16_t256x256x64x2_ks1_w2x4x1_bias0_ktail0_gm0_pht_gfx950",
+    "err_ratio": 0.0,
+    "tflops": 993.22,
+    "bw": 2126.95
+   },
+   "pick": [
+    {
+     "name": "hgemm_bf16_t256x256x64x2_ks1_w2x4x1_gm0_bias0_lnt_phti_0",
+     "dur_us": 147.161,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 147,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       160,
+       1,
+       1
+      ],
+      "block": [
+       512,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT160x256x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA128_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT5_8_MO40_NTn1_NTA4_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW1_SK3_SKFTR0_SKXCCM8_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA1_VWB8_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 135.281,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 154,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "768x1024x4096:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0,
+    "splitK": 0,
+    "us": 17.7368,
+    "kernelName": "native",
+    "err_ratio": 0.0,
+    "tflops": 363.23,
+    "bw": 916.34
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT64x48x256_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA512_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT1_3_MO40_NTn1_NTA0_NTB0_NTC1_NTD5_NTM0_NEPBS16_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO1_SRVW0_SSO0_SVW1_SK3_SKFTR0_SKXCCM0_TLDS2_ULSGRO0_USL1_UIOFGRO0_USFGRO1_VSn1_VWA1_VWB1_WSGRA0_WSGRB0_WS64_WG64_4_1",
+     "dur_us": 17.599,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 161,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT64x48x256_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA512_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT1_3_MO40_NTn1_NTA0_NTB0_NTC1_NTD5_NTM0_NEPBS16_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO1_SRVW0_SSO0_SVW1_SK3_SKFTR0_SKXCCM0_TLDS2_ULSGRO0_USL1_UIOFGRO0_USFGRO1_VSn1_VWA1_VWB1_WSGRA0_WSGRB0_WS64_WG64_4_1",
+     "dur_us": 17.839,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 168,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "768x2048x4096:bfloat16": {
+   "cfg": {
+    "libtype": "flydsl",
+    "solidx": 1983,
+    "splitK": 1,
+    "us": 24.2473,
+    "kernelName": "flydsl_hgemm_abf16_wbf16_bf16_t64x64x64x4_ks1_w2x1x1_bias0_ktail0_gm4_pft_gfx950",
+    "err_ratio": 0.0,
+    "tflops": 531.4,
+    "bw": 1081.13
+   },
+   "pick": [
+    {
+     "name": "hgemm_bf16_t64x64x64x4_ks1_w2x1x1_gm4_bias0_lnt_pft_0",
+     "dur_us": 25.759,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 172,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       384,
+       1,
+       1
+      ],
+      "block": [
+       128,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT64x96x256_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR0_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT2_3_MO40_NTn1_NTA0_NTB0_NTC0_NTD4_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW2_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA2_VWB1_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 25.839,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 179,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "768x129280x4096:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0,
+    "splitK": 0,
+    "us": 584.7506,
+    "kernelName": "native",
+    "err_ratio": 0.0,
+    "tflops": 1390.95,
+    "bw": 2161.48
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x256x64_MI16x16x1_CMS_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA1_DTLB1_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_8_MO40_NTn1_NTA0_NTB0_NTC0_NTD4_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB8_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 603.924,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 186,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       387840,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x256x64_MI16x16x1_CMS_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA1_DTLB1_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_8_MO40_NTn1_NTA0_NTB0_NTC0_NTD4_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB8_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 608.885,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 193,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       387840,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "1024x512x4096:bfloat16": {
+   "cfg": {
+    "libtype": "flydsl",
+    "solidx": 1826,
+    "splitK": 1,
+    "us": 15.0732,
+    "kernelName": "flydsl_hgemm_abf16_wbf16_bf16_t32x64x128x4_ks1_w2x2x1_bias0_ktail0_gm4_pft_gfx950",
+    "err_ratio": 0.0,
+    "tflops": 284.94,
+    "bw": 904.35
+   },
+   "pick": [
+    {
+     "name": "hgemm_bf16_t32x64x128x4_ks1_w2x2x1_gm4_bias0_lnt_pft_0",
+     "dur_us": 15.919,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 199,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       256,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT64x32x256_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR0_CADS0_DTLA1_DTLB1_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT2_1_MO40_NTn1_NTA0_NTB0_NTC3_NTD1_NTM0_NEPBS10_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW2_SK3_SKFTR0_SKXCCM0_TLDS2_ULSGRO0_USL1_UIOFGRO0_USFGROn1_VSn1_VWA2_VWB1_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 16.399,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 206,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "1024x1024x4096:bfloat16": {
+   "cfg": {
+    "libtype": "flydsl",
+    "solidx": 2811,
+    "splitK": 1,
+    "us": 19.1775,
+    "kernelName": "flydsl_hgemm_abf16_wbf16_bf16_t64x64x64x6_ks1_w4x2x1_bias0_ktail0_gm4_pft_gfx950",
+    "err_ratio": 0.0,
+    "tflops": 447.92,
+    "bw": 984.19
+   },
+   "pick": [
+    {
+     "name": "hgemm_bf16_t64x64x64x6_ks1_w4x2x1_gm4_bias0_lnt_pft_0",
+     "dur_us": 19.679,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 210,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       256,
+       1,
+       1
+      ],
+      "block": [
+       512,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT64x64x256_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR0_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV1_MIWT2_2_MO40_NTn1_NTA0_NTB0_NTC3_NTD3_NTM0_NEPBS16_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW2_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA2_VWB2_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 19.479,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 217,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "1024x2048x1536:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT128x64x128_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT4_2_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW4_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA4_VWB2_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 14.639,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 224,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT128x64x128_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT4_2_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW4_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA4_VWB2_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 14.399,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 231,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "1024x2304x16384:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0,
+    "splitK": 0,
+    "us": 90.7703,
+    "kernelName": "native",
+    "err_ratio": 0.0,
+    "tflops": 851.7,
+    "bw": 1253.39
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x256x64_MI16x16x1_CMS_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA1_DTLB1_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_8_MO40_NTn1_NTA0_NTB0_NTC0_NTD4_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB8_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 72.84,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 238,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       64512,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    },
+    {
+     "name": "Cijk_SB_BiasS_HAS_ScaleAlphaVec_PostGSU8_VW4",
+     "dur_us": 14.039,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 239,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       589824,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x256x64_MI16x16x1_CMS_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA1_DTLB1_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_8_MO40_NTn1_NTA0_NTB0_NTC0_NTD4_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB8_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 73.68,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 246,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       64512,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    },
+    {
+     "name": "Cijk_SB_BiasS_HAS_ScaleAlphaVec_PostGSU8_VW4",
+     "dur_us": 14.239,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 247,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       589824,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "1024x3072x6144:float32": {
+   "cfg": {
+    "libtype": "opus",
+    "solidx": 6006,
+    "splitK": 0,
+    "us": 76.1704,
+    "kernelName": "opus_gemm_512x128x128x64_2x4_16x16x32_0x0x0_nooob_4g_safe",
+    "err_ratio": 0.0,
+    "tflops": 507.48,
+    "bw": 743.37
+   },
+   "pick": [
+    {
+     "name": "void gemm_a16w16_4g_safe_kernel<opus_gemm_a16w16_traits_gfx950<512, opus::seq<128, 128, 64>, opus::tuple<std::bfloat16_t, std::bfloat16_t, float, float>, opus::seq<8, 8, 4>, opus::seq<2, 4, 1>, opus::seq<16, 16, 32>, false, float, false, 0, 17, 8, 32> >(opus_gemm_noscale_kargs_gfx950)",
+     "dur_us": 75.8,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 251,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       192,
+       1,
+       1
+      ],
+      "block": [
+       512,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BSS_BH_Bias_S_HA_S_SAV_UserArgs_MT96x128x128_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA256_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT3_4_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW1_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA1_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 49.239,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 258,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "1024x4096x512:bfloat16": {
+   "cfg": {
+    "libtype": "flydsl",
+    "solidx": 36,
+    "splitK": 1,
+    "us": 10.166,
+    "kernelName": "flydsl_hgemm_abf16_wbf16_bf16_t128x128x64x3_ks1_w4x4x1_bias0_ktail0_gm0_pft_gfx950",
+    "err_ratio": 0.0,
+    "tflops": 422.48,
+    "bw": 1340.89
+   },
+   "pick": [
+    {
+     "name": "hgemm_bf16_t128x128x64x3_ks1_w4x4x1_gm0_bias0_lnt_pft_0",
+     "dur_us": 10.719,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 262,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       256,
+       1,
+       1
+      ],
+      "block": [
+       1024,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT128x128x128_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT4_4_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW4_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA4_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 11.439,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 269,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "1024x4096x1024:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT128x128x128_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT4_4_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW4_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA4_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 15.559,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 276,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT128x128x128_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT4_4_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW4_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA4_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 15.359,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 283,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "1024x4096x1536:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT128x128x256_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR0_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA2048_LBSPPB2048_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT4_4_MO40_NTn1_NTA0_NTB0_NTC1_NTD1_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO1_SRVW0_SSO4_SVW4_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA4_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 21.92,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 290,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT128x128x256_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR0_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA2048_LBSPPB2048_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT4_4_MO40_NTn1_NTA0_NTB0_NTC1_NTD1_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO1_SRVW0_SSO4_SVW4_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA4_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 21.799,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 297,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "1024x5120x1280:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0,
+    "splitK": 0,
+    "us": 21.5302,
+    "kernelName": "native",
+    "err_ratio": 0.0,
+    "tflops": 623.39,
+    "bw": 1217.56
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT160x128x128_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA256_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT5_4_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW1_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA1_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 21.0,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 304,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT160x128x128_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA256_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT5_4_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW1_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA1_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 20.719,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 311,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "1024x5120x3200:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0,
+    "splitK": 0,
+    "us": 42.6439,
+    "kernelName": "native",
+    "err_ratio": 0.0,
+    "tflops": 786.85,
+    "bw": 1167.98
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT160x128x128_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA256_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT5_4_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW1_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA1_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 39.08,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 318,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT160x128x128_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA256_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT5_4_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW1_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA1_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 38.639,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 325,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "1024x5120x5120:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0,
+    "splitK": 0,
+    "us": 67.5518,
+    "kernelName": "native",
+    "err_ratio": 0.0,
+    "tflops": 794.75,
+    "bw": 1086.58
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT160x128x128_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA256_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT5_4_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW1_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA1_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 57.999,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 332,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT160x128x128_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA256_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT5_4_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW1_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA1_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 57.72,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 339,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "1024x5120x6400:bfloat16": {
+   "cfg": {
+    "libtype": "flydsl",
+    "solidx": 44,
+    "splitK": 1,
+    "us": 113.5304,
+    "kernelName": "flydsl_hgemm_abf16_wbf16_bf16_t128x128x64x4_ks1_w4x2x1_bias0_ktail0_gm0_pft_gfx950",
+    "err_ratio": 0.0,
+    "tflops": 591.11,
+    "bw": 785.07
+   },
+   "pick": [
+    {
+     "name": "hgemm_bf16_t128x128x64x4_ks1_w4x2x1_gm0_bias0_lnt_pft_0",
+     "dur_us": 106.24,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 343,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       320,
+       1,
+       1
+      ],
+      "block": [
+       512,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT160x128x128_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA256_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT5_4_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW1_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA1_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 69.639,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 350,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "1024x6144x2048:float32": {
+   "cfg": {
+    "libtype": "opus",
+    "solidx": 303,
+    "splitK": 0,
+    "us": 46.6113,
+    "kernelName": "opus_gemm_persistent_512x128x128x64_2x4_16x16x32_0x0x0",
+    "err_ratio": 0.0,
+    "tflops": 552.87,
+    "bw": 899.85
+   },
+   "pick": [
+    {
+     "name": "void gemm_a16w16_persistent_kernel<opus_gemm_a16w16_persistent_traits_gfx950<512, opus::seq<128, 128, 64>, opus::tuple<std::bfloat16_t, std::bfloat16_t, float, float>, opus::seq<8, 8, 4>, opus::seq<2, 4, 1>, opus::seq<16, 16, 32>, true, 0, 17> >(opus_gemm_persistent_kargs_gfx950)",
+     "dur_us": 40.039,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 354,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       48,
+       8,
+       1
+      ],
+      "block": [
+       512,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BSS_BH_Bias_S_HA_S_SAV_UserArgs_MT192x128x64_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA256_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT6_4_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW2_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA2_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 31.639,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 361,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "1024x6144x3072:bfloat16": {
+   "cfg": {
+    "libtype": "flydsl",
+    "solidx": 218,
+    "splitK": 1,
+    "us": 47.9152,
+    "kernelName": "flydsl_hgemm_abf16_wbf16_bf16_t256x128x64x3_ks1_w4x2x2_bias0_ktail0_gm0_pft_gfx950",
+    "err_ratio": 0.0043,
+    "tflops": 806.73,
+    "bw": 1181.74
+   },
+   "pick": [
+    {
+     "name": "hgemm_bf16_t256x128x64x3_ks1_w4x2x2_gm0_bias0_lnt_pft_0",
+     "dur_us": 46.48,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 365,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       192,
+       1,
+       1
+      ],
+      "block": [
+       1024,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT192x128x128_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR0_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA512_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT6_4_MO40_NTn1_NTA0_NTB0_NTC1_NTD4_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO1_SVW2_SK3_SKFTR0_SKXCCM0_TLDS2_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA2_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 43.319,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 372,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "1024x6144x3072:float32": {
+   "cfg": {
+    "libtype": "opus",
+    "solidx": 2007,
+    "splitK": 0,
+    "us": 62.0624,
+    "kernelName": "opus_gemm_512x256x128x64_2x4_16x16x32_0x0x0_cA1cB17",
+    "err_ratio": 0.0,
+    "tflops": 622.84,
+    "bw": 912.36
+   },
+   "pick": [
+    {
+     "name": "void gemm_a16w16_kernel<opus_gemm_a16w16_traits_gfx950<512, opus::seq<256, 128, 64>, opus::tuple<std::bfloat16_t, std::bfloat16_t, float, float>, opus::seq<8, 8, 4>, opus::seq<2, 4, 1>, opus::seq<16, 16, 32>, false, float, true, 1, 17, 8, 32> >(opus_gemm_noscale_kargs_gfx950)",
+     "dur_us": 67.64,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 376,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       192,
+       1,
+       1
+      ],
+      "block": [
+       512,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BSS_BH_Bias_S_HA_S_SAV_UserArgs_MT192x128x64_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA256_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT6_4_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW2_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA2_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 43.239,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 383,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "1024x8192x1024:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0,
+    "splitK": 0,
+    "us": 22.0257,
+    "kernelName": "native",
+    "err_ratio": 0.0,
+    "tflops": 779.99,
+    "bw": 1618.64
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x128x64_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_4_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 22.599,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 390,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x128x64_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_4_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 22.72,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 397,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "1024x8192x2048:bfloat16": {
+   "cfg": {
+    "libtype": "flydsl",
+    "solidx": 61,
+    "splitK": 1,
+    "us": 37.2428,
+    "kernelName": "flydsl_hgemm_abf16_wbf16_bf16_t128x256x64x2_ks1_w2x4x1_bias0_ktail0_gm4_pht_gfx950",
+    "err_ratio": 0.0,
+    "tflops": 922.59,
+    "bw": 1464.07
+   },
+   "pick": [
+    {
+     "name": "hgemm_bf16_t128x256x64x2_ks1_w2x4x1_gm4_bias0_lnt_phti_0",
+     "dur_us": 35.679,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 401,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       256,
+       1,
+       1
+      ],
+      "block": [
+       512,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x128x64_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_4_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 37.4,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 408,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "1024x8192x3584:bfloat16": {
+   "cfg": {
+    "libtype": "flydsl",
+    "solidx": 53,
+    "splitK": 1,
+    "us": 79.9192,
+    "kernelName": "flydsl_hgemm_abf16_wbf16_bf16_t128x128x64x5_ks1_w4x2x1_bias0_ktail0_gm4_pft_gfx950",
+    "err_ratio": 0.0,
+    "tflops": 752.38,
+    "bw": 1036.52
+   },
+   "pick": [
+    {
+     "name": "hgemm_bf16_t128x128x64x5_ks1_w4x2x1_gm4_bias0_lnt_pft_0",
+     "dur_us": 72.16,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 412,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       512,
+       1,
+       1
+      ],
+      "block": [
+       512,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x128x64_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_4_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 58.96,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 419,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "1024x8192x4096:bfloat16": {
+   "cfg": {
+    "libtype": "flydsl",
+    "solidx": 59,
+    "splitK": 1,
+    "us": 69.8645,
+    "kernelName": "flydsl_hgemm_abf16_wbf16_bf16_t128x256x64x2_ks1_w2x4x1_bias0_ktail0_gm0_pht_gfx950",
+    "err_ratio": 0.0,
+    "tflops": 983.61,
+    "bw": 1320.77
+   },
+   "pick": [
+    {
+     "name": "hgemm_bf16_t128x256x64x2_ks1_w2x4x1_gm0_bias0_lnt_phti_0",
+     "dur_us": 67.719,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 423,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       256,
+       1,
+       1
+      ],
+      "block": [
+       512,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x256x64_MI16x16x1_CMS_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA1_DTLB1_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_8_MO40_NTn1_NTA0_NTB0_NTC0_NTD4_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB8_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 95.48,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 430,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "1024x10240x4096:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0,
+    "splitK": 0,
+    "us": 82.1069,
+    "kernelName": "native",
+    "err_ratio": 0.0,
+    "tflops": 1046.19,
+    "bw": 1379.25
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT160x256x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA128_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT5_8_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW1_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA1_VWB8_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 79.36,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 437,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT160x256x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA128_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT5_8_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW1_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA1_VWB8_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 79.479,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 444,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "1280x512x4096:bfloat16": {
+   "cfg": {
+    "libtype": "flydsl",
+    "solidx": 1754,
+    "splitK": 1,
+    "us": 16.8426,
+    "kernelName": "flydsl_hgemm_abf16_wbf16_bf16_t48x32x128x4_ks1_w1x1x2_bias0_ktail0_gm4_pft_gfx950",
+    "err_ratio": 0.0051,
+    "tflops": 318.76,
+    "bw": 949.42
+   },
+   "pick": [
+    {
+     "name": "hgemm_bf16_t48x32x128x4_ks1_w1x1x2_gm4_bias0_lnt_pft_0",
+     "dur_us": 18.079,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 448,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       432,
+       1,
+       1
+      ],
+      "block": [
+       128,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT64x48x256_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA512_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT1_3_MO40_NTn1_NTA0_NTB0_NTC1_NTD5_NTM0_NEPBS16_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO1_SRVW0_SSO0_SVW1_SK3_SKFTR0_SKXCCM0_TLDS2_ULSGRO0_USL1_UIOFGRO0_USFGRO1_VSn1_VWA1_VWB1_WSGRA0_WSGRB0_WS64_WG64_4_1",
+     "dur_us": 18.159,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 455,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       55296,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "1280x1024x4096:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0,
+    "splitK": 0,
+    "us": 23.3149,
+    "kernelName": "native",
+    "err_ratio": 0.0,
+    "tflops": 460.54,
+    "bw": 921.98
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT64x80x256_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR0_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA512_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT1_5_MO40_NTn1_NTA0_NTB0_NTC0_NTD5_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO1_SRVW0_SSO0_SVW1_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA1_VWB1_WSGRA0_WSGRB0_WS64_WG64_4_1",
+     "dur_us": 21.919,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 462,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT64x80x256_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR0_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA512_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT1_5_MO40_NTn1_NTA0_NTB0_NTC0_NTD5_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO1_SRVW0_SSO0_SVW1_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA1_VWB1_WSGRA0_WSGRB0_WS64_WG64_4_1",
+     "dur_us": 21.999,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 469,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "1536x512x4096:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0,
+    "splitK": 0,
+    "us": 17.9557,
+    "kernelName": "native",
+    "err_ratio": 0.0,
+    "tflops": 358.8,
+    "bw": 1021.96
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT64x48x256_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA512_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT1_3_MO40_NTn1_NTA0_NTB0_NTC1_NTD5_NTM0_NEPBS16_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO1_SRVW0_SSO0_SVW1_SK3_SKFTR0_SKXCCM0_TLDS2_ULSGRO0_USL1_UIOFGRO0_USFGRO1_VSn1_VWA1_VWB1_WSGRA0_WSGRB0_WS64_WG64_4_1",
+     "dur_us": 17.879,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 476,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT64x48x256_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA512_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT1_3_MO40_NTn1_NTA0_NTB0_NTC1_NTD5_NTM0_NEPBS16_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO1_SRVW0_SSO0_SVW1_SK3_SKFTR0_SKXCCM0_TLDS2_ULSGRO0_USL1_UIOFGRO0_USFGRO1_VSn1_VWA1_VWB1_WSGRA0_WSGRB0_WS64_WG64_4_1",
+     "dur_us": 17.719,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 483,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "1536x1024x4096:bfloat16": {
+   "cfg": {
+    "libtype": "flydsl",
+    "solidx": 1983,
+    "splitK": 1,
+    "us": 24.6233,
+    "kernelName": "flydsl_hgemm_abf16_wbf16_bf16_t64x64x64x4_ks1_w2x1x1_bias0_ktail0_gm4_pft_gfx950",
+    "err_ratio": 0.0,
+    "tflops": 523.28,
+    "bw": 979.45
+   },
+   "pick": [
+    {
+     "name": "hgemm_bf16_t64x64x64x4_ks1_w2x1x1_gm4_bias0_lnt_pft_0",
+     "dur_us": 25.359,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 487,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       384,
+       1,
+       1
+      ],
+      "block": [
+       128,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT64x96x256_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR0_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT2_3_MO40_NTn1_NTA0_NTB0_NTC0_NTD4_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW2_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA2_VWB1_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 25.959,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 494,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "1536x1024x5120:float32": {
+   "cfg": {
+    "libtype": "asm",
+    "solidx": 9,
+    "splitK": 1,
+    "us": 39.8045,
+    "kernelName": "_ZN5aiter37bf16gemm_fp32bf16_tn_96x64_pf3_splitkE",
+    "err_ratio": 0.0,
+    "tflops": 404.63,
+    "bw": 737.61
+   },
+   "pick": [
+    {
+     "name": "aiter::bf16gemm_fp32bf16_tn_96x64_pf3_splitk",
+     "dur_us": 29.479,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 501,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       16,
+       16,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BSS_BH_Bias_S_HA_S_SAV_UserArgs_MT64x96x128_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA512_LBSPPB256_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT2_3_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW2_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA2_VWB1_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 29.439,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 508,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "1792x512x4096:bfloat16": {
+   "cfg": {
+    "libtype": "flydsl",
+    "solidx": 2389,
+    "splitK": 1,
+    "us": 18.8896,
+    "kernelName": "flydsl_hgemm_abf16_wbf16_bf16_t64x32x64x6_ks1_w2x1x1_bias0_ktail0_gm4_pft_gfx950",
+    "err_ratio": 0.0,
+    "tflops": 397.9,
+    "bw": 1096.34
+   },
+   "pick": [
+    {
+     "name": "hgemm_bf16_t64x32x64x6_ks1_w2x1x1_gm4_bias0_lnt_pft_0",
+     "dur_us": 20.239,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 512,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       448,
+       1,
+       1
+      ],
+      "block": [
+       128,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT64x64x256_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR0_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV1_MIWT2_2_MO40_NTn1_NTA0_NTB0_NTC3_NTD3_NTM0_NEPBS16_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW2_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA2_VWB2_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 19.84,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 519,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       57344,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "1792x1024x4096:bfloat16": {
+   "cfg": {
+    "libtype": "flydsl",
+    "solidx": 1852,
+    "splitK": 1,
+    "us": 25.41,
+    "kernelName": "flydsl_hgemm_abf16_wbf16_bf16_t64x64x64x4_ks1_w2x1x1_bias0_ktail0_gm4_pft_gfx950",
+    "err_ratio": 0.0,
+    "tflops": 591.59,
+    "bw": 1052.29
+   },
+   "pick": [
+    {
+     "name": "hgemm_bf16_t64x64x64x4_ks1_w2x1x1_gm4_bias0_lnt_pft_0",
+     "dur_us": 26.72,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 523,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       448,
+       1,
+       1
+      ],
+      "block": [
+       128,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x128x64_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_4_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 25.159,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 530,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       57344,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    },
+    {
+     "name": "Cijk_SB_BiasS_HAS_ScaleAlphaVec_PostGSU4_VW4",
+     "dur_us": 6.479,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 531,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       458752,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "1792x1024x7168:bfloat16": {
+   "cfg": {
+    "libtype": "flydsl",
+    "solidx": 1867,
+    "splitK": 1,
+    "us": 43.4924,
+    "kernelName": "flydsl_hgemm_abf16_wbf16_bf16_t64x64x64x4_ks1_w2x1x1_bias0_ktail0_gm4_pft_gfx950",
+    "err_ratio": 0.0,
+    "tflops": 604.86,
+    "bw": 1012.6
+   },
+   "pick": [
+    {
+     "name": "hgemm_bf16_t64x64x64x4_ks1_w2x1x1_gm4_bias0_lnt_pft_0",
+     "dur_us": 43.279,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 535,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       448,
+       1,
+       1
+      ],
+      "block": [
+       128,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x128x64_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_4_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 34.999,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 542,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       57344,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    },
+    {
+     "name": "Cijk_SB_BiasS_HAS_ScaleAlphaVec_PostGSU4_VW4",
+     "dur_us": 6.639,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 543,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       458752,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "2048x512x4096:bfloat16": {
+   "cfg": {
+    "libtype": "flydsl",
+    "solidx": 2608,
+    "splitK": 1,
+    "us": 19.6702,
+    "kernelName": "flydsl_hgemm_abf16_wbf16_bf16_t64x64x64x5_ks1_w2x4x1_bias0_ktail0_gm4_pft_gfx950",
+    "err_ratio": 0.0,
+    "tflops": 436.7,
+    "bw": 1172.77
+   },
+   "pick": [
+    {
+     "name": "hgemm_bf16_t64x64x64x5_ks1_w2x4x1_gm4_bias0_lnt_pft_0",
+     "dur_us": 19.919,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 547,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       256,
+       1,
+       1
+      ],
+      "block": [
+       512,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT64x64x256_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR0_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV1_MIWT2_2_MO40_NTn1_NTA0_NTB0_NTC3_NTD3_NTM0_NEPBS16_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW2_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA2_VWB2_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 19.239,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 554,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "2048x2048x512:bfloat16": {
+   "cfg": {
+    "libtype": "flydsl",
+    "solidx": 34,
+    "splitK": 1,
+    "us": 10.7168,
+    "kernelName": "flydsl_hgemm_abf16_wbf16_bf16_t128x128x64x3_ks1_w4x2x1_bias0_ktail0_gm0_pft_gfx950",
+    "err_ratio": 0.0,
+    "tflops": 400.77,
+    "bw": 1174.13
+   },
+   "pick": [
+    {
+     "name": "hgemm_bf16_t128x128x64x3_ks1_w4x2x1_gm0_bias0_lnt_pft_0",
+     "dur_us": 11.359,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 558,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       256,
+       1,
+       1
+      ],
+      "block": [
+       512,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT128x128x128_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT4_4_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW4_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA4_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 11.559,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 565,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "2048x2048x1536:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT128x128x256_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR0_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA2048_LBSPPB2048_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT4_4_MO40_NTn1_NTA0_NTB0_NTC1_NTD1_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO1_SRVW0_SSO4_SVW4_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA4_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 22.079,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 572,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT128x128x256_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR0_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA2048_LBSPPB2048_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT4_4_MO40_NTn1_NTA0_NTB0_NTC1_NTD1_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO1_SRVW0_SSO4_SVW4_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA4_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 21.999,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 579,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "2048x2560x6144:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0,
+    "splitK": 0,
+    "us": 76.0439,
+    "kernelName": "native",
+    "err_ratio": 0.0,
+    "tflops": 847.2,
+    "bw": 882.5
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT160x128x128_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA256_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT5_4_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW1_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA1_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 67.52,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 586,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT160x128x128_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA256_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT5_4_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW1_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA1_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 67.439,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 593,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "2048x4096x512:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0,
+    "splitK": 0,
+    "us": 14.7878,
+    "kernelName": "native",
+    "err_ratio": 0.0,
+    "tflops": 580.88,
+    "bw": 1559.98
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x128x64_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_4_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 15.959,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 600,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x128x64_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_4_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 16.039,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 607,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "2048x4096x1024:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x128x64_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_4_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 22.839,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 614,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x128x64_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_4_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 22.599,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 621,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "2048x4096x1536:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0,
+    "splitK": 0,
+    "us": 30.5308,
+    "kernelName": "native",
+    "err_ratio": 0.0,
+    "tflops": 844.06,
+    "bw": 1167.73
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x128x64_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_4_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 30.239,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 628,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x128x64_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_4_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 29.839,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 635,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "2048x4096x2048:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x128x64_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_4_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 36.92,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 642,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x128x64_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_4_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 36.959,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 649,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "2048x4096x4096:bfloat16": {
+   "cfg": {
+    "libtype": "opus",
+    "solidx": 1401,
+    "splitK": 0,
+    "us": 66.999,
+    "kernelName": "opus_gemm_mono_tile_512x128x256x64_2x4_16x16x32_0x0x0_nooob",
+    "err_ratio": 0.0,
+    "tflops": 1025.68,
+    "bw": 1001.64
+   },
+   "pick": [
+    {
+     "name": "void gemm_a16w16_mono_tile_kernel_gfx950<opus_gemm_a16w16_mono_tile_traits_gfx950<512, opus::seq<128, 256, 64>, opus::tuple<std::bfloat16_t, std::bfloat16_t, std::bfloat16_t, float>, opus::seq<8, 8, 8> > >(opus_gemm_mono_tile_kargs_gfx950)",
+     "dur_us": 62.919,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 653,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       256,
+       1,
+       1
+      ],
+      "block": [
+       512,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x256x64_MI16x16x1_CMS_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA1_DTLB1_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_8_MO40_NTn1_NTA0_NTB0_NTC0_NTD4_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB8_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 96.92,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 660,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "2048x5120x1280:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0,
+    "splitK": 0,
+    "us": 31.9114,
+    "kernelName": "native",
+    "err_ratio": 0.0,
+    "tflops": 841.19,
+    "bw": 1232.21
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT160x256x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA128_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT5_8_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW1_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA1_VWB8_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 31.679,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 667,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT160x256x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA128_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT5_8_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW1_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA1_VWB8_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 31.64,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 674,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "2048x5120x3200:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0,
+    "splitK": 0,
+    "us": 66.6566,
+    "kernelName": "native",
+    "err_ratio": 0.0,
+    "tflops": 1006.78,
+    "bw": 1002.85
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT160x256x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA128_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT5_8_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW1_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA1_VWB8_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 63.639,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 681,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT160x256x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA128_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT5_8_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW1_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA1_VWB8_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 63.759,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 688,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "2048x5120x5120:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0,
+    "splitK": 0,
+    "us": 98.5253,
+    "kernelName": "native",
+    "err_ratio": 0.0,
+    "tflops": 1089.81,
+    "bw": 957.84
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT160x256x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA128_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT5_8_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW1_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA1_VWB8_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 96.48,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 695,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT160x256x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA128_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT5_8_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW1_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA1_VWB8_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 96.32,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 702,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "2048x5120x6400:bfloat16": {
+   "cfg": {
+    "libtype": "flydsl",
+    "solidx": 90,
+    "splitK": 1,
+    "us": 187.2211,
+    "kernelName": "flydsl_hgemm_abf16_wbf16_bf16_t256x128x64x3_ks1_w4x2x1_bias0_ktail0_gm0_pft_gfx950",
+    "err_ratio": 0.0,
+    "tflops": 716.89,
+    "bw": 602.08
+   },
+   "pick": [
+    {
+     "name": "hgemm_bf16_t256x128x64x3_ks1_w4x2x1_gm0_bias0_lnt_pft_0",
+     "dur_us": 189.0,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 706,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       320,
+       1,
+       1
+      ],
+      "block": [
+       512,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT160x256x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA128_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT5_8_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW1_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA1_VWB8_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 118.32,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 713,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "2048x6144x2048:bfloat16": {
+   "cfg": {
+    "libtype": "flydsl",
+    "solidx": 95,
+    "splitK": 1,
+    "us": 48.5934,
+    "kernelName": "flydsl_hgemm_abf16_wbf16_bf16_t256x256x64x2_ks1_w2x4x1_bias0_ktail0_gm0_pht_gfx950",
+    "err_ratio": 0.0,
+    "tflops": 1060.63,
+    "bw": 1208.4
+   },
+   "pick": [
+    {
+     "name": "hgemm_bf16_t256x256x64x2_ks1_w2x4x1_gm0_bias0_lnt_phti_0",
+     "dur_us": 48.64,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 717,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       192,
+       1,
+       1
+      ],
+      "block": [
+       512,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT192x256x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA256_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT6_8_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW2_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA2_VWB8_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 49.199,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 724,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "2048x6144x2048:float32": {
+   "cfg": {
+    "libtype": "asm",
+    "solidx": 10,
+    "splitK": 1,
+    "us": 58.7492,
+    "kernelName": "_ZN5aiter24bf16gemm_bf16_tn_256x256E",
+    "err_ratio": 0.0,
+    "tflops": 877.28,
+    "bw": 999.51
+   },
+   "pick": [
+    {
+     "name": "aiter::bf16gemm_bf16_tn_256x256",
+     "dur_us": 55.16,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 731,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       24,
+       8,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BSS_BH_Bias_S_HA_S_SAV_UserArgs_MT192x256x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA256_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT6_8_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW2_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA2_VWB8_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 53.08,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 738,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "2048x6144x3072:float32": {
+   "cfg": {
+    "libtype": "asm",
+    "solidx": 10,
+    "splitK": 1,
+    "us": 77.3258,
+    "kernelName": "_ZN5aiter24bf16gemm_bf16_tn_256x256E",
+    "err_ratio": 0.0,
+    "tflops": 999.79,
+    "bw": 976.36
+   },
+   "pick": [
+    {
+     "name": "aiter::bf16gemm_bf16_tn_256x256",
+     "dur_us": 74.08,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 745,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       24,
+       8,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BSS_BH_Bias_S_HA_S_SAV_UserArgs_MT192x256x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA256_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT6_8_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW2_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA2_VWB8_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 72.639,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 752,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "2560x512x4096:bfloat16": {
+   "cfg": {
+    "libtype": "flydsl",
+    "solidx": 1148,
+    "splitK": 1,
+    "us": 28.4015,
+    "kernelName": "flydsl_hgemm_abf16_wbf16_bf16_t64x128x64x6_ks1_w2x4x1_bias0_ktail0_gm4_pft_gfx950",
+    "err_ratio": 0.0,
+    "tflops": 604.89,
+    "bw": 1476.79
+   },
+   "pick": [
+    {
+     "name": "hgemm_bf16_t64x128x64x6_ks1_w2x4x1_gm4_bias0_lnt_pft_0",
+     "dur_us": 25.36,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 756,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       160,
+       1,
+       1
+      ],
+      "block": [
+       512,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT64x80x256_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR0_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA512_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT1_5_MO40_NTn1_NTA0_NTB0_NTC0_NTD5_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO1_SRVW0_SSO0_SVW1_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA1_VWB1_WSGRA0_WSGRB0_WS64_WG64_4_1",
+     "dur_us": 22.079,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 763,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "2560x2048x4096:bfloat16": {
+   "cfg": {
+    "libtype": "opus",
+    "solidx": 6401,
+    "splitK": 0,
+    "us": 65.5158,
+    "kernelName": "opus_gemm_mono_tile_512x128x256x64_2x4_16x16x32_0x0x0_nooob_4g_safe",
+    "err_ratio": 0.0,
+    "tflops": 1048.9,
+    "bw": 1024.32
+   },
+   "pick": [
+    {
+     "name": "void gemm_a16w16_mono_tile_4g_safe_kernel_gfx950<opus_gemm_a16w16_mono_tile_traits_gfx950<512, opus::seq<128, 256, 64>, opus::tuple<std::bfloat16_t, std::bfloat16_t, std::bfloat16_t, float>, opus::seq<8, 8, 8> > >(opus_gemm_mono_tile_kargs_gfx950)",
+     "dur_us": 46.879,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 767,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       160,
+       1,
+       1
+      ],
+      "block": [
+       512,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT128x160x128_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB256_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT4_5_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW4_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA4_VWB1_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 47.12,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 774,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "3072x512x4096:bfloat16": {
+   "cfg": {
+    "libtype": "flydsl",
+    "solidx": 1148,
+    "splitK": 1,
+    "us": 28.4015,
+    "kernelName": "flydsl_hgemm_abf16_wbf16_bf16_t64x128x64x6_ks1_w2x4x1_bias0_ktail0_gm4_pft_gfx950",
+    "err_ratio": 0.0,
+    "tflops": 604.89,
+    "bw": 1476.79
+   },
+   "pick": [
+    {
+     "name": "hgemm_bf16_t64x128x64x6_ks1_w2x4x1_gm4_bias0_lnt_pft_0",
+     "dur_us": 26.16,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 778,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       192,
+       1,
+       1
+      ],
+      "block": [
+       512,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT64x96x256_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR0_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT2_3_MO40_NTn1_NTA0_NTB0_NTC0_NTD4_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW2_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA2_VWB1_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 25.239,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 785,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "3072x2048x1536:bfloat16": {
+   "cfg": {
+    "libtype": "opus",
+    "solidx": 6401,
+    "splitK": 0,
+    "us": 30.4531,
+    "kernelName": "opus_gemm_mono_tile_512x128x256x64_2x4_16x16x32_0x0x0_nooob_4g_safe",
+    "err_ratio": 0.0,
+    "tflops": 846.21,
+    "bw": 1170.7
+   },
+   "pick": [
+    {
+     "name": "void gemm_a16w16_mono_tile_4g_safe_kernel_gfx950<opus_gemm_a16w16_mono_tile_traits_gfx950<512, opus::seq<128, 256, 64>, opus::tuple<std::bfloat16_t, std::bfloat16_t, std::bfloat16_t, float>, opus::seq<8, 8, 8> > >(opus_gemm_mono_tile_kargs_gfx950)",
+     "dur_us": 23.959,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 789,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       192,
+       1,
+       1
+      ],
+      "block": [
+       512,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT128x192x128_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR0_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA2048_LBSPPB256_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_3_MO40_NTn1_NTA0_NTB0_NTC1_NTD4_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS2_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB1_WSGRA0_WSGRB0_WS64_WG16_16_1",
+     "dur_us": 25.08,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 796,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "3072x4096x1024:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x192x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB256_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_6_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB2_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 29.44,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 803,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x192x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB256_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_6_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB2_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 29.359,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 810,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "3072x4096x1536:bfloat16": {
+   "cfg": {
+    "libtype": "opus",
+    "solidx": 1400,
+    "splitK": 0,
+    "us": 39.9526,
+    "kernelName": "opus_gemm_mono_tile_512x192x256x64_2x4_16x16x32_0x0x0_nooob",
+    "err_ratio": 0.0,
+    "tflops": 967.51,
+    "bw": 1181.05
+   },
+   "pick": [
+    {
+     "name": "void gemm_a16w16_mono_tile_kernel_gfx950<opus_gemm_a16w16_mono_tile_traits_gfx950<512, opus::seq<192, 256, 64>, opus::tuple<std::bfloat16_t, std::bfloat16_t, std::bfloat16_t, float>, opus::seq<8, 8, 8> > >(opus_gemm_mono_tile_kargs_gfx950)",
+     "dur_us": 37.759,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 814,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       256,
+       1,
+       1
+      ],
+      "block": [
+       512,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x192x64_MI16x16x1_SN_LDSB0_AFC1_AFEM1_AFEM1_ASEM1_CLR0_CADS0_DTLA1_DTLB1_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT16_3_MO40_NTn1_NTA3_NTB5_NTC4_NTD7_NTM0_NEPBS16_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO1_SRVW0_SSO1_SVW8_SK3_SKFTR0_SKXCCM4_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB1_WSGRA0_WSGRB0_WS64_WG16_16_1",
+     "dur_us": 38.039,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 821,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "3072x4096x2048:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x192x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB256_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_6_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB2_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 49.159,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 828,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x192x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB256_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_6_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB2_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 49.2,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 835,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "4096x1536x1536:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0,
+    "splitK": 0,
+    "us": 26.9642,
+    "kernelName": "native",
+    "err_ratio": 0.0,
+    "tflops": 716.78,
+    "bw": 1108.3
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT192x128x128_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR0_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA512_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT6_4_MO40_NTn1_NTA0_NTB0_NTC1_NTD4_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO1_SVW2_SK3_SKFTR0_SKXCCM0_TLDS2_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA2_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 24.679,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 842,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT192x128x128_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR0_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA512_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT6_4_MO40_NTn1_NTA0_NTB0_NTC1_NTD4_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO1_SVW2_SK3_SKFTR0_SKXCCM0_TLDS2_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA2_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 24.839,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 849,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "4096x2048x512:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0,
+    "splitK": 0,
+    "us": 13.6542,
+    "kernelName": "native",
+    "err_ratio": 0.0,
+    "tflops": 629.11,
+    "bw": 1689.49
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x128x64_MI16x16x1_SN_LDSB0_AFC1_AFEM1_AFEM1_ASEM1_CLR0_CADS0_DTLA1_DTLB1_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_4_MO40_NTn1_NTA3_NTB1_NTC6_NTD4_NTM0_NEPBS16_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO1_SVW8_SK3_SKFTR0_SKXCCM4_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGROn1_VSn1_VWA8_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 13.719,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 856,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x128x64_MI16x16x1_SN_LDSB0_AFC1_AFEM1_AFEM1_ASEM1_CLR0_CADS0_DTLA1_DTLB1_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_4_MO40_NTn1_NTA3_NTB1_NTC6_NTD4_NTM0_NEPBS16_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO1_SVW8_SK3_SKFTR0_SKXCCM4_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGROn1_VSn1_VWA8_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 13.8,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 863,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "4096x2048x1536:bfloat16": {
+   "cfg": {
+    "libtype": "opus",
+    "solidx": 6401,
+    "splitK": 0,
+    "us": 30.4531,
+    "kernelName": "opus_gemm_mono_tile_512x128x256x64_2x4_16x16x32_0x0x0_nooob_4g_safe",
+    "err_ratio": 0.0,
+    "tflops": 846.21,
+    "bw": 1170.7
+   },
+   "pick": [
+    {
+     "name": "void gemm_a16w16_mono_tile_4g_safe_kernel_gfx950<opus_gemm_a16w16_mono_tile_traits_gfx950<512, opus::seq<128, 256, 64>, opus::tuple<std::bfloat16_t, std::bfloat16_t, std::bfloat16_t, float>, opus::seq<8, 8, 8> > >(opus_gemm_mono_tile_kargs_gfx950)",
+     "dur_us": 28.159,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 867,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       256,
+       1,
+       1
+      ],
+      "block": [
+       512,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x128x64_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_4_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 29.559,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 874,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "4096x2048x4096:bfloat16": {
+   "cfg": {
+    "libtype": "opus",
+    "solidx": 6401,
+    "splitK": 0,
+    "us": 65.5158,
+    "kernelName": "opus_gemm_mono_tile_512x128x256x64_2x4_16x16x32_0x0x0_nooob_4g_safe",
+    "err_ratio": 0.0,
+    "tflops": 1048.9,
+    "bw": 1024.32
+   },
+   "pick": [
+    {
+     "name": "void gemm_a16w16_mono_tile_4g_safe_kernel_gfx950<opus_gemm_a16w16_mono_tile_traits_gfx950<512, opus::seq<128, 256, 64>, opus::tuple<std::bfloat16_t, std::bfloat16_t, std::bfloat16_t, float>, opus::seq<8, 8, 8> > >(opus_gemm_mono_tile_kargs_gfx950)",
+     "dur_us": 62.279,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 878,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       256,
+       1,
+       1
+      ],
+      "block": [
+       512,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x256x64_MI16x16x1_CMS_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA1_DTLB1_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_8_MO40_NTn1_NTA0_NTB0_NTC0_NTD4_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB8_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 104.04,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 885,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "4096x2560x6144:bfloat16": {
+   "cfg": {
+    "libtype": "flydsl",
+    "solidx": 123,
+    "splitK": 1,
+    "us": 206.8969,
+    "kernelName": "flydsl_hgemm_abf16_wbf16_bf16_t256x64x64x3_ks1_w4x1x1_bias0_ktail0_gm4_pft_gfx950",
+    "err_ratio": 0.0,
+    "tflops": 622.77,
+    "bw": 496.67
+   },
+   "pick": [
+    {
+     "name": "hgemm_bf16_t256x64x64x3_ks1_w4x1x1_gm4_bias0_lnt_pft_0",
+     "dur_us": 203.201,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 889,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       640,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT160x256x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA128_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT5_8_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW1_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA1_VWB8_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 113.92,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 896,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "4096x3072x1536:bfloat16": {
+   "cfg": {
+    "libtype": "flydsl",
+    "solidx": 95,
+    "splitK": 1,
+    "us": 40.7327,
+    "kernelName": "flydsl_hgemm_abf16_wbf16_bf16_t256x256x64x2_ks1_w2x4x1_bias0_ktail0_gm0_pht_gfx950",
+    "err_ratio": 0.0,
+    "tflops": 948.98,
+    "bw": 1158.43
+   },
+   "pick": [
+    {
+     "name": "hgemm_bf16_t256x256x64x2_ks1_w2x4x1_gm0_bias0_lnt_phti_0",
+     "dur_us": 39.199,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 900,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       192,
+       1,
+       1
+      ],
+      "block": [
+       512,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT192x256x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA256_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT6_8_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW2_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA2_VWB8_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 39.36,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 907,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "4096x3072x6144:float32": {
+   "cfg": {
+    "libtype": "asm",
+    "solidx": 10,
+    "splitK": 1,
+    "us": 138.0331,
+    "kernelName": "_ZN5aiter24bf16gemm_bf16_tn_256x256E",
+    "err_ratio": 0.0,
+    "tflops": 1120.16,
+    "bw": 820.43
+   },
+   "pick": [
+    {
+     "name": "aiter::bf16gemm_bf16_tn_256x256",
+     "dur_us": 133.0,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 914,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       12,
+       16,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BSS_BH_Bias_S_HA_S_SAV_UserArgs_MT192x256x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA256_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT6_8_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW2_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA2_VWB8_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 131.76,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 921,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "4096x5120x1280:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0,
+    "splitK": 0,
+    "us": 63.8218,
+    "kernelName": "native",
+    "err_ratio": 0.0,
+    "tflops": 841.2,
+    "bw": 1026.86
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT160x256x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA128_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT5_8_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW1_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA1_VWB8_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 57.72,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 928,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT160x256x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA128_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT5_8_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW1_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA1_VWB8_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 57.32,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 935,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "4096x6144x2048:float32": {
+   "cfg": {
+    "libtype": "asm",
+    "solidx": 10,
+    "splitK": 1,
+    "us": 109.5022,
+    "kernelName": "_ZN5aiter24bf16gemm_bf16_tn_256x256E",
+    "err_ratio": 0.0,
+    "tflops": 941.34,
+    "bw": 842.67
+   },
+   "pick": [
+    {
+     "name": "aiter::bf16gemm_bf16_tn_256x256",
+     "dur_us": 107.24,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 942,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       24,
+       16,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BSS_BH_Bias_S_HA_S_SAV_UserArgs_MT192x256x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA256_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT6_8_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW2_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA2_VWB8_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 99.52,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 949,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "4096x6144x3072:float32": {
+   "cfg": {
+    "libtype": "asm",
+    "solidx": 10,
+    "splitK": 1,
+    "us": 147.9731,
+    "kernelName": "_ZN5aiter24bf16gemm_bf16_tn_256x256E",
+    "err_ratio": 0.0,
+    "tflops": 1044.91,
+    "bw": 765.32
+   },
+   "pick": [
+    {
+     "name": "aiter::bf16gemm_bf16_tn_256x256",
+     "dur_us": 145.68,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 956,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       24,
+       16,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BSS_BH_Bias_S_HA_S_SAV_UserArgs_MT192x256x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA256_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT6_8_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW2_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA2_VWB8_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 138.36,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 963,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "5120x1024x4096:bfloat16": {
+   "cfg": {
+    "libtype": "opus",
+    "solidx": 1401,
+    "splitK": 0,
+    "us": 66.0978,
+    "kernelName": "opus_gemm_mono_tile_512x128x256x64_2x4_16x16x32_0x0x0_nooob",
+    "err_ratio": 0.0,
+    "tflops": 1039.66,
+    "bw": 1396.03
+   },
+   "pick": [
+    {
+     "name": "void gemm_a16w16_mono_tile_kernel_gfx950<opus_gemm_a16w16_mono_tile_traits_gfx950<512, opus::seq<128, 256, 64>, opus::tuple<std::bfloat16_t, std::bfloat16_t, std::bfloat16_t, float>, opus::seq<8, 8, 8> > >(opus_gemm_mono_tile_kargs_gfx950)",
+     "dur_us": 45.16,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 967,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       160,
+       1,
+       1
+      ],
+      "block": [
+       512,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT128x160x128_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB256_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT4_5_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW4_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA4_VWB1_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 46.839,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 974,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "5120x2048x1536:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x160x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB128_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_5_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB1_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 34.239,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 981,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x160x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB128_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_5_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB1_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 34.0,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 988,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "5120x2048x4096:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0,
+    "splitK": 0,
+    "us": 103.7019,
+    "kernelName": "native",
+    "err_ratio": 0.0,
+    "tflops": 1325.33,
+    "bw": 1132.48
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x160x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB128_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_5_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB1_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 76.199,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 995,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x160x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB128_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_5_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB1_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 76.159,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1002,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "5120x4096x1024:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x160x64_MI16x16x1_SN_LDSB0_AFC1_AFEM1_AFEM1_ASEM1_CLR0_CADS0_DTLA1_DTLB1_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_5_MO40_NTn1_NTA0_NTB1_NTC6_NTD6_NTM0_NEPBS12_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO1_SVW8_SK3_SKFTR0_SKXCCM4_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO1_VSn1_VWA8_VWB1_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 42.799,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1009,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x160x64_MI16x16x1_SN_LDSB0_AFC1_AFEM1_AFEM1_ASEM1_CLR0_CADS0_DTLA1_DTLB1_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_5_MO40_NTn1_NTA0_NTB1_NTC6_NTD6_NTM0_NEPBS12_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO1_SVW8_SK3_SKFTR0_SKXCCM4_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO1_VSn1_VWA8_VWB1_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 42.44,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1016,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "5120x4096x1536:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x160x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB128_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_5_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB1_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 62.24,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1023,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x160x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB128_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_5_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB1_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 62.4,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1030,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "5120x4096x2048:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x160x64_MI16x16x1_SN_LDSB0_AFC1_AFEM1_AFEM1_ASEM1_CLR0_CADS0_DTLA1_DTLB1_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_5_MO40_NTn1_NTA1_NTB2_NTC6_NTD2_NTM0_NEPBS16_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO4_SVW8_SK3_SKFTR0_SKXCCM8_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB1_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 75.839,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1037,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x160x64_MI16x16x1_SN_LDSB0_AFC1_AFEM1_AFEM1_ASEM1_CLR0_CADS0_DTLA1_DTLB1_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_5_MO40_NTn1_NTA1_NTB2_NTC6_NTD2_NTM0_NEPBS16_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO4_SVW8_SK3_SKFTR0_SKXCCM8_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB1_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 75.48,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1044,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "6144x1024x4096:bfloat16": {
+   "cfg": {
+    "libtype": "opus",
+    "solidx": 1402,
+    "splitK": 0,
+    "us": 56.8737,
+    "kernelName": "opus_gemm_mono_tile_512x192x128x64_2x4_16x16x32_0x0x0_nooob",
+    "err_ratio": 0.0,
+    "tflops": 906.21,
+    "bw": 1253.71
+   },
+   "pick": [
+    {
+     "name": "void gemm_a16w16_mono_tile_kernel_gfx950<opus_gemm_a16w16_mono_tile_traits_gfx950<512, opus::seq<192, 128, 64>, opus::tuple<std::bfloat16_t, std::bfloat16_t, std::bfloat16_t, float>, opus::seq<8, 8, 8> > >(opus_gemm_mono_tile_kargs_gfx950)",
+     "dur_us": 50.159,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1048,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       256,
+       1,
+       1
+      ],
+      "block": [
+       512,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT128x192x128_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR0_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA2048_LBSPPB256_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_3_MO40_NTn1_NTA0_NTB0_NTC1_NTD4_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS2_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB1_WSGRA0_WSGRB0_WS64_WG16_16_1",
+     "dur_us": 53.4,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1055,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "6144x1024x7168:bfloat16": {
+   "cfg": {
+    "libtype": "opus",
+    "solidx": 6402,
+    "splitK": 0,
+    "us": 95.0185,
+    "kernelName": "opus_gemm_mono_tile_512x192x128x64_2x4_16x16x32_0x0x0_nooob_4g_safe",
+    "err_ratio": 0.0,
+    "tflops": 949.23,
+    "bw": 1213.9
+   },
+   "pick": [
+    {
+     "name": "void gemm_a16w16_mono_tile_4g_safe_kernel_gfx950<opus_gemm_a16w16_mono_tile_traits_gfx950<512, opus::seq<192, 128, 64>, opus::tuple<std::bfloat16_t, std::bfloat16_t, std::bfloat16_t, float>, opus::seq<8, 8, 8> > >(opus_gemm_mono_tile_kargs_gfx950)",
+     "dur_us": 81.92,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1059,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       256,
+       1,
+       1
+      ],
+      "block": [
+       512,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x192x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB256_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_6_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB2_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 103.759,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1066,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "6144x2048x7168:bfloat16": {
+   "cfg": {
+    "libtype": "opus",
+    "solidx": 6400,
+    "splitK": 0,
+    "us": 134.2738,
+    "kernelName": "opus_gemm_mono_tile_512x192x256x64_2x4_16x16x32_0x0x0_nooob_4g_safe",
+    "err_ratio": 0.0,
+    "tflops": 1343.44,
+    "bw": 1062.06
+   },
+   "pick": [
+    {
+     "name": "void gemm_a16w16_mono_tile_4g_safe_kernel_gfx950<opus_gemm_a16w16_mono_tile_traits_gfx950<512, opus::seq<192, 256, 64>, opus::tuple<std::bfloat16_t, std::bfloat16_t, std::bfloat16_t, float>, opus::seq<8, 8, 8> > >(opus_gemm_mono_tile_kargs_gfx950)",
+     "dur_us": 140.68,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1070,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       256,
+       1,
+       1
+      ],
+      "block": [
+       512,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x192x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB256_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_6_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB2_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 146.84,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1077,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "8192x1024x4096:bfloat16": {
+   "cfg": {
+    "libtype": "opus",
+    "solidx": 1401,
+    "splitK": 0,
+    "us": 66.0978,
+    "kernelName": "opus_gemm_mono_tile_512x128x256x64_2x4_16x16x32_0x0x0_nooob",
+    "err_ratio": 0.0,
+    "tflops": 1039.66,
+    "bw": 1396.03
+   },
+   "pick": [
+    {
+     "name": "void gemm_a16w16_mono_tile_kernel_gfx950<opus_gemm_a16w16_mono_tile_traits_gfx950<512, opus::seq<128, 256, 64>, opus::tuple<std::bfloat16_t, std::bfloat16_t, std::bfloat16_t, float>, opus::seq<8, 8, 8> > >(opus_gemm_mono_tile_kargs_gfx950)",
+     "dur_us": 61.4,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1081,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       256,
+       1,
+       1
+      ],
+      "block": [
+       512,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x256x64_MI16x16x1_CMS_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA1_DTLB1_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_8_MO40_NTn1_NTA0_NTB0_NTC0_NTD4_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB8_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 97.96,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1088,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "8192x1024x5120:float32": {
+   "cfg": {
+    "libtype": "opus",
+    "solidx": 1401,
+    "splitK": 0,
+    "us": 88.734,
+    "kernelName": "opus_gemm_mono_tile_512x128x256x64_2x4_16x16x32_0x0x0_nooob",
+    "err_ratio": 0.0,
+    "tflops": 968.05,
+    "bw": 1252.61
+   },
+   "pick": [
+    {
+     "name": "void gemm_a16w16_mono_tile_kernel_gfx950<opus_gemm_a16w16_mono_tile_traits_gfx950<512, opus::seq<128, 256, 64>, opus::tuple<std::bfloat16_t, std::bfloat16_t, float, float>, opus::seq<8, 8, 8> > >(opus_gemm_mono_tile_kargs_gfx950)",
+     "dur_us": 77.2,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1092,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       256,
+       1,
+       1
+      ],
+      "block": [
+       512,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BSS_BH_Bias_S_HA_S_SAV_UserArgs_MT256x128x64_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB512_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_4_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 82.32,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1099,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "8192x1280x8192:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0,
+    "splitK": 0,
+    "us": 144.7397,
+    "kernelName": "native",
+    "err_ratio": 0.0,
+    "tflops": 1186.95,
+    "bw": 1217.09
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT160x256x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA128_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT5_8_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW1_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA1_VWB8_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 146.8,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1106,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT160x256x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA128_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT5_8_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW1_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA1_VWB8_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 145.921,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1113,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "8192x1536x1536:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0,
+    "splitK": 0,
+    "us": 40.7494,
+    "kernelName": "native",
+    "err_ratio": 0.0,
+    "tflops": 948.6,
+    "bw": 1350.95
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT192x256x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA256_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT6_8_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW2_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA2_VWB8_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 38.4,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1120,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT192x256x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA256_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT6_8_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW2_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA2_VWB8_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 38.359,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1127,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "8192x5120x640:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0,
+    "splitK": 0,
+    "us": 65.6074,
+    "kernelName": "native",
+    "err_ratio": 0.0,
+    "tflops": 818.31,
+    "bw": 1538.32
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x224x64_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB128_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_7_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB1_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 59.799,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1134,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       189440,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x224x64_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB128_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_7_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB1_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 60.719,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1141,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       189440,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "8192x5120x1280:bfloat16": {
+   "cfg": {
+    "libtype": "flydsl",
+    "solidx": 83,
+    "splitK": 1,
+    "us": 106.5407,
+    "kernelName": "flydsl_hgemm_abf16_wbf16_bf16_t256x256x64x2_ks1_w2x4x1_bias0_ktail0_gm4_pht_gfx950",
+    "err_ratio": 0.0,
+    "tflops": 1007.82,
+    "bw": 1107.23
+   },
+   "pick": [
+    {
+     "name": "hgemm_bf16_t256x256x64x2_ks1_w2x4x1_gm4_bias0_lnt_phti_0",
+     "dur_us": 101.6,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1147,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       640,
+       1,
+       1
+      ],
+      "block": [
+       512,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x224x64_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB128_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_7_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB1_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 102.08,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1154,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       189440,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "10240x512x4096:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0,
+    "splitK": 0,
+    "us": 51.1104,
+    "kernelName": "native",
+    "err_ratio": 0.0,
+    "tflops": 840.33,
+    "bw": 1928.49
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT128x160x128_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB256_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT4_5_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW4_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA4_VWB1_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 47.119,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1161,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT128x160x128_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB256_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT4_5_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW4_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA4_VWB1_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 46.92,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1168,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "10240x1024x4096:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0,
+    "splitK": 0,
+    "us": 79.9704,
+    "kernelName": "native",
+    "err_ratio": 0.0,
+    "tflops": 1074.14,
+    "bw": 1416.1
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x160x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB128_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_5_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB1_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 76.92,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1175,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x160x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB128_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_5_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB1_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 76.96,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1182,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "10240x1024x7168:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0,
+    "splitK": 0,
+    "us": 128.5337,
+    "kernelName": "native",
+    "err_ratio": 0.0,
+    "tflops": 1169.53,
+    "bw": 1419.49
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x160x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB128_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_5_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB1_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 129.4,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1189,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x160x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB128_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_5_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB1_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 128.64,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1196,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "12288x512x4096:bfloat16": {
+   "cfg": {
+    "libtype": "opus",
+    "solidx": 1402,
+    "splitK": 0,
+    "us": 59.4093,
+    "kernelName": "opus_gemm_mono_tile_512x192x128x64_2x4_16x16x32_0x0x0_nooob",
+    "err_ratio": 0.0,
+    "tflops": 867.53,
+    "bw": 1976.8
+   },
+   "pick": [
+    {
+     "name": "void gemm_a16w16_mono_tile_kernel_gfx950<opus_gemm_a16w16_mono_tile_traits_gfx950<512, opus::seq<192, 128, 64>, opus::tuple<std::bfloat16_t, std::bfloat16_t, std::bfloat16_t, float>, opus::seq<8, 8, 8> > >(opus_gemm_mono_tile_kargs_gfx950)",
+     "dur_us": 51.16,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1200,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       256,
+       1,
+       1
+      ],
+      "block": [
+       512,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT128x192x128_MI16x16x1_SN_LDSB1_AFC0_AFEM1_AFEM1_ASEM1_CLR0_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA2048_LBSPPB256_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_3_MO40_NTn1_NTA0_NTB0_NTC1_NTD4_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS2_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB1_WSGRA0_WSGRB0_WS64_WG16_16_1",
+     "dur_us": 54.479,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1207,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "12288x512x7168:bfloat16": {
+   "cfg": {
+    "libtype": "opus",
+    "solidx": 6402,
+    "splitK": 0,
+    "us": 97.4902,
+    "kernelName": "opus_gemm_mono_tile_512x192x128x64_2x4_16x16x32_0x0x0_nooob_4g_safe",
+    "err_ratio": 0.0,
+    "tflops": 925.16,
+    "bw": 2011.32
+   },
+   "pick": [
+    {
+     "name": "void gemm_a16w16_mono_tile_4g_safe_kernel_gfx950<opus_gemm_a16w16_mono_tile_traits_gfx950<512, opus::seq<192, 128, 64>, opus::tuple<std::bfloat16_t, std::bfloat16_t, std::bfloat16_t, float>, opus::seq<8, 8, 8> > >(opus_gemm_mono_tile_kargs_gfx950)",
+     "dur_us": 82.8,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1211,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       256,
+       1,
+       1
+      ],
+      "block": [
+       512,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x192x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB256_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_6_MO40_NTn1_NTA0_NTB4_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM8_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB2_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 100.28,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1218,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "12288x1024x4096:bfloat16": {
+   "cfg": {
+    "libtype": "opus",
+    "solidx": 1400,
+    "splitK": 0,
+    "us": 84.9524,
+    "kernelName": "opus_gemm_mono_tile_512x192x256x64_2x4_16x16x32_0x0x0_nooob",
+    "err_ratio": 0.0,
+    "tflops": 1213.38,
+    "bw": 1579.92
+   },
+   "pick": [
+    {
+     "name": "void gemm_a16w16_mono_tile_kernel_gfx950<opus_gemm_a16w16_mono_tile_traits_gfx950<512, opus::seq<192, 256, 64>, opus::tuple<std::bfloat16_t, std::bfloat16_t, std::bfloat16_t, float>, opus::seq<8, 8, 8> > >(opus_gemm_mono_tile_kargs_gfx950)",
+     "dur_us": 83.839,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1222,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       256,
+       1,
+       1
+      ],
+      "block": [
+       512,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x192x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB256_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_6_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB2_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 87.319,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1229,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "12288x1024x7168:bfloat16": {
+   "cfg": {
+    "libtype": "opus",
+    "solidx": 1400,
+    "splitK": 0,
+    "us": 137.5567,
+    "kernelName": "opus_gemm_mono_tile_512x192x256x64_2x4_16x16x32_0x0x0_nooob",
+    "err_ratio": 0.0,
+    "tflops": 1311.38,
+    "bw": 1570.31
+   },
+   "pick": [
+    {
+     "name": "void gemm_a16w16_mono_tile_kernel_gfx950<opus_gemm_a16w16_mono_tile_traits_gfx950<512, opus::seq<192, 256, 64>, opus::tuple<std::bfloat16_t, std::bfloat16_t, std::bfloat16_t, float>, opus::seq<8, 8, 8> > >(opus_gemm_mono_tile_kargs_gfx950)",
+     "dur_us": 140.441,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1233,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       256,
+       1,
+       1
+      ],
+      "block": [
+       512,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x192x64_MI16x16x1_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA0_DTLB0_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB256_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_6_MO40_NTn1_NTA0_NTB0_NTC0_NTD0_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB2_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 147.2,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1240,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "16384x512x4096:bfloat16": {
+   "cfg": {
+    "libtype": "opus",
+    "solidx": 1401,
+    "splitK": 0,
+    "us": 68.129,
+    "kernelName": "opus_gemm_mono_tile_512x128x256x64_2x4_16x16x32_0x0x0_nooob",
+    "err_ratio": 0.0,
+    "tflops": 1008.67,
+    "bw": 2277.87
+   },
+   "pick": [
+    {
+     "name": "void gemm_a16w16_mono_tile_kernel_gfx950<opus_gemm_a16w16_mono_tile_traits_gfx950<512, opus::seq<128, 256, 64>, opus::tuple<std::bfloat16_t, std::bfloat16_t, std::bfloat16_t, float>, opus::seq<8, 8, 8> > >(opus_gemm_mono_tile_kargs_gfx950)",
+     "dur_us": 60.279,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1244,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       256,
+       1,
+       1
+      ],
+      "block": [
+       512,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x256x64_MI16x16x1_CMS_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA1_DTLB1_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_8_MO40_NTn1_NTA0_NTB4_NTC0_NTD4_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB8_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 92.44,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1251,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "16384x7168x512:bfloat16": {
+   "cfg": {
+    "libtype": "torch",
+    "solidx": 0,
+    "splitK": 0,
+    "us": 131.333,
+    "kernelName": "native",
+    "err_ratio": 0.0,
+    "tflops": 915.68,
+    "bw": 1972.07
+   },
+   "pick": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x256x64_MI16x16x1_CMS_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA1_DTLB1_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_8_MO40_NTn1_NTA0_NTB0_NTC0_NTD4_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB8_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 115.24,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1258,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ],
+   "hbl": [
+    {
+     "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT256x256x64_MI16x16x1_CMS_SN_LDSB0_AFC0_AFEM1_AFEM1_ASEM1_CLR1_CADS0_DTLA1_DTLB1_DTVA0_DTVB0_EPS0_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_ISA950_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB1024_LBSPPM0_LPA16_LPB16_LPM0_LRVW8_LWPMn1_MIAV0_MIWT8_8_MO40_NTn1_NTA0_NTB0_NTC0_NTD4_NTM0_NEPBS0_NLCA1_NLCB1_ONLL1_PGR2_PLR1_PKA1_SIA3_SS1_SPO0_SRVW0_SSO0_SVW8_SK3_SKFTR0_SKXCCM0_TLDS1_ULSGRO0_USL1_UIOFGRO0_USFGRO0_VSn1_VWA8_VWB8_WSGRA0_WSGRB0_WS64_WG32_8_1",
+     "dur_us": 114.76,
+     "args": {
+      "device": 5,
+      "stream": 0,
+      "correlation": 1265,
+      "kind": "Dispatch Kernel",
+      "grid": [
+       65536,
+       1,
+       1
+      ],
+      "block": [
+       256,
+       1,
+       1
+      ]
+     }
+    }
+   ]
+  }
+ }
+}

@@ -1,10 +1,11 @@
 # Tried and dropped: stream-K ideas not to try again (without new evidence)
 
-Everything the stream-K versions (v14-v29) tried and then removed, with the reason, the evidence and what would justify
+Everything the stream-K versions (v14-v30) tried and then removed, with the reason, the evidence and what would justify
 reopening it. Open items are in [TODO.md](TODO.md); the history is in [STREAMK.md](STREAMK.md) and the per-version
 work logs. v29 ([v29_streamk_compact](v29_streamk_compact/WORKLOG.md)) keeps only what remains: data-parallel,
 one-tile with the owner or reduce-scatter ending, two-tile and spread, ragged M / N / K, small tiles, the capped rule,
-`tile="auto"` and the l2 exchange. v28 still has every option below as code.
+`tile="auto"` and the l2 exchange. V30's initial streamlined form keeps the quadrant paths and deliberately drops
+small tiles and every tile-aligned uneven split. v28 still has every option below as code.
 
 ## Dropped for performance
 
@@ -28,10 +29,19 @@ one-tile with the owner or reduce-scatter ending, two-tile and spread, ragged M 
 - **A fixed owner on chunk 0 under chunk-major**: 2-8% slower than a rotating owner (+8.3% on 4352x4352x8192), as
   every owner sat on the same XCDs' links. Owners must be spread over the XCDs whenever programs are grouped by chunk
   ([STREAMK.md, v18](STREAMK.md)).
-- **The one-tile uneven split for S > P / 2** (the `all` kind, `P % S` tiles on 2 programs).
-  - Correct on all 161 points, but a median 1.24x behind the best of dp, pdp, spread, cap and two-tile; ahead by
-    more than 2% on 1.
-  - Evidence: [v27 WORKLOG §17](v27_streamk_tile/WORKLOG.md).
+- **The one-tile uneven split** (the `all` kind where S does not divide P: `P % S` tiles on `P // S + 1` programs,
+  the rest on `P // S`).
+  - The tail ends when the tiles on `P // S` programs finish, so it can at best match the even split on
+    `S (P // S)` programs (data-parallel for S > P / 2). The extra programs add partials, active CUs and power.
+  - S > P / 2: correct on all 161 points, but a median 1.24x behind the best of dp, pdp, spread, cap and two-tile;
+    ahead by more than 2% on 1.
+  - Any S, against the same ending at n = `P // S` (267 cells of v27's split tables): a geomean 2.8% slower, more
+    than 2% behind in 125 cells and more than 2% ahead in 15, mostly small tiles with no full wave at k = 64.
+  - Possible benefit, untested: the tiles with more programs finish their MAC earlier, so their partial stores and
+    reads overlap the other tiles' MAC instead of landing in one burst. This corner case is not worth the extra
+    complexity for now and would need testing.
+  - Evidence: [v27 WORKLOG §17](v27_streamk_tile/WORKLOG.md),
+    [results/split/tables.json](v27_streamk_tile/results/split/tables.json).
 - **The split tile order** (`PERSISTENT_TILE_ORDER=split`).
   - v13 itself was 2-5% slower in it, and 3840x4096x8192 got worse in v15 (812 against 915 TFLOPS in v9 order).
   - Evidence: [v15 WORKLOG §1](v15_streamk_onetile/WORKLOG.md).

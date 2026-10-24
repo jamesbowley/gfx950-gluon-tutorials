@@ -1,0 +1,8 @@
+## simple rule (cover min(M, N) up to COVER, fill the programs): fitted (0.5, 4096, 64) (top fits [(1.118, (0.5, 4096, 64)), (1.119, (0.5, 2048, 64)), (1.119, (0.75, 4096, 64))])
+  REFIT MB, leave one out: 1.069 / 1.371 / 1.941 / 1.124, 84 > 1.05, 48 > 1.15
+  tilesel small-M (held out): 65 shapes 1.064 / 1.362 / 1.843 / 1.122, 35 > 1.05, 16 > 1.15, table kind not timed 11
+  tilesel small-N (held out): 22 shapes 1.015 / 1.049 / 1.215 / 1.028, 3 > 1.05, 1 > 1.15, table kind not timed 4
+## first version (cover M fully, largest long side keeping FILL of the CUs busy): fitted (0.5, 4096) (top fits [(1.15, (0.5, 4096)), (1.159, (0.75, 2048)), (1.159, (0.75, 4096))])
+  REFIT MB, leave one out: 1.102 / 1.405 / 2.706 / 1.150, 92 > 1.05, 57 > 1.15
+  tilesel small-M (held out): 52 shapes 1.032 / 1.281 / 1.534 / 1.088, 25 > 1.05, 10 > 1.15, table kind not timed 11
+  tilesel small-N (held out): 21 shapes 1.025 / 1.165 / 1.566 / 1.058, 6 > 1.05, 3 > 1.15, table kind not timed 4

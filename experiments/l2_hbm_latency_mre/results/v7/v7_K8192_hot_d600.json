@@ -1,0 +1,521 @@
+{
+ "name": "v7_K8192_hot_d600",
+ "K": 8192,
+ "cache": "hot",
+ "att_iter": 600,
+ "ui": "/home/jbowley/repos/gfx950-gluon-tutorials/experiments/l2_hbm_latency_mre/tmp/v7/v7_K8192_hot_d600/ui_output_agent_8394_dispatch_620",
+ "host": {
+  "correct": true,
+  "copies": 1,
+  "MB": 160,
+  "iters": 1500,
+  "wall_s": 0.277556022,
+  "gfxclk_samples": 286,
+  "gfxclk_median": 2401.75
+ },
+ "kernel_us": {
+  "n": 1501,
+  "first": [
+   185.481,
+   195.801,
+   191.881
+  ],
+  "at15": 230.121,
+  "at600": 185.521,
+  "median_after_100": 183.281
+ },
+ "smu": {
+  "domain": "boottime",
+  "traced": {
+   "n": 0,
+   "mhz": null,
+   "watts": null
+  },
+  "steady": {
+   "n": 285,
+   "mhz": 2401.75,
+   "watts": 278
+  },
+  "first_20": {
+   "n": 0,
+   "mhz": null
+  }
+ },
+ "att": {
+  "ghz": 1.6115912208504803,
+  "loads_per_iter": 32,
+  "positions": [
+   {
+    "pos": 1,
+    "n": 504,
+    "stalled": 0.001984126984126984,
+    "stall_p50": 8.0,
+    "stall_p90": 12,
+    "stall_max": 16,
+    "since_a_p50": 8.0
+   },
+   {
+    "pos": 2,
+    "n": 504,
+    "stalled": 0.0,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 4,
+    "since_a_p50": 72.0
+   },
+   {
+    "pos": 3,
+    "n": 504,
+    "stalled": 0.0,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 4,
+    "since_a_p50": 136.0
+   },
+   {
+    "pos": 4,
+    "n": 504,
+    "stalled": 0.0,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 4,
+    "since_a_p50": 200.0
+   },
+   {
+    "pos": 5,
+    "n": 504,
+    "stalled": 0.0,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 4,
+    "since_a_p50": 264.0
+   },
+   {
+    "pos": 6,
+    "n": 504,
+    "stalled": 0.0,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 4,
+    "since_a_p50": 328.0
+   },
+   {
+    "pos": 7,
+    "n": 504,
+    "stalled": 0.0,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 4,
+    "since_a_p50": 392.0
+   },
+   {
+    "pos": 8,
+    "n": 504,
+    "stalled": 0.0,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 4,
+    "since_a_p50": 456.0
+   },
+   {
+    "pos": 9,
+    "n": 504,
+    "stalled": 0.0,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 4,
+    "since_a_p50": 520.0
+   },
+   {
+    "pos": 10,
+    "n": 504,
+    "stalled": 0.0,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 4,
+    "since_a_p50": 584.0
+   },
+   {
+    "pos": 11,
+    "n": 504,
+    "stalled": 0.0,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 4,
+    "since_a_p50": 648.0
+   },
+   {
+    "pos": 12,
+    "n": 504,
+    "stalled": 0.0,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 4,
+    "since_a_p50": 712.0
+   },
+   {
+    "pos": 13,
+    "n": 504,
+    "stalled": 0.0,
+    "stall_p50": 8.0,
+    "stall_p90": 12,
+    "stall_max": 12,
+    "since_a_p50": 1428.0
+   },
+   {
+    "pos": 14,
+    "n": 504,
+    "stalled": 0.0,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 4,
+    "since_a_p50": 1492.0
+   },
+   {
+    "pos": 15,
+    "n": 504,
+    "stalled": 0.0,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 4,
+    "since_a_p50": 1556.0
+   },
+   {
+    "pos": 16,
+    "n": 504,
+    "stalled": 0.0,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 4,
+    "since_a_p50": 1620.0
+   },
+   {
+    "pos": 17,
+    "n": 504,
+    "stalled": 0.0,
+    "stall_p50": 8.0,
+    "stall_p90": 12,
+    "stall_max": 12,
+    "since_a_p50": 2080.0
+   },
+   {
+    "pos": 18,
+    "n": 504,
+    "stalled": 0.0,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 4,
+    "since_a_p50": 2144.0
+   },
+   {
+    "pos": 19,
+    "n": 504,
+    "stalled": 0.0,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 4,
+    "since_a_p50": 2208.0
+   },
+   {
+    "pos": 20,
+    "n": 504,
+    "stalled": 0.0,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 4,
+    "since_a_p50": 2272.0
+   },
+   {
+    "pos": 21,
+    "n": 504,
+    "stalled": 0.0,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 4,
+    "since_a_p50": 2336.0
+   },
+   {
+    "pos": 22,
+    "n": 504,
+    "stalled": 0.0,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 4,
+    "since_a_p50": 2400.0
+   },
+   {
+    "pos": 23,
+    "n": 504,
+    "stalled": 0.0,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 4,
+    "since_a_p50": 2464.0
+   },
+   {
+    "pos": 24,
+    "n": 504,
+    "stalled": 0.0,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 4,
+    "since_a_p50": 2528.0
+   },
+   {
+    "pos": 25,
+    "n": 504,
+    "stalled": 0.06349206349206349,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 88,
+    "since_a_p50": 2592.0
+   },
+   {
+    "pos": 26,
+    "n": 504,
+    "stalled": 0.07936507936507936,
+    "stall_p50": 4.0,
+    "stall_p90": 8,
+    "stall_max": 64,
+    "since_a_p50": 2656.0
+   },
+   {
+    "pos": 27,
+    "n": 504,
+    "stalled": 0.02976190476190476,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 40,
+    "since_a_p50": 2720.0
+   },
+   {
+    "pos": 28,
+    "n": 504,
+    "stalled": 0.027777777777777776,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 40,
+    "since_a_p50": 2784.0
+   },
+   {
+    "pos": 29,
+    "n": 504,
+    "stalled": 0.0,
+    "stall_p50": 8.0,
+    "stall_p90": 12,
+    "stall_max": 12,
+    "since_a_p50": 3496.0
+   },
+   {
+    "pos": 30,
+    "n": 504,
+    "stalled": 0.0,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 4,
+    "since_a_p50": 3560.0
+   },
+   {
+    "pos": 31,
+    "n": 504,
+    "stalled": 0.0,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 4,
+    "since_a_p50": 3624.0
+   },
+   {
+    "pos": 32,
+    "n": 504,
+    "stalled": 0.0,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 4,
+    "since_a_p50": 3688.0
+   }
+  ]
+ },
+ "att_latency": {
+  "ui": "/home/jbowley/repos/gfx950-gluon-tutorials/experiments/l2_hbm_latency_mre/tmp/v7/v7_K8192_hot_d600/ui_output_agent_8394_dispatch_620",
+  "loop_only": true,
+  "loop_code_range": [
+   577,
+   1107
+  ],
+  "waves": 8,
+  "ses": [
+   0,
+   2
+  ],
+  "ghz_realtime": 1.612,
+  "loads_per_wave": 2016.0,
+  "loads_per_cu": 8064.0,
+  "stretched_loads_per_cu": 51.0,
+  "stretch_threshold_cyc": 16,
+  "L_exact": {
+   "n": 0,
+   "p10": null,
+   "p50": null,
+   "p90": null,
+   "mean": null,
+   "p50_ns": null
+  },
+  "L_bound": {
+   "n": 2016,
+   "p10": 2356.0,
+   "p50": 2412.0,
+   "p90": 2416.0,
+   "p50_ns": 1496.7
+  },
+  "load_rate_per_cu": {
+   "loads_per_cyc": 0.030505474279390706,
+   "bytes_per_cyc": 31.237605662096083,
+   "bytes_per_ns": 50.3422510454233
+  },
+  "inflight_kb_per_cu": {
+   "at_L_exact_p50": null,
+   "at_L_bound_p50": 73.6
+  },
+  "dk_median": {
+   "8": 164.0,
+   "9": 180.0,
+   "10": 200.0,
+   "11": 220.0,
+   "12": 236.0,
+   "13": 252.0,
+   "14": 272.0,
+   "15": 288.0,
+   "16": 300.0,
+   "17": 316.0,
+   "18": 336.0,
+   "19": 352.0,
+   "20": 364.0,
+   "21": 380.0,
+   "22": 400.0,
+   "23": 416.0,
+   "24": 428.0,
+   "25": 444.0,
+   "26": 464.0,
+   "27": 480.0,
+   "28": 492.0,
+   "29": 508.0,
+   "30": 528.0,
+   "31": 544.0,
+   "32": 556.0,
+   "33": 572.0,
+   "34": 592.0,
+   "35": 612.0,
+   "36": 636.0,
+   "37": 672.0,
+   "38": 1016.0,
+   "39": 1048.0,
+   "40": 1064.0,
+   "41": 1080.0,
+   "42": 1100.0,
+   "43": 1120.0,
+   "44": 1140.0,
+   "45": 1156.0,
+   "46": 1176.0,
+   "47": 1196.0,
+   "48": 1212.0,
+   "49": 1228.0,
+   "50": 1244.0,
+   "51": 1264.0,
+   "52": 1288.0,
+   "53": 1324.0,
+   "54": 1920.0,
+   "55": 1956.0,
+   "56": 1968.0,
+   "57": 1984.0,
+   "58": 2004.0,
+   "59": 2028.0,
+   "60": 2048.0,
+   "61": 2064.0,
+   "62": 2084.0,
+   "63": 2100.0,
+   "64": 2116.0,
+   "65": 2128.0,
+   "66": 2148.0,
+   "67": 2164.0,
+   "68": 2180.0,
+   "69": 2192.0,
+   "70": 2212.0,
+   "71": 2228.0,
+   "72": 2244.0
+  },
+  "k_match": null,
+  "dk_at": {
+   "32": 556.0,
+   "44": 1140.0,
+   "48": 1212.0
+  },
+  "per_wave": [
+   {
+    "name": "se0_sm0_sl0_wv0.json",
+    "se": 0,
+    "vmem_ops": 2080,
+    "loads": 2016,
+    "exact": 0,
+    "bound": 252
+   },
+   {
+    "name": "se0_sm1_sl0_wv0.json",
+    "se": 0,
+    "vmem_ops": 2080,
+    "loads": 2016,
+    "exact": 0,
+    "bound": 252
+   },
+   {
+    "name": "se0_sm2_sl0_wv0.json",
+    "se": 0,
+    "vmem_ops": 2080,
+    "loads": 2016,
+    "exact": 0,
+    "bound": 252
+   },
+   {
+    "name": "se0_sm3_sl0_wv0.json",
+    "se": 0,
+    "vmem_ops": 2080,
+    "loads": 2016,
+    "exact": 0,
+    "bound": 252
+   },
+   {
+    "name": "se2_sm0_sl0_wv0.json",
+    "se": 2,
+    "vmem_ops": 2080,
+    "loads": 2016,
+    "exact": 0,
+    "bound": 252
+   },
+   {
+    "name": "se2_sm1_sl0_wv0.json",
+    "se": 2,
+    "vmem_ops": 2080,
+    "loads": 2016,
+    "exact": 0,
+    "bound": 252
+   },
+   {
+    "name": "se2_sm2_sl0_wv0.json",
+    "se": 2,
+    "vmem_ops": 2080,
+    "loads": 2016,
+    "exact": 0,
+    "bound": 252
+   },
+   {
+    "name": "se2_sm3_sl0_wv0.json",
+    "se": 2,
+    "vmem_ops": 2080,
+    "loads": 2016,
+    "exact": 0,
+    "bound": 252
+   }
+  ],
+  "name": "v7_K8192_hot_d600"
+ },
+ "mfma_eff": 97.43
+}

@@ -1,0 +1,3018 @@
+{
+ "pmc": {
+  "none": {
+   "l2_hit": 0.0,
+   "ea_bytes": 1048704.0,
+   "burst_bytes": 1048576,
+   "expected_l2_hit": 0.0
+  },
+  "all": {
+   "l2_hit": 0.0,
+   "ea_bytes": 1048832.0,
+   "burst_bytes": 1048576,
+   "expected_l2_hit": 0.0
+  }
+ },
+ "rows": {
+  "corun_none_L2_d0": {
+   "co": "none",
+   "tier": "L2",
+   "mix": false,
+   "d": 0,
+   "att": {
+    "ghz": 2.4009453781512606,
+    "n": 1024,
+    "exact_share": 1.0,
+    "rt": {
+     "n": 820,
+     "p10": 184.0,
+     "p50": 204.0,
+     "p90": 216.0
+    },
+    "rt_fast": {
+     "n": 820,
+     "p10": 184.0,
+     "p50": 204.0,
+     "p90": 216.0
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 4.0,
+    "occ_p90": 4.0,
+    "occ_max": 4,
+    "bytes_per_clk": 17.34193548387097,
+    "little_kb": 3.4100629425649096,
+    "mean_l": 201.3560975609756,
+    "kernel_ghz": 2.4023952095808383,
+    "measured_ms": 0.05436,
+    "co_ms": 0
+   }
+  },
+  "corun_none_L2_d2": {
+   "co": "none",
+   "tier": "L2",
+   "mix": false,
+   "d": 2,
+   "att": {
+    "ghz": 2.400267558528428,
+    "n": 1024,
+    "exact_share": 0.7121951219512195,
+    "rt": {
+     "n": 584,
+     "p10": 196.0,
+     "p50": 212.0,
+     "p90": 220.0
+    },
+    "rt_fast": {
+     "n": 584,
+     "p10": 196.0,
+     "p50": 212.0,
+     "p90": 220.0
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 11.0,
+    "occ_p90": 11.0,
+    "occ_max": 12,
+    "bytes_per_clk": 49.8369384359401,
+    "little_kb": 10.293825331764133,
+    "mean_l": 211.50731707317073,
+    "kernel_ghz": 2.398003992015968,
+    "measured_ms": 0.03768,
+    "co_ms": 0
+   }
+  },
+  "corun_none_L2_d4": {
+   "co": "none",
+   "tier": "L2",
+   "mix": false,
+   "d": 4,
+   "att": {
+    "ghz": 2.4009797060881732,
+    "n": 1024,
+    "exact_share": 0.4719512195121951,
+    "rt": {
+     "n": 387,
+     "p10": 252.0,
+     "p50": 288.0,
+     "p90": 288.0
+    },
+    "rt_fast": {
+     "n": 387,
+     "p10": 252.0,
+     "p50": 288.0,
+     "p90": 288.0
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 18.0,
+    "occ_p90": 19.0,
+    "occ_max": 20,
+    "bytes_per_clk": 63.98046994202014,
+    "little_kb": 17.811331378342775,
+    "mean_l": 285.0682926829268,
+    "kernel_ghz": 2.40199203187251,
+    "measured_ms": 0.03592,
+    "co_ms": 0
+   }
+  },
+  "corun_none_L2_d8": {
+   "co": "none",
+   "tier": "L2",
+   "mix": false,
+   "d": 8,
+   "att": {
+    "ghz": 2.4003785271851346,
+    "n": 1024,
+    "exact_share": 0.0,
+    "rt": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_fast": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.8097560975609757,
+    "issue_stall_p90": 20.0,
+    "occ_p50": 33.0,
+    "occ_p90": 33.0,
+    "occ_max": 33,
+    "bytes_per_clk": 64.0,
+    "little_kb": 32.733536585365854,
+    "mean_l": 523.7365853658537,
+    "kernel_ghz": 2.4023952095808383,
+    "measured_ms": 0.03612,
+    "co_ms": 0
+   }
+  },
+  "corun_none_L2_d10": {
+   "co": "none",
+   "tier": "L2",
+   "mix": false,
+   "d": 10,
+   "att": {
+    "ghz": 2.3994467496542184,
+    "n": 1024,
+    "exact_share": 0.0,
+    "rt": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_fast": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.8182926829268292,
+    "issue_stall_p90": 20.0,
+    "occ_p50": 41.0,
+    "occ_p90": 41.0,
+    "occ_max": 42,
+    "bytes_per_clk": 64.01954198473283,
+    "little_kb": 40.75085384472166,
+    "mean_l": 651.8146341463415,
+    "kernel_ghz": 2.4023952095808383,
+    "measured_ms": 0.03596,
+    "co_ms": 0
+   }
+  },
+  "corun_none_L2_d12": {
+   "co": "none",
+   "tier": "L2",
+   "mix": false,
+   "d": 12,
+   "att": {
+    "ghz": 2.399583043780403,
+    "n": 1024,
+    "exact_share": 0.0,
+    "rt": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_fast": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.824390243902439,
+    "issue_stall_p90": 20.0,
+    "occ_p50": 49.0,
+    "occ_p90": 49.0,
+    "occ_max": 50,
+    "bytes_per_clk": 64.0,
+    "little_kb": 48.734451219512195,
+    "mean_l": 779.7512195121951,
+    "kernel_ghz": 2.4025948103792416,
+    "measured_ms": 0.03576,
+    "co_ms": 0
+   }
+  },
+  "corun_none_L2_d16": {
+   "co": "none",
+   "tier": "L2",
+   "mix": false,
+   "d": 16,
+   "att": {
+    "ghz": 2.3997229916897505,
+    "n": 1024,
+    "exact_share": 0.0,
+    "rt": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_fast": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.8280487804878048,
+    "issue_stall_p90": 20.0,
+    "occ_p50": 65.0,
+    "occ_p90": 65.0,
+    "occ_max": 66,
+    "bytes_per_clk": 63.960951799877975,
+    "little_kb": 64.69647837021384,
+    "mean_l": 1035.7756097560975,
+    "kernel_ghz": 2.397609561752988,
+    "measured_ms": 0.03584,
+    "co_ms": 0
+   }
+  },
+  "corun_none_LLC_d0": {
+   "co": "none",
+   "tier": "LLC",
+   "mix": false,
+   "d": 0,
+   "att": {
+    "ghz": 2.3943955247073445,
+    "n": 1024,
+    "exact_share": 1.0,
+    "rt": {
+     "n": 820,
+     "p10": 384.0,
+     "p50": 616.0,
+     "p90": 684.0
+    },
+    "rt_fast": {
+     "n": 820,
+     "p10": 384.0,
+     "p50": 616.0,
+     "p90": 684.0
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 4.0,
+    "occ_p90": 4.0,
+    "occ_max": 4,
+    "bytes_per_clk": 7.051558873978408,
+    "little_kb": 3.758972661565986,
+    "mean_l": 545.8634146341464,
+    "kernel_ghz": 2.397405189620758,
+    "measured_ms": 0.36452,
+    "co_ms": 0
+   }
+  },
+  "corun_none_LLC_d2": {
+   "co": "none",
+   "tier": "LLC",
+   "mix": false,
+   "d": 2,
+   "att": {
+    "ghz": 2.391951276372538,
+    "n": 1024,
+    "exact_share": 0.8304878048780487,
+    "rt": {
+     "n": 681,
+     "p10": 432.0,
+     "p50": 656.0,
+     "p90": 696.0
+    },
+    "rt_fast": {
+     "n": 681,
+     "p10": 432.0,
+     "p50": 656.0,
+     "p90": 696.0
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 11.0,
+    "occ_p90": 12.0,
+    "occ_max": 12,
+    "bytes_per_clk": 19.13341850702683,
+    "little_kb": 11.3982929277641,
+    "mean_l": 610.0243902439024,
+    "kernel_ghz": 2.392814371257485,
+    "measured_ms": 0.3214,
+    "co_ms": 0
+   }
+  },
+  "corun_none_LLC_d4": {
+   "co": "none",
+   "tier": "LLC",
+   "mix": false,
+   "d": 4,
+   "att": {
+    "ghz": 2.3981615868408324,
+    "n": 1024,
+    "exact_share": 0.775609756097561,
+    "rt": {
+     "n": 636,
+     "p10": 608.0,
+     "p50": 668.0,
+     "p90": 696.0
+    },
+    "rt_fast": {
+     "n": 636,
+     "p10": 608.0,
+     "p50": 668.0,
+     "p90": 696.0
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 19.0,
+    "occ_p90": 20.0,
+    "occ_max": 20,
+    "bytes_per_clk": 29.605196272239482,
+    "little_kb": 19.0346519172619,
+    "mean_l": 658.380487804878,
+    "kernel_ghz": 2.397405189620758,
+    "measured_ms": 0.3092,
+    "co_ms": 0
+   }
+  },
+  "corun_none_LLC_d8": {
+   "co": "none",
+   "tier": "LLC",
+   "mix": false,
+   "d": 8,
+   "att": {
+    "ghz": 2.3947587049480754,
+    "n": 1024,
+    "exact_share": 0.6390243902439025,
+    "rt": {
+     "n": 524,
+     "p10": 716.0,
+     "p50": 748.0,
+     "p90": 826.8
+    },
+    "rt_fast": {
+     "n": 524,
+     "p10": 716.0,
+     "p50": 748.0,
+     "p90": 826.8
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 35.0,
+    "occ_p90": 36.0,
+    "occ_max": 36,
+    "bytes_per_clk": 46.51963612158864,
+    "little_kb": 34.26479676600626,
+    "mean_l": 754.2439024390244,
+    "kernel_ghz": 2.3972055888223553,
+    "measured_ms": 0.30604,
+    "co_ms": 0
+   }
+  },
+  "corun_none_LLC_d10": {
+   "co": "none",
+   "tier": "LLC",
+   "mix": false,
+   "d": 10,
+   "att": {
+    "ghz": 2.398430987987252,
+    "n": 1024,
+    "exact_share": 0.6524390243902439,
+    "rt": {
+     "n": 535,
+     "p10": 860.0,
+     "p50": 948.0,
+     "p90": 1040.0
+    },
+    "rt_fast": {
+     "n": 535,
+     "p10": 860.0,
+     "p50": 948.0,
+     "p90": 1040.0
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 43.0,
+    "occ_p90": 44.0,
+    "occ_max": 44,
+    "bytes_per_clk": 46.44749667700487,
+    "little_kb": 42.517647265418155,
+    "mean_l": 937.3609756097561,
+    "kernel_ghz": 2.4015968063872255,
+    "measured_ms": 0.3046,
+    "co_ms": 0
+   }
+  },
+  "corun_none_LLC_d12": {
+   "co": "none",
+   "tier": "LLC",
+   "mix": false,
+   "d": 12,
+   "att": {
+    "ghz": 2.396633614885543,
+    "n": 1024,
+    "exact_share": 0.032926829268292684,
+    "rt": {
+     "n": 27,
+     "p10": 980.0,
+     "p50": 1024.0,
+     "p90": 1109.6
+    },
+    "rt_fast": {
+     "n": 27,
+     "p10": 980.0,
+     "p50": 1024.0,
+     "p90": 1109.6
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.8878048780487805,
+    "issue_stall_p90": 100.0,
+    "occ_p50": 49.0,
+    "occ_p90": 49.0,
+    "occ_max": 50,
+    "bytes_per_clk": 45.32295719844358,
+    "little_kb": 48.571044889437225,
+    "mean_l": 1097.3853658536586,
+    "kernel_ghz": 2.3972055888223553,
+    "measured_ms": 0.30488,
+    "co_ms": 0
+   }
+  },
+  "corun_none_LLC_d16": {
+   "co": "none",
+   "tier": "LLC",
+   "mix": false,
+   "d": 16,
+   "att": {
+    "ghz": 2.398114824335904,
+    "n": 1024,
+    "exact_share": 0.0,
+    "rt": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_fast": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.8878048780487805,
+    "issue_stall_p90": 88.40000000000009,
+    "occ_p50": 65.0,
+    "occ_p90": 65.0,
+    "occ_max": 65,
+    "bytes_per_clk": 47.07319263583296,
+    "little_kb": 64.76824613665984,
+    "mean_l": 1408.9268292682927,
+    "kernel_ghz": 2.401796407185629,
+    "measured_ms": 0.30516,
+    "co_ms": 0
+   }
+  },
+  "corun_none_HBM_d0": {
+   "co": "none",
+   "tier": "HBM",
+   "mix": false,
+   "d": 0,
+   "att": {
+    "ghz": 2.402202304737516,
+    "n": 1024,
+    "exact_share": 1.0,
+    "rt": {
+     "n": 820,
+     "p10": 716.0,
+     "p50": 968.0,
+     "p90": 1276.0
+    },
+    "rt_fast": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_cold": {
+     "n": 820,
+     "p10": 716.0,
+     "p50": 968.0,
+     "p90": 1276.0
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 4.0,
+    "occ_p90": 4.0,
+    "occ_max": 4,
+    "bytes_per_clk": 4.1761577532118315,
+    "little_kb": 3.9285962674983783,
+    "mean_l": 963.2975609756097,
+    "kernel_ghz": 2.4025948103792416,
+    "measured_ms": 0.1344,
+    "co_ms": 0
+   }
+  },
+  "corun_none_HBM_d2": {
+   "co": "none",
+   "tier": "HBM",
+   "mix": false,
+   "d": 2,
+   "att": {
+    "ghz": 2.4031900753212225,
+    "n": 1024,
+    "exact_share": 0.802439024390244,
+    "rt": {
+     "n": 658,
+     "p10": 828.0,
+     "p50": 1048.0,
+     "p90": 1353.2000000000003
+    },
+    "rt_fast": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_cold": {
+     "n": 658,
+     "p10": 828.0,
+     "p50": 1048.0,
+     "p90": 1353.2000000000003
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 12.0,
+    "occ_p90": 12.0,
+    "occ_max": 12,
+    "bytes_per_clk": 11.069320521619767,
+    "little_kb": 11.81704806066592,
+    "mean_l": 1093.1707317073171,
+    "kernel_ghz": 2.4069860279441118,
+    "measured_ms": 0.06852,
+    "co_ms": 0
+   }
+  },
+  "corun_none_HBM_d4": {
+   "co": "none",
+   "tier": "HBM",
+   "mix": false,
+   "d": 4,
+   "att": {
+    "ghz": 2.4017250392054366,
+    "n": 1024,
+    "exact_share": 0.7939024390243903,
+    "rt": {
+     "n": 651,
+     "p10": 960.0,
+     "p50": 1164.0,
+     "p90": 1444.0
+    },
+    "rt_fast": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_cold": {
+     "n": 651,
+     "p10": 960.0,
+     "p50": 1164.0,
+     "p90": 1444.0
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 19.0,
+    "occ_p90": 20.0,
+    "occ_max": 20,
+    "bytes_per_clk": 16.961734487501012,
+    "little_kb": 19.59172446384281,
+    "mean_l": 1182.7756097560975,
+    "kernel_ghz": 2.4025948103792416,
+    "measured_ms": 0.05516,
+    "co_ms": 0
+   }
+  },
+  "corun_none_HBM_d8": {
+   "co": "none",
+   "tier": "HBM",
+   "mix": false,
+   "d": 8,
+   "att": {
+    "ghz": 2.393279258400927,
+    "n": 1024,
+    "exact_share": 0.6707317073170732,
+    "rt": {
+     "n": 550,
+     "p10": 1132.0,
+     "p50": 1432.0,
+     "p90": 1712.0
+    },
+    "rt_fast": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_cold": {
+     "n": 550,
+     "p10": 1132.0,
+     "p50": 1432.0,
+     "p90": 1712.0
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 35.0,
+    "occ_p90": 36.0,
+    "occ_max": 36,
+    "bytes_per_clk": 25.61563836285889,
+    "little_kb": 35.59453536361876,
+    "mean_l": 1422.9121951219513,
+    "kernel_ghz": 2.393812375249501,
+    "measured_ms": 0.0468,
+    "co_ms": 0
+   }
+  },
+  "corun_none_HBM_d10": {
+   "co": "none",
+   "tier": "HBM",
+   "mix": false,
+   "d": 10,
+   "att": {
+    "ghz": 2.4008777062609714,
+    "n": 1024,
+    "exact_share": 0.5695121951219512,
+    "rt": {
+     "n": 467,
+     "p10": 1460.0,
+     "p50": 1764.0,
+     "p90": 2137.6000000000004
+    },
+    "rt_fast": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_cold": {
+     "n": 467,
+     "p10": 1460.0,
+     "p50": 1764.0,
+     "p90": 2137.6000000000004
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 43.0,
+    "occ_p90": 44.0,
+    "occ_max": 44,
+    "bytes_per_clk": 25.046469955799786,
+    "little_kb": 43.221745369466596,
+    "mean_l": 1767.0780487804877,
+    "kernel_ghz": 2.4023952095808383,
+    "measured_ms": 0.04668,
+    "co_ms": 0
+   }
+  },
+  "corun_none_HBM_d12": {
+   "co": "none",
+   "tier": "HBM",
+   "mix": false,
+   "d": 12,
+   "att": {
+    "ghz": 2.4017008797653956,
+    "n": 1024,
+    "exact_share": 0.02195121951219512,
+    "rt": {
+     "n": 18,
+     "p10": 1441.2,
+     "p50": 1880.0,
+     "p90": 2125.6
+    },
+    "rt_fast": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_cold": {
+     "n": 18,
+     "p10": 1441.2,
+     "p50": 1880.0,
+     "p90": 2125.6
+    },
+    "issue_stalled": 0.9829268292682927,
+    "issue_stall_p90": 340.0,
+    "occ_p50": 49.0,
+    "occ_p90": 49.0,
+    "occ_max": 50,
+    "bytes_per_clk": 25.6909692439652,
+    "little_kb": 47.98576662950798,
+    "mean_l": 1912.6341463414635,
+    "kernel_ghz": 2.4025948103792416,
+    "measured_ms": 0.04684,
+    "co_ms": 0
+   }
+  },
+  "corun_none_HBM_d16": {
+   "co": "none",
+   "tier": "HBM",
+   "mix": false,
+   "d": 16,
+   "att": {
+    "ghz": 2.3992261904761905,
+    "n": 1024,
+    "exact_share": 0.0,
+    "rt": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_fast": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.9975609756097561,
+    "issue_stall_p90": 336.4000000000001,
+    "occ_p50": 65.0,
+    "occ_p90": 65.0,
+    "occ_max": 65,
+    "bytes_per_clk": 26.442678774120317,
+    "little_kb": 64.3541388665873,
+    "mean_l": 2492.131707317073,
+    "kernel_ghz": 2.398003992015968,
+    "measured_ms": 0.04572,
+    "co_ms": 0
+   }
+  },
+  "corun_none_L2_mix50_d4": {
+   "co": "none",
+   "tier": "L2",
+   "mix": true,
+   "d": 4,
+   "att": {
+    "ghz": 2.398525539757767,
+    "n": 1024,
+    "exact_share": 0.7621951219512195,
+    "rt": {
+     "n": 625,
+     "p10": 956.0,
+     "p50": 1040.0,
+     "p90": 1362.4
+    },
+    "rt_fast": {
+     "n": 287,
+     "p10": 942.4,
+     "p50": 1040.0,
+     "p90": 1368.0
+    },
+    "rt_cold": {
+     "n": 338,
+     "p10": 968.0,
+     "p50": 1040.0,
+     "p90": 1349.2
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 19.0,
+    "occ_p90": 20.0,
+    "occ_max": 20,
+    "bytes_per_clk": 17.85134099616858,
+    "little_kb": 19.502368937482476,
+    "mean_l": 1118.7073170731708,
+    "kernel_ghz": 2.4023952095808383,
+    "measured_ms": 0.05404,
+    "co_ms": 0
+   }
+  },
+  "corun_none_L2_mix50_d10": {
+   "co": "none",
+   "tier": "L2",
+   "mix": true,
+   "d": 10,
+   "att": {
+    "ghz": 2.3995107033639145,
+    "n": 1024,
+    "exact_share": 0.7097560975609756,
+    "rt": {
+     "n": 582,
+     "p10": 1132.4,
+     "p50": 1376.0,
+     "p90": 1664.0
+    },
+    "rt_fast": {
+     "n": 322,
+     "p10": 1132.0,
+     "p50": 1368.0,
+     "p90": 1635.6000000000001
+    },
+    "rt_cold": {
+     "n": 260,
+     "p10": 1140.0,
+     "p50": 1388.0,
+     "p90": 1684.0
+    },
+    "issue_stalled": 0.0012195121951219512,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 43.0,
+    "occ_p90": 44.0,
+    "occ_max": 44,
+    "bytes_per_clk": 32.39054534219064,
+    "little_kb": 43.64283440030446,
+    "mean_l": 1379.7317073170732,
+    "kernel_ghz": 2.397609561752988,
+    "measured_ms": 0.04412,
+    "co_ms": 0
+   }
+  },
+  "corun_none_LLC_mix50_d4": {
+   "co": "none",
+   "tier": "LLC",
+   "mix": true,
+   "d": 4,
+   "att": {
+    "ghz": 2.4022370848708485,
+    "n": 1024,
+    "exact_share": 0.7853658536585366,
+    "rt": {
+     "n": 644,
+     "p10": 952.0,
+     "p50": 1040.0,
+     "p90": 1408.0
+    },
+    "rt_fast": {
+     "n": 298,
+     "p10": 930.8,
+     "p50": 1032.0,
+     "p90": 1388.0
+    },
+    "rt_cold": {
+     "n": 346,
+     "p10": 972.0,
+     "p50": 1056.0,
+     "p90": 1428.0
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 19.0,
+    "occ_p90": 20.0,
+    "occ_max": 20,
+    "bytes_per_clk": 17.863508562665075,
+    "little_kb": 19.585100796522152,
+    "mean_l": 1122.6878048780488,
+    "kernel_ghz": 2.4025948103792416,
+    "measured_ms": 0.32568,
+    "co_ms": 0
+   }
+  },
+  "corun_none_LLC_mix50_d10": {
+   "co": "none",
+   "tier": "LLC",
+   "mix": true,
+   "d": 10,
+   "att": {
+    "ghz": 2.4013237794510567,
+    "n": 1024,
+    "exact_share": 0.6621951219512195,
+    "rt": {
+     "n": 543,
+     "p10": 1180.0,
+     "p50": 1360.0,
+     "p90": 1603.2
+    },
+    "rt_fast": {
+     "n": 293,
+     "p10": 1176.8,
+     "p50": 1356.0,
+     "p90": 1580.0
+    },
+    "rt_cold": {
+     "n": 250,
+     "p10": 1180.0,
+     "p50": 1360.0,
+     "p90": 1608.4
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 43.0,
+    "occ_p90": 44.0,
+    "occ_max": 44,
+    "bytes_per_clk": 31.623529411764707,
+    "little_kb": 42.64672166427547,
+    "mean_l": 1380.9414634146342,
+    "kernel_ghz": 2.40199203187251,
+    "measured_ms": 0.30768,
+    "co_ms": 0
+   }
+  },
+  "corun_xcd_L2_d0": {
+   "co": "xcd",
+   "tier": "L2",
+   "mix": false,
+   "d": 0,
+   "att": {
+    "ghz": 2.25114977545303,
+    "n": 1024,
+    "exact_share": 1.0,
+    "rt": {
+     "n": 820,
+     "p10": 184.0,
+     "p50": 204.0,
+     "p90": 212.0
+    },
+    "rt_fast": {
+     "n": 820,
+     "p10": 184.0,
+     "p50": 204.0,
+     "p90": 212.0
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 4.0,
+    "occ_p90": 4.0,
+    "occ_max": 4,
+    "bytes_per_clk": 17.54510460251046,
+    "little_kb": 3.409142871721604,
+    "mean_l": 198.97073170731707,
+    "kernel_ghz": 2.288423153692615,
+    "measured_ms": 50.05788,
+    "co_ms": 80.0
+   }
+  },
+  "corun_xcd_L2_d2": {
+   "co": "xcd",
+   "tier": "L2",
+   "mix": false,
+   "d": 2,
+   "att": {
+    "ghz": 2.254498106628599,
+    "n": 1024,
+    "exact_share": 0.7060975609756097,
+    "rt": {
+     "n": 579,
+     "p10": 195.20000000000002,
+     "p50": 208.0,
+     "p90": 220.0
+    },
+    "rt_fast": {
+     "n": 579,
+     "p10": 195.20000000000002,
+     "p50": 208.0,
+     "p90": 220.0
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 11.0,
+    "occ_p90": 11.0,
+    "occ_max": 12,
+    "bytes_per_clk": 50.17085427135678,
+    "little_kb": 10.30902071332271,
+    "mean_l": 210.40975609756097,
+    "kernel_ghz": 2.2179282868525894,
+    "measured_ms": 50.03992,
+    "co_ms": 80.0
+   }
+  },
+  "corun_xcd_L2_d4": {
+   "co": "xcd",
+   "tier": "L2",
+   "mix": false,
+   "d": 4,
+   "att": {
+    "ghz": 2.2522720308945616,
+    "n": 1024,
+    "exact_share": 0.501219512195122,
+    "rt": {
+     "n": 411,
+     "p10": 268.0,
+     "p50": 284.0,
+     "p90": 288.0
+    },
+    "rt_fast": {
+     "n": 411,
+     "p10": 268.0,
+     "p50": 284.0,
+     "p90": 288.0
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 4.0,
+    "occ_p50": 18.0,
+    "occ_p90": 19.0,
+    "occ_max": 20,
+    "bytes_per_clk": 63.921951219512195,
+    "little_kb": 17.80173966389054,
+    "mean_l": 285.1756097560976,
+    "kernel_ghz": 2.253187250996016,
+    "measured_ms": 50.03864,
+    "co_ms": 80.0
+   }
+  },
+  "corun_xcd_L2_d8": {
+   "co": "xcd",
+   "tier": "L2",
+   "mix": false,
+   "d": 8,
+   "att": {
+    "ghz": 2.2512540132171868,
+    "n": 1024,
+    "exact_share": 0.013414634146341463,
+    "rt": {
+     "n": 11,
+     "p10": 488.0,
+     "p50": 488.0,
+     "p90": 488.0
+    },
+    "rt_fast": {
+     "n": 11,
+     "p10": 488.0,
+     "p50": 488.0,
+     "p90": 488.0
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.7682926829268293,
+    "issue_stall_p90": 20.0,
+    "occ_p50": 33.0,
+    "occ_p90": 33.0,
+    "occ_max": 34,
+    "bytes_per_clk": 64.0,
+    "little_kb": 32.7625,
+    "mean_l": 524.2,
+    "kernel_ghz": 2.2972055888223553,
+    "measured_ms": 50.03668,
+    "co_ms": 80.0
+   }
+  },
+  "corun_xcd_L2_d10": {
+   "co": "xcd",
+   "tier": "L2",
+   "mix": false,
+   "d": 10,
+   "att": {
+    "ghz": 2.2485025776777205,
+    "n": 1024,
+    "exact_share": 0.0,
+    "rt": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_fast": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.8134146341463414,
+    "issue_stall_p90": 20.0,
+    "occ_p50": 41.0,
+    "occ_p90": 41.0,
+    "occ_max": 42,
+    "bytes_per_clk": 64.0,
+    "little_kb": 40.732926829268294,
+    "mean_l": 651.7268292682927,
+    "kernel_ghz": 2.2489021956087827,
+    "measured_ms": 50.03896,
+    "co_ms": 80.0
+   }
+  },
+  "corun_xcd_L2_d12": {
+   "co": "xcd",
+   "tier": "L2",
+   "mix": false,
+   "d": 12,
+   "att": {
+    "ghz": 2.2526927712077947,
+    "n": 1024,
+    "exact_share": 0.0,
+    "rt": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_fast": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.8158536585365853,
+    "issue_stall_p90": 20.0,
+    "occ_p50": 49.0,
+    "occ_p90": 49.0,
+    "occ_max": 50,
+    "bytes_per_clk": 63.94144556267155,
+    "little_kb": 48.690777229821705,
+    "mean_l": 779.7658536585366,
+    "kernel_ghz": 2.2663346613545814,
+    "measured_ms": 50.039,
+    "co_ms": 80.0
+   }
+  },
+  "corun_xcd_L2_d16": {
+   "co": "xcd",
+   "tier": "L2",
+   "mix": false,
+   "d": 16,
+   "att": {
+    "ghz": 2.252445338823568,
+    "n": 1024,
+    "exact_share": 0.0,
+    "rt": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_fast": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.8097560975609757,
+    "issue_stall_p90": 20.0,
+    "occ_p50": 65.0,
+    "occ_p90": 65.0,
+    "occ_max": 66,
+    "bytes_per_clk": 64.0,
+    "little_kb": 64.73414634146341,
+    "mean_l": 1035.7463414634146,
+    "kernel_ghz": 2.266135458167331,
+    "measured_ms": 50.03968,
+    "co_ms": 80.0
+   }
+  },
+  "corun_xcd_LLC_d0": {
+   "co": "xcd",
+   "tier": "LLC",
+   "mix": false,
+   "d": 0,
+   "att": {
+    "ghz": 2.2484176138025003,
+    "n": 1024,
+    "exact_share": 1.0,
+    "rt": {
+     "n": 820,
+     "p10": 376.0,
+     "p50": 530.0,
+     "p90": 672.0
+    },
+    "rt_fast": {
+     "n": 820,
+     "p10": 376.0,
+     "p50": 530.0,
+     "p90": 672.0
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 3.0,
+    "occ_p90": 4.0,
+    "occ_max": 4,
+    "bytes_per_clk": 7.313265199344239,
+    "little_kb": 3.7368304678547153,
+    "mean_l": 523.229268292683,
+    "kernel_ghz": 2.2880239520958083,
+    "measured_ms": 50.36428,
+    "co_ms": 80.0
+   }
+  },
+  "corun_xcd_LLC_d2": {
+   "co": "xcd",
+   "tier": "LLC",
+   "mix": false,
+   "d": 2,
+   "att": {
+    "ghz": 2.253410914165583,
+    "n": 1024,
+    "exact_share": 0.8524390243902439,
+    "rt": {
+     "n": 699,
+     "p10": 444.0,
+     "p50": 620.0,
+     "p90": 668.0
+    },
+    "rt_fast": {
+     "n": 699,
+     "p10": 444.0,
+     "p50": 620.0,
+     "p90": 668.0
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 11.0,
+    "occ_p90": 12.0,
+    "occ_max": 12,
+    "bytes_per_clk": 19.32565213383722,
+    "little_kb": 11.273174328756838,
+    "mean_l": 597.3268292682927,
+    "kernel_ghz": 2.235329341317365,
+    "measured_ms": 50.32952,
+    "co_ms": 80.0
+   }
+  },
+  "corun_xcd_LLC_d4": {
+   "co": "xcd",
+   "tier": "LLC",
+   "mix": false,
+   "d": 4,
+   "att": {
+    "ghz": 2.2473811822991014,
+    "n": 1024,
+    "exact_share": 0.7329268292682927,
+    "rt": {
+     "n": 601,
+     "p10": 576.0,
+     "p50": 632.0,
+     "p90": 668.0
+    },
+    "rt_fast": {
+     "n": 601,
+     "p10": 576.0,
+     "p50": 632.0,
+     "p90": 668.0
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 19.0,
+    "occ_p90": 20.0,
+    "occ_max": 20,
+    "bytes_per_clk": 31.246497764530552,
+    "little_kb": 18.964325906001235,
+    "mean_l": 621.4926829268293,
+    "kernel_ghz": 2.2223552894211576,
+    "measured_ms": 50.3134,
+    "co_ms": 80.0
+   }
+  },
+  "corun_xcd_LLC_d8": {
+   "co": "xcd",
+   "tier": "LLC",
+   "mix": false,
+   "d": 8,
+   "att": {
+    "ghz": 2.2538496219705912,
+    "n": 1024,
+    "exact_share": 0.6158536585365854,
+    "rt": {
+     "n": 505,
+     "p10": 708.0,
+     "p50": 748.0,
+     "p90": 796.0
+    },
+    "rt_fast": {
+     "n": 505,
+     "p10": 708.0,
+     "p50": 748.0,
+     "p90": 796.0
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 35.0,
+    "occ_p90": 36.0,
+    "occ_max": 36,
+    "bytes_per_clk": 47.43529411764706,
+    "little_kb": 34.57136298421808,
+    "mean_l": 746.3024390243902,
+    "kernel_ghz": 2.314570858283433,
+    "measured_ms": 50.30804,
+    "co_ms": 80.0
+   }
+  },
+  "corun_xcd_LLC_d10": {
+   "co": "xcd",
+   "tier": "LLC",
+   "mix": false,
+   "d": 10,
+   "att": {
+    "ghz": 2.2478206344461915,
+    "n": 1024,
+    "exact_share": 0.6073170731707317,
+    "rt": {
+     "n": 498,
+     "p10": 864.0,
+     "p50": 912.0,
+     "p90": 996.0
+    },
+    "rt_fast": {
+     "n": 498,
+     "p10": 864.0,
+     "p50": 912.0,
+     "p90": 996.0
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 43.0,
+    "occ_p90": 44.0,
+    "occ_max": 44,
+    "bytes_per_clk": 47.456767768220914,
+    "little_kb": 42.54832006536453,
+    "mean_l": 918.0878048780488,
+    "kernel_ghz": 2.2749003984063743,
+    "measured_ms": 50.31156,
+    "co_ms": 80.0
+   }
+  },
+  "corun_xcd_LLC_d12": {
+   "co": "xcd",
+   "tier": "LLC",
+   "mix": false,
+   "d": 12,
+   "att": {
+    "ghz": 2.2538846993773465,
+    "n": 1024,
+    "exact_share": 0.01951219512195122,
+    "rt": {
+     "n": 16,
+     "p10": 956.0,
+     "p50": 1016.0,
+     "p90": 1044.0
+    },
+    "rt_fast": {
+     "n": 16,
+     "p10": 956.0,
+     "p50": 1016.0,
+     "p90": 1044.0
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.8658536585365854,
+    "issue_stall_p90": 88.0,
+    "occ_p50": 49.0,
+    "occ_p90": 49.0,
+    "occ_max": 50,
+    "bytes_per_clk": 47.30685920577617,
+    "little_kb": 48.6071668354319,
+    "mean_l": 1052.1463414634147,
+    "kernel_ghz": 2.2704590818363273,
+    "measured_ms": 50.31368,
+    "co_ms": 80.0
+   }
+  },
+  "corun_xcd_LLC_d16": {
+   "co": "xcd",
+   "tier": "LLC",
+   "mix": false,
+   "d": 16,
+   "att": {
+    "ghz": 2.246772590864288,
+    "n": 1024,
+    "exact_share": 0.0,
+    "rt": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_fast": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.8451219512195122,
+    "issue_stall_p90": 80.0,
+    "occ_p50": 65.0,
+    "occ_p90": 65.0,
+    "occ_max": 66,
+    "bytes_per_clk": 48.747733085328996,
+    "little_kb": 64.69269114953414,
+    "mean_l": 1358.9414634146342,
+    "kernel_ghz": 2.257370517928287,
+    "measured_ms": 50.31696,
+    "co_ms": 80.0
+   }
+  },
+  "corun_xcd_HBM_d0": {
+   "co": "xcd",
+   "tier": "HBM",
+   "mix": false,
+   "d": 0,
+   "att": {
+    "ghz": 2.248571607091979,
+    "n": 1024,
+    "exact_share": 1.0,
+    "rt": {
+     "n": 820,
+     "p10": 732.0,
+     "p50": 964.0,
+     "p90": 1140.4
+    },
+    "rt_fast": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_cold": {
+     "n": 820,
+     "p10": 732.0,
+     "p50": 964.0,
+     "p90": 1140.4
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 4.0,
+    "occ_p90": 4.0,
+    "occ_max": 4,
+    "bytes_per_clk": 4.242664616131774,
+    "little_kb": 3.9163804242356637,
+    "mean_l": 945.2487804878049,
+    "kernel_ghz": 2.2656686626746505,
+    "measured_ms": 50.14184,
+    "co_ms": 80.0
+   }
+  },
+  "corun_xcd_HBM_d2": {
+   "co": "xcd",
+   "tier": "HBM",
+   "mix": false,
+   "d": 2,
+   "att": {
+    "ghz": 2.2485395352185047,
+    "n": 1024,
+    "exact_share": 0.8365853658536585,
+    "rt": {
+     "n": 686,
+     "p10": 784.0,
+     "p50": 1000.0,
+     "p90": 1276.0
+    },
+    "rt_fast": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_cold": {
+     "n": 686,
+     "p10": 784.0,
+     "p50": 1000.0,
+     "p90": 1276.0
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 12.0,
+    "occ_p90": 12.0,
+    "occ_max": 12,
+    "bytes_per_clk": 11.67134268537074,
+    "little_kb": 11.755908768757026,
+    "mean_l": 1031.419512195122,
+    "kernel_ghz": 2.261277445109781,
+    "measured_ms": 50.071,
+    "co_ms": 80.0
+   }
+  },
+  "corun_xcd_HBM_d4": {
+   "co": "xcd",
+   "tier": "HBM",
+   "mix": false,
+   "d": 4,
+   "att": {
+    "ghz": 2.2489352056186553,
+    "n": 1024,
+    "exact_share": 0.8182926829268292,
+    "rt": {
+     "n": 671,
+     "p10": 944.0,
+     "p50": 1068.0,
+     "p90": 1340.0
+    },
+    "rt_fast": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_cold": {
+     "n": 671,
+     "p10": 944.0,
+     "p50": 1068.0,
+     "p90": 1340.0
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 19.0,
+    "occ_p90": 20.0,
+    "occ_max": 20,
+    "bytes_per_clk": 18.0,
+    "little_kb": 19.56290967987805,
+    "mean_l": 1112.9121951219513,
+    "kernel_ghz": 2.2699203187250996,
+    "measured_ms": 50.05668,
+    "co_ms": 80.0
+   }
+  },
+  "corun_xcd_HBM_d8": {
+   "co": "xcd",
+   "tier": "HBM",
+   "mix": false,
+   "d": 8,
+   "att": {
+    "ghz": 2.2516538230646996,
+    "n": 1024,
+    "exact_share": 0.6048780487804878,
+    "rt": {
+     "n": 496,
+     "p10": 1166.0,
+     "p50": 1412.0,
+     "p90": 1784.0
+    },
+    "rt_fast": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_cold": {
+     "n": 496,
+     "p10": 1166.0,
+     "p50": 1412.0,
+     "p90": 1784.0
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 35.0,
+    "occ_p90": 36.0,
+    "occ_max": 36,
+    "bytes_per_clk": 25.60938072554049,
+    "little_kb": 35.633662379679855,
+    "mean_l": 1424.8243902439024,
+    "kernel_ghz": 2.2656686626746505,
+    "measured_ms": 50.05056,
+    "co_ms": 80.0
+   }
+  },
+  "corun_xcd_HBM_d10": {
+   "co": "xcd",
+   "tier": "HBM",
+   "mix": false,
+   "d": 10,
+   "att": {
+    "ghz": 2.255039960813911,
+    "n": 1024,
+    "exact_share": 0.8085365853658537,
+    "rt": {
+     "n": 663,
+     "p10": 1392.0,
+     "p50": 1648.0,
+     "p90": 1984.0
+    },
+    "rt_fast": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_cold": {
+     "n": 663,
+     "p10": 1392.0,
+     "p50": 1648.0,
+     "p90": 1984.0
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 43.0,
+    "occ_p90": 44.0,
+    "occ_max": 44,
+    "bytes_per_clk": 26.57675244010648,
+    "little_kb": 43.47208215205489,
+    "mean_l": 1674.9756097560976,
+    "kernel_ghz": 2.2876247504990017,
+    "measured_ms": 50.04756,
+    "co_ms": 80.0
+   }
+  },
+  "corun_xcd_HBM_d12": {
+   "co": "xcd",
+   "tier": "HBM",
+   "mix": false,
+   "d": 12,
+   "att": {
+    "ghz": 2.253052078496371,
+    "n": 1024,
+    "exact_share": 0.03048780487804878,
+    "rt": {
+     "n": 25,
+     "p10": 1593.6,
+     "p50": 1816.0,
+     "p90": 2164.8
+    },
+    "rt_fast": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_cold": {
+     "n": 25,
+     "p10": 1593.6,
+     "p50": 1816.0,
+     "p90": 2164.8
+    },
+    "issue_stalled": 0.9817073170731707,
+    "issue_stall_p90": 352.8000000000002,
+    "occ_p50": 49.0,
+    "occ_p90": 49.0,
+    "occ_max": 51,
+    "bytes_per_clk": 26.39607201309329,
+    "little_kb": 47.975665642090135,
+    "mean_l": 1861.1512195121952,
+    "kernel_ghz": 2.2654690618762476,
+    "measured_ms": 50.04876,
+    "co_ms": 80.0
+   }
+  },
+  "corun_xcd_HBM_d16": {
+   "co": "xcd",
+   "tier": "HBM",
+   "mix": false,
+   "d": 16,
+   "att": {
+    "ghz": 2.2522203744718543,
+    "n": 1024,
+    "exact_share": 0.0,
+    "rt": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_fast": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 1.0,
+    "issue_stall_p90": 336.0,
+    "occ_p50": 65.0,
+    "occ_p90": 65.0,
+    "occ_max": 65,
+    "bytes_per_clk": 26.506194690265488,
+    "little_kb": 64.14191020936758,
+    "mean_l": 2477.960975609756,
+    "kernel_ghz": 2.2656686626746505,
+    "measured_ms": 50.0484,
+    "co_ms": 80.0
+   }
+  },
+  "corun_xcd_L2_mix50_d4": {
+   "co": "xcd",
+   "tier": "L2",
+   "mix": true,
+   "d": 4,
+   "att": {
+    "ghz": 2.2491234357599423,
+    "n": 1024,
+    "exact_share": 0.7548780487804878,
+    "rt": {
+     "n": 619,
+     "p10": 708.0,
+     "p50": 808.0,
+     "p90": 1096.0
+    },
+    "rt_fast": {
+     "n": 289,
+     "p10": 698.4,
+     "p50": 796.0,
+     "p90": 1084.8
+    },
+    "rt_cold": {
+     "n": 330,
+     "p10": 712.0,
+     "p50": 814.0,
+     "p90": 1096.8000000000002
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 19.0,
+    "occ_p90": 20.0,
+    "occ_max": 20,
+    "bytes_per_clk": 23.080581241743726,
+    "little_kb": 19.417836372716437,
+    "mean_l": 861.4975609756098,
+    "kernel_ghz": 2.261155378486056,
+    "measured_ms": 50.05296,
+    "co_ms": 80.0
+   }
+  },
+  "corun_xcd_L2_mix50_d10": {
+   "co": "xcd",
+   "tier": "L2",
+   "mix": true,
+   "d": 10,
+   "att": {
+    "ghz": 2.24730472145481,
+    "n": 1024,
+    "exact_share": 0.5768292682926829,
+    "rt": {
+     "n": 473,
+     "p10": 1356.8,
+     "p50": 1620.0,
+     "p90": 1984.0
+    },
+    "rt_fast": {
+     "n": 247,
+     "p10": 1342.4,
+     "p50": 1592.0,
+     "p90": 1981.6
+    },
+    "rt_cold": {
+     "n": 226,
+     "p10": 1398.0,
+     "p50": 1628.0,
+     "p90": 1992.0
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 43.0,
+    "occ_p90": 44.0,
+    "occ_max": 44,
+    "bytes_per_clk": 27.074380165289256,
+    "little_kb": 43.28869919749042,
+    "mean_l": 1637.2536585365854,
+    "kernel_ghz": 2.25249500998004,
+    "measured_ms": 50.04932,
+    "co_ms": 80.0
+   }
+  },
+  "corun_xcd_LLC_mix50_d4": {
+   "co": "xcd",
+   "tier": "LLC",
+   "mix": true,
+   "d": 4,
+   "att": {
+    "ghz": 2.249309735185636,
+    "n": 1024,
+    "exact_share": 0.7414634146341463,
+    "rt": {
+     "n": 608,
+     "p10": 700.0,
+     "p50": 784.0,
+     "p90": 1089.2000000000003
+    },
+    "rt_fast": {
+     "n": 281,
+     "p10": 668.0,
+     "p50": 772.0,
+     "p90": 1080.0
+    },
+    "rt_cold": {
+     "n": 327,
+     "p10": 716.0,
+     "p50": 792.0,
+     "p90": 1097.6000000000001
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 19.0,
+    "occ_p90": 20.0,
+    "occ_max": 20,
+    "bytes_per_clk": 23.185226141767114,
+    "little_kb": 19.397083581695046,
+    "mean_l": 856.6926829268293,
+    "kernel_ghz": 2.269860279441118,
+    "measured_ms": 50.3158,
+    "co_ms": 80.0
+   }
+  },
+  "corun_xcd_LLC_mix50_d10": {
+   "co": "xcd",
+   "tier": "LLC",
+   "mix": true,
+   "d": 10,
+   "att": {
+    "ghz": 2.253782338358191,
+    "n": 1024,
+    "exact_share": 0.6121951219512195,
+    "rt": {
+     "n": 502,
+     "p10": 1128.8,
+     "p50": 1388.0,
+     "p90": 1612.0
+    },
+    "rt_fast": {
+     "n": 266,
+     "p10": 1122.0,
+     "p50": 1382.0,
+     "p90": 1602.0
+    },
+    "rt_cold": {
+     "n": 236,
+     "p10": 1138.0,
+     "p50": 1390.0,
+     "p90": 1624.0
+    },
+    "issue_stalled": 0.0024390243902439024,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 43.0,
+    "occ_p90": 44.0,
+    "occ_max": 44,
+    "bytes_per_clk": 31.83963553530752,
+    "little_kb": 42.90873215178621,
+    "mean_l": 1379.9951219512195,
+    "kernel_ghz": 2.287425149700599,
+    "measured_ms": 50.31892,
+    "co_ms": 80.0
+   }
+  },
+  "corun_all_L2_d0": {
+   "co": "all",
+   "tier": "L2",
+   "mix": false,
+   "d": 0,
+   "att": {
+    "ghz": 2.075079457822503,
+    "n": 1024,
+    "exact_share": 1.0,
+    "rt": {
+     "n": 820,
+     "p10": 184.0,
+     "p50": 204.0,
+     "p90": 212.0
+    },
+    "rt_fast": {
+     "n": 820,
+     "p10": 184.0,
+     "p50": 204.0,
+     "p90": 212.0
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 4.0,
+    "occ_p90": 4.0,
+    "occ_max": 4,
+    "bytes_per_clk": 17.442928452579036,
+    "little_kb": 3.4111428107625503,
+    "mean_l": 200.25365853658536,
+    "kernel_ghz": 2.152191235059761,
+    "measured_ms": 50.05876,
+    "co_ms": 80.0
+   }
+  },
+  "corun_all_L2_d2": {
+   "co": "all",
+   "tier": "L2",
+   "mix": false,
+   "d": 2,
+   "att": {
+    "ghz": 2.0790582845558645,
+    "n": 1024,
+    "exact_share": 0.7060975609756097,
+    "rt": {
+     "n": 579,
+     "p10": 196.0,
+     "p50": 208.0,
+     "p90": 220.0
+    },
+    "rt_fast": {
+     "n": 579,
+     "p10": 196.0,
+     "p50": 208.0,
+     "p90": 220.0
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 11.0,
+    "occ_p90": 11.0,
+    "occ_max": 12,
+    "bytes_per_clk": 50.206896551724135,
+    "little_kb": 10.290117746005047,
+    "mean_l": 209.87317073170732,
+    "kernel_ghz": 2.1698602794411177,
+    "measured_ms": 50.04324,
+    "co_ms": 80.0
+   }
+  },
+  "corun_all_L2_d4": {
+   "co": "all",
+   "tier": "L2",
+   "mix": false,
+   "d": 4,
+   "att": {
+    "ghz": 2.0775573476747295,
+    "n": 1024,
+    "exact_share": 0.4195121951219512,
+    "rt": {
+     "n": 344,
+     "p10": 264.0,
+     "p50": 284.0,
+     "p90": 288.0
+    },
+    "rt_fast": {
+     "n": 344,
+     "p10": 264.0,
+     "p50": 284.0,
+     "p90": 288.0
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 18.0,
+    "occ_p90": 19.0,
+    "occ_max": 19,
+    "bytes_per_clk": 63.960951799877975,
+    "little_kb": 17.808030625455736,
+    "mean_l": 285.10243902439026,
+    "kernel_ghz": 2.1611553784860558,
+    "measured_ms": 50.03808,
+    "co_ms": 80.0
+   }
+  },
+  "corun_all_L2_d8": {
+   "co": "all",
+   "tier": "L2",
+   "mix": false,
+   "d": 8,
+   "att": {
+    "ghz": 2.068759540134289,
+    "n": 1024,
+    "exact_share": 0.0,
+    "rt": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_fast": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.8097560975609757,
+    "issue_stall_p90": 20.0,
+    "occ_p50": 33.0,
+    "occ_p90": 33.0,
+    "occ_max": 34,
+    "bytes_per_clk": 64.0,
+    "little_kb": 32.73079268292683,
+    "mean_l": 523.6926829268293,
+    "kernel_ghz": 2.152390438247012,
+    "measured_ms": 50.03804,
+    "co_ms": 80.0
+   }
+  },
+  "corun_all_L2_d10": {
+   "co": "all",
+   "tier": "L2",
+   "mix": false,
+   "d": 10,
+   "att": {
+    "ghz": 2.073380518995636,
+    "n": 1024,
+    "exact_share": 0.0,
+    "rt": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_fast": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.8158536585365853,
+    "issue_stall_p90": 20.0,
+    "occ_p50": 41.0,
+    "occ_p90": 41.0,
+    "occ_max": 42,
+    "bytes_per_clk": 64.0,
+    "little_kb": 40.735670731707316,
+    "mean_l": 651.770731707317,
+    "kernel_ghz": 2.1654690618762475,
+    "measured_ms": 50.03956,
+    "co_ms": 80.0
+   }
+  },
+  "corun_all_L2_d12": {
+   "co": "all",
+   "tier": "L2",
+   "mix": false,
+   "d": 12,
+   "att": {
+    "ghz": 2.0768984861692004,
+    "n": 1024,
+    "exact_share": 0.0,
+    "rt": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_fast": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.8097560975609757,
+    "issue_stall_p90": 20.0,
+    "occ_p50": 49.0,
+    "occ_p90": 49.0,
+    "occ_max": 50,
+    "bytes_per_clk": 64.01954198473283,
+    "little_kb": 48.75390653509589,
+    "mean_l": 779.8243902439025,
+    "kernel_ghz": 2.152390438247012,
+    "measured_ms": 50.03892,
+    "co_ms": 80.0
+   }
+  },
+  "corun_all_L2_d16": {
+   "co": "all",
+   "tier": "L2",
+   "mix": false,
+   "d": 16,
+   "att": {
+    "ghz": 2.076168531895996,
+    "n": 1024,
+    "exact_share": 0.0,
+    "rt": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_fast": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.8097560975609757,
+    "issue_stall_p90": 20.0,
+    "occ_p50": 65.0,
+    "occ_p90": 65.0,
+    "occ_max": 66,
+    "bytes_per_clk": 64.0,
+    "little_kb": 64.7329268292683,
+    "mean_l": 1035.7268292682927,
+    "kernel_ghz": 2.1436254980079683,
+    "measured_ms": 50.03836,
+    "co_ms": 80.0
+   }
+  },
+  "corun_all_LLC_d0": {
+   "co": "all",
+   "tier": "LLC",
+   "mix": false,
+   "d": 0,
+   "att": {
+    "ghz": 2.078027156856914,
+    "n": 1024,
+    "exact_share": 1.0,
+    "rt": {
+     "n": 820,
+     "p10": 380.0,
+     "p50": 582.0,
+     "p90": 644.0
+    },
+    "rt_fast": {
+     "n": 820,
+     "p10": 380.0,
+     "p50": 582.0,
+     "p90": 644.0
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 4.0,
+    "occ_p90": 4.0,
+    "occ_max": 4,
+    "bytes_per_clk": 7.316072300928187,
+    "little_kb": 3.749382499076578,
+    "mean_l": 524.7853658536585,
+    "kernel_ghz": 2.1645418326693227,
+    "measured_ms": 50.36692,
+    "co_ms": 80.0
+   }
+  },
+  "corun_all_LLC_d2": {
+   "co": "all",
+   "tier": "LLC",
+   "mix": false,
+   "d": 2,
+   "att": {
+    "ghz": 2.073232605959672,
+    "n": 1024,
+    "exact_share": 0.8780487804878049,
+    "rt": {
+     "n": 720,
+     "p10": 480.0,
+     "p50": 600.0,
+     "p90": 640.0
+    },
+    "rt_fast": {
+     "n": 720,
+     "p10": 480.0,
+     "p50": 600.0,
+     "p90": 640.0
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 11.0,
+    "occ_p90": 12.0,
+    "occ_max": 12,
+    "bytes_per_clk": 19.845149077141507,
+    "little_kb": 11.291655373818292,
+    "mean_l": 582.6439024390244,
+    "kernel_ghz": 2.1514970059880243,
+    "measured_ms": 50.33408,
+    "co_ms": 80.0
+   }
+  },
+  "corun_all_LLC_d4": {
+   "co": "all",
+   "tier": "LLC",
+   "mix": false,
+   "d": 4,
+   "att": {
+    "ghz": 2.074365448870296,
+    "n": 1024,
+    "exact_share": 0.6951219512195121,
+    "rt": {
+     "n": 570,
+     "p10": 568.0,
+     "p50": 624.0,
+     "p90": 660.0
+    },
+    "rt_fast": {
+     "n": 570,
+     "p10": 568.0,
+     "p50": 624.0,
+     "p90": 660.0
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 19.0,
+    "occ_p90": 20.0,
+    "occ_max": 20,
+    "bytes_per_clk": 31.55689343768814,
+    "little_kb": 18.98735224152362,
+    "mean_l": 616.1268292682927,
+    "kernel_ghz": 2.151593625498008,
+    "measured_ms": 50.32436,
+    "co_ms": 80.0
+   }
+  },
+  "corun_all_LLC_d8": {
+   "co": "all",
+   "tier": "LLC",
+   "mix": false,
+   "d": 8,
+   "att": {
+    "ghz": 2.0722451356227856,
+    "n": 1024,
+    "exact_share": 0.6548780487804878,
+    "rt": {
+     "n": 537,
+     "p10": 660.0,
+     "p50": 684.0,
+     "p90": 732.0
+    },
+    "rt_fast": {
+     "n": 537,
+     "p10": 660.0,
+     "p50": 684.0,
+     "p90": 732.0
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 34.0,
+    "occ_p90": 35.0,
+    "occ_max": 36,
+    "bytes_per_clk": 51.1875,
+    "little_kb": 34.300648163586125,
+    "mean_l": 686.180487804878,
+    "kernel_ghz": 2.169061876247505,
+    "measured_ms": 50.3078,
+    "co_ms": 80.0
+   }
+  },
+  "corun_all_LLC_d10": {
+   "co": "all",
+   "tier": "LLC",
+   "mix": false,
+   "d": 10,
+   "att": {
+    "ghz": 2.068678638903606,
+    "n": 1024,
+    "exact_share": 0.6524390243902439,
+    "rt": {
+     "n": 535,
+     "p10": 800.0,
+     "p50": 836.0,
+     "p90": 880.0
+    },
+    "rt_fast": {
+     "n": 535,
+     "p10": 800.0,
+     "p50": 836.0,
+     "p90": 880.0
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 42.0,
+    "occ_p90": 43.0,
+    "occ_max": 44,
+    "bytes_per_clk": 51.61595273264402,
+    "little_kb": 42.20720448895774,
+    "mean_l": 837.3414634146342,
+    "kernel_ghz": 2.151297405189621,
+    "measured_ms": 50.31056,
+    "co_ms": 80.0
+   }
+  },
+  "corun_all_LLC_d12": {
+   "co": "all",
+   "tier": "LLC",
+   "mix": false,
+   "d": 12,
+   "att": {
+    "ghz": 2.078366762464076,
+    "n": 1024,
+    "exact_share": 0.025609756097560974,
+    "rt": {
+     "n": 21,
+     "p10": 916.0,
+     "p50": 972.0,
+     "p90": 1020.0
+    },
+    "rt_fast": {
+     "n": 21,
+     "p10": 916.0,
+     "p50": 972.0,
+     "p90": 1020.0
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.8365853658536585,
+    "issue_stall_p90": 84.0,
+    "occ_p50": 49.0,
+    "occ_p90": 49.0,
+    "occ_max": 50,
+    "bytes_per_clk": 49.26315789473684,
+    "little_kb": 48.756962050706036,
+    "mean_l": 1013.4780487804878,
+    "kernel_ghz": 2.1644710578842314,
+    "measured_ms": 50.32,
+    "co_ms": 80.0
+   }
+  },
+  "corun_all_LLC_d16": {
+   "co": "all",
+   "tier": "LLC",
+   "mix": false,
+   "d": 16,
+   "att": {
+    "ghz": 2.0765986861736345,
+    "n": 1024,
+    "exact_share": 0.0,
+    "rt": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_fast": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.9121951219512195,
+    "issue_stall_p90": 72.0,
+    "occ_p50": 65.0,
+    "occ_p90": 65.0,
+    "occ_max": 66,
+    "bytes_per_clk": 49.36755356722392,
+    "little_kb": 64.62817627363935,
+    "mean_l": 1340.541463414634,
+    "kernel_ghz": 2.160159362549801,
+    "measured_ms": 50.31008,
+    "co_ms": 80.0
+   }
+  },
+  "corun_all_HBM_d0": {
+   "co": "all",
+   "tier": "HBM",
+   "mix": false,
+   "d": 0,
+   "att": {
+    "ghz": 2.0762026502088218,
+    "n": 1024,
+    "exact_share": 1.0,
+    "rt": {
+     "n": 820,
+     "p10": 720.0,
+     "p50": 964.0,
+     "p90": 1268.0
+    },
+    "rt_fast": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_cold": {
+     "n": 820,
+     "p10": 720.0,
+     "p50": 964.0,
+     "p90": 1268.0
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 4.0,
+    "occ_p90": 4.0,
+    "occ_max": 4,
+    "bytes_per_clk": 4.125376306003187,
+    "little_kb": 3.918773404397759,
+    "mean_l": 972.7170731707317,
+    "kernel_ghz": 2.178443113772455,
+    "measured_ms": 50.149,
+    "co_ms": 80.0
+   }
+  },
+  "corun_all_HBM_d2": {
+   "co": "all",
+   "tier": "HBM",
+   "mix": false,
+   "d": 2,
+   "att": {
+    "ghz": 2.0717462592796405,
+    "n": 1024,
+    "exact_share": 0.8939024390243903,
+    "rt": {
+     "n": 733,
+     "p10": 780.8,
+     "p50": 960.0,
+     "p90": 1215.2000000000003
+    },
+    "rt_fast": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_cold": {
+     "n": 733,
+     "p10": 780.8,
+     "p50": 960.0,
+     "p90": 1215.2000000000003
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 12.0,
+    "occ_p90": 12.0,
+    "occ_max": 12,
+    "bytes_per_clk": 12.13684515195369,
+    "little_kb": 11.714264162931064,
+    "mean_l": 988.3463414634147,
+    "kernel_ghz": 2.1610778443113774,
+    "measured_ms": 50.0736,
+    "co_ms": 80.0
+   }
+  },
+  "corun_all_HBM_d4": {
+   "co": "all",
+   "tier": "HBM",
+   "mix": false,
+   "d": 4,
+   "att": {
+    "ghz": 2.0746117174996774,
+    "n": 1024,
+    "exact_share": 0.7841463414634147,
+    "rt": {
+     "n": 643,
+     "p10": 908.8,
+     "p50": 1032.0,
+     "p90": 1268.0
+    },
+    "rt_fast": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_cold": {
+     "n": 643,
+     "p10": 908.8,
+     "p50": 1032.0,
+     "p90": 1268.0
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 19.0,
+    "occ_p90": 20.0,
+    "occ_max": 20,
+    "bytes_per_clk": 18.967251673602316,
+    "little_kb": 19.685390566046063,
+    "mean_l": 1062.770731707317,
+    "kernel_ghz": 2.1611553784860558,
+    "measured_ms": 50.05588,
+    "co_ms": 80.0
+   }
+  },
+  "corun_all_HBM_d8": {
+   "co": "all",
+   "tier": "HBM",
+   "mix": false,
+   "d": 8,
+   "att": {
+    "ghz": 2.074653014323265,
+    "n": 1024,
+    "exact_share": 0.675609756097561,
+    "rt": {
+     "n": 554,
+     "p10": 1120.0,
+     "p50": 1356.0,
+     "p90": 1676.0
+    },
+    "rt_fast": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_cold": {
+     "n": 554,
+     "p10": 1120.0,
+     "p50": 1356.0,
+     "p90": 1676.0
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 35.0,
+    "occ_p90": 36.0,
+    "occ_max": 36,
+    "bytes_per_clk": 26.250657318141982,
+    "little_kb": 35.114005686069135,
+    "mean_l": 1369.7463414634146,
+    "kernel_ghz": 2.1698602794411177,
+    "measured_ms": 50.05004,
+    "co_ms": 80.0
+   }
+  },
+  "corun_all_HBM_d10": {
+   "co": "all",
+   "tier": "HBM",
+   "mix": false,
+   "d": 10,
+   "att": {
+    "ghz": 2.0700617816156583,
+    "n": 1024,
+    "exact_share": 0.5707317073170731,
+    "rt": {
+     "n": 468,
+     "p10": 1374.8,
+     "p50": 1606.0,
+     "p90": 1848.0
+    },
+    "rt_fast": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_cold": {
+     "n": 468,
+     "p10": 1374.8,
+     "p50": 1606.0,
+     "p90": 1848.0
+    },
+    "issue_stalled": 0.003658536585365854,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 43.0,
+    "occ_p90": 44.0,
+    "occ_max": 44,
+    "bytes_per_clk": 27.748014822657492,
+    "little_kb": 43.542387893968936,
+    "mean_l": 1606.8682926829267,
+    "kernel_ghz": 2.1654690618762475,
+    "measured_ms": 50.04924,
+    "co_ms": 80.0
+   }
+  },
+  "corun_all_HBM_d12": {
+   "co": "all",
+   "tier": "HBM",
+   "mix": false,
+   "d": 12,
+   "att": {
+    "ghz": 2.0825175618569713,
+    "n": 1024,
+    "exact_share": 0.014634146341463415,
+    "rt": {
+     "n": 12,
+     "p10": 1512.4,
+     "p50": 1788.0,
+     "p90": 1950.4
+    },
+    "rt_fast": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_cold": {
+     "n": 12,
+     "p10": 1512.4,
+     "p50": 1788.0,
+     "p90": 1950.4
+    },
+    "issue_stalled": 0.9939024390243902,
+    "issue_stall_p90": 284.0,
+    "occ_p50": 49.0,
+    "occ_p90": 49.0,
+    "occ_max": 50,
+    "bytes_per_clk": 29.360593754376136,
+    "little_kb": 48.61547590178324,
+    "mean_l": 1695.5463414634146,
+    "kernel_ghz": 2.1345309381237523,
+    "measured_ms": 50.04868,
+    "co_ms": 80.0
+   }
+  },
+  "corun_all_HBM_d16": {
+   "co": "all",
+   "tier": "HBM",
+   "mix": false,
+   "d": 16,
+   "att": {
+    "ghz": 2.084682520642156,
+    "n": 1024,
+    "exact_share": 0.0,
+    "rt": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_fast": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "rt_cold": {
+     "n": 0,
+     "p10": null,
+     "p50": null,
+     "p90": null
+    },
+    "issue_stalled": 0.9792682926829268,
+    "issue_stall_p90": 372.0,
+    "occ_p50": 65.0,
+    "occ_p90": 65.0,
+    "occ_max": 65,
+    "bytes_per_clk": 26.48610409297625,
+    "little_kb": 64.44291693883336,
+    "mean_l": 2491.478048780488,
+    "kernel_ghz": 2.1698602794411177,
+    "measured_ms": 50.04884,
+    "co_ms": 80.0
+   }
+  },
+  "corun_all_L2_mix50_d4": {
+   "co": "all",
+   "tier": "L2",
+   "mix": true,
+   "d": 4,
+   "att": {
+    "ghz": 2.073776687067503,
+    "n": 1024,
+    "exact_share": 0.7524390243902439,
+    "rt": {
+     "n": 617,
+     "p10": 900.0,
+     "p50": 992.0,
+     "p90": 1244.0
+    },
+    "rt_fast": {
+     "n": 280,
+     "p10": 875.6,
+     "p50": 980.0,
+     "p90": 1220.0
+    },
+    "rt_cold": {
+     "n": 337,
+     "p10": 920.0,
+     "p50": 1004.0,
+     "p90": 1257.6000000000001
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 19.0,
+    "occ_p90": 20.0,
+    "occ_max": 20,
+    "bytes_per_clk": 19.451155023657112,
+    "little_kb": 19.607750164615478,
+    "mean_l": 1032.2439024390244,
+    "kernel_ghz": 2.1652694610778442,
+    "measured_ms": 50.05624,
+    "co_ms": 80.0
+   }
+  },
+  "corun_all_L2_mix50_d10": {
+   "co": "all",
+   "tier": "L2",
+   "mix": true,
+   "d": 10,
+   "att": {
+    "ghz": 2.07872984551162,
+    "n": 1024,
+    "exact_share": 0.6414634146341464,
+    "rt": {
+     "n": 526,
+     "p10": 1080.0,
+     "p50": 1240.0,
+     "p90": 1496.0
+    },
+    "rt_fast": {
+     "n": 289,
+     "p10": 1063.2,
+     "p50": 1240.0,
+     "p90": 1497.6
+    },
+    "rt_cold": {
+     "n": 237,
+     "p10": 1102.4,
+     "p50": 1240.0,
+     "p90": 1489.6
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 43.0,
+    "occ_p90": 44.0,
+    "occ_max": 44,
+    "bytes_per_clk": 34.97897897897898,
+    "little_kb": 43.08536402255914,
+    "mean_l": 1261.3121951219512,
+    "kernel_ghz": 2.156573705179283,
+    "measured_ms": 50.04508,
+    "co_ms": 80.0
+   }
+  },
+  "corun_all_LLC_mix50_d4": {
+   "co": "all",
+   "tier": "LLC",
+   "mix": true,
+   "d": 4,
+   "att": {
+    "ghz": 2.070545271886222,
+    "n": 1024,
+    "exact_share": 0.7719512195121951,
+    "rt": {
+     "n": 633,
+     "p10": 884.0,
+     "p50": 988.0,
+     "p90": 1260.0
+    },
+    "rt_fast": {
+     "n": 298,
+     "p10": 868.0,
+     "p50": 984.0,
+     "p90": 1264.0
+    },
+    "rt_cold": {
+     "n": 335,
+     "p10": 900.0,
+     "p50": 996.0,
+     "p90": 1252.0
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 19.0,
+    "occ_p90": 20.0,
+    "occ_max": 20,
+    "bytes_per_clk": 19.112488605287147,
+    "little_kb": 19.416401938768704,
+    "mean_l": 1040.2829268292683,
+    "kernel_ghz": 2.1392430278884462,
+    "measured_ms": 50.32896,
+    "co_ms": 80.0
+   }
+  },
+  "corun_all_LLC_mix50_d10": {
+   "co": "all",
+   "tier": "LLC",
+   "mix": true,
+   "d": 10,
+   "att": {
+    "ghz": 2.075613460826225,
+    "n": 1024,
+    "exact_share": 0.6109756097560975,
+    "rt": {
+     "n": 501,
+     "p10": 1372.0,
+     "p50": 1572.0,
+     "p90": 1892.0
+    },
+    "rt_fast": {
+     "n": 260,
+     "p10": 1334.4,
+     "p50": 1560.0,
+     "p90": 1864.8
+    },
+    "rt_cold": {
+     "n": 241,
+     "p10": 1388.0,
+     "p50": 1584.0,
+     "p90": 1916.0
+    },
+    "issue_stalled": 0.0,
+    "issue_stall_p90": 0.0,
+    "occ_p50": 43.0,
+    "occ_p90": 44.0,
+    "occ_max": 44,
+    "bytes_per_clk": 27.645569620253166,
+    "little_kb": 43.09901107594937,
+    "mean_l": 1596.4,
+    "kernel_ghz": 2.1611553784860558,
+    "measured_ms": 50.31756,
+    "co_ms": 80.0
+   }
+  }
+ }
+}

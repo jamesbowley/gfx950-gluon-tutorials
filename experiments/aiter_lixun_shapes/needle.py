@@ -140,19 +140,25 @@ def flips(rows, base):
 
 
 def same_tile_behind(rows, other, state, other_state):
+    """other None (a cold-only run): no column for the other cache state."""
     rs = sorted((r for r in rows.values() if r["_best_tile"] == "256x256" and r["_gap"] < -TIE), key=lambda r: r["_gap"])
     ties = sum(1 for r in rows.values() if r["_best_tile"] == "256x256" and -TIE <= r["_gap"] < 0)
+    tile = " v27 tile |" if "v20_tile" in next(iter(rows.values())) else ""
     L = [f"{state}: {len(rs)} behind by more than 1%, {ties} behind by less (ties)", "",
-         f"| # | Shape (MxNxK) | Output tiles | Full waves | S | k-steps | Best library | {NAME} config | Best TFLOPS | "
-         f"v9 TFLOPS | {NAME} TFLOPS | {NAME} vs best | {NAME} vs v9 | {other_state}: vs best |",
-         "|---:|---|---:|---:|---:|---:|---|---|---:|---:|---:|---:|---:|---:|"]
+         f"| # | Shape (MxNxK) | Output tiles | Full waves | S | k-steps | Best library | {NAME} config |{tile} Best TFLOPS | "
+         f"v9 TFLOPS | {NAME} TFLOPS | {NAME} vs best | {NAME} vs v9 |" + (f" {other_state}: vs best |" if other is not None else ""),
+         "|---:|---|---:|---:|---:|---:|---|---|" + ("---|" if tile else "") + "---:|---:|---:|---:|---:|"
+         + ("---:|" if other is not None else "")]
     for i, r in enumerate(rs, 1):
-        o = other.get(key(r["M"], r["N"], r["K"], r["out"]))
         cfg = r["v20_label"] + (", handed to v9" if str(r.get("v20_v9_delegated")) == "True" else "")
-        L.append(f"| {i} | {r['M']}x{r['N']}x{r['K']} | {r['tiles']} | {r['waves']} | {r['S']} | {r['k_steps']} | "
-                 f"{r['_best_lib'].replace('AITER ', 'AITER ')} | {cfg} | {r['_best']:.0f} | {r['_v9']:.0f} | "
-                 f"{r['_v20']:.0f} | {r['_gap']:+.1f}% | {pct(r['_v20'], r['_v9']):+.1f}% | "
-                 f"{o['_gap'] if o else float('nan'):+.1f}% |")
+        line = (f"| {i} | {r['M']}x{r['N']}x{r['K']} | {r['tiles']} | {r['waves']} | {r['S']} | {r['k_steps']} | "
+                f"{r['_best_lib'].replace('AITER ', 'AITER ')} | {cfg} |" + (f" {r['v20_tile']} |" if tile else "")
+                + f" {r['_best']:.0f} | {r['_v9']:.0f} | "
+                f"{r['_v20']:.0f} | {r['_gap']:+.1f}% | {pct(r['_v20'], r['_v9']):+.1f}% |")
+        if other is not None:
+            o = other.get(key(r["M"], r["N"], r["K"], r["out"]))
+            line += f" {o['_gap'] if o else float('nan'):+.1f}% |"
+        L.append(line)
     return L
 
 
@@ -183,56 +189,172 @@ def correctness(rows, state):
     return f"{state}: {len(bad)} shapes with a {NAME}/v9/hipBLASLt/dp failure or flag left; AITER pick outside tolerance on {len(pick_bad)}; notes on {len(notes)}"
 
 
+TILE_ORDER = ("256x256x64", "128x256x64", "128x128x128", "64x128x128", "64x64x128")
+
+
+def tile_group(r):
+    return "v27 keeps 256x256x64" if r["v20_tile"] == "256x256x64" else "v27 picks a smaller tile"
+
+
+def v27_sections(states):
+    """--kernel v27 runs: v27 auto against v26 timed in the same run, split into the tile's effect (v27 auto
+    against v27 at 256x256x64, both on Triton 3.9) and the compiler's (v27 at 256x256x64 against v26 on
+    Triton v2.2 + llirSched); the new AITER v9 against the existing one; every kernel against the best library."""
+    L = []
+    for _, R, _ in states:
+        for r in R.values():
+            r.update(_v26=fnum(r["v26_tflops"]), _t256=fnum(r["v27t256_tflops"]), _v9new=fnum(r["v9new_tflops"]))
+
+    def groups(R, keyf, order):
+        g = {}
+        for r in R.values():
+            for k in ("All shapes",) + tuple(keyf(r)):
+                g.setdefault(k, []).append(r)
+        return [(k, g[k]) for k in ("All shapes",) + tuple(order) if k in g] + sorted(
+            (k, v) for k, v in g.items() if k not in order and k != "All shapes")
+
+    def v27_keys(r):
+        p = path(r)
+        return (tile_group(r), f"tile {r['v20_tile']}", p if p != "Stream-K split" else "Stream-K split: " + kind(r),
+                "under one wave" if int(r["tiles"]) < 256 else "one wave or more")
+
+    order = ("v27 keeps 256x256x64", "v27 picks a smaller tile") + tuple(f"tile {t}" for t in TILE_ORDER) + (
+        "Handed to v9", "Persistent data-parallel", "Stream-K split: reduce-scatter", "Stream-K split: owner",
+        "Stream-K split: spread", "under one wave", "one wave or more")
+    L += [f"## {NAME} (auto tile) against v26, timed in the same run (this / v26 - 1)", "",
+          "Tiles: v27 auto against v27 at 256x256x64, both on Triton 3.9. Compiler: v27 at 256x256x64 (v26's code) "
+          "against v26 on Triton v2.2 + llirSched. On each shape the two ratios multiply to v27 against v26; "
+          "their medians need not.", "",
+          f"| Group | Caches | Shapes | {NAME} vs v26: faster | within 1% | slower | median | tiles: median | "
+          "compiler: median | v27 at 256 vs v26: faster | slower |",
+          "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|"]
+    for st, R, _ in states:
+        for k, rs in groups(R, v27_keys, order):
+            f, w, s, m = counts([pct(r["_v20"], r["_v26"]) for r in rs])
+            ft, _, st_, mt = counts([pct(r["_v20"], r["_t256"]) for r in rs])
+            fc, _, sc, mc = counts([pct(r["_t256"], r["_v26"]) for r in rs])
+            L.append(f"| {k} | {st} | {len(rs)} | {f} | {w} | {s} | {m:+.1f}% | {mt:+.1f}% | {mc:+.1f}% | {fc} | {sc} |")
+    L += [""]
+
+    L += ["## Every kernel against the best library", "",
+          "| Caches | Kernel | faster | within 1% | slower | median | under one wave: median | same-tile behind |",
+          "|---|---|---:|---:|---:|---:|---:|---:|"]
+    for st, R, _ in states:
+        rs = list(R.values())
+        same = [r for r in rs if r["_best_tile"] == "256x256"]
+        for name, col in ((f"{NAME} auto (capped)", "_v20"), (f"{NAME} auto, data-parallel (forced)", "_dp"),
+                          (f"{NAME} at 256x256x64 (capped)", "_t256"), ("v26 (capped)", "_v26"),
+                          ("AITER v9, existing", "_v9"), ("AITER v9, new", "_v9new")):
+            f, w, s, m = counts([pct(r[col], r["_best"]) for r in rs])
+            under = med([pct(r[col], r["_best"]) for r in rs if int(r["tiles"]) < 256])
+            sb = sum(pct(r[col], r["_best"]) < -TIE for r in same)
+            L.append(f"| {st} | {name} | {f} | {w} | {s} | {m:+.1f}% | {under:+.1f}% | {sb} of {len(same)} |")
+    L += [""]
+
+    L += [f"## {NAME} auto against the best library, by its tile", "",
+          "| Group | Caches | Shapes | faster | within 1% | slower | median | v26 vs best: median |",
+          "|---|---|---:|---:|---:|---:|---:|---:|"]
+    for st, R, _ in states:
+        for k, rs in groups(R, v27_keys, order):
+            f, w, s, m = counts([r["_gap"] for r in rs])
+            L.append(f"| {k} | {st} | {len(rs)} | {f} | {w} | {s} | {m:+.1f}% | "
+                     f"{med([pct(r['_v26'], r['_best']) for r in rs]):+.1f}% |")
+    L += [""]
+
+    L += ["## The new AITER v9 against the existing one (this run)", "",
+          "| Group | Caches | Shapes | new faster | within 1% | new slower | median | new vs best: median | "
+          "existing vs best: median |", "|---|---|---:|---:|---:|---:|---:|---:|---:|"]
+    v9_order = tuple(f"new v9 tile {t}" for t in ("256x256", "256x128", "128x256", "128x128", "128x64", "64x128", "64x64"))
+    for st, R, _ in states:
+        for k, rs in groups(R, lambda r: (f"new v9 tile {r['v9new_tile']}",
+                                          "under one wave" if int(r["tiles"]) < 256 else "one wave or more"),
+                            v9_order + ("under one wave", "one wave or more")):
+            f, w, s, m = counts([pct(r["_v9new"], r["_v9"]) for r in rs])
+            L.append(f"| {k} | {st} | {len(rs)} | {f} | {w} | {s} | {m:+.1f}% | "
+                     f"{med([pct(r['_v9new'], r['_best']) for r in rs]):+.1f}% | "
+                     f"{med([pct(r['_v9'], r['_best']) for r in rs]):+.1f}% |")
+    L += [""]
+
+    L += [f"## {NAME} auto against the new AITER v9", "",
+          "| Group | Caches | Shapes | v27 faster | within 1% | v27 slower | median |", "|---|---|---:|---:|---:|---:|---:|"]
+    for st, R, _ in states:
+        for k, rs in groups(R, v27_keys, order):
+            f, w, s, m = counts([pct(r["_v20"], r["_v9new"]) for r in rs])
+            L.append(f"| {k} | {st} | {len(rs)} | {f} | {w} | {s} | {m:+.1f}% |")
+    L += [""]
+
+    L += ["## Checks of the extra columns", ""]
+    for st, R, _ in states:
+        rs = list(R.values())
+        bad = [r for r in rs if any(str(r.get(c)) != "True" for c in ("v9new_ok", "v26_ok", "v27t256_ok", "v26_post_ok",
+                                                                       "v27t256_post_ok"))
+               or str(r["v26_flags_left"]) != "0"]
+        last = max(rs, key=lambda r: int(r["new_builds"] or 0))
+        L.append(f"- {st}: {len(bad)} shapes with a new v9 / v26 / v27-at-256 failure or v26 flag left; builds on "
+                 f"Triton 3.9 {last['new_builds']}, without sched_barriers: new v9 {last['v9new_unscheduled']}, "
+                 f"v27 and v9_tile {last['v27_unscheduled']}; notes on {sum(1 for r in rs if r['note'])}.")
+    return L
+
+
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("--warm", required=True)
+    p.add_argument("--warm", default=None, help="omit (with --base-warm) for a cold-only run")
     p.add_argument("--cold", required=True)
-    p.add_argument("--base-warm", required=True)
+    p.add_argument("--base-warm", default=None)
     p.add_argument("--base-cold", required=True)
     p.add_argument("--ctl-warm", default=None, help="a --v20-only run of the baseline kernel on this card")
     p.add_argument("--ctl-cold", default=None)
     p.add_argument("--name", default="v24", help="the run's kernel, for labels")
     p.add_argument("--ctl-name", default="v20", help="the control's kernel, for labels")
     a = p.parse_args()
+    assert (a.warm is None) == (a.base_warm is None), "--warm and --base-warm go together"
+    assert a.warm or not a.ctl_warm, "--ctl-warm needs --warm"
     global NAME, CTL
     NAME, CTL = a.name, a.ctl_name
-    W, C = enrich(read_rows(a.warm)), enrich(read_rows(a.cold))
-    BW, BC = enrich(read_rows(a.base_warm)), enrich(read_rows(a.base_cold))
-    if a.ctl_warm:
+    W, C = (enrich(read_rows(a.warm)) if a.warm else None), enrich(read_rows(a.cold))
+    BW, BC = (enrich(read_rows(a.base_warm)) if a.base_warm else None), enrich(read_rows(a.base_cold))
+    states = ([("warm", W, BW)] if W is not None else []) + [("cold", C, BC)]
+    if a.ctl_warm or a.ctl_cold:
         print(f"## {NAME} against {CTL} on the same card (this / control - 1)\n")
         print(f"| Path | Caches | Shapes | {NAME} vs {CTL}: median | faster | within 1% | slower | "
               f"data-parallel (forced) vs {CTL}'s |")
-        lines = control(W, {key(r["M"], r["N"], r["K"], r["out"]): r for r in read_rows(a.ctl_warm)}, "warm")
-        if a.ctl_cold:
-            lines += control(C, {key(r["M"], r["N"], r["K"], r["out"]): r for r in read_rows(a.ctl_cold)}, "cold")
+        lines = []
+        for st, R, ctl in (("warm", W, a.ctl_warm), ("cold", C, a.ctl_cold)):
+            if ctl:
+                lines += control(R, {key(r["M"], r["N"], r["K"], r["out"]): r for r in read_rows(ctl)}, st)
         print("\n".join(lines) + "\n")
     print("## Results table\n")
     print("| Run | Caches | faster | within 1% | slower | median | under one wave: median | same-tile behind | v9: median |")
-    print(headline(BW, "base | warm"))
-    print(headline(W, "this | warm"))
-    print(headline(BC, "base | cold"))
-    print(headline(C, "this | cold"))
+    for st, R, B in states:
+        print(headline(B, f"base | {st}"))
+        print(headline(R, f"this | {st}"))
     print("\n## Three-way against the best library\n")
     print("| Caches | Kernel | faster | within 1% | slower | median | same-tile behind |")
-    print("\n".join(three_way(W, "warm") + three_way(C, "cold")))
+    print("\n".join(sum((three_way(R, st) for st, R, _ in states), [])))
     print("\n## Per path against the baseline (this / base - 1, median)\n")
     print(f"| Path | Caches | Shapes | {NAME} vs base | AITER v9 (card) | {NAME} corrected by v9 | dp | hipBLASLt | AITER pick |")
-    print("\n".join(by_path(W, BW, "warm") + by_path(C, BC, "cold")))
-    for st, R, B in (("warm", W, BW), ("cold", C, BC)):
+    print("\n".join(sum((by_path(R, B, st) for st, R, B in states), [])))
+    for st, R, B in states:
         ah, be = flips(R, B)
         v9f = counts([pct(r["_v20"], r["_v9"]) for r in R.values()])
         print(f"\n{st}: behind->ahead {ah}, ahead->behind {be}; {NAME} vs v9: {v9f[0]} faster, {v9f[2]} slower, median {v9f[3]:+.1f}%")
     print("\n## Same-tile behind\n")
-    print("\n".join(same_tile_behind(W, C, "Warm", "Cold")))
-    print()
-    print("\n".join(same_tile_behind(C, W, "Cold", "Warm")))
+    for i, (st, R, _) in enumerate(states):
+        other = [(s, X) for s, X, _ in states if s != st]
+        if i:
+            print()
+        print("\n".join(same_tile_behind(R, other[0][1] if other else None, st.capitalize(),
+                                         other[0][0].capitalize() if other else None)))
     print("\n## Hand-off\n")
     print("| Caches | Shapes | Against the persistent loop | Against AITER's v9 |")
-    print("\n".join(handoff(W, "Warm") + handoff(C, "Cold")))
+    print("\n".join(sum((handoff(R, st.capitalize()) for st, R, _ in states), [])))
     print("\n## Spread and correctness\n")
-    for st, R, B in (("warm", W, BW), ("cold", C, BC)):
+    for st, R, B in states:
         print(spread(R, st), "| base:", spread(B, st))
         print(correctness(R, st))
+    if "v9new_tflops" in next(iter(C.values())):
+        print()
+        print("\n".join(v27_sections(states)))
 
 
 if __name__ == "__main__":

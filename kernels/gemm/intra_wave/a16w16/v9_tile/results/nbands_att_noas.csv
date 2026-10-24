@@ -1,0 +1,4 @@
+tile,M,N,K,tiles,correct,att_mfma_eff,mfma_in_loop,iter_cycles,pro_ratio,loop_ratio,epi_ratio,prologue_cycles,epilogue_cycles
+256x192,4096,3072,8192,256,True,0.8243,192,3726.6,2.25%,93.72%,4.04%,5631,10112
+192x256,3072,4096,8192,256,True,0.8905,192,3449.9,2.32%,93.86%,3.82%,5377,8835
+256x256,4096,4096,8192,256,True,0.9046,256,4527.8,2.05%,93.83%,4.12%,6225,12537

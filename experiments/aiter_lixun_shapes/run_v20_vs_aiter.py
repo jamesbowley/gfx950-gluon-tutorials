@@ -66,7 +66,11 @@ KERNELS = {
     "v20": ("v20_streamk_reduce_scatter", "v20_streamk_reduce_scatter", "v9_beyond_hotloop", "v9_beyond_hotloop"),
     "v24": ("v24_streamk_combined", "v24_streamk_combined", "v9_beyond_hotloop", "v9_beyond_hotloop"),
     "v26": ("v26_streamk_ragged_k", "v26_streamk_ragged_k", "v9_ragged", "v9_ragged"),
+    "v27": ("v27_streamk_tile", "v27_streamk_tile", "v9_tile", "v9_tile"),
+    "v28": ("v28_streamk_owner", "v28_streamk_owner", "v9_tile", "v9_tile"),
 }
+# Kernels that run in the Triton 3.9 worker ("new"), with v27's columns.
+NEW_KERNELS = ("v27", "v28")
 V20_LIVE = os.path.join(A16, KERNELS[os.environ.get("V20CMP_KERNEL", "v20")][0], "matmul_kernel.py")
 # The v9 it hands off to is the live one (not snapshotted).
 V9_LIVE = os.path.join(A16, KERNELS[os.environ.get("V20CMP_KERNEL", "v20")][2], "matmul_kernel.py")
@@ -77,9 +81,15 @@ SEP29_DETAILS = os.path.join(HVR, "details_rocm724.csv")
 
 AITER = "/home/jbowley/repos/aiter_llirsched_wt"
 TRITON_PY = "/home/jbowley/repos/triton_gfx950-tutorial-v2.2/python"
+# --kernel v27: v27 and the newer AITER v9 run in a third worker ("new") on Triton 3.9 (the MFMA
+# scheduler through schedule_hint, no plugins), in the same ROCm 7.2.4 / torch 2.10 environment;
+# v26 runs in the tutorial worker ("v26") on the old stack, as on 2026-10-12.
+AITER_V2 = "/home/jbowley/repos/aiter_llirsched_v2"
+TRITON39_PY = "/home/jbowley/repos/triton/python"
+V27_TILE_256 = "256x256x64"
 # HIP device (HIP_VISIBLE_DEVICES, set by run_rocm724_v20.sh from V20CMP_GPU) -> its PCI bus. HIP
 # numbers the devices in a different order from rocm-smi: HIP 0 is rocm-smi GPU 3.
-GPUS = {"0": 0x75, "3": 0x15}
+GPUS = {"0": 0x75, "2": 0x65, "3": 0x15}
 GPU = os.environ.get("HIP_VISIBLE_DEVICES", "0")
 GPU_PCI_BUS = GPUS.get(GPU)
 GPU_BDF = f"0000:{GPU_PCI_BUS or 0:02x}:00.0"
@@ -90,6 +100,16 @@ TAG = "@@JSON "
 STREAMK_ENV = ("STREAMK_POLICY", "STREAMK_FIXUP", "STREAMK_NUM_PROGRAMS", "STREAMK_BALANCE_XCDS",
                "PERSISTENT_TILE_ORDER")
 PLUGIN_ENV = ("LLVM_PASS_PLUGIN_PATH", "TRITON_AMDGCNAS_PLUGIN", "AITER_LLIR_SCHED")
+
+
+SKIPPABLE = ("v9", "v26", "v27t256", "v9new", "v20_dp")
+# --mean-ratio: also record each output's mean_ratio (columns *_mratio).
+MEAN_RATIO = bool(os.environ.get("V20CMP_MEAN_RATIO"))
+
+
+def skipped(name):
+    """--skip: a column left out of this run (V20CMP_SKIP, read by the driver and every worker)."""
+    return name in os.environ.get("V20CMP_SKIP", "").split(",")
 
 
 def run_paths(tag, jit_tag=None):
@@ -108,12 +128,12 @@ def run_paths(tag, jit_tag=None):
 
 
 def geometry(M, N, K):
-    tiles = (M // 256) * (N // 256)
-    return dict(tiles=tiles, waves=tiles // NUM_CUS, S=tiles % NUM_CUS, k_steps=K // 64)
+    tiles = -(-M // 256) * -(-N // 256)
+    return dict(tiles=tiles, waves=tiles // NUM_CUS, S=tiles % NUM_CUS, k_steps=-(-K // 64))
 
 
-def load_shapes():
-    with open(SHAPES_CSV, newline="") as f:
+def load_shapes(path=None):
+    with open(path or SHAPES_CSV, newline="") as f:
         return list(csv.DictReader(f))
 
 
@@ -155,6 +175,36 @@ def check(out, ref):
 
     out = out.float()
     return bool(torch.allclose(out, ref, atol=1e-1, rtol=1e-2)), float((out - ref).abs().max().item())
+
+
+def region_mean(x, rows, cols):
+    """Mean of x over each rows x cols region, the edge regions over their in-bounds elements."""
+    import torch
+    import torch.nn.functional as F
+
+    M, N = x.shape
+    mt, nt = -(-M // rows), -(-N // cols)
+    pad = (0, nt * cols - N, 0, mt * rows - M)
+    s = F.pad(x, pad).view(mt, rows, nt, cols).sum((1, 3))
+    cnt = F.pad(torch.ones_like(x), pad).view(mt, rows, nt, cols).sum((1, 3))
+    return s / cnt
+
+
+def mean_ratio(out, inp):
+    """The largest, over 32-row regions of at least 1024 elements, of the mean error against the fp32 reference over
+    the mean error of one bf16 rounding of it (check_streamk.py's measure: a kernel that reduces K through n
+    bf16-rounded partials stays within about 1 + sqrt(n)); nan for fp32 output."""
+    import torch
+
+    if inp.otype != torch.bfloat16:
+        return float("nan")
+    rows = min(inp.M, 32)
+    cols = min(inp.N, max(32, -(-1024 // rows)))
+    err = region_mean((out.float() - inp.ref32).abs(), rows, cols)
+    rnd = region_mean((inp.ref32.to(torch.bfloat16).float() - inp.ref32).abs(), rows, cols)
+    if torch.isnan(out).any():
+        return float("inf")
+    return float((err / rnd.clamp_min(1e-6)).max().item())
 
 
 def device_info():
@@ -201,7 +251,8 @@ class Inputs:
         torch.manual_seed(0)
         self.x = torch.randn((self.M, self.K), dtype=torch.bfloat16, device="cuda")
         self.w = torch.randn((self.N, self.K), dtype=torch.bfloat16, device="cuda")
-        self.ref = F.linear(self.x.float(), self.w.float()).to(self.otype).float()
+        self.ref32 = F.linear(self.x.float(), self.w.float())
+        self.ref = self.ref32.to(self.otype).float()
         self.y = torch.empty((self.M, self.N), dtype=self.otype, device="cuda")
         self.layouts = ("", "_pad") if os.environ.get("V20CMP_PAD") else ("",)
 
@@ -383,10 +434,9 @@ class AiterWorker:
         # raw: name -> (fn(x, w, y), layout); fns: the timed callables, rotating over that layout's
         # sets. pick and hbl allocate their output, so the rotation keeps their recent outputs alive.
         # On the padded layout hipBLASLt writes into the padded C through torch.mm(out=).
-        base = {
-            "pick": lambda x, w, y: self.tg.gemm_a16w16(x, w, None, otype),
-            "v9": lambda x, w, y: gluon_gemm(x, w, None, otype, y, backend="gluon", kernel_type="compute_bound"),
-        }
+        base = {"pick": lambda x, w, y: self.tg.gemm_a16w16(x, w, None, otype)}
+        if not skipped("v9"):
+            base["v9"] = lambda x, w, y: gluon_gemm(x, w, None, otype, y, backend="gluon", kernel_type="compute_bound")
         if os.environ.get("V20CMP_HBL"):
             base["hbl"] = hbl_call(otype)
         self.raw = {}
@@ -402,7 +452,10 @@ class AiterWorker:
         self.ok_fns = []
         for name, (fn, lay) in self.raw.items():
             try:
-                res[f"{name}_ok"], res[f"{name}_maxerr"] = check(fn(*inp.sets[lay][0]), inp.ref)
+                out = fn(*inp.sets[lay][0])
+                res[f"{name}_ok"], res[f"{name}_maxerr"] = check(out, inp.ref)
+                if MEAN_RATIO:
+                    res[f"{name}_mratio"] = mean_ratio(out, inp)
                 self.ok_fns.append(name)
             except Exception as e:  # noqa: BLE001 - record and keep going
                 res["notes"].append(f"{name}: {type(e).__name__}: {e}"[:300])
@@ -568,7 +621,7 @@ class V20Worker:
             if self.v9_same_dtype_only:
                 delegated = delegated and inp.otype == torch.bfloat16
             self.raw = {"v20": self._run("capped")}
-            if c_policy != "dp" or delegated:
+            if (c_policy != "dp" or delegated) and not os.environ.get("V20CMP_NO_DP"):
                 self.raw["v20_dp"] = self._run("dp")
             res = dict(v20_policy=c_policy, v20_fixup="" if c_policy == "dp" else c_fixup,
                        v20_label=split_label(c_policy, c_fixup, c_programs, g), v20_v9_delegated=delegated,
@@ -646,8 +699,231 @@ class V20Worker:
         return {}
 
 
+class NewWorker:
+    """--kernel v27's worker on Triton 3.9 with the AITER_V2 worktree:
+    - v9new: that worktree's gemm_a16w16(backend="gluon", kernel_type="compute_bound"), on the tile its
+      gluon config picks for the shape (default_tile);
+    - v20: v27 with tile="auto" (the kernel's auto_tile) and its default capped split at that tile;
+    - v20_dp: the same tile with STREAMK_POLICY=dp (the persistent loop), where capped splits or hands
+      the shape to v9_tile;
+    - v27t256: v27 at 256x256x64, capped: v26's code on this compiler.
+    v27 passes schedule_hint="mfma-schedule" itself. Every build must carry the MFMA scheduler's
+    sched_barriers; post() counts the builds that do not."""
+
+    def __init__(self):
+        import importlib.util
+
+        for k in STREAMK_ENV + ("STREAMK_TILE",):
+            os.environ.pop(k, None)
+        # bench.py's path (a16w16 and kernels/gemm/utils), without bench_ext's plugin hooks.
+        sys.path[:0] = [A16, os.path.join(A16, "..", "..", "utils")]
+        self.snapshot = os.environ["V20CMP_SNAPSHOT"]
+        spec = importlib.util.spec_from_file_location("v27_snapshot_matmul_kernel", self.snapshot)
+        self.mk = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(self.mk)
+        from aiter.ops.triton._gluon_kernels.gfx950.gemm.basic import gemm_a16w16 as g950
+        from aiter.ops.triton.gemm.basic.gemm_a16w16 import gemm_a16w16
+
+        self.gemm, self.g950 = gemm_a16w16, g950
+        v9t = self.mk.v9_tile
+        self.kernel_name = KERNELS[os.environ.get("V20CMP_KERNEL", "v27")][1]
+        self.groups = {"v9new": [g950._gemm_a16w16_compute_bound_kernel],
+                       "v27": [getattr(self.mk, self.kernel_name), v9t.v9_tile, v9t.v9_tile_small]}
+        self.seen, self.unscheduled = set(), {g: [] for g in self.groups}
+        self.picks = {}
+        if os.environ.get("V20CMP_V27_PICKS"):
+            # --v27-picks: per shape and slot, a runner (v27 or v9_tile), a tile and v27's STREAMK_* options, as the
+            # worst10 sweep timed the point (sweep.kind_env).
+            with open(os.environ["V20CMP_V27_PICKS"], newline="") as f:
+                for r in csv.DictReader(f):
+                    self.picks.setdefault((int(r["M"]), int(r["N"]), int(r["K"])), {})[r["slot"]] = r
+        self.inp = None
+
+    def _pick(self, p):
+        """fn(x, w, y) for a --v27-picks row."""
+        options = json.loads(p["options"])
+
+        def fn(x, w, y):
+            for k in PICK_OPTION_KEYS:
+                os.environ.pop(k, None)
+            if p["runner"] == "v9_tile":
+                return self.mk.v9_tile.matmul(x, w.T, y, tile=p["spec"])
+            os.environ.update(options)
+            try:
+                return self.mk.matmul(x, w.T, y, tile=p["tile"])
+            finally:
+                for k in PICK_OPTION_KEYS:
+                    os.environ.pop(k, None)
+
+        return fn
+
+    def info(self):
+        import triton
+
+        import aiter
+
+        info = device_info()
+        assert not any(os.environ.get(k) for k in PLUGIN_ENV), "plugin variables set in the new worker"
+        assert self.g950.schedule_hint() == "mfma-schedule", "AITER_MFMA_SCHED turns the new v9's scheduler off"
+        aiter_dir = os.path.dirname(aiter.__file__)
+        commit = subprocess.run(
+            ["git", "-c", "safe.directory=*", "-C", aiter_dir, "log", "-1", "--format=%h %cs %s"],
+            capture_output=True, text=True,
+        ).stdout.strip()
+        return info | dict(
+            triton=f"{triton.__version__} @ {os.path.dirname(triton.__file__)}",
+            aiter=aiter_dir,
+            aiter_commit=commit,
+            aiter_jit_dir=os.environ.get("AITER_JIT_DIR", ""),
+            v9new_schedule_hint=self.g950.schedule_hint(),
+            v27_snapshot=self.snapshot,
+            v27_snapshot_sha256=sha256(self.snapshot),
+            v9_tile=self.mk.v9_tile.__file__,
+            v9_tile_sha256=sha256(self.mk.v9_tile.__file__),
+        )
+
+    def _run(self, tile, policy):
+        """fn(x, w, y) running v27 on tile with STREAMK_POLICY=policy (None: the kernel's default, capped)."""
+
+        def fn(x, w, y):
+            if policy is None:
+                os.environ.pop("STREAMK_POLICY", None)
+            else:
+                os.environ["STREAMK_POLICY"] = policy
+            return self.mk.matmul(x, w.T, y, tile=tile)
+
+        return fn
+
+    def _capped(self, spec, M, N, K):
+        """What capped runs at a tile: (policy, fixup, programs, delegated, geometry), as matmul decides it."""
+        geo = self.mk.tile_geometry(spec)
+        bm, bn, bk, P = geo["block_m"], geo["block_n"], geo["block_k"], geo["num_programs"]
+        tiles = -(-M // bm) * -(-N // bn)
+        k_steps = -(-K // (2 * bk)) * 2
+        policy, fixup, programs = self.mk.capped_policy(tiles, k_steps, P)
+        g = dict(tiles=tiles, S=tiles % P, k_steps=k_steps)
+        return policy, fixup, programs, policy == "dp" and tiles <= P, g
+
+    def setup(self, s, first=True):
+        """As V20Worker.setup; first also records the kernels v27 auto launches."""
+        import torch
+        from torch.profiler import ProfilerActivity, profile
+
+        old = self.inp  # noqa: F841 - held until the new inputs are allocated
+        self.inp = inp = Inputs(s)
+        old = None
+        M, N, K, otype = inp.M, inp.N, inp.K, inp.otype
+        tile = self.mk.auto_tile(M, N, K)
+        policy, fixup, programs, delegated, g = self._capped(tile, M, N, K)
+        p256, f256, n256, d256, g256 = self._capped(V27_TILE_256, M, N, K)
+        raw = {"v20": self._run("auto", None)}
+        if not os.environ.get("V20CMP_V20_ONLY"):
+            if not skipped("v9new"):
+                raw = {
+                    "v9new": lambda x, w, y: self.gemm(x, w, None, otype, y, backend="gluon",
+                                                       kernel_type="compute_bound"),
+                    **raw,
+                }
+            if not skipped("v27t256"):
+                raw["v27t256"] = self._run(V27_TILE_256, None)
+        if (policy != "dp" or delegated) and not skipped("v20_dp"):
+            raw["v20_dp"] = self._run("auto", "dp")
+        picks = self.picks.get((M, N, K), {})
+        for slot in pick_slots():
+            if slot in picks:
+                raw[f"pk_{slot}"] = self._pick(picks[slot])
+        bm, bn = self.g950.default_tile(M, N, K, inp.x.device)
+        res = dict(v20_policy=policy, v20_fixup="" if policy == "dp" else fixup,
+                   v20_label=split_label(policy, fixup, programs, g), v20_v9_delegated=delegated, v20_tile=tile,
+                   v20_tile_tiles=g["tiles"], v20_tile_S=g["S"], v9new_tile=f"{bm}x{bn}",
+                   v27t256_label=split_label(p256, f256, n256, g256), v27t256_v9_delegated=d256, notes=[])
+        for slot, p in picks.items():
+            res[f"pk_{slot}_kind"], res[f"pk_{slot}_tile"] = p["kind"], p["tile"]
+        self.raw = {n + lay: (f, lay) for n, f in raw.items() for lay in inp.layouts}
+        self.fns = {n: inp.rotating(f, lay) for n, (f, lay) in self.raw.items()}
+        res["rot_copies"] = len(inp.copies)
+        self.ok_fns = []
+        kn = self.kernel_name
+        expect = {"v20": ("v9_tile" if delegated else kn, tile, None if delegated else policy),
+                  "v27t256": ("v9_tile" if d256 else kn, V27_TILE_256, None if d256 else p256)}
+        for name, (fn, lay) in self.raw.items():
+            try:
+                out = fn(*inp.sets[lay][0])
+                res[f"{name}_ok"], res[f"{name}_maxerr"] = check(out, inp.ref)
+                if MEAN_RATIO:
+                    res[f"{name}_mratio"] = mean_ratio(out, inp)
+                self.ok_fns.append(name)
+                if name in expect:
+                    ll = self.mk.LAST_LAUNCH
+                    ran = (ll.get("kernel"), ll.get("tile"), ll.get("policy"))
+                    if ran != expect[name]:
+                        res["notes"].append(f"{name}: ran {ran}, expected {expect[name]}")
+            except Exception as e:  # noqa: BLE001
+                res["notes"].append(f"{name}: {type(e).__name__}: {e}"[:300])
+                res[f"{name}_ok"], res[f"{name}_maxerr"] = False, float("nan")
+        torch.cuda.synchronize()
+        if first and "v20" in self.ok_fns:
+            with profile(activities=[ProfilerActivity.CUDA]) as prof:
+                self.raw["v20"][0](*inp.sets[""][0])
+                torch.cuda.synchronize()
+            res["v20_kernels_launched"] = " | ".join(sorted({e.name for e in prof.events()
+                                                             if e.device_type.name == "CUDA"}))
+        return res
+
+    def time(self):
+        return bench_all(self.fns, self.ok_fns, self.inp)
+
+    def _count_unscheduled(self):
+        """Builds so far without the MFMA scheduler's sched_barriers, per group (each build checked once)."""
+        for group, kernels in self.groups.items():
+            for k in kernels:
+                for entry in k.device_caches.values():
+                    for ck in entry[0].values():
+                        if id(ck) not in self.seen:
+                            self.seen.add(id(ck))
+                            if "sched_barrier" not in ck.asm["amdgcn"]:
+                                self.unscheduled[group].append(ck.name)
+        return {f"{g}_unscheduled": len(v) for g, v in self.unscheduled.items()} | dict(new_builds=len(self.seen))
+
+    def post(self):
+        """v27 auto and v27 at 256 checked again after the graph replays; every workspace's flags and counts
+        re-armed. tile_sync (v24's layout, n = programs): (count, generation) pairs [0, 2n), L2 epoch flags
+        [2n, 3n) (they hold epochs), zero counts [3n, 5n)."""
+        import torch
+
+        res = {}
+        for name in ("v20", "v27t256"):
+            if name in self.ok_fns:
+                fn, lay = self.raw[name]
+                x, w, y = self.inp.sets[lay][0]
+                y.fill_(float("nan"))
+                res[f"{name}_post_ok"], _ = check(fn(x, w, y), self.inp.ref)
+        torch.cuda.synchronize()
+        left = 0
+        for _, locks, tile_sync, _ in self.mk._WORKSPACE.values():
+            n = locks.numel()
+            assert tile_sync.numel() == 5 * n, (tile_sync.numel(), n)
+            left += int((locks != 0).sum()) + int((tile_sync[:2 * n:2] != 0).sum()) + int((tile_sync[3 * n:] != 0).sum())
+        res["v20_flags_left"] = left
+        return res | self._count_unscheduled()
+
+    def free(self):
+        import torch
+
+        self.inp = self.fns = self.raw = None
+        torch.cuda.empty_cache()
+        return {}
+
+
+def renamed(resp, prefix):
+    """A V20Worker's reply with its v20* keys (and _used_v20*) under prefix, e.g. v26_ok."""
+    if not isinstance(resp, dict):
+        return resp
+    return {(k.replace("v20", prefix, 1) if k.startswith(("v20", "_used_v20")) else k): v for k, v in resp.items()}
+
+
 def worker_main(role):
-    w = AiterWorker() if role == "aiter" else V20Worker()
+    w = AiterWorker() if role == "aiter" else NewWorker() if role == "new" else V20Worker()
     send({"ready": True})
     for line in sys.stdin:
         req = json.loads(line)
@@ -660,6 +936,8 @@ def worker_main(role):
                 break
             else:
                 resp = getattr(w, req["cmd"])()
+            if role == "v26":
+                resp = renamed(resp, "v26")
             send({"ok": True, "data": resp})
         except Exception as e:  # noqa: BLE001
             import traceback
@@ -691,6 +969,23 @@ class Worker:
                 AITER_JIT_DIR=self.paths["jit"],
                 TRITON_CACHE_DIR=f"{HERE}/cache/aiter",
             )
+        elif self.role == "new":
+            env.update(
+                PYTHONPATH=f"{REPO}/scripts/triton_deepbind_shim:{TRITON39_PY}:{AITER_V2}",
+                AITER_JIT_DIR=os.path.join(HERE, "jit", "rocm724_v9new"),
+                TRITON_CACHE_DIR=f"{HERE}/cache/new",
+                V20CMP_SNAPSHOT=self.paths["snapshot"],
+            )
+        elif self.role == "v26":
+            # v26 capped as on 2026-10-12 (its snapshot, AITER's llirSched copy); no dp column.
+            env.update(
+                PYTHONPATH=f"{HVR}/shim:{TRITON_PY}:{AITER}",
+                TRITON_CACHE_DIR=f"{HERE}/cache/v20_aiter_sched",
+                V20CMP_SNAPSHOT=run_paths("v26")["snapshot"],
+                V20CMP_KERNEL="v26",
+                V20CMP_V20_SCHED="aiter",
+                V20CMP_NO_DP="1",
+            )
         elif os.environ.get("V20CMP_V20_SCHED") == "aiter":
             # The AITER worker's loader and AITER's opt-in llirSched copy, no amdgcnas hook; the
             # worker opts the tutorial kernels in.
@@ -712,7 +1007,7 @@ class Worker:
     def start(self):
         self.p = subprocess.Popen(
             [sys.executable, os.path.abspath(__file__), "worker", self.role],
-            cwd=A16 if self.role == "v20" else HERE, env=self.env(), stdin=subprocess.PIPE,
+            cwd=HERE if self.role == "aiter" else A16, env=self.env(), stdin=subprocess.PIPE,
             stdout=subprocess.PIPE, stderr=self.log, text=True, bufsize=1, start_new_session=True,
         )
         self.q = queue.Queue()
@@ -773,6 +1068,94 @@ def wait_idle():
     print(f"GPU {GPU_BDF} idle at {time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())}", flush=True)
 
 
+def kfd_gpu_id():
+    """The KFD gpu_id of the benchmark GPU (topology location_id = bus << 8 | device << 3 | function)."""
+    import glob
+    import re
+
+    for node in glob.glob("/sys/class/kfd/kfd/topology/nodes/*"):
+        with open(f"{node}/properties") as f:
+            m = re.search(r"location_id (\d+)", f.read())
+        if m and int(m.group(1)) >> 8 == GPU_PCI_BUS:
+            with open(f"{node}/gpu_id") as f:
+                return f.read().strip()
+    raise RuntimeError(f"no KFD node on PCI bus {GPU_PCI_BUS:#x}")
+
+
+class GpuGuard:
+    """Other processes on the benchmark GPU, from any container: KFD lists every process (host PIDs) with
+    its memory and CU occupancy per GPU. Our workers are the only ones allowed, so more holders than workers
+    means another job shares the card. A thread samples every 0.5 s; a shape timed while another job was seen
+    is re-timed. With tolerate_idle, holders that sat idle (no CU occupancy) for IDLE_TOLERATE samples while
+    ours were idle too are allowed; then another job is seen when a further holder appears or when two
+    holders occupy CUs at once (our workers run one at a time)."""
+
+    IDLE_TOLERATE = 120
+
+    def __init__(self, ours, tolerate_idle=False):
+        self.gpu_id, self.ours, self.seen, self.stop = kfd_gpu_id(), ours, 0, False
+        self.allowed, self.tolerate_idle = ours, tolerate_idle
+        threading.Thread(target=self._watch, daemon=True).start()
+
+    def sample(self):
+        """(holders, holders with CUs occupied)."""
+        import glob
+
+        n = busy = 0
+        for d in glob.glob("/sys/class/kfd/kfd/proc/*"):
+            try:
+                with open(f"{d}/vram_{self.gpu_id}") as f:
+                    if int(f.read()) == 0:
+                        continue
+                n += 1
+                with open(f"{d}/stats_{self.gpu_id}/cu_occupancy") as f:
+                    busy += int(f.read()) > 0
+            except (OSError, ValueError):
+                pass
+        return n, busy
+
+    def holders(self):
+        return self.sample()[0]
+
+    def _watch(self):
+        while not self.stop:
+            n, busy = self.sample()
+            if n > self.allowed or (self.allowed > self.ours and busy > 1):
+                self.seen += 1
+            self.allowed = max(self.ours, min(self.allowed, n))
+            time.sleep(0.5)
+
+    def wait_alone(self):
+        """If another job holds the card, block until it has been ours alone for 30 s, or (tolerate_idle) until
+        every holder has been idle for IDLE_TOLERATE samples, which allows those holders."""
+        if self.holders() <= self.allowed:
+            return
+        quiet = idle = 0
+        said = False
+        while quiet < 60:
+            n, busy = self.sample()
+            if n > self.allowed:
+                quiet = 0
+                idle = idle + 1 if busy == 0 else 0
+                if self.tolerate_idle and idle >= self.IDLE_TOLERATE:
+                    self.allowed = n
+                    print(f"GPU {GPU_BDF}: {n - self.ours} other holder(s) idle for {idle // 2} s, allowed "
+                          f"({time.strftime('%H:%M:%S')})", flush=True)
+                    return
+                if not said:
+                    print(f"another process holds memory on GPU {GPU_BDF}, waiting "
+                          f"({time.strftime('%H:%M:%S')})", flush=True)
+                    said = True
+            else:
+                quiet += 1
+            time.sleep(0.5)
+        if said:
+            print(f"GPU {GPU_BDF} ours alone again at {time.strftime('%H:%M:%S')}", flush=True)
+
+
+GUARD_REDOS = 5
+
+
 def tflops(M, N, K, ms):
     return round(2.0 * M * N * K / statistics.median(ms) * 1e-9, 1) if ms else float("nan")
 
@@ -788,10 +1171,12 @@ def run_shape(s, rounds, workers):
     pad = bool(os.environ.get("V20CMP_PAD"))
     realloc = bool(os.environ.get("V20CMP_REALLOC"))
     notes, res, used = [], {}, {}
+    v27 = "new" in workers
     ms = {n: [] for n in ("pick", "v9", "v20", "v20_dp", "v20_capped", "v20_two_tile")
           + (("v20_rule",) if rule else ()) + (("hbl",) if capped else ())
-          + (PAD_NAMES if pad else ())}
-    roles = [role for role in ("aiter", "v20") if role in workers]
+          + (PAD_NAMES if pad else ()) + (V27_NAMES if v27 else ())
+          + (pick_names() if v27 and os.environ.get("V20CMP_V27_PICKS") else ())}
+    roles = [role for role in ("aiter", "v20", "v26", "new") if role in workers]
     # A worker that failed is restarted without this shape's inputs, so it sits out the rest of it.
     dead = set()
 
@@ -814,7 +1199,7 @@ def run_shape(s, rounds, workers):
                 res[k] = v
             elif k.endswith("_ok"):
                 res[k] = bool(res[k]) and bool(v)
-            elif k.endswith("_maxerr"):
+            elif k.endswith(("_maxerr", "_mratio")):
                 res[k] = v if v != v or res[k] != res[k] else max(res[k], v)
 
     # --realloc: every round gets fresh inputs (new buffers), so a timing that depends on where the
@@ -831,7 +1216,10 @@ def run_shape(s, rounds, workers):
                     used[name[6:]] = min(used.get(name[6:], x), x)
                 elif name in ms:
                     ms[name].append(x)
-    post = guarded("v20", "post")
+    post = {}
+    for role in ("v20", "v26", "new"):
+        if role in workers:
+            post.update(guarded(role, "post") or {})
     for role in roles:
         guarded(role, "free")
 
@@ -874,6 +1262,8 @@ def run_shape(s, rounds, workers):
         **(dict(v20_v9_delegated=res.get("v20_v9_delegated", ""),
                 v20_kernels_launched=res.get("v20_kernels_launched", "")) if capped else {}),
         **(pad_columns(M, N, K, ms, res, post) if pad else {}),
+        **(v27_columns(M, N, K, ms, res, post) if v27 else {}),
+        **({f"{n}_mratio": f"{res.get(f'{n}_mratio', float('nan')):.3g}" for n in ms} if MEAN_RATIO else {}),
         **{f"{n}_ms": " ".join(f"{x:.4f}" for x in ms[n]) for n in ms},
         **{f"{n}_spread": spread(ms[n]) for n in ms},
         note="; ".join(notes),
@@ -882,6 +1272,47 @@ def run_shape(s, rounds, workers):
 
 
 PAD_NAMES = ("pick_pad", "v9_pad", "hbl_pad", "v20_pad", "v20_dp_pad")
+V27_NAMES = ("v9new", "v26", "v27t256")
+# --v27-picks: the worst10 sweep's best point, the best points at its next two tiles, and the best point with fp32
+# partials, per shape; x5-x7 are spare slots for other comparisons.
+PICK_SLOTS = ("best", "tile2", "tile3", "fp32", "x5", "x6", "x7")
+PICK_OPTION_KEYS = ("STREAMK_POLICY", "STREAMK_NUM_PROGRAMS", "STREAMK_FIXUP", "STREAMK_PARTIALS",
+                    "STREAMK_COMPACT_GRID", "STREAMK_PERSISTENT_PROGRAMS")
+
+
+def pick_slots():
+    """The --v27-picks slots: PICK_SLOTS, or V20CMP_PICK_SLOTS (the driver sets it from the picks CSV when that has
+    slots outside PICK_SLOTS)."""
+    env = os.environ.get("V20CMP_PICK_SLOTS")
+    return tuple(env.split(",")) if env else PICK_SLOTS
+
+
+def pick_names():
+    return tuple(f"pk_{s}" for s in pick_slots())
+
+
+def v27_columns(M, N, K, ms, res, post):
+    """--kernel v27's extra columns: v27 auto's tile (v20_*), the new v9, v26 and v27 at 256x256x64."""
+    cols = dict(v20_tile=res.get("v20_tile", ""), v20_tile_tiles=res.get("v20_tile_tiles", ""),
+                v20_tile_S=res.get("v20_tile_S", ""), v9new_tile=res.get("v9new_tile", ""),
+                v26_label=res.get("v26_label", ""), v26_policy=res.get("v26_policy", ""),
+                v26_v9_delegated=res.get("v26_v9_delegated", ""), v27t256_label=res.get("v27t256_label", ""),
+                v27t256_v9_delegated=res.get("v27t256_v9_delegated", ""))
+    for n in V27_NAMES:
+        cols[f"{n}_tflops"] = tflops(M, N, K, ms[n])
+        cols[f"{n}_ok"] = res.get(f"{n}_ok", False)
+        cols[f"{n}_maxerr"] = f"{res.get(f'{n}_maxerr', float('nan')):.3g}"
+    cols.update(v26_post_ok=post.get("v26_post_ok", False), v26_flags_left=post.get("v26_flags_left", ""),
+                v27t256_post_ok=post.get("v27t256_post_ok", False),
+                v9new_unscheduled=post.get("v9new_unscheduled", ""), v27_unscheduled=post.get("v27_unscheduled", ""),
+                new_builds=post.get("new_builds", ""), v26_kernels_launched=res.get("v26_kernels_launched", ""))
+    if os.environ.get("V20CMP_V27_PICKS"):
+        for s in pick_slots():
+            n = f"pk_{s}"
+            cols.update({f"{n}_kind": res.get(f"{n}_kind", ""), f"{n}_tile": res.get(f"{n}_tile", ""),
+                         f"{n}_tflops": tflops(M, N, K, ms[n]), f"{n}_ok": res.get(f"{n}_ok", ""),
+                         f"{n}_maxerr": f"{res.get(f'{n}_maxerr', float('nan')):.3g}"})
+    return cols
 
 
 def spread(ms):
@@ -906,7 +1337,7 @@ def pad_columns(M, N, K, ms, res, post):
 
 
 def sweep(args):
-    global V20_LIVE, V9_LIVE
+    global V20_LIVE, V9_LIVE, MEAN_RATIO
     assert args.v20_only or os.environ.get("V20CMP_ENV") == "rocm724", "run through run_rocm724_v20.sh"
     os.environ["V20CMP_KERNEL"] = args.kernel
     V20_LIVE = os.path.join(A16, KERNELS[args.kernel][0], "matmul_kernel.py")
@@ -940,10 +1371,34 @@ def sweep(args):
         os.environ["V20CMP_REALLOC_WS"] = "1"
     os.environ["STREAMK_P_PAD"] = str(args.p_pad)
     os.environ["V20CMP_V20_SCHED"] = args.v20_sched
+    skip = [n for n in (args.skip or "").split(",") if n]
+    assert all(n in SKIPPABLE for n in skip), f"--skip takes {', '.join(SKIPPABLE)}"
+    os.environ["V20CMP_SKIP"] = ",".join(skip)
     os.environ["V20CMP_SNAPSHOT_SHA"] = sha256(snap)
+    v27 = args.kernel in NEW_KERNELS
+    if v27:
+        assert args.headline == "capped" and not args.pad512, "--kernel v27 runs the capped headline, contiguous only"
+        if args.v20_only:
+            # v27 auto and its data-parallel column alone, in the Triton 3.9 worker.
+            os.environ["V20CMP_V20_ONLY"] = "1"
+        if args.v27_picks:
+            os.environ["V20CMP_V27_PICKS"] = os.path.abspath(args.v27_picks)
+            slots = []
+            for r in csv.DictReader(open(args.v27_picks)):
+                if r["slot"] not in slots:
+                    slots.append(r["slot"])
+            if not set(slots) <= set(PICK_SLOTS):
+                os.environ["V20CMP_PICK_SLOTS"] = ",".join(slots)
+    else:
+        assert not args.v27_picks, "--v27-picks needs --kernel v27 or v28"
+    if args.mean_ratio:
+        os.environ["V20CMP_MEAN_RATIO"] = "1"
+        MEAN_RATIO = True
     wait_idle()
     log = open(paths["log"], "a")
-    workers = {role: Worker(role, log, paths) for role in (("v20",) if args.v20_only else ("aiter", "v20"))}
+    roles = (("new",) if v27 else ("v20",)) if args.v20_only else ("aiter", "v26", "new") if v27 else ("aiter", "v20")
+    roles = tuple(r for r in roles if not skipped(r))
+    workers = {role: Worker(role, log, paths) for role in roles}
     info = {role: w.call("info") for role, w in workers.items()}
     worklog = os.path.join(os.path.dirname(V20_LIVE), "WORKLOG.md")
     with open(worklog) as f:
@@ -956,7 +1411,12 @@ def sweep(args):
                        pad_bytes=PAD_BYTES if args.pad512 else 0, realloc=args.realloc,
                        realloc_workspace=args.realloc_workspace, streamk_p_pad=args.p_pad,
                        v20_sched=args.v20_sched, kernel=args.kernel, kernel_name=KERNELS[args.kernel][1],
-                       v9_handoff=KERNELS[args.kernel][3], hip_device=GPU)
+                       v9_handoff=KERNELS[args.kernel][3], hip_device=GPU, skip=",".join(skip))
+    if v27:
+        v26_snap = run_paths("v26")["snapshot"]
+        info["run"].update(v26_snapshot=v26_snap, v26_snapshot_sha256_at_start=sha256(v26_snap),
+                           v26_handoff_sha256_at_start=sha256(os.path.join(A16, "v9_ragged", "matmul_kernel.py")),
+                           aiter_v2=AITER_V2, triton39=TRITON39_PY, v27_tile="auto", v27t256_tile=V27_TILE_256)
     for role, i in info.items():
         print(f"{role}: " + " ".join(f"{k}={v}" for k, v in i.items()), flush=True)
     with open(paths["envinfo"], "w") as f:
@@ -964,18 +1424,34 @@ def sweep(args):
 
     out = args.out or paths["details"]
     done = {key(r["M"], r["N"], r["K"], r["out"]) for r in read_rows(out)}
-    shapes = load_shapes()
+    shapes = load_shapes(args.shapes)
     only = {int(i) for i in args.only.split(",")} if args.only else None
+    guard = GpuGuard(len(workers), args.guard_tolerate_idle) if args.gpu_guard else None
     t0 = time.time()
     try:
         for i, s in enumerate(shapes):
             if key(s["M"], s["N"], s["K"], s["out"]) in done or (only is not None and i not in only):
                 continue
-            row = run_shape(s, args.rounds, workers)
+            for redo in range(GUARD_REDOS + 1):
+                if guard:
+                    guard.wait_alone()
+                    seen = guard.seen
+                row = run_shape(s, args.rounds, workers)
+                if guard is None or guard.seen == seen:
+                    break
+                print(f"[{i + 1}/{len(shapes)}] {s['M']}x{s['N']}x{s['K']}: another process was on the GPU "
+                      "while timing, re-timing", flush=True)
+            if guard:
+                row["guard_redos"] = redo
+                if guard.allowed > guard.ours:
+                    row["note"] = "; ".join(x for x in (row["note"], f"{guard.allowed - guard.ours} idle other "
+                                                        "holder(s) allowed") if x)
+                if guard.seen != seen:
+                    row["note"] = "; ".join(x for x in (row["note"], "another process on the GPU in every attempt") if x)
             append_row(out, row)
             flags = "".join(
                 f" {n.upper()}-WRONG" for n in (("v20",) if args.v20_only else ("pick", "v9", "v20"))
-                if str(row[f"{n}_ok"]) != "True"
+                if str(row[f"{n}_ok"]) != "True" and not skipped(n)
             )
             flags += "".join(f" {n.upper()}-WRONG" for n in ("v20_capped", "v20_two_tile", "v20_rule")
                              if str(row.get(f"{n}_ok")) == "False")
@@ -995,9 +1471,27 @@ def sweep(args):
             if args.rule_policy:
                 extra += f" rule: {row['v20_rule_label']}"
             if args.headline == "capped":
-                flags += "" if str(row["hbl_ok"]) == "True" else " HBL-WRONG"
+                flags += "" if str(row["hbl_ok"]) == "True" or args.v20_only else " HBL-WRONG"
                 rot = f" copies {row['rot_copies']} (used >= {row['rot_used_min']})" if args.rotating_mb else ""
                 deleg = " ->v9" if str(row["v20_v9_delegated"]) == "True" else ""
+                if v27 and args.v27_picks:
+                    flags += "".join(f" {n.upper()}-WRONG" for n in pick_names() if str(row[f"{n}_ok"]) == "False")
+                    rot += "".join(f" | {s} {row[f'pk_{s}_tflops']:.1f} ({row[f'pk_{s}_kind']} {row[f'pk_{s}_tile']})"
+                                   for s in pick_slots() if row[f"pk_{s}_kind"])
+                if v27 and args.v20_only:
+                    deleg = f", {row['v20_tile']}{deleg}"
+                elif v27:
+                    flags += "".join(f" {n.upper()}-WRONG" for n in V27_NAMES
+                                     if str(row[f"{n}_ok"]) != "True" and not skipped(n))
+                    flags += "".join(f" {n.upper()}-POST" for n in ("v26", "v27t256")
+                                     if str(row[f"{n}_post_ok"]) != "True" and not skipped(n))
+                    flags += ("" if str(row["v26_flags_left"]) == "0" or skipped("v26")
+                              else f" V26-FLAGS({row['v26_flags_left']})")
+                    flags += "".join(f" {g.upper()}-UNSCHEDULED({row[f'{g}_unscheduled']})" for g in ("v9new", "v27")
+                                     if str(row[f"{g}_unscheduled"]) != "0")
+                    deleg = f", {row['v20_tile']}{deleg}"
+                    rot += (f" | v9new {row['v9new_tflops']:.1f} ({row['v9new_tile']}) v26 {row['v26_tflops']:.1f} "
+                            f"t256 {row['v27t256_tflops']:.1f} builds {row['new_builds']}")
                 padded = (f" | pad: pick {row['pick_pad_tflops']:.1f} hbl {row['hbl_pad_tflops']:.1f} "
                           f"v9 {row['v9_pad_tflops']:.1f} v20 {row['v20_pad_tflops']:.1f} "
                           f"(spread v20 {row['v20_spread']:.1f}%/{row['v20_pad_spread']:.1f}%)") if args.pad512 else ""
@@ -1019,8 +1513,16 @@ def sweep(args):
                 flush=True,
             )
     finally:
+        if guard:
+            guard.stop = True
         for w in workers.values():
             w.kill()
+        if v27:
+            info["run"].update(v20_live_sha256_at_end=sha256(V20_LIVE), v9_live_sha256_at_end=sha256(V9_LIVE),
+                               v26_snapshot_sha256_at_end=sha256(run_paths("v26")["snapshot"]),
+                               v26_handoff_sha256_at_end=sha256(os.path.join(A16, "v9_ragged", "matmul_kernel.py")))
+            with open(paths["envinfo"], "w") as f:
+                json.dump(info, f, indent=2)
     print("DONE", flush=True)
 
 
@@ -1532,6 +2034,8 @@ def main():
                         "(no run_rocm724_v20.sh); the AITER and v9 columns stay empty")
     s.add_argument("--rounds", type=int, default=2)
     s.add_argument("--only", default=None, help="comma-separated 0-based shape indices")
+    s.add_argument("--shapes", default=None,
+                   help="a shapes CSV with M, N, K, bias, out, scope, band (default supported_status_scoped.csv)")
     s.add_argument("--out", default=None, help="details CSV (default results/details[_TAG].csv)")
     s.add_argument("--headline", choices=["auto", "capped"], default="auto",
                    help="capped: v20 is STREAMK_POLICY=capped on every shape (dp as a diagnostic where it "
@@ -1556,8 +2060,24 @@ def main():
                    help="STREAMK_P_PAD: bytes of padding after each program's partial slot in P")
     s.add_argument("--kernel", choices=sorted(KERNELS), default="v20",
                    help="the tutorial stream-K kernel timed as streamk_wip (columns v20_*)")
+    s.add_argument("--gpu-guard", action="store_true",
+                   help="wait while any other process holds memory on the GPU, and re-time a shape (up to "
+                        f"{GUARD_REDOS} times) when one appeared during it; column guard_redos")
+    s.add_argument("--guard-tolerate-idle", action="store_true",
+                   help="with --gpu-guard: allow other holders once all have been idle (no CU occupancy) for "
+                        f"{GpuGuard.IDLE_TOLERATE // 2} s, and re-time a shape if a further holder appears or two "
+                        "holders occupy CUs at once; such rows say so in note")
+    s.add_argument("--skip", default=None,
+                   help=f"comma-separated columns not to run ({', '.join(SKIPPABLE)}); v26 also leaves its worker "
+                        "out. Their columns stay in the CSV, empty")
+    s.add_argument("--v27-picks", default=None,
+                   help="with --kernel v27: a CSV of M, N, K, slot (best, tile2, tile3, fp32), kind, tile, runner (v27 or "
+                        "v9_tile), spec and options (JSON STREAMK_* settings); each shape's picks are timed too, "
+                        "as columns pk_<slot>_*")
+    s.add_argument("--mean-ratio", action="store_true",
+                   help="also record every output's mean_ratio against the fp32 reference (columns *_mratio)")
     w = sub.add_parser("worker")
-    w.add_argument("role", choices=["aiter", "v20"])
+    w.add_argument("role", choices=["aiter", "v20", "v26", "new"])
     r = sub.add_parser("report")
     r.add_argument("--tag", default="")
     r.add_argument("--details", default=None, help="default results/details[_TAG].csv")

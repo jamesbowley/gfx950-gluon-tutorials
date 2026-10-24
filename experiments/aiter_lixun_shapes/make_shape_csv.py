@@ -69,27 +69,38 @@ def state_cols(r):
         tp = fnum(r["v20_pad_tflops"])
         cols.update(streamk_padded_tflops=r1(tp), streamk_padded_vs_best_pct=r2(pct(tp, b["best"])),
                     streamk_padded_spread_pct=r.get("v20_pad_spread", ""))
+    if "v9new_tflops" in r:
+        # --kernel v27: streamk is v27 auto; v26, v27 at 256x256x64 and the new AITER v9 from the same run.
+        v26, t256, v9new = fnum(r["v26_tflops"]), fnum(r["v27t256_tflops"]), fnum(r["v9new_tflops"])
+        cols.update(streamk_tile=r["v20_tile"], streamk_tile_S=r["v20_tile_S"], v26_tflops=r1(v26),
+                    v26_config=r["v26_label"] + (", handed to v9" if str(r["v26_v9_delegated"]) == "True" else ""),
+                    v27_256_tflops=r1(t256), v9new_tflops=r1(v9new), v9new_tile=r["v9new_tile"],
+                    streamk_vs_v26_pct=r2(pct(t["v20"], v26)), v27_256_vs_v26_pct=r2(pct(t256, v26)),
+                    streamk_vs_v27_256_pct=r2(pct(t["v20"], t256)), v26_vs_best_pct=r2(pct(v26, b["best"])),
+                    v9new_vs_best_pct=r2(pct(v9new, b["best"])), v9new_vs_v9_pct=r2(pct(v9new, t["v9"])),
+                    streamk_vs_v9new_pct=r2(pct(t["v20"], v9new)))
     return cols
 
 
 def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    p.add_argument("--warm", required=True)
+    p.add_argument("--warm", default=None, help="omit for a cold-only run")
     p.add_argument("--cold", required=True)
     p.add_argument("--out", required=True)
     args = p.parse_args()
     shapes = {key(s["M"], s["N"], s["K"], s["out"]): s for s in read_rows(SHAPES_CSV)}
-    warm = {key(r["M"], r["N"], r["K"], r["out"]): r for r in read_rows(args.warm)}
+    warm = {key(r["M"], r["N"], r["K"], r["out"]): r for r in read_rows(args.warm)} if args.warm else None
     cold = {key(r["M"], r["N"], r["K"], r["out"]): r for r in read_rows(args.cold)}
     out = []
     for k, s in shapes.items():
-        w = warm.get(k)
+        w = (warm if warm is not None else cold).get(k)
         if not w:
             continue
         row = dict(M=s["M"], N=s["N"], K=s["K"], bias=s["bias"], out=s["out"], src=w["src"], AI=s["AI"],
                    tiles=w["tiles"], waves=w["waves"], S=w["S"], k_steps=w["k_steps"], scope=s["scope"],
                    band=s["band"])
-        row.update({f"warm_{c}": v for c, v in state_cols(w).items()})
+        if warm is not None:
+            row.update({f"warm_{c}": v for c, v in state_cols(w).items()})
         if k in cold:
             row.update({f"cold_{c}": v for c, v in state_cols(cold[k]).items()})
         out.append(row)

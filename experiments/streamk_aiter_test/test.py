@@ -54,6 +54,10 @@ run on v25 (v24's code on these aligned shapes; experiments/streamk_split_count/
 The fastest of these per shape is the per-shape tuned choice; a rule's loss is its kernel time over that.
 Nothing measured here feeds back into a rule. Rows record the tile (256x256x64), the program count (256)
 and the layout, so later sweeps at other tiles share the format.
+
+`v27 capped @TILE` rows: v27 as deployed (its capped rule, in that tile's k-steps, tile count and programs) at
+the tiles of V27_TILES, next to `v26 capped`. They are left out of the per-shape fastest choice, so the rules'
+losses stay as before, and reported as their own columns.
 """
 
 import argparse
@@ -86,8 +90,9 @@ LAYOUT = "contiguous"
 TAG = "CHECK_CASE "
 ENV_KEYS = ("STREAMK_NUM_PROGRAMS", "STREAMK_POLICY", "STREAMK_FIXUP", "STREAMK_BALANCE_XCDS", "GEMM_TILE_LIMIT",
             "STREAMK_PARTIALS", "STREAMK_RS_READERS", "STREAMK_EXCHANGE", "STREAMK_PLACEMENT", "STREAMK_XCD_LOCAL",
-            "STREAMK_FORCE_EDGE", "V9_FORCE_EDGE")
+            "STREAMK_FORCE_EDGE", "V9_FORCE_EDGE", "STREAMK_TILE")
 SPLITS = {"v24 rs": "rs", "v24 owner": "owner"}
+V27_TILES = ("256x128", "128x256", "128x128x128")
 
 
 def shapes():
@@ -167,6 +172,10 @@ def cases():
                 yield base | dict(config="v26 spread", n="-", snp=None, v=26, env={"STREAMK_POLICY": "spread"})
         if fz3:
             yield base | dict(config="v26 capped", n="-", snp=None, v=26, env={})
+        for t in V27_TILES:
+            bm, bn, *bk = (int(x) for x in t.split("x"))
+            yield base | dict(config=f"v27 capped @{t}", n="-", snp=None, v=27, env={"STREAMK_TILE": t},
+                              tile=[bm, bn, bk[0] if bk else 64])
         added = set()
         for name in ("v2", "v2-sqrt", "v3"):
             if name not in rules:
@@ -210,6 +219,9 @@ def run():
     path = os.path.join(RESULTS, "test.jsonl")
     done = {key(r) for r in load("test.jsonl")}
     todo = [c for c in cases() if key(c) not in done]
+    # SWEEP_SHARD=i/n: this process runs every n-th case from the i-th (one process per GPU).
+    shard, _, count = os.environ.get("SWEEP_SHARD", "0/1").partition("/")
+    todo = todo[int(shard)::int(count)]
     print(f"{len(todo)} cases to run", flush=True)
     todo = todo[:int(os.environ.get("SWEEP_MAX_CASES", len(todo)))]
     for i, c in enumerate(todo):
@@ -235,7 +247,8 @@ def check_worker(K, group):
             os.environ.pop(k, None)
         os.environ.update({k: v for k, v in case_env(c).items() if k in ENV_KEYS})
         name = {9: "v9_beyond_hotloop", 13: "v13_persistant_peel_acc", 24: "v24_streamk_combined",
-                25: "v25_streamk_ragged_mn", 26: "v26_streamk_ragged_k", "9r": "v9_ragged"}[c["v"]]
+                25: "v25_streamk_ragged_mn", 26: "v26_streamk_ragged_k", 27: "v27_streamk_tile",
+                "9r": "v9_ragged"}[c["v"]]
         mk = mods.setdefault(name, importlib.import_module(f"{name}.matmul_kernel"))
         res = {"wrong": 0, "error": None}
         try:
@@ -259,14 +272,37 @@ def untimed():
     return [c for c in cases() if key(c) not in done]
 
 
-def check(jobs):
+def pool(select):
+    """The cases to check: untimed (default), or v27-below: every v27 row on the shapes with less than one wave
+    of 256x256 tiles (re-checks after a v27 change)."""
+    if select == "v27-below":
+        return [c for c in cases() if c["v"] == 27 and c["tiles"] < PROGRAMS]
+    return untimed()
+
+
+def check(jobs, select="untimed"):
+    import queue
+
     groups = {}
-    for c in untimed():
+    for c in pool(select):
         groups.setdefault(c["K"], []).append(c)
+    # CHECK_GPUS=0,1,...: one worker per GPU at a time (else all share HIP_VISIBLE_DEVICES).
+    gpus = queue.Queue()
+    pinned = [g for g in os.environ.get("CHECK_GPUS", "").split(",") if g]
+    for g in pinned:
+        gpus.put(g)
+    if pinned:
+        jobs = len(pinned)
 
     def launch(K):
-        proc = subprocess.run([sys.executable, "-W", "ignore", os.path.abspath(__file__), "check_worker", str(K)],
-                              capture_output=True, text=True)
+        g = gpus.get() if pinned else None
+        env = dict(os.environ, **({"HIP_VISIBLE_DEVICES": g} if g else {}))
+        try:
+            proc = subprocess.run([sys.executable, "-W", "ignore", os.path.abspath(__file__), "check_worker", str(K),
+                                   "--select", select], capture_output=True, text=True, env=env)
+        finally:
+            if g:
+                gpus.put(g)
         return K, proc.stdout, proc.returncode
 
     rows = []
@@ -314,7 +350,7 @@ def report():
     for (M, N, K), cell in sorted(by_shape.items()):
         r0 = next(iter(cell.values()))
         tiles, S = r0["tiles"], r0["S"]
-        best = min(cell.values(), key=lambda r: r["us"])
+        best = min((r for k, r in cell.items() if not k[0].startswith("v27")), key=lambda r: r["us"])
         dp = cell.get(("dp", "-"))
         cap = cell.get(("v24 capped", "-"))
         fit = {v: rule_row(cell, rules[v](S, K, tiles), S, K, tiles, v != "v1" and v9r_above, SPREAD_ROW[v])
@@ -329,9 +365,13 @@ def report():
             rec[v + "_choice"] = (fit[v]["config"], fit[v]["n"])
         if ("v26 capped", "-") in cell:
             rec["v26 deployed"] = cell[("v26 capped", "-")]["us"] / best["us"]
+        for t in V27_TILES:
+            if (f"v27 capped @{t}", "-") in cell:
+                rec[f"v27 @{t}"] = cell[(f"v27 capped @{t}", "-")]["us"] / best["us"]
         detail.append(rec)
     deployed = bool(detail) and all("v26 deployed" in r for r in detail)
     cols = names + (["v26 deployed"] if deployed else [])
+    cols += [f"v27 @{t}" for t in V27_TILES if detail and all(f"v27 @{t}" in r for r in detail)]
 
     def q(xs, f):
         xs = sorted(xs)
@@ -406,6 +446,7 @@ def main():
     p.add_argument("stage", choices=["cases", "todo", "check", "check_worker", "run", "report"])
     p.add_argument("arg", nargs="?")
     p.add_argument("--jobs", type=int, default=3)
+    p.add_argument("--select", default="untimed", choices=["untimed", "v27-below"], help="check: which cases (pool)")
     a = p.parse_args()
     if a.stage == "cases":
         cs = list(cases())
@@ -415,10 +456,10 @@ def main():
         done = {key(r) for r in load("test.jsonl")}
         print(sum(key(c) not in done for c in cases()))
     elif a.stage == "check":
-        check(a.jobs)
+        check(a.jobs, a.select)
     elif a.stage == "check_worker":
         K = int(a.arg)
-        check_worker(K, [c for c in untimed() if c["K"] == K])
+        check_worker(K, [c for c in pool(a.select) if c["K"] == K])
     elif a.stage == "run":
         run()
     else:

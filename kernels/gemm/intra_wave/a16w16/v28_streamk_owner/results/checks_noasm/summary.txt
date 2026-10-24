@@ -1,0 +1,5 @@
+05:08:40 b 128x128x64 fp32: PASS (88 configurations)
+05:09:06 b 128x128x128 fp32: PASS (88 configurations)
+05:09:33 b 256x128x64 fp32: PASS (88 configurations)
+05:09:53 b 128x128x128 no-full fp32: PASS (60 configurations)
+05:10:13 b 256x256x64 no-full fp32: PASS (60 configurations)

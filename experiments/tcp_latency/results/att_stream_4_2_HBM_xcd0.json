@@ -1,0 +1,100 @@
+{
+ "ui": "/home/jbowley/repos/gfx950-gluon-tutorials/experiments/tcp_latency/tmp/att/stream_4_2_HBM_xcd0/ui_output_agent_30252_dispatch_35",
+ "waves": 8,
+ "ses": [
+  0,
+  2
+ ],
+ "ghz_realtime": 2.397,
+ "loads_per_wave": 8192.0,
+ "loads_per_cu": 32768.0,
+ "stretched_loads_per_cu": 1.5,
+ "stretch_threshold_cyc": 16,
+ "L_exact": {
+  "n": 28542,
+  "p10": 928.0,
+  "p50": 1100.0,
+  "p90": 1440.0,
+  "p50_ns": 459.0
+ },
+ "L_bound": {
+  "n": 28802,
+  "p10": 968.0,
+  "p50": 1180.0,
+  "p90": 1488.0
+ },
+ "dk_median": {},
+ "k_match": null,
+ "dk_at": {
+  "32": null,
+  "44": null,
+  "48": null
+ },
+ "per_wave": [
+  {
+   "name": "se0_sm0_sl0_wv0.json",
+   "se": 0,
+   "vmem_ops": 8192,
+   "loads": 8192,
+   "exact": 3542,
+   "bound": 3626
+  },
+  {
+   "name": "se0_sm1_sl0_wv0.json",
+   "se": 0,
+   "vmem_ops": 8193,
+   "loads": 8192,
+   "exact": 3577,
+   "bound": 3591
+  },
+  {
+   "name": "se0_sm2_sl0_wv0.json",
+   "se": 0,
+   "vmem_ops": 8192,
+   "loads": 8192,
+   "exact": 3612,
+   "bound": 3556
+  },
+  {
+   "name": "se0_sm3_sl0_wv0.json",
+   "se": 0,
+   "vmem_ops": 8192,
+   "loads": 8192,
+   "exact": 3634,
+   "bound": 3534
+  },
+  {
+   "name": "se2_sm0_sl0_wv0.json",
+   "se": 2,
+   "vmem_ops": 8192,
+   "loads": 8192,
+   "exact": 3580,
+   "bound": 3588
+  },
+  {
+   "name": "se2_sm1_sl0_wv0.json",
+   "se": 2,
+   "vmem_ops": 8193,
+   "loads": 8192,
+   "exact": 3500,
+   "bound": 3668
+  },
+  {
+   "name": "se2_sm2_sl0_wv0.json",
+   "se": 2,
+   "vmem_ops": 8192,
+   "loads": 8192,
+   "exact": 3646,
+   "bound": 3522
+  },
+  {
+   "name": "se2_sm3_sl0_wv0.json",
+   "se": 2,
+   "vmem_ops": 8192,
+   "loads": 8192,
+   "exact": 3451,
+   "bound": 3717
+  }
+ ],
+ "name": "stream_4_2_HBM_xcd0"
+}

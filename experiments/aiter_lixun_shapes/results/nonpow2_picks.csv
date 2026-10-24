@@ -1,0 +1,22 @@
+M,N,K,group,slot,kind,tile,runner,spec,options
+5120,2048,1536,nonpow2,best,dp,160x256x64,v9_tile,160x256x64,{}
+5120,2048,1536,nonpow2,tile3,dp,256x256x64,v9_tile,256x256x64,{}
+2304,2048,4096,nonpow2,best,dp,160x128x128,v9_tile,160x128x128,{}
+2304,2048,4096,nonpow2,tile2,dp,160x128x64,v9_tile,160x128x64,{}
+2304,2048,4096,nonpow2,tile3,sp,256x128x64,v27,,"{""STREAMK_POLICY"": ""spread""}"
+512,10240,4096,nonpow2,best,dp,192x128x64,v9_tile,192x128x64,{}
+512,10240,4096,nonpow2,tile3,sp,256x128x64,v27,,"{""STREAMK_POLICY"": ""spread""}"
+10240,512,4096,nonpow2,best,dp,160x128x128,v9_tile,160x128x128,{}
+10240,512,4096,nonpow2,tile2,dp,160x128x64,v9_tile,160x128x64,{}
+10240,512,4096,nonpow2,tile3,sp,128x256x64,v27,,"{""STREAMK_POLICY"": ""spread""}"
+5120,1024,4096,nonpow2,best,dp,160x128x128,v9_tile,160x128x128,{}
+5120,1024,4096,nonpow2,tile2,dp,160x128x64,v9_tile,160x128x64,{}
+5120,1024,4096,nonpow2,tile3,dp,128x128x64,v9_tile,128x128x64,{}
+5120,4096,1024,nonpow2,best,dp,160x256x64,v9_tile,160x256x64,{}
+5120,4096,1024,nonpow2,tile3,dp,128x128x64,v9_tile,128x128x64,{}
+4352,1024,4096,nonpow2,best,dp,160x128x128,v9_tile,160x128x128,{}
+4352,1024,4096,nonpow2,tile2,dp,160x128x64,v9_tile,160x128x64,{}
+4352,1024,4096,nonpow2,tile3,rs8,128x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""128"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_POLICY"": ""one_tile""}"
+2560,2048,4096,nonpow2,best,dp,160x128x128,v9_tile,160x128x128,{}
+2560,2048,4096,nonpow2,tile2,dp,160x128x64,v9_tile,160x128x64,{}
+2560,2048,4096,nonpow2,tile3,dp,128x128x64,v9_tile,128x128x64,{}

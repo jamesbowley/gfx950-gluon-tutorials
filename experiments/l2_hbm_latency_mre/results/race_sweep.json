@@ -1,0 +1,966 @@
+{
+ "roles": {
+  "target": {
+   "xcc": 0,
+   "se": 0,
+   "cu": 0
+  },
+  "same_xcd": {
+   "xcc": 0,
+   "se": 1,
+   "cu": 5
+  },
+  "other_xcd": {
+   "xcc": 1,
+   "se": 0,
+   "cu": 0
+  }
+ },
+ "rows": [
+  {
+   "place": 1,
+   "delta": 0,
+   "counts": [
+    2,
+    2,
+    0,
+    0
+   ],
+   "ghz": 2.4026,
+   "leader": [
+    1224.0
+   ],
+   "follower_n": 32,
+   "follower": 1218.0,
+   "follower_p10": 984.8,
+   "follower_p90": 1299.2,
+   "gap_ticks": 0.0,
+   "gap_cycles": 0.0,
+   "leader_late_ticks": 8.0
+  },
+  {
+   "place": 1,
+   "delta": 2,
+   "counts": [
+    2,
+    2,
+    0,
+    0
+   ],
+   "ghz": 2.4010000000000002,
+   "leader": [
+    1216.0
+   ],
+   "follower_n": 32,
+   "follower": 1120.0,
+   "follower_p10": 872.8,
+   "follower_p90": 1328.8000000000002,
+   "gap_ticks": 4.0,
+   "gap_cycles": 96.04,
+   "leader_late_ticks": 4.0
+  },
+  {
+   "place": 1,
+   "delta": 4,
+   "counts": [
+    2,
+    2,
+    0,
+    0
+   ],
+   "ghz": 2.4008,
+   "leader": [
+    1218.0
+   ],
+   "follower_n": 32,
+   "follower": 1092.0,
+   "follower_p10": 880.4,
+   "follower_p90": 1231.2,
+   "gap_ticks": 4.0,
+   "gap_cycles": 96.032,
+   "leader_late_ticks": 4.0
+  },
+  {
+   "place": 1,
+   "delta": 6,
+   "counts": [
+    2,
+    2,
+    0,
+    0
+   ],
+   "ghz": 2.4128,
+   "leader": [
+    1222.0
+   ],
+   "follower_n": 32,
+   "follower": 992.0,
+   "follower_p10": 776.4,
+   "follower_p90": 1142.0,
+   "gap_ticks": 8.0,
+   "gap_cycles": 193.024,
+   "leader_late_ticks": 4.0
+  },
+  {
+   "place": 1,
+   "delta": 8,
+   "counts": [
+    2,
+    2,
+    0,
+    0
+   ],
+   "ghz": 2.3962,
+   "leader": [
+    1214.0
+   ],
+   "follower_n": 32,
+   "follower": 1028.0,
+   "follower_p10": 796.0,
+   "follower_p90": 1225.2,
+   "gap_ticks": 8.0,
+   "gap_cycles": 191.696,
+   "leader_late_ticks": 8.0
+  },
+  {
+   "place": 1,
+   "delta": 10,
+   "counts": [
+    2,
+    2,
+    0,
+    0
+   ],
+   "ghz": 2.3968,
+   "leader": [
+    1174.0
+   ],
+   "follower_n": 32,
+   "follower": 906.0,
+   "follower_p10": 668.0,
+   "follower_p90": 1046.4,
+   "gap_ticks": 12.0,
+   "gap_cycles": 287.616,
+   "leader_late_ticks": 4.0
+  },
+  {
+   "place": 1,
+   "delta": 15,
+   "counts": [
+    2,
+    2,
+    0,
+    0
+   ],
+   "ghz": 2.410179640718563,
+   "leader": [
+    1230.0
+   ],
+   "follower_n": 32,
+   "follower": 824.0,
+   "follower_p10": 600.4,
+   "follower_p90": 972.0000000000001,
+   "gap_ticks": 16.0,
+   "gap_cycles": 385.6287425149701,
+   "leader_late_ticks": 4.0
+  },
+  {
+   "place": 1,
+   "delta": 20,
+   "counts": [
+    2,
+    2,
+    0,
+    0
+   ],
+   "ghz": 2.3972,
+   "leader": [
+    1226.0
+   ],
+   "follower_n": 32,
+   "follower": 696.0,
+   "follower_p10": 465.6,
+   "follower_p90": 855.6,
+   "gap_ticks": 20.0,
+   "gap_cycles": 479.44000000000005,
+   "leader_late_ticks": 4.0
+  },
+  {
+   "place": 1,
+   "delta": 25,
+   "counts": [
+    2,
+    2,
+    0,
+    0
+   ],
+   "ghz": 2.4138,
+   "leader": [
+    1238.0
+   ],
+   "follower_n": 32,
+   "follower": 538.0,
+   "follower_p10": 321.2,
+   "follower_p90": 723.6,
+   "gap_ticks": 28.0,
+   "gap_cycles": 675.864,
+   "leader_late_ticks": 4.0
+  },
+  {
+   "place": 1,
+   "delta": 30,
+   "counts": [
+    2,
+    2,
+    0,
+    0
+   ],
+   "ghz": 2.3975999999999997,
+   "leader": [
+    1220.0
+   ],
+   "follower_n": 32,
+   "follower": 440.0,
+   "follower_p10": 296.0,
+   "follower_p90": 575.2,
+   "gap_ticks": 32.0,
+   "gap_cycles": 767.232,
+   "leader_late_ticks": 4.0
+  },
+  {
+   "place": 1,
+   "delta": 40,
+   "counts": [
+    2,
+    2,
+    0,
+    0
+   ],
+   "ghz": 2.4146,
+   "leader": [
+    1230.0
+   ],
+   "follower_n": 32,
+   "follower": 320.0,
+   "follower_p10": 300.0,
+   "follower_p90": 463.6000000000002,
+   "gap_ticks": 40.0,
+   "gap_cycles": 965.84,
+   "leader_late_ticks": 8.0
+  },
+  {
+   "place": 1,
+   "delta": 50,
+   "counts": [
+    2,
+    2,
+    0,
+    0
+   ],
+   "ghz": 2.3968,
+   "leader": [
+    1220.0
+   ],
+   "follower_n": 32,
+   "follower": 318.0,
+   "follower_p10": 300.0,
+   "follower_p90": 324.0,
+   "gap_ticks": 52.0,
+   "gap_cycles": 1246.336,
+   "leader_late_ticks": 8.0
+  },
+  {
+   "place": 1,
+   "delta": 70,
+   "counts": [
+    2,
+    2,
+    0,
+    0
+   ],
+   "ghz": 2.4143999999999997,
+   "leader": [
+    1232.0
+   ],
+   "follower_n": 32,
+   "follower": 310.0,
+   "follower_p10": 300.0,
+   "follower_p90": 324.0,
+   "gap_ticks": 72.0,
+   "gap_cycles": 1738.3679999999997,
+   "leader_late_ticks": 8.0
+  },
+  {
+   "place": 1,
+   "delta": 100,
+   "counts": [
+    2,
+    2,
+    0,
+    0
+   ],
+   "ghz": 2.3974,
+   "leader": [
+    1206.0
+   ],
+   "follower_n": 32,
+   "follower": 310.0,
+   "follower_p10": 296.0,
+   "follower_p90": 324.0,
+   "gap_ticks": 100.0,
+   "gap_cycles": 2397.4,
+   "leader_late_ticks": 4.0
+  },
+  {
+   "place": 0,
+   "delta": 0,
+   "counts": [
+    2,
+    0,
+    0,
+    0
+   ],
+   "ghz": 2.4042000000000003,
+   "leader": [
+    1226.0
+   ],
+   "follower_n": 32,
+   "follower": 1214.0,
+   "follower_p10": 965.2,
+   "follower_p90": 1473.2000000000003,
+   "gap_ticks": 0.0,
+   "gap_cycles": 0.0,
+   "leader_late_ticks": 11.0
+  },
+  {
+   "place": 0,
+   "delta": 2,
+   "counts": [
+    2,
+    0,
+    0,
+    0
+   ],
+   "ghz": 2.4024,
+   "leader": [
+    1208.0
+   ],
+   "follower_n": 32,
+   "follower": 1212.0,
+   "follower_p10": 981.2,
+   "follower_p90": 1333.6000000000001,
+   "gap_ticks": 0.0,
+   "gap_cycles": 0.0,
+   "leader_late_ticks": 11.0
+  },
+  {
+   "place": 0,
+   "delta": 4,
+   "counts": [
+    2,
+    0,
+    0,
+    0
+   ],
+   "ghz": 2.4024,
+   "leader": [
+    1228.0
+   ],
+   "follower_n": 32,
+   "follower": 1142.0,
+   "follower_p10": 900.0,
+   "follower_p90": 1304.8000000000002,
+   "gap_ticks": 4.0,
+   "gap_cycles": 96.096,
+   "leader_late_ticks": 7.0
+  },
+  {
+   "place": 0,
+   "delta": 6,
+   "counts": [
+    2,
+    0,
+    0,
+    0
+   ],
+   "ghz": 2.4023952095808383,
+   "leader": [
+    1208.0
+   ],
+   "follower_n": 32,
+   "follower": 1130.0,
+   "follower_p10": 865.2,
+   "follower_p90": 1278.0,
+   "gap_ticks": 4.0,
+   "gap_cycles": 96.09580838323353,
+   "leader_late_ticks": 7.0
+  },
+  {
+   "place": 0,
+   "delta": 8,
+   "counts": [
+    2,
+    0,
+    0,
+    0
+   ],
+   "ghz": 2.4021999999999997,
+   "leader": [
+    1190.0
+   ],
+   "follower_n": 32,
+   "follower": 1008.0,
+   "follower_p10": 776.8,
+   "follower_p90": 1146.0,
+   "gap_ticks": 8.0,
+   "gap_cycles": 192.176,
+   "leader_late_ticks": 7.0
+  },
+  {
+   "place": 0,
+   "delta": 10,
+   "counts": [
+    2,
+    0,
+    0,
+    0
+   ],
+   "ghz": 2.4119760479041914,
+   "leader": [
+    1238.0
+   ],
+   "follower_n": 32,
+   "follower": 1076.0,
+   "follower_p10": 818.4,
+   "follower_p90": 1198.8,
+   "gap_ticks": 8.0,
+   "gap_cycles": 192.95808383233532,
+   "leader_late_ticks": 11.0
+  },
+  {
+   "place": 0,
+   "delta": 15,
+   "counts": [
+    2,
+    0,
+    0,
+    0
+   ],
+   "ghz": 2.3966000000000003,
+   "leader": [
+    1216.0
+   ],
+   "follower_n": 32,
+   "follower": 934.0,
+   "follower_p10": 702.0,
+   "follower_p90": 1007.6,
+   "gap_ticks": 12.0,
+   "gap_cycles": 287.59200000000004,
+   "leader_late_ticks": 7.0
+  },
+  {
+   "place": 0,
+   "delta": 20,
+   "counts": [
+    2,
+    0,
+    0,
+    0
+   ],
+   "ghz": 2.4128,
+   "leader": [
+    1234.0
+   ],
+   "follower_n": 32,
+   "follower": 780.0,
+   "follower_p10": 521.6,
+   "follower_p90": 998.8000000000001,
+   "gap_ticks": 20.0,
+   "gap_cycles": 482.55999999999995,
+   "leader_late_ticks": 11.0
+  },
+  {
+   "place": 0,
+   "delta": 25,
+   "counts": [
+    2,
+    0,
+    0,
+    0
+   ],
+   "ghz": 2.4021999999999997,
+   "leader": [
+    1126.0
+   ],
+   "follower_n": 32,
+   "follower": 576.0,
+   "follower_p10": 416.8,
+   "follower_p90": 800.0000000000001,
+   "gap_ticks": 24.0,
+   "gap_cycles": 576.5279999999999,
+   "leader_late_ticks": 7.0
+  },
+  {
+   "place": 0,
+   "delta": 30,
+   "counts": [
+    2,
+    0,
+    0,
+    0
+   ],
+   "ghz": 2.4142,
+   "leader": [
+    1208.0
+   ],
+   "follower_n": 32,
+   "follower": 504.0,
+   "follower_p10": 309.2,
+   "follower_p90": 780.4000000000002,
+   "gap_ticks": 28.0,
+   "gap_cycles": 675.976,
+   "leader_late_ticks": 7.0
+  },
+  {
+   "place": 0,
+   "delta": 40,
+   "counts": [
+    2,
+    0,
+    0,
+    0
+   ],
+   "ghz": 2.3964,
+   "leader": [
+    1222.0
+   ],
+   "follower_n": 32,
+   "follower": 272.0,
+   "follower_p10": 212.0,
+   "follower_p90": 342.8,
+   "gap_ticks": 40.0,
+   "gap_cycles": 958.56,
+   "leader_late_ticks": 7.0
+  },
+  {
+   "place": 0,
+   "delta": 50,
+   "counts": [
+    2,
+    0,
+    0,
+    0
+   ],
+   "ghz": 2.4138,
+   "leader": [
+    1212.0
+   ],
+   "follower_n": 32,
+   "follower": 212.0,
+   "follower_p10": 204.0,
+   "follower_p90": 286.8,
+   "gap_ticks": 48.0,
+   "gap_cycles": 1158.624,
+   "leader_late_ticks": 7.0
+  },
+  {
+   "place": 0,
+   "delta": 70,
+   "counts": [
+    2,
+    0,
+    0,
+    0
+   ],
+   "ghz": 2.3964,
+   "leader": [
+    1194.0
+   ],
+   "follower_n": 32,
+   "follower": 208.0,
+   "follower_p10": 208.0,
+   "follower_p90": 208.0,
+   "gap_ticks": 68.0,
+   "gap_cycles": 1629.552,
+   "leader_late_ticks": 7.0
+  },
+  {
+   "place": 0,
+   "delta": 100,
+   "counts": [
+    2,
+    0,
+    0,
+    0
+   ],
+   "ghz": 2.4146,
+   "leader": [
+    1230.0
+   ],
+   "follower_n": 32,
+   "follower": 208.0,
+   "follower_p10": 208.0,
+   "follower_p90": 208.0,
+   "gap_ticks": 100.0,
+   "gap_cycles": 2414.6,
+   "leader_late_ticks": 11.0
+  },
+  {
+   "place": 2,
+   "delta": 0,
+   "counts": [
+    2,
+    2,
+    0,
+    0
+   ],
+   "ghz": 2.4032,
+   "leader": [
+    1234.0
+   ],
+   "follower_n": 32,
+   "follower": 1278.0,
+   "follower_p10": 1057.2,
+   "follower_p90": 1497.2,
+   "gap_ticks": 0.0,
+   "gap_cycles": 0.0,
+   "leader_late_ticks": 8.0
+  },
+  {
+   "place": 2,
+   "delta": 2,
+   "counts": [
+    2,
+    2,
+    0,
+    0
+   ],
+   "ghz": 2.403,
+   "leader": [
+    1220.0
+   ],
+   "follower_n": 32,
+   "follower": 1148.0,
+   "follower_p10": 965.2,
+   "follower_p90": 1239.6,
+   "gap_ticks": 4.0,
+   "gap_cycles": 96.12,
+   "leader_late_ticks": 4.0
+  },
+  {
+   "place": 2,
+   "delta": 4,
+   "counts": [
+    2,
+    2,
+    0,
+    0
+   ],
+   "ghz": 2.4038,
+   "leader": [
+    1214.0
+   ],
+   "follower_n": 32,
+   "follower": 1136.0,
+   "follower_p10": 948.4,
+   "follower_p90": 1294.0,
+   "gap_ticks": 4.0,
+   "gap_cycles": 96.152,
+   "leader_late_ticks": 8.0
+  },
+  {
+   "place": 2,
+   "delta": 6,
+   "counts": [
+    2,
+    2,
+    0,
+    0
+   ],
+   "ghz": 2.4026,
+   "leader": [
+    1220.0
+   ],
+   "follower_n": 32,
+   "follower": 1058.0,
+   "follower_p10": 860.8,
+   "follower_p90": 1288.0,
+   "gap_ticks": 8.0,
+   "gap_cycles": 192.208,
+   "leader_late_ticks": 4.0
+  },
+  {
+   "place": 2,
+   "delta": 8,
+   "counts": [
+    2,
+    2,
+    0,
+    0
+   ],
+   "ghz": 2.416,
+   "leader": [
+    1132.0
+   ],
+   "follower_n": 32,
+   "follower": 1008.0,
+   "follower_p10": 860.4,
+   "follower_p90": 1230.4,
+   "gap_ticks": 8.0,
+   "gap_cycles": 193.28,
+   "leader_late_ticks": 8.0
+  },
+  {
+   "place": 2,
+   "delta": 10,
+   "counts": [
+    2,
+    2,
+    0,
+    0
+   ],
+   "ghz": 2.402,
+   "leader": [
+    1224.0
+   ],
+   "follower_n": 32,
+   "follower": 1000.0,
+   "follower_p10": 765.2,
+   "follower_p90": 1098.0,
+   "gap_ticks": 12.0,
+   "gap_cycles": 288.24,
+   "leader_late_ticks": 4.0
+  },
+  {
+   "place": 2,
+   "delta": 15,
+   "counts": [
+    2,
+    2,
+    0,
+    0
+   ],
+   "ghz": 2.403,
+   "leader": [
+    1232.0
+   ],
+   "follower_n": 32,
+   "follower": 904.0,
+   "follower_p10": 732.4,
+   "follower_p90": 1034.4,
+   "gap_ticks": 16.0,
+   "gap_cycles": 384.48,
+   "leader_late_ticks": 4.0
+  },
+  {
+   "place": 2,
+   "delta": 20,
+   "counts": [
+    2,
+    2,
+    0,
+    0
+   ],
+   "ghz": 2.4015999999999997,
+   "leader": [
+    1222.0
+   ],
+   "follower_n": 32,
+   "follower": 912.0,
+   "follower_p10": 712.4,
+   "follower_p90": 1078.0000000000002,
+   "gap_ticks": 20.0,
+   "gap_cycles": 480.31999999999994,
+   "leader_late_ticks": 4.0
+  },
+  {
+   "place": 2,
+   "delta": 25,
+   "counts": [
+    2,
+    2,
+    0,
+    0
+   ],
+   "ghz": 2.402,
+   "leader": [
+    1222.0
+   ],
+   "follower_n": 32,
+   "follower": 832.0,
+   "follower_p10": 708.4,
+   "follower_p90": 959.6,
+   "gap_ticks": 28.0,
+   "gap_cycles": 672.5600000000001,
+   "leader_late_ticks": 4.0
+  },
+  {
+   "place": 2,
+   "delta": 30,
+   "counts": [
+    2,
+    2,
+    0,
+    0
+   ],
+   "ghz": 2.4013972055888226,
+   "leader": [
+    1222.0
+   ],
+   "follower_n": 32,
+   "follower": 838.0,
+   "follower_p10": 716.0,
+   "follower_p90": 967.6,
+   "gap_ticks": 32.0,
+   "gap_cycles": 768.4471057884232,
+   "leader_late_ticks": 4.0
+  },
+  {
+   "place": 2,
+   "delta": 40,
+   "counts": [
+    2,
+    2,
+    0,
+    0
+   ],
+   "ghz": 2.402,
+   "leader": [
+    1214.0
+   ],
+   "follower_n": 32,
+   "follower": 838.0,
+   "follower_p10": 708.4,
+   "follower_p90": 964.0,
+   "gap_ticks": 40.0,
+   "gap_cycles": 960.8000000000001,
+   "leader_late_ticks": 8.0
+  },
+  {
+   "place": 2,
+   "delta": 50,
+   "counts": [
+    2,
+    2,
+    0,
+    0
+   ],
+   "ghz": 2.3994,
+   "leader": [
+    1128.0
+   ],
+   "follower_n": 32,
+   "follower": 836.0,
+   "follower_p10": 712.4,
+   "follower_p90": 967.2,
+   "gap_ticks": 52.0,
+   "gap_cycles": 1247.688,
+   "leader_late_ticks": 4.0
+  },
+  {
+   "place": 2,
+   "delta": 70,
+   "counts": [
+    2,
+    2,
+    0,
+    0
+   ],
+   "ghz": 2.4010000000000002,
+   "leader": [
+    1222.0
+   ],
+   "follower_n": 32,
+   "follower": 838.0,
+   "follower_p10": 712.4,
+   "follower_p90": 964.0,
+   "gap_ticks": 72.0,
+   "gap_cycles": 1728.7200000000003,
+   "leader_late_ticks": 4.0
+  },
+  {
+   "place": 2,
+   "delta": 100,
+   "counts": [
+    2,
+    2,
+    0,
+    0
+   ],
+   "ghz": 2.400801603206413,
+   "leader": [
+    1226.0
+   ],
+   "follower_n": 32,
+   "follower": 834.0,
+   "follower_p10": 708.0,
+   "follower_p90": 963.6,
+   "gap_ticks": 100.0,
+   "gap_cycles": 2400.801603206413,
+   "leader_late_ticks": 4.0
+  }
+ ],
+ "pmc": [
+  {
+   "place": 3,
+   "delta": 0,
+   "counters": {
+    "TCC_EA0_RDREQ_sum": 620.0,
+    "TCC_HIT_sum": 6979.0,
+    "TCC_MISS_sum": 453.0,
+    "TCC_TAG_STALL_sum": 1.0
+   },
+   "follower": null,
+   "leader": 1212.0
+  },
+  {
+   "place": 1,
+   "delta": 0,
+   "counters": {
+    "TCC_EA0_RDREQ_sum": 612.0,
+    "TCC_HIT_sum": 7114.0,
+    "TCC_MISS_sum": 470.0,
+    "TCC_TAG_STALL_sum": 48.0
+   },
+   "follower": 1192.0,
+   "leader": 1180.0
+  },
+  {
+   "place": 1,
+   "delta": 100,
+   "counters": {
+    "TCC_EA0_RDREQ_sum": 612.0,
+    "TCC_HIT_sum": 7114.0,
+    "TCC_MISS_sum": 470.0,
+    "TCC_TAG_STALL_sum": 48.0
+   },
+   "follower": 312.0,
+   "leader": 1186.0
+  },
+  {
+   "place": 0,
+   "delta": 0,
+   "counters": {
+    "TCC_EA0_RDREQ_sum": 620.0,
+    "TCC_HIT_sum": 7005.0,
+    "TCC_MISS_sum": 461.0,
+    "TCC_TAG_STALL_sum": 1.0
+   },
+   "follower": 1214.0,
+   "leader": 1202.0
+  },
+  {
+   "place": 2,
+   "delta": 0,
+   "counters": {
+    "TCC_EA0_RDREQ_sum": 880.0,
+    "TCC_HIT_sum": 7006.0,
+    "TCC_MISS_sum": 722.0,
+    "TCC_TAG_STALL_sum": 48.0
+   },
+   "follower": 1230.0,
+   "leader": 1200.0
+  }
+ ],
+ "smi": "\n\n============================ ROCm System Management Interface ============================\n=============================== Current clock frequencies ================================\nGPU[0]\t\t: fclk clock level: 0: (1250Mhz)\nGPU[0]\t\t: mclk clock level: 0: (2000Mhz)\nGPU[0]\t\t: sclk clock level: 1: (157Mhz)\nGPU[0]\t\t: socclk clock level: S: (38Mhz)\n==========================================================================================\n================================== End of ROCm SMI Log ===================================\n"
+}

@@ -1,0 +1,241 @@
+M,N,K,group,slot,kind,tile,runner,spec,options,sweep_rel_over_best,deployed_over_best
+10240,512,4096,worst,best,rs3p,256x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.1446
+10240,512,4096,worst,tile2,rsallp,128x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0565,1.1446
+10240,512,4096,worst,tile3,sp,128x256x64,v27,,"{""STREAMK_POLICY"": ""spread""}",1.0671,1.1446
+10240,512,4096,worst,fp32,sp,128x256x64,v27,,"{""STREAMK_POLICY"": ""spread""}",1.0671,1.1446
+1024,1024,7168,worst,best,rsallb,128x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.2387
+1024,1024,7168,worst,tile2,rsallb,256x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16"", ""STREAMK_POLICY"": ""one_tile""}",1.0106,1.2387
+1024,1024,7168,worst,tile3,rsallb,128x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16"", ""STREAMK_POLICY"": ""one_tile""}",1.0202,1.2387
+1024,1024,7168,worst,fp32,rsall,128x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_POLICY"": ""one_tile""}",1.0994,1.2387
+1024,1280,8192,worst,best,rs6p,128x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.4849
+1024,1280,8192,worst,tile2,rs6p,256x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0027,1.4849
+1024,1280,8192,worst,tile3,rs3p,128x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0489,1.4849
+1024,1280,8192,worst,fp32,rs3,128x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_POLICY"": ""one_tile""}",1.1086,1.4849
+1024,1536,7168,worst,best,rs5p,256x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.3131
+1024,1536,7168,worst,tile2,rs5p,128x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0084,1.3131
+1024,1536,7168,worst,tile3,rs8p,256x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""192"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0144,1.3131
+1024,1536,7168,worst,fp32,rs5,256x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_POLICY"": ""one_tile""}",1.0948,1.3131
+1024,2048,4096,control,best,rsallp,128x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.0548
+1024,2048,4096,control,tile2,rsallp,256x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.011,1.0548
+1024,2048,4096,control,tile3,rsallp,128x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0463,1.0548
+1024,2048,4096,control,fp32,dp,64x128x128,v9_tile,64x128x128,{},1.0488,1.0548
+1024,2304,16384,worst,best,rsallp,256x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.5442
+1024,2304,16384,worst,tile2,owallp,128x256x64,v27,,"{""STREAMK_FIXUP"": ""owner"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.179,1.5442
+1024,2304,16384,worst,tile3,owallp,256x128x64,v27,,"{""STREAMK_FIXUP"": ""owner"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.1865,1.5442
+1024,2304,16384,worst,fp32,rs7,256x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""252"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_POLICY"": ""one_tile""}",1.0923,1.5442
+1024,4608,16384,worst,best,rs3p,256x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""216"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.4008
+1024,4608,16384,worst,tile2,sp,256x128x64,v27,,"{""STREAMK_POLICY"": ""spread""}",1.2568,1.4008
+1024,4608,16384,worst,tile3,rsallb,128x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16"", ""STREAMK_POLICY"": ""one_tile""}",1.3164,1.4008
+1024,4608,16384,worst,fp32,ow3,256x256x64,v27,,"{""STREAMK_FIXUP"": ""owner"", ""STREAMK_NUM_PROGRAMS"": ""216"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_POLICY"": ""one_tile""}",1.0404,1.4008
+1024,5120,1280,worst,best,dp,128x256x64,v9_tile,128x256x64,{},1.0,1.0005
+1024,5120,1280,worst,tile2,dp,256x128x64,v9_tile,256x128x64,{},1.0091,1.0005
+1024,5120,1280,worst,tile3,dp,128x128x64,v9_tile,128x128x64,{},1.0107,1.0005
+1024,5120,1280,worst,fp32,dp,128x256x64,v9_tile,128x256x64,{},1.0,1.0005
+1024,5120,25600,worst,best,rsallp,256x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.4554
+1024,5120,25600,worst,tile2,rsallb,128x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16"", ""STREAMK_POLICY"": ""one_tile""}",1.3524,1.4554
+1024,5120,25600,worst,tile3,cap,256x128x64,v27,,{},1.4305,1.4554
+1024,5120,25600,worst,fp32,owall,256x256x64,v27,,"{""STREAMK_FIXUP"": ""owner"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_POLICY"": ""one_tile""}",1.0201,1.4554
+1024,5120,3200,worst,best,rs3p,256x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.1209
+1024,5120,3200,worst,tile2,all,128x256x64,v27,,"{""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_POLICY"": ""one_tile""}",1.085,1.1209
+1024,5120,3200,worst,tile3,rsallp,128x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0986,1.1209
+1024,5120,3200,worst,fp32,all,128x256x64,v27,,"{""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_POLICY"": ""one_tile""}",1.085,1.1209
+1024,5120,5120,worst,best,rs3p,256x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.3476
+1024,5120,5120,worst,tile2,sp,256x128x64,v27,,"{""STREAMK_POLICY"": ""spread""}",1.1465,1.3476
+1024,5120,5120,worst,tile3,sp,128x256x64,v27,,"{""STREAMK_POLICY"": ""spread""}",1.1683,1.3476
+1024,5120,5120,worst,fp32,ow3,256x256x64,v27,,"{""STREAMK_FIXUP"": ""owner"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_POLICY"": ""one_tile""}",1.0812,1.3476
+1024,5120,6400,worst,best,rsallp,256x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.3851
+1024,5120,6400,worst,tile2,sp,256x128x64,v27,,"{""STREAMK_POLICY"": ""spread""}",1.1546,1.3851
+1024,5120,6400,worst,tile3,sp,128x256x64,v27,,"{""STREAMK_POLICY"": ""spread""}",1.1865,1.3851
+1024,5120,6400,worst,fp32,ow3,256x256x64,v27,,"{""STREAMK_FIXUP"": ""owner"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_POLICY"": ""one_tile""}",1.0861,1.3851
+1024,6144,3072,worst,best,rs2p,256x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""192"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.0113
+1024,6144,3072,worst,tile2,cap,256x128x64,v27,,{},1.0025,1.0113
+1024,6144,3072,worst,tile3,dp,128x256x64,v9_tile,128x256x64,{},1.0043,1.0113
+1024,6144,3072,worst,fp32,cap,256x128x64,v27,,{},1.0025,1.0113
+1024,6144,6144,worst,best,ow2p,256x256x64,v27,,"{""STREAMK_FIXUP"": ""owner"", ""STREAMK_NUM_PROGRAMS"": ""192"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.2037
+1024,6144,6144,worst,tile2,sp,128x256x64,v27,,"{""STREAMK_POLICY"": ""spread""}",1.0691,1.2037
+1024,6144,6144,worst,tile3,sp,256x128x64,v27,,"{""STREAMK_POLICY"": ""spread""}",1.0721,1.2037
+1024,6144,6144,worst,fp32,ow2,256x256x64,v27,,"{""STREAMK_FIXUP"": ""owner"", ""STREAMK_NUM_PROGRAMS"": ""192"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_POLICY"": ""one_tile""}",1.0469,1.2037
+1024,8192,2048,control,best,cap,256x128x64,v27,,{},1.0,1.0091
+1024,8192,2048,control,tile2,dp,128x256x64,v9_tile,128x256x64,{},1.0041,1.0091
+1024,8192,2048,control,tile3,dp,128x128x64,v9_tile,128x128x64,{},1.1484,1.0091
+1024,8192,2048,control,fp32,cap,256x128x64,v27,,{},1.0,1.0091
+1280,1024,4096,worst,best,rs3p,128x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.2094
+1280,1024,4096,worst,tile2,rsallb,128x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16"", ""STREAMK_POLICY"": ""one_tile""}",1.0084,1.2094
+1280,1024,4096,worst,tile3,rs6p,256x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0373,1.2094
+1280,1024,4096,worst,fp32,rs3,128x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_POLICY"": ""one_tile""}",1.0762,1.2094
+1280,1024,7168,worst,best,rsallp,128x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.4468
+1280,1024,7168,worst,tile2,rs6b,256x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16"", ""STREAMK_POLICY"": ""one_tile""}",1.0057,1.4468
+1280,1024,7168,worst,tile3,rs6p,128x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0064,1.4468
+1280,1024,7168,worst,fp32,rs3,128x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_POLICY"": ""one_tile""}",1.0445,1.4468
+1280,2048,7168,worst,best,rs6b,256x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.3503
+1280,2048,7168,worst,tile2,rs3p,128x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0818,1.3503
+1280,2048,7168,worst,tile3,rs3p,256x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0859,1.3503
+1280,2048,7168,worst,fp32,rs3,256x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_POLICY"": ""one_tile""}",1.1615,1.3503
+1280,512,4096,worst,best,rs6p,128x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.1724
+1280,512,4096,worst,tile2,rsallb,64x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16"", ""STREAMK_POLICY"": ""one_tile""}",1.0533,1.1724
+1280,512,4096,worst,tile3,rs8p,256x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""160"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0637,1.1724
+1280,512,4096,worst,fp32,rs3,128x64x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_POLICY"": ""one_tile""}",1.0851,1.1724
+1280,512,7168,worst,best,rs6p,128x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.4813
+1280,512,7168,worst,tile2,rs6p,128x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0467,1.4813
+1280,512,7168,worst,tile3,rs12p,256x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0596,1.4813
+1280,512,7168,worst,fp32,rs6,128x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_POLICY"": ""one_tile""}",1.0754,1.4813
+1536,1024,5120,worst,best,rs5b,256x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.3045
+1536,1024,5120,worst,tile2,rs5p,128x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.013,1.3045
+1536,1024,5120,worst,tile3,rs8p,256x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""192"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0954,1.3045
+1536,1024,5120,worst,fp32,rs5,256x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_POLICY"": ""one_tile""}",1.1388,1.3045
+1536,1024,7168,worst,best,rs5p,256x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.3245
+1536,1024,7168,worst,tile2,rs5p,128x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0089,1.3245
+1536,1024,7168,worst,tile3,rs8p,256x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""192"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0214,1.3245
+1536,1024,7168,worst,fp32,rs5,256x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_POLICY"": ""one_tile""}",1.0985,1.3245
+1536,512,7168,worst,best,rs5b,128x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.3805
+1536,512,7168,worst,tile2,rs8p,256x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""192"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0017,1.3805
+1536,512,7168,worst,tile3,rs8p,128x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""192"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0101,1.3805
+1536,512,7168,worst,fp32,rs5,128x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_POLICY"": ""one_tile""}",1.0588,1.3805
+16384,512,7168,control,best,owallp,256x256x64,v27,,"{""STREAMK_FIXUP"": ""owner"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.0673
+16384,512,7168,control,tile2,dp,128x256x64,v9_tile,128x256x64,{},1.112,1.0673
+16384,512,7168,control,tile3,dp,256x128x64,v9_tile,256x128x64,{},1.127,1.0673
+16384,512,7168,control,fp32,sp,256x256x64,v27,,"{""STREAMK_POLICY"": ""spread""}",1.0455,1.0673
+1792,512,7168,worst,best,rs8p,128x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""224"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.3438
+1792,512,7168,worst,tile2,rs8b,256x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""224"", ""STREAMK_PARTIALS"": ""bf16"", ""STREAMK_POLICY"": ""one_tile""}",1.0097,1.3438
+1792,512,7168,worst,tile3,rs4p,128x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""224"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0458,1.3438
+1792,512,7168,worst,fp32,rs4,128x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""224"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_POLICY"": ""one_tile""}",1.1042,1.3438
+2048,2560,6144,worst,best,rsallp,256x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.4217
+2048,2560,6144,worst,tile2,rsallp,128x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.1892,1.4217
+2048,2560,6144,worst,tile3,sp,256x128x64,v27,,"{""STREAMK_POLICY"": ""spread""}",1.2022,1.4217
+2048,2560,6144,worst,fp32,ow3,256x256x64,v27,,"{""STREAMK_FIXUP"": ""owner"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_POLICY"": ""one_tile""}",1.0901,1.4217
+2048,5120,1280,worst,best,dp,256x256x64,v9_tile,256x256x64,{},1.0,1.0029
+2048,5120,1280,worst,tile2,pdp512,128x128x64,v27,,"{""STREAMK_PERSISTENT_PROGRAMS"": ""512"", ""STREAMK_POLICY"": ""dp""}",1.0859,1.0029
+2048,5120,1280,worst,tile3,rsallp,128x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.1619,1.0029
+2048,5120,1280,worst,fp32,dp,256x256x64,v9_tile,256x256x64,{},1.0,1.0029
+2304,1024,4096,worst,best,rs6b,256x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""216"", ""STREAMK_PARTIALS"": ""bf16"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.1152
+2304,1024,4096,worst,tile2,sp,128x128x64,v27,,"{""STREAMK_POLICY"": ""spread""}",1.012,1.1152
+2304,1024,4096,worst,tile3,rs3p,128x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""216"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0218,1.1152
+2304,1024,4096,worst,fp32,sp,128x128x64,v27,,"{""STREAMK_POLICY"": ""spread""}",1.012,1.1152
+2304,2048,4096,worst,best,rs3p,256x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""216"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.1914
+2304,2048,4096,worst,tile2,rs4p,128x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""128"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0493,1.1914
+2304,2048,4096,worst,tile3,sp,256x128x64,v27,,"{""STREAMK_POLICY"": ""spread""}",1.0687,1.1914
+2304,2048,4096,worst,fp32,sp,256x128x64,v27,,"{""STREAMK_POLICY"": ""spread""}",1.0687,1.1914
+2304,512,4096,worst,best,rs3p,128x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""216"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.2254
+2304,512,4096,worst,tile2,rs3p,128x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""216"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0141,1.2254
+2304,512,4096,worst,tile3,rsallp,128x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0244,1.2254
+2304,512,4096,worst,fp32,rs3,128x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""216"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_POLICY"": ""one_tile""}",1.0662,1.2254
+2560,2048,4096,worst,best,rs3p,256x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.1758
+2560,2048,4096,worst,tile2,dp,128x128x64,v9_tile,128x128x64,{},1.0624,1.1758
+2560,2048,4096,worst,tile3,rsallp,128x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0789,1.1758
+2560,2048,4096,worst,fp32,dp,128x128x64,v9_tile,128x128x64,{},1.0624,1.1758
+2560,512,4096,worst,best,rs3b,128x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.211
+2560,512,4096,worst,tile2,rs3p,128x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0099,1.211
+2560,512,4096,worst,tile3,rs6p,128x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0265,1.211
+2560,512,4096,worst,fp32,rs3,128x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_POLICY"": ""one_tile""}",1.0707,1.211
+4096,1024,4096,control,best,cap,128x128x128,v27,,{},1.0,1.0
+4096,1024,4096,control,tile2,rsallb,128x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16"", ""STREAMK_POLICY"": ""one_tile""}",1.038,1.0
+4096,1024,4096,control,tile3,rsallp,256x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.047,1.0
+4096,1024,4096,control,fp32,cap,128x128x128,v27,,{},1.0,1.0
+4352,1024,4096,worst,best,rs3p,256x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""204"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.2123
+4352,1024,4096,worst,tile2,rs8b,128x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""128"", ""STREAMK_PARTIALS"": ""bf16"", ""STREAMK_POLICY"": ""one_tile""}",1.0031,1.2123
+4352,1024,4096,worst,tile3,sp,256x128x64,v27,,"{""STREAMK_POLICY"": ""spread""}",1.0394,1.2123
+4352,1024,4096,worst,fp32,rs8,128x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""128"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_POLICY"": ""one_tile""}",1.0217,1.2123
+5120,1024,4096,worst,best,rs3p,256x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.1207
+5120,1024,4096,worst,tile2,dp,128x128x64,v9_tile,128x128x64,{},1.0287,1.1207
+5120,1024,4096,worst,tile3,rsallb,128x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16"", ""STREAMK_POLICY"": ""one_tile""}",1.0379,1.1207
+5120,1024,4096,worst,fp32,dp,128x128x64,v9_tile,128x128x64,{},1.0287,1.1207
+5120,2048,1536,worst,best,dp,128x128x64,v9_tile,128x128x64,{},1.0,1.0051
+5120,2048,1536,worst,tile2,dp,256x256x64,v9_tile,256x256x64,{},1.0032,1.0051
+5120,2048,1536,worst,tile3,cap,128x128x128,v27,,{},1.0254,1.0051
+5120,2048,1536,worst,fp32,dp,128x128x64,v9_tile,128x128x64,{},1.0,1.0051
+5120,4096,1024,worst,best,dp,128x128x64,v9_tile,128x128x64,{},1.0,1.095
+5120,4096,1024,worst,tile2,pdp,128x256x64,v27,,"{""STREAMK_POLICY"": ""dp""}",1.0107,1.095
+5120,4096,1024,worst,tile3,cap,256x128x64,v27,,{},1.0247,1.095
+5120,4096,1024,worst,fp32,dp,128x128x64,v9_tile,128x128x64,{},1.0,1.095
+512,10240,4096,worst,best,rs3p,256x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.132
+512,10240,4096,worst,tile2,sp,256x128x64,v27,,"{""STREAMK_POLICY"": ""spread""}",1.0637,1.132
+512,10240,4096,worst,tile3,rsallp,128x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0757,1.132
+512,10240,4096,worst,fp32,sp,256x128x64,v27,,"{""STREAMK_POLICY"": ""spread""}",1.0637,1.132
+512,1024,7168,worst,best,rsallb,128x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.275
+512,1024,7168,worst,tile2,rs7p,128x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""224"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0974,1.275
+512,1024,7168,worst,tile3,rsallp,64x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.103,1.275
+512,1024,7168,worst,fp32,all,128x128x64,v27,,"{""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_POLICY"": ""one_tile""}",1.1067,1.275
+512,1280,6144,worst,best,rs6p,128x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.3813
+512,1280,6144,worst,tile2,rs12p,256x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0385,1.3813
+512,1280,6144,worst,tile3,rs12p,128x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0535,1.3813
+512,1280,6144,worst,fp32,rs6,128x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_POLICY"": ""one_tile""}",1.0892,1.3813
+512,1280,8192,worst,best,rs6b,128x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.5223
+512,1280,8192,worst,tile2,rsallp,256x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0924,1.5223
+512,1280,8192,worst,tile3,rs6p,128x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.1168,1.5223
+512,1280,8192,worst,fp32,rs6,128x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_POLICY"": ""one_tile""}",1.1043,1.5223
+512,1536,7168,worst,best,rs5p,128x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.3411
+512,1536,7168,worst,tile2,rs8b,256x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""192"", ""STREAMK_PARTIALS"": ""bf16"", ""STREAMK_POLICY"": ""one_tile""}",1.0017,1.3411
+512,1536,7168,worst,tile3,rs8p,128x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""192"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0051,1.3411
+512,1536,7168,worst,fp32,rs5,128x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_POLICY"": ""one_tile""}",1.0612,1.3411
+512,2048,7168,worst,best,rsallp,128x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.2296
+512,2048,7168,worst,tile2,rsallp,256x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0232,1.2296
+512,2048,7168,worst,tile3,rsallb,128x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16"", ""STREAMK_POLICY"": ""one_tile""}",1.0254,1.2296
+512,2048,7168,worst,fp32,rsall,128x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_POLICY"": ""one_tile""}",1.0994,1.2296
+512,2304,16384,worst,best,rs12p,256x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""216"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.7338
+512,2304,16384,worst,tile2,rsallp,256x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0029,1.7338
+512,2304,16384,worst,tile3,rs7p,128x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""252"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0299,1.7338
+512,2304,16384,worst,fp32,rsall,256x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_POLICY"": ""one_tile""}",1.0854,1.7338
+512,2304,6144,worst,best,rsallp,128x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.4266
+512,2304,6144,worst,tile2,rs7p,256x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""252"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0457,1.4266
+512,2304,6144,worst,tile3,rs7p,128x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""252"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0474,1.4266
+512,2304,6144,worst,fp32,rsall,128x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_POLICY"": ""one_tile""}",1.0421,1.4266
+512,2560,6144,worst,best,rsallp,128x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.3689
+512,2560,6144,worst,tile2,rs6p,128x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0329,1.3689
+512,2560,6144,worst,tile3,rs6p,256x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0342,1.3689
+512,2560,6144,worst,fp32,rs3,128x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_POLICY"": ""one_tile""}",1.0532,1.3689
+512,2560,8192,worst,best,rs3p,128x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.4415
+512,2560,8192,worst,tile2,rs6p,128x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0039,1.4415
+512,2560,8192,worst,tile3,rs6p,256x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.009,1.4415
+512,2560,8192,worst,fp32,rs3,128x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_POLICY"": ""one_tile""}",1.0484,1.4415
+512,3072,6144,worst,best,rs5p,128x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.2929
+512,3072,6144,worst,tile2,rs5p,256x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0104,1.2929
+512,3072,6144,worst,tile3,rs8p,256x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""192"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0211,1.2929
+512,3072,6144,worst,fp32,rs5,128x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_POLICY"": ""one_tile""}",1.1193,1.2929
+512,4096,1536,control,best,cap,128x64x128,v27,,{},1.0,1.0328
+512,4096,1536,control,tile2,cap,64x128x128,v27,,{},1.0328,1.0328
+512,4096,1536,control,tile3,dp,64x64x128,v9_tile,64x64x128,{},1.1653,1.0328
+512,4096,1536,control,fp32,cap,128x64x128,v27,,{},1.0,1.0328
+512,4608,16384,worst,best,rs7p,256x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""252"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.4925
+512,4608,16384,worst,tile2,rs3p,256x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""216"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.1935,1.4925
+512,4608,16384,worst,tile3,rs3b,128x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""216"", ""STREAMK_PARTIALS"": ""bf16"", ""STREAMK_POLICY"": ""one_tile""}",1.21,1.4925
+512,4608,16384,worst,fp32,rs7,256x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""252"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_POLICY"": ""one_tile""}",1.0785,1.4925
+512,4608,8192,worst,best,rs7p,256x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""252"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.3829
+512,4608,8192,worst,tile2,ow3p,256x128x64,v27,,"{""STREAMK_FIXUP"": ""owner"", ""STREAMK_NUM_PROGRAMS"": ""216"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0811,1.3829
+512,4608,8192,worst,tile3,rs3b,128x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""216"", ""STREAMK_PARTIALS"": ""bf16"", ""STREAMK_POLICY"": ""one_tile""}",1.096,1.3829
+512,4608,8192,worst,fp32,rs6,256x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""216"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_POLICY"": ""one_tile""}",1.0978,1.3829
+512,5120,25600,worst,best,rs6b,256x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.6498
+512,5120,25600,worst,tile2,owallp,256x128x64,v27,,"{""STREAMK_FIXUP"": ""owner"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.1755,1.6498
+512,5120,25600,worst,tile3,rs3p,128x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.2037,1.6498
+512,5120,25600,worst,fp32,rs6,256x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_POLICY"": ""one_tile""}",1.0587,1.6498
+512,5120,5120,worst,best,rs6b,256x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.2867
+512,5120,5120,worst,tile2,rsallp,256x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0653,1.2867
+512,5120,5120,worst,tile3,rs3p,128x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.067,1.2867
+512,5120,5120,worst,fp32,ow3,256x128x64,v27,,"{""STREAMK_FIXUP"": ""owner"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_POLICY"": ""one_tile""}",1.1131,1.2867
+512,5120,6400,worst,best,rs6b,256x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.3233
+512,5120,6400,worst,tile2,rsallp,256x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0555,1.3233
+512,5120,6400,worst,tile3,rs3p,128x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0766,1.3233
+512,5120,6400,worst,fp32,all,256x128x64,v27,,"{""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_POLICY"": ""one_tile""}",1.1305,1.3233
+512,7168,4224,control,best,rs4b,256x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""224"", ""STREAMK_PARTIALS"": ""bf16"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.0031
+512,7168,4224,control,tile2,cap,128x128x128,v27,,{},1.0031,1.0031
+512,7168,4224,control,tile3,owallp,256x128x64,v27,,"{""STREAMK_FIXUP"": ""owner"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0381,1.0031
+512,7168,4224,control,fp32,cap,128x128x128,v27,,{},1.0031,1.0031
+512,8704,4096,worst,best,rs3p,256x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""204"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.2101
+512,8704,4096,worst,tile2,rs8p,128x128x128,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""128"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0185,1.2101
+512,8704,4096,worst,tile3,sp,256x128x64,v27,,"{""STREAMK_POLICY"": ""spread""}",1.036,1.2101
+512,8704,4096,worst,fp32,cap,128x128x128,v27,,{},1.0358,1.2101
+6912,1024,4096,control,best,dp,128x256x64,v9_tile,128x256x64,{},1.0,1.0093
+6912,1024,4096,control,tile2,rs2b,256x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""216"", ""STREAMK_PARTIALS"": ""bf16"", ""STREAMK_POLICY"": ""one_tile""}",1.0098,1.0093
+6912,1024,4096,control,tile3,dp,256x128x64,v9_tile,256x128x64,{},1.0151,1.0093
+6912,1024,4096,control,fp32,dp,128x256x64,v9_tile,128x256x64,{},1.0,1.0093
+7424,2048,4096,control,best,all,256x256x64,v27,,"{""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.0149
+7424,2048,4096,control,tile2,pdp,128x256x64,v27,,"{""STREAMK_POLICY"": ""dp""}",1.1954,1.0149
+7424,2048,4096,control,tile3,sp,256x128x64,v27,,"{""STREAMK_POLICY"": ""spread""}",1.2258,1.0149
+7424,2048,4096,control,fp32,all,256x256x64,v27,,"{""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.0149
+768,1024,7168,worst,best,rs5b,128x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.3659
+768,1024,7168,worst,tile2,rs8p,256x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""192"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0014,1.3659
+768,1024,7168,worst,tile3,rs8p,128x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""192"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0085,1.3659
+768,1024,7168,worst,fp32,rs5,128x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_POLICY"": ""one_tile""}",1.0574,1.3659
+768,2048,7168,worst,best,rs5p,128x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0,1.3495
+768,2048,7168,worst,tile2,rs5p,256x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0018,1.3495
+768,2048,7168,worst,tile3,rs8p,256x256x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""192"", ""STREAMK_PARTIALS"": ""bf16_pairs"", ""STREAMK_POLICY"": ""one_tile""}",1.0131,1.3495
+768,2048,7168,worst,fp32,rs5,256x128x64,v27,,"{""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""240"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_POLICY"": ""one_tile""}",1.1185,1.3495

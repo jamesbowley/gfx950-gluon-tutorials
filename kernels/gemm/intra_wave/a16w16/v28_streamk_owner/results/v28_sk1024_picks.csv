@@ -1,0 +1,8 @@
+M,N,K,group,slot,kind,tile,runner,spec,options,sweep_rel_over_best,deployed_over_best
+1024,1024,7168,sk1024,best,rsall,128x128x128,v27,,"{""STREAMK_POLICY"": ""one_tile"", ""STREAMK_FIXUP"": ""rs"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""fp32""}",,
+1024,1024,7168,sk1024,fp32,owall,128x128x128,v27,,"{""STREAMK_POLICY"": ""one_tile"", ""STREAMK_FIXUP"": ""owner"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""fp32""}",,
+1024,1024,7168,sk1024,tile2,owall+b,128x128x128,v27,,"{""STREAMK_POLICY"": ""one_tile"", ""STREAMK_FIXUP"": ""owner"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_OWNER_OPT"": ""b""}",,
+1024,1024,7168,sk1024,tile3,ow2,128x128x128,v27,,"{""STREAMK_POLICY"": ""one_tile"", ""STREAMK_FIXUP"": ""owner"", ""STREAMK_NUM_PROGRAMS"": ""128"", ""STREAMK_PARTIALS"": ""fp32""}",,
+1024,1024,7168,sk1024,x5,ow2+b,128x128x128,v27,,"{""STREAMK_POLICY"": ""one_tile"", ""STREAMK_FIXUP"": ""owner"", ""STREAMK_NUM_PROGRAMS"": ""128"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_OWNER_OPT"": ""b""}",,
+1024,1024,7168,sk1024,x6,owall+s,128x128x128,v27,,"{""STREAMK_POLICY"": ""one_tile"", ""STREAMK_FIXUP"": ""owner"", ""STREAMK_NUM_PROGRAMS"": ""256"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_OWNER_OPT"": ""s""}",,
+1024,1024,7168,sk1024,x7,ow2+s,128x128x128,v27,,"{""STREAMK_POLICY"": ""one_tile"", ""STREAMK_FIXUP"": ""owner"", ""STREAMK_NUM_PROGRAMS"": ""128"", ""STREAMK_PARTIALS"": ""fp32"", ""STREAMK_OWNER_OPT"": ""s""}",,

@@ -1,0 +1,246 @@
+{
+ "ui": "/home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a16w16/v9_tile/tmp/clockpin/1400/l10/sweep_att/256x128_4096x4096x8192/ui_output_agent_53162_dispatch_58",
+ "loop_only": true,
+ "loop_code_range": [
+  460,
+  770
+ ],
+ "waves": 16,
+ "ses": [
+  0,
+  2
+ ],
+ "ghz_realtime": 1.215,
+ "loads_per_wave": 1512.0,
+ "loads_per_cu": 12096.0,
+ "stretched_loads_per_cu": 171.5,
+ "stretch_threshold_cyc": 16,
+ "L_exact": {
+  "n": 0,
+  "p10": null,
+  "p50": null,
+  "p90": null,
+  "mean": null,
+  "p50_ns": null
+ },
+ "L_bound": {
+  "n": 8064,
+  "p10": 1592.0,
+  "p50": 1632.0,
+  "p90": 1736.0,
+  "p50_ns": 1343.4
+ },
+ "load_rate_per_cu": {
+  "loads_per_cyc": 0.0387386098408007,
+  "bytes_per_cyc": 39.66833647697992,
+  "bytes_per_ns": 48.190729055458014
+ },
+ "inflight_kb_per_cu": {
+  "at_L_exact_p50": null,
+  "at_L_bound_p50": 63.2
+ },
+ "dk_median": {
+  "8": 304.0,
+  "9": 316.0,
+  "10": 336.0,
+  "11": 356.0,
+  "12": 384.0,
+  "13": 412.0,
+  "14": 452.0,
+  "15": 480.0,
+  "16": 508.0,
+  "17": 528.0,
+  "18": 548.0,
+  "19": 572.0,
+  "20": 628.0,
+  "21": 668.0,
+  "22": 704.0,
+  "23": 736.0,
+  "24": 792.0,
+  "25": 824.0,
+  "26": 844.0,
+  "27": 884.0,
+  "28": 904.0,
+  "29": 932.0,
+  "30": 960.0,
+  "31": 1004.0,
+  "32": 1032.0,
+  "33": 1056.0,
+  "34": 1072.0,
+  "35": 1092.0,
+  "36": 1116.0,
+  "37": 1136.0,
+  "38": 1164.0,
+  "39": 1180.0,
+  "40": 1216.0,
+  "41": 1232.0,
+  "42": 1248.0,
+  "43": 1264.0,
+  "44": 1296.0,
+  "45": 1328.0,
+  "46": 1356.0,
+  "47": 1392.0,
+  "48": 1420.0,
+  "49": 1432.0,
+  "50": 1440.0,
+  "51": 1476.0,
+  "52": 1488.0,
+  "53": 1508.0,
+  "54": 1532.0,
+  "55": 1560.0,
+  "56": 1600.0,
+  "57": 1612.0,
+  "58": 1640.0,
+  "59": 1672.0,
+  "60": 1692.0,
+  "61": 1716.0,
+  "62": 1740.0,
+  "63": 1768.0,
+  "64": 1804.0,
+  "65": 1824.0,
+  "66": 1840.0,
+  "67": 1860.0,
+  "68": 1892.0,
+  "69": 1908.0,
+  "70": 1920.0,
+  "71": 1972.0,
+  "72": 2012.0
+ },
+ "k_match": null,
+ "dk_at": {
+  "32": 1032.0,
+  "44": 1296.0,
+  "48": 1420.0
+ },
+ "per_wave": [
+  {
+   "name": "se0_sm0_sl0_wv0.json",
+   "se": 0,
+   "vmem_ops": 1552,
+   "loads": 1512,
+   "exact": 0,
+   "bound": 504
+  },
+  {
+   "name": "se0_sm0_sl0_wv1.json",
+   "se": 0,
+   "vmem_ops": 1552,
+   "loads": 1512,
+   "exact": 0,
+   "bound": 504
+  },
+  {
+   "name": "se0_sm1_sl0_wv0.json",
+   "se": 0,
+   "vmem_ops": 1552,
+   "loads": 1512,
+   "exact": 0,
+   "bound": 504
+  },
+  {
+   "name": "se0_sm1_sl0_wv1.json",
+   "se": 0,
+   "vmem_ops": 1552,
+   "loads": 1512,
+   "exact": 0,
+   "bound": 504
+  },
+  {
+   "name": "se0_sm2_sl0_wv0.json",
+   "se": 0,
+   "vmem_ops": 1552,
+   "loads": 1512,
+   "exact": 0,
+   "bound": 504
+  },
+  {
+   "name": "se0_sm2_sl0_wv1.json",
+   "se": 0,
+   "vmem_ops": 1552,
+   "loads": 1512,
+   "exact": 0,
+   "bound": 504
+  },
+  {
+   "name": "se0_sm3_sl0_wv0.json",
+   "se": 0,
+   "vmem_ops": 1552,
+   "loads": 1512,
+   "exact": 0,
+   "bound": 504
+  },
+  {
+   "name": "se0_sm3_sl0_wv1.json",
+   "se": 0,
+   "vmem_ops": 1552,
+   "loads": 1512,
+   "exact": 0,
+   "bound": 504
+  },
+  {
+   "name": "se2_sm0_sl0_wv0.json",
+   "se": 2,
+   "vmem_ops": 1552,
+   "loads": 1512,
+   "exact": 0,
+   "bound": 504
+  },
+  {
+   "name": "se2_sm0_sl0_wv1.json",
+   "se": 2,
+   "vmem_ops": 1552,
+   "loads": 1512,
+   "exact": 0,
+   "bound": 504
+  },
+  {
+   "name": "se2_sm1_sl0_wv0.json",
+   "se": 2,
+   "vmem_ops": 1552,
+   "loads": 1512,
+   "exact": 0,
+   "bound": 504
+  },
+  {
+   "name": "se2_sm1_sl0_wv1.json",
+   "se": 2,
+   "vmem_ops": 1552,
+   "loads": 1512,
+   "exact": 0,
+   "bound": 504
+  },
+  {
+   "name": "se2_sm2_sl0_wv0.json",
+   "se": 2,
+   "vmem_ops": 1552,
+   "loads": 1512,
+   "exact": 0,
+   "bound": 504
+  },
+  {
+   "name": "se2_sm2_sl0_wv1.json",
+   "se": 2,
+   "vmem_ops": 1552,
+   "loads": 1512,
+   "exact": 0,
+   "bound": 504
+  },
+  {
+   "name": "se2_sm3_sl0_wv0.json",
+   "se": 2,
+   "vmem_ops": 1552,
+   "loads": 1512,
+   "exact": 0,
+   "bound": 504
+  },
+  {
+   "name": "se2_sm3_sl0_wv1.json",
+   "se": 2,
+   "vmem_ops": 1552,
+   "loads": 1512,
+   "exact": 0,
+   "bound": 504
+  }
+ ],
+ "name": "256x128_1400_l10"
+}

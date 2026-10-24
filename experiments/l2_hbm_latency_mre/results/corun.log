@@ -1,0 +1,153 @@
+physical GPU 0 results in /home/jbowley/repos/gfx950-gluon-tutorials/experiments/l2_hbm_latency_mre/results/clock_corun
+counters, HBM D=16, co-runners none: L2 hit 0.000, memory 1.049 MB of 1.049 MB
+counters, HBM D=16, co-runners all: L2 hit 0.000, memory 1.049 MB of 1.049 MB
+corun_none_L2_d0: clock 2.402 GHz (ATT 2.401); rt p50 204.0 cyc = 85 ns (fast 204.0, cold None); exact 100%; in flight 4.0; issue stalled 0%; 17.3 B/clk
+wrote results/corun_sweep.json
+corun_none_L2_d2: clock 2.398 GHz (ATT 2.400); rt p50 212.0 cyc = 88 ns (fast 212.0, cold None); exact 71%; in flight 11.0; issue stalled 0%; 49.8 B/clk
+wrote results/corun_sweep.json
+corun_none_L2_d4: clock 2.402 GHz (ATT 2.401); rt p50 288.0 cyc = 120 ns (fast 288.0, cold None); exact 47%; in flight 18.0; issue stalled 0%; 64.0 B/clk
+wrote results/corun_sweep.json
+corun_none_L2_d8: clock 2.402 GHz (ATT 2.400); rt p50 None cyc = 0 ns (fast None, cold None); exact 0%; in flight 33.0; issue stalled 81%; 64.0 B/clk
+wrote results/corun_sweep.json
+corun_none_L2_d10: clock 2.402 GHz (ATT 2.399); rt p50 None cyc = 0 ns (fast None, cold None); exact 0%; in flight 41.0; issue stalled 82%; 64.0 B/clk
+wrote results/corun_sweep.json
+corun_none_L2_d12: clock 2.403 GHz (ATT 2.400); rt p50 None cyc = 0 ns (fast None, cold None); exact 0%; in flight 49.0; issue stalled 82%; 64.0 B/clk
+wrote results/corun_sweep.json
+corun_none_L2_d16: clock 2.398 GHz (ATT 2.400); rt p50 None cyc = 0 ns (fast None, cold None); exact 0%; in flight 65.0; issue stalled 83%; 64.0 B/clk
+wrote results/corun_sweep.json
+corun_none_LLC_d0: clock 2.397 GHz (ATT 2.394); rt p50 616.0 cyc = 257 ns (fast 616.0, cold None); exact 100%; in flight 4.0; issue stalled 0%; 7.1 B/clk
+wrote results/corun_sweep.json
+corun_none_LLC_d2: clock 2.393 GHz (ATT 2.392); rt p50 656.0 cyc = 274 ns (fast 656.0, cold None); exact 83%; in flight 11.0; issue stalled 0%; 19.1 B/clk
+wrote results/corun_sweep.json
+corun_none_LLC_d4: clock 2.397 GHz (ATT 2.398); rt p50 668.0 cyc = 279 ns (fast 668.0, cold None); exact 78%; in flight 19.0; issue stalled 0%; 29.6 B/clk
+wrote results/corun_sweep.json
+corun_none_LLC_d8: clock 2.397 GHz (ATT 2.395); rt p50 748.0 cyc = 312 ns (fast 748.0, cold None); exact 64%; in flight 35.0; issue stalled 0%; 46.5 B/clk
+wrote results/corun_sweep.json
+corun_none_LLC_d10: clock 2.402 GHz (ATT 2.398); rt p50 948.0 cyc = 395 ns (fast 948.0, cold None); exact 65%; in flight 43.0; issue stalled 0%; 46.4 B/clk
+wrote results/corun_sweep.json
+corun_none_LLC_d12: clock 2.397 GHz (ATT 2.397); rt p50 1024.0 cyc = 427 ns (fast 1024.0, cold None); exact 3%; in flight 49.0; issue stalled 89%; 45.3 B/clk
+wrote results/corun_sweep.json
+corun_none_LLC_d16: clock 2.402 GHz (ATT 2.398); rt p50 None cyc = 0 ns (fast None, cold None); exact 0%; in flight 65.0; issue stalled 89%; 47.1 B/clk
+wrote results/corun_sweep.json
+corun_none_HBM_d0: clock 2.403 GHz (ATT 2.402); rt p50 968.0 cyc = 403 ns (fast None, cold 968.0); exact 100%; in flight 4.0; issue stalled 0%; 4.2 B/clk
+wrote results/corun_sweep.json
+corun_none_HBM_d2: clock 2.407 GHz (ATT 2.403); rt p50 1048.0 cyc = 435 ns (fast None, cold 1048.0); exact 80%; in flight 12.0; issue stalled 0%; 11.1 B/clk
+wrote results/corun_sweep.json
+corun_none_HBM_d4: clock 2.403 GHz (ATT 2.402); rt p50 1164.0 cyc = 484 ns (fast None, cold 1164.0); exact 79%; in flight 19.0; issue stalled 0%; 17.0 B/clk
+wrote results/corun_sweep.json
+corun_none_HBM_d8: clock 2.394 GHz (ATT 2.393); rt p50 1432.0 cyc = 598 ns (fast None, cold 1432.0); exact 67%; in flight 35.0; issue stalled 0%; 25.6 B/clk
+wrote results/corun_sweep.json
+corun_none_HBM_d10: clock 2.402 GHz (ATT 2.401); rt p50 1764.0 cyc = 734 ns (fast None, cold 1764.0); exact 57%; in flight 43.0; issue stalled 0%; 25.0 B/clk
+wrote results/corun_sweep.json
+corun_none_HBM_d12: clock 2.403 GHz (ATT 2.402); rt p50 1880.0 cyc = 782 ns (fast None, cold 1880.0); exact 2%; in flight 49.0; issue stalled 98%; 25.7 B/clk
+wrote results/corun_sweep.json
+corun_none_HBM_d16: clock 2.398 GHz (ATT 2.399); rt p50 None cyc = 0 ns (fast None, cold None); exact 0%; in flight 65.0; issue stalled 100%; 26.4 B/clk
+wrote results/corun_sweep.json
+corun_none_L2_mix50_d4: clock 2.402 GHz (ATT 2.399); rt p50 1040.0 cyc = 433 ns (fast 1040.0, cold 1040.0); exact 76%; in flight 19.0; issue stalled 0%; 17.9 B/clk
+wrote results/corun_sweep.json
+corun_none_L2_mix50_d10: clock 2.398 GHz (ATT 2.400); rt p50 1376.0 cyc = 574 ns (fast 1368.0, cold 1388.0); exact 71%; in flight 43.0; issue stalled 0%; 32.4 B/clk
+wrote results/corun_sweep.json
+corun_none_LLC_mix50_d4: clock 2.403 GHz (ATT 2.402); rt p50 1040.0 cyc = 433 ns (fast 1032.0, cold 1056.0); exact 79%; in flight 19.0; issue stalled 0%; 17.9 B/clk
+wrote results/corun_sweep.json
+corun_none_LLC_mix50_d10: clock 2.402 GHz (ATT 2.401); rt p50 1360.0 cyc = 566 ns (fast 1356.0, cold 1360.0); exact 66%; in flight 43.0; issue stalled 0%; 31.6 B/clk
+wrote results/corun_sweep.json
+corun_xcd_L2_d0: clock 2.288 GHz (ATT 2.251); rt p50 204.0 cyc = 89 ns (fast 204.0, cold None); exact 100%; in flight 4.0; issue stalled 0%; 17.5 B/clk
+wrote results/corun_sweep.json
+corun_xcd_L2_d2: clock 2.218 GHz (ATT 2.254); rt p50 208.0 cyc = 94 ns (fast 208.0, cold None); exact 71%; in flight 11.0; issue stalled 0%; 50.2 B/clk
+wrote results/corun_sweep.json
+corun_xcd_L2_d4: clock 2.253 GHz (ATT 2.252); rt p50 284.0 cyc = 126 ns (fast 284.0, cold None); exact 50%; in flight 18.0; issue stalled 0%; 63.9 B/clk
+wrote results/corun_sweep.json
+corun_xcd_L2_d8: clock 2.297 GHz (ATT 2.251); rt p50 488.0 cyc = 212 ns (fast 488.0, cold None); exact 1%; in flight 33.0; issue stalled 77%; 64.0 B/clk
+wrote results/corun_sweep.json
+corun_xcd_L2_d10: clock 2.249 GHz (ATT 2.249); rt p50 None cyc = 0 ns (fast None, cold None); exact 0%; in flight 41.0; issue stalled 81%; 64.0 B/clk
+wrote results/corun_sweep.json
+corun_xcd_L2_d12: clock 2.266 GHz (ATT 2.253); rt p50 None cyc = 0 ns (fast None, cold None); exact 0%; in flight 49.0; issue stalled 82%; 63.9 B/clk
+wrote results/corun_sweep.json
+corun_xcd_L2_d16: clock 2.266 GHz (ATT 2.252); rt p50 None cyc = 0 ns (fast None, cold None); exact 0%; in flight 65.0; issue stalled 81%; 64.0 B/clk
+wrote results/corun_sweep.json
+corun_xcd_LLC_d0: clock 2.288 GHz (ATT 2.248); rt p50 530.0 cyc = 232 ns (fast 530.0, cold None); exact 100%; in flight 3.0; issue stalled 0%; 7.3 B/clk
+wrote results/corun_sweep.json
+corun_xcd_LLC_d2: clock 2.235 GHz (ATT 2.253); rt p50 620.0 cyc = 277 ns (fast 620.0, cold None); exact 85%; in flight 11.0; issue stalled 0%; 19.3 B/clk
+wrote results/corun_sweep.json
+corun_xcd_LLC_d4: clock 2.222 GHz (ATT 2.247); rt p50 632.0 cyc = 284 ns (fast 632.0, cold None); exact 73%; in flight 19.0; issue stalled 0%; 31.2 B/clk
+wrote results/corun_sweep.json
+corun_xcd_LLC_d8: clock 2.315 GHz (ATT 2.254); rt p50 748.0 cyc = 323 ns (fast 748.0, cold None); exact 62%; in flight 35.0; issue stalled 0%; 47.4 B/clk
+wrote results/corun_sweep.json
+corun_xcd_LLC_d10: clock 2.275 GHz (ATT 2.248); rt p50 912.0 cyc = 401 ns (fast 912.0, cold None); exact 61%; in flight 43.0; issue stalled 0%; 47.5 B/clk
+wrote results/corun_sweep.json
+corun_xcd_LLC_d12: clock 2.270 GHz (ATT 2.254); rt p50 1016.0 cyc = 447 ns (fast 1016.0, cold None); exact 2%; in flight 49.0; issue stalled 87%; 47.3 B/clk
+wrote results/corun_sweep.json
+corun_xcd_LLC_d16: clock 2.257 GHz (ATT 2.247); rt p50 None cyc = 0 ns (fast None, cold None); exact 0%; in flight 65.0; issue stalled 85%; 48.7 B/clk
+wrote results/corun_sweep.json
+corun_xcd_HBM_d0: clock 2.266 GHz (ATT 2.249); rt p50 964.0 cyc = 425 ns (fast None, cold 964.0); exact 100%; in flight 4.0; issue stalled 0%; 4.2 B/clk
+wrote results/corun_sweep.json
+corun_xcd_HBM_d2: clock 2.261 GHz (ATT 2.249); rt p50 1000.0 cyc = 442 ns (fast None, cold 1000.0); exact 84%; in flight 12.0; issue stalled 0%; 11.7 B/clk
+wrote results/corun_sweep.json
+corun_xcd_HBM_d4: clock 2.270 GHz (ATT 2.249); rt p50 1068.0 cyc = 471 ns (fast None, cold 1068.0); exact 82%; in flight 19.0; issue stalled 0%; 18.0 B/clk
+wrote results/corun_sweep.json
+corun_xcd_HBM_d8: clock 2.266 GHz (ATT 2.252); rt p50 1412.0 cyc = 623 ns (fast None, cold 1412.0); exact 60%; in flight 35.0; issue stalled 0%; 25.6 B/clk
+wrote results/corun_sweep.json
+corun_xcd_HBM_d10: clock 2.288 GHz (ATT 2.255); rt p50 1648.0 cyc = 720 ns (fast None, cold 1648.0); exact 81%; in flight 43.0; issue stalled 0%; 26.6 B/clk
+wrote results/corun_sweep.json
+corun_xcd_HBM_d12: clock 2.265 GHz (ATT 2.253); rt p50 1816.0 cyc = 802 ns (fast None, cold 1816.0); exact 3%; in flight 49.0; issue stalled 98%; 26.4 B/clk
+wrote results/corun_sweep.json
+corun_xcd_HBM_d16: clock 2.266 GHz (ATT 2.252); rt p50 None cyc = 0 ns (fast None, cold None); exact 0%; in flight 65.0; issue stalled 100%; 26.5 B/clk
+wrote results/corun_sweep.json
+corun_xcd_L2_mix50_d4: clock 2.261 GHz (ATT 2.249); rt p50 808.0 cyc = 357 ns (fast 796.0, cold 814.0); exact 75%; in flight 19.0; issue stalled 0%; 23.1 B/clk
+wrote results/corun_sweep.json
+corun_xcd_L2_mix50_d10: clock 2.252 GHz (ATT 2.247); rt p50 1620.0 cyc = 719 ns (fast 1592.0, cold 1628.0); exact 58%; in flight 43.0; issue stalled 0%; 27.1 B/clk
+wrote results/corun_sweep.json
+corun_xcd_LLC_mix50_d4: clock 2.270 GHz (ATT 2.249); rt p50 784.0 cyc = 345 ns (fast 772.0, cold 792.0); exact 74%; in flight 19.0; issue stalled 0%; 23.2 B/clk
+wrote results/corun_sweep.json
+corun_xcd_LLC_mix50_d10: clock 2.287 GHz (ATT 2.254); rt p50 1388.0 cyc = 607 ns (fast 1382.0, cold 1390.0); exact 61%; in flight 43.0; issue stalled 0%; 31.8 B/clk
+wrote results/corun_sweep.json
+corun_all_L2_d0: clock 2.152 GHz (ATT 2.075); rt p50 204.0 cyc = 95 ns (fast 204.0, cold None); exact 100%; in flight 4.0; issue stalled 0%; 17.4 B/clk
+wrote results/corun_sweep.json
+corun_all_L2_d2: clock 2.170 GHz (ATT 2.079); rt p50 208.0 cyc = 96 ns (fast 208.0, cold None); exact 71%; in flight 11.0; issue stalled 0%; 50.2 B/clk
+wrote results/corun_sweep.json
+corun_all_L2_d4: clock 2.161 GHz (ATT 2.078); rt p50 284.0 cyc = 131 ns (fast 284.0, cold None); exact 42%; in flight 18.0; issue stalled 0%; 64.0 B/clk
+wrote results/corun_sweep.json
+corun_all_L2_d8: clock 2.152 GHz (ATT 2.069); rt p50 None cyc = 0 ns (fast None, cold None); exact 0%; in flight 33.0; issue stalled 81%; 64.0 B/clk
+wrote results/corun_sweep.json
+corun_all_L2_d10: clock 2.165 GHz (ATT 2.073); rt p50 None cyc = 0 ns (fast None, cold None); exact 0%; in flight 41.0; issue stalled 82%; 64.0 B/clk
+wrote results/corun_sweep.json
+corun_all_L2_d12: clock 2.152 GHz (ATT 2.077); rt p50 None cyc = 0 ns (fast None, cold None); exact 0%; in flight 49.0; issue stalled 81%; 64.0 B/clk
+wrote results/corun_sweep.json
+corun_all_L2_d16: clock 2.144 GHz (ATT 2.076); rt p50 None cyc = 0 ns (fast None, cold None); exact 0%; in flight 65.0; issue stalled 81%; 64.0 B/clk
+wrote results/corun_sweep.json
+corun_all_LLC_d0: clock 2.165 GHz (ATT 2.078); rt p50 582.0 cyc = 269 ns (fast 582.0, cold None); exact 100%; in flight 4.0; issue stalled 0%; 7.3 B/clk
+wrote results/corun_sweep.json
+corun_all_LLC_d2: clock 2.151 GHz (ATT 2.073); rt p50 600.0 cyc = 279 ns (fast 600.0, cold None); exact 88%; in flight 11.0; issue stalled 0%; 19.8 B/clk
+wrote results/corun_sweep.json
+corun_all_LLC_d4: clock 2.152 GHz (ATT 2.074); rt p50 624.0 cyc = 290 ns (fast 624.0, cold None); exact 70%; in flight 19.0; issue stalled 0%; 31.6 B/clk
+wrote results/corun_sweep.json
+corun_all_LLC_d8: clock 2.169 GHz (ATT 2.072); rt p50 684.0 cyc = 315 ns (fast 684.0, cold None); exact 65%; in flight 34.0; issue stalled 0%; 51.2 B/clk
+wrote results/corun_sweep.json
+corun_all_LLC_d10: clock 2.151 GHz (ATT 2.069); rt p50 836.0 cyc = 389 ns (fast 836.0, cold None); exact 65%; in flight 42.0; issue stalled 0%; 51.6 B/clk
+wrote results/corun_sweep.json
+corun_all_LLC_d12: clock 2.164 GHz (ATT 2.078); rt p50 972.0 cyc = 449 ns (fast 972.0, cold None); exact 3%; in flight 49.0; issue stalled 84%; 49.3 B/clk
+wrote results/corun_sweep.json
+corun_all_LLC_d16: clock 2.160 GHz (ATT 2.077); rt p50 None cyc = 0 ns (fast None, cold None); exact 0%; in flight 65.0; issue stalled 91%; 49.4 B/clk
+wrote results/corun_sweep.json
+corun_all_HBM_d0: clock 2.178 GHz (ATT 2.076); rt p50 964.0 cyc = 443 ns (fast None, cold 964.0); exact 100%; in flight 4.0; issue stalled 0%; 4.1 B/clk
+wrote results/corun_sweep.json
+corun_all_HBM_d2: clock 2.161 GHz (ATT 2.072); rt p50 960.0 cyc = 444 ns (fast None, cold 960.0); exact 89%; in flight 12.0; issue stalled 0%; 12.1 B/clk
+wrote results/corun_sweep.json
+corun_all_HBM_d4: clock 2.161 GHz (ATT 2.075); rt p50 1032.0 cyc = 478 ns (fast None, cold 1032.0); exact 78%; in flight 19.0; issue stalled 0%; 19.0 B/clk
+wrote results/corun_sweep.json
+corun_all_HBM_d8: clock 2.170 GHz (ATT 2.075); rt p50 1356.0 cyc = 625 ns (fast None, cold 1356.0); exact 68%; in flight 35.0; issue stalled 0%; 26.3 B/clk
+wrote results/corun_sweep.json
+corun_all_HBM_d10: clock 2.165 GHz (ATT 2.070); rt p50 1606.0 cyc = 742 ns (fast None, cold 1606.0); exact 57%; in flight 43.0; issue stalled 0%; 27.7 B/clk
+wrote results/corun_sweep.json
+corun_all_HBM_d12: clock 2.135 GHz (ATT 2.083); rt p50 1788.0 cyc = 838 ns (fast None, cold 1788.0); exact 1%; in flight 49.0; issue stalled 99%; 29.4 B/clk
+wrote results/corun_sweep.json
+corun_all_HBM_d16: clock 2.170 GHz (ATT 2.085); rt p50 None cyc = 0 ns (fast None, cold None); exact 0%; in flight 65.0; issue stalled 98%; 26.5 B/clk
+wrote results/corun_sweep.json
+corun_all_L2_mix50_d4: clock 2.165 GHz (ATT 2.074); rt p50 992.0 cyc = 458 ns (fast 980.0, cold 1004.0); exact 75%; in flight 19.0; issue stalled 0%; 19.5 B/clk
+wrote results/corun_sweep.json
+corun_all_L2_mix50_d10: clock 2.157 GHz (ATT 2.079); rt p50 1240.0 cyc = 575 ns (fast 1240.0, cold 1240.0); exact 64%; in flight 43.0; issue stalled 0%; 35.0 B/clk
+wrote results/corun_sweep.json
+corun_all_LLC_mix50_d4: clock 2.139 GHz (ATT 2.071); rt p50 988.0 cyc = 462 ns (fast 984.0, cold 996.0); exact 77%; in flight 19.0; issue stalled 0%; 19.1 B/clk
+wrote results/corun_sweep.json
+corun_all_LLC_mix50_d10: clock 2.161 GHz (ATT 2.076); rt p50 1572.0 cyc = 727 ns (fast 1560.0, cold 1584.0); exact 61%; in flight 43.0; issue stalled 0%; 27.6 B/clk
+wrote results/corun_sweep.json

@@ -1,0 +1,521 @@
+{
+ "name": "v7_K16384_cold_d15",
+ "K": 16384,
+ "cache": "cold",
+ "att_iter": 15,
+ "ui": "/home/jbowley/repos/gfx950-gluon-tutorials/experiments/l2_hbm_latency_mre/tmp/v7/v7_K16384_cold_d15/ui_output_agent_23913_dispatch_49",
+ "host": {
+  "correct": true,
+  "copies": 8,
+  "MB": 2304,
+  "iters": 1500,
+  "wall_s": 0.599345916,
+  "gfxclk_samples": 648,
+  "gfxclk_median": 2402.0
+ },
+ "kernel_us": {
+  "n": 1501,
+  "first": [
+   466.603,
+   386.162,
+   390.602
+  ],
+  "at15": 462.722,
+  "at600": 400.442,
+  "median_after_100": 397.602
+ },
+ "smu": {
+  "domain": "boottime",
+  "traced": {
+   "n": 0,
+   "mhz": null,
+   "watts": null
+  },
+  "steady": {
+   "n": 627,
+   "mhz": 2402,
+   "watts": 278
+  },
+  "first_20": {
+   "n": 1,
+   "mhz": 2402.125
+  }
+ },
+ "att": {
+  "ghz": 1.342965393328646,
+  "loads_per_iter": 32,
+  "positions": [
+   {
+    "pos": 1,
+    "n": 1016,
+    "stalled": 0.001968503937007874,
+    "stall_p50": 8.0,
+    "stall_p90": 8,
+    "stall_max": 16,
+    "since_a_p50": 8.0
+   },
+   {
+    "pos": 2,
+    "n": 1016,
+    "stalled": 0.0,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 4,
+    "since_a_p50": 72.0
+   },
+   {
+    "pos": 3,
+    "n": 1016,
+    "stalled": 0.0,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 4,
+    "since_a_p50": 136.0
+   },
+   {
+    "pos": 4,
+    "n": 1016,
+    "stalled": 0.001968503937007874,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 148,
+    "since_a_p50": 200.0
+   },
+   {
+    "pos": 5,
+    "n": 1016,
+    "stalled": 0.007874015748031496,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 128,
+    "since_a_p50": 264.0
+   },
+   {
+    "pos": 6,
+    "n": 1016,
+    "stalled": 0.017716535433070866,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 196,
+    "since_a_p50": 328.0
+   },
+   {
+    "pos": 7,
+    "n": 1016,
+    "stalled": 0.024606299212598427,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 404,
+    "since_a_p50": 392.0
+   },
+   {
+    "pos": 8,
+    "n": 1016,
+    "stalled": 0.04921259842519685,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 368,
+    "since_a_p50": 456.0
+   },
+   {
+    "pos": 9,
+    "n": 1016,
+    "stalled": 0.04232283464566929,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 160,
+    "since_a_p50": 520.0
+   },
+   {
+    "pos": 10,
+    "n": 1016,
+    "stalled": 0.045275590551181105,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 192,
+    "since_a_p50": 584.0
+   },
+   {
+    "pos": 11,
+    "n": 1016,
+    "stalled": 0.04625984251968504,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 272,
+    "since_a_p50": 648.0
+   },
+   {
+    "pos": 12,
+    "n": 1016,
+    "stalled": 0.10039370078740158,
+    "stall_p50": 4.0,
+    "stall_p90": 16,
+    "stall_max": 340,
+    "since_a_p50": 712.0
+   },
+   {
+    "pos": 13,
+    "n": 1016,
+    "stalled": 0.0,
+    "stall_p50": 8.0,
+    "stall_p90": 12,
+    "stall_max": 12,
+    "since_a_p50": 1428.0
+   },
+   {
+    "pos": 14,
+    "n": 1016,
+    "stalled": 0.0,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 4,
+    "since_a_p50": 1492.0
+   },
+   {
+    "pos": 15,
+    "n": 1016,
+    "stalled": 0.0,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 4,
+    "since_a_p50": 1556.0
+   },
+   {
+    "pos": 16,
+    "n": 1016,
+    "stalled": 0.0,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 4,
+    "since_a_p50": 1620.0
+   },
+   {
+    "pos": 17,
+    "n": 1016,
+    "stalled": 0.0,
+    "stall_p50": 8.0,
+    "stall_p90": 12,
+    "stall_max": 12,
+    "since_a_p50": 2080.0
+   },
+   {
+    "pos": 18,
+    "n": 1016,
+    "stalled": 0.0,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 4,
+    "since_a_p50": 2144.0
+   },
+   {
+    "pos": 19,
+    "n": 1016,
+    "stalled": 0.0,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 4,
+    "since_a_p50": 2208.0
+   },
+   {
+    "pos": 20,
+    "n": 1016,
+    "stalled": 0.0,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 4,
+    "since_a_p50": 2272.0
+   },
+   {
+    "pos": 21,
+    "n": 1016,
+    "stalled": 0.0,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 4,
+    "since_a_p50": 2336.0
+   },
+   {
+    "pos": 22,
+    "n": 1016,
+    "stalled": 0.000984251968503937,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 204,
+    "since_a_p50": 2400.0
+   },
+   {
+    "pos": 23,
+    "n": 1016,
+    "stalled": 0.006889763779527559,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 188,
+    "since_a_p50": 2464.0
+   },
+   {
+    "pos": 24,
+    "n": 1016,
+    "stalled": 0.038385826771653545,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 192,
+    "since_a_p50": 2528.0
+   },
+   {
+    "pos": 25,
+    "n": 1016,
+    "stalled": 0.11515748031496063,
+    "stall_p50": 4.0,
+    "stall_p90": 32,
+    "stall_max": 476,
+    "since_a_p50": 2592.0
+   },
+   {
+    "pos": 26,
+    "n": 1016,
+    "stalled": 0.0984251968503937,
+    "stall_p50": 4.0,
+    "stall_p90": 12,
+    "stall_max": 392,
+    "since_a_p50": 2656.0
+   },
+   {
+    "pos": 27,
+    "n": 1016,
+    "stalled": 0.0984251968503937,
+    "stall_p50": 4.0,
+    "stall_p90": 12,
+    "stall_max": 332,
+    "since_a_p50": 2720.0
+   },
+   {
+    "pos": 28,
+    "n": 1016,
+    "stalled": 0.1486220472440945,
+    "stall_p50": 4.0,
+    "stall_p90": 64,
+    "stall_max": 328,
+    "since_a_p50": 2788.0
+   },
+   {
+    "pos": 29,
+    "n": 1016,
+    "stalled": 0.0,
+    "stall_p50": 8.0,
+    "stall_p90": 12,
+    "stall_max": 12,
+    "since_a_p50": 3504.0
+   },
+   {
+    "pos": 30,
+    "n": 1016,
+    "stalled": 0.0,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 4,
+    "since_a_p50": 3568.0
+   },
+   {
+    "pos": 31,
+    "n": 1016,
+    "stalled": 0.0,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 4,
+    "since_a_p50": 3632.0
+   },
+   {
+    "pos": 32,
+    "n": 1016,
+    "stalled": 0.0,
+    "stall_p50": 4.0,
+    "stall_p90": 4,
+    "stall_max": 4,
+    "since_a_p50": 3696.0
+   }
+  ]
+ },
+ "att_latency": {
+  "ui": "/home/jbowley/repos/gfx950-gluon-tutorials/experiments/l2_hbm_latency_mre/tmp/v7/v7_K16384_cold_d15/ui_output_agent_23913_dispatch_49",
+  "loop_only": true,
+  "loop_code_range": [
+   577,
+   1107
+  ],
+  "waves": 8,
+  "ses": [
+   0,
+   2
+  ],
+  "ghz_realtime": 1.343,
+  "loads_per_wave": 4064.0,
+  "loads_per_cu": 16256.0,
+  "stretched_loads_per_cu": 429.0,
+  "stretch_threshold_cyc": 16,
+  "L_exact": {
+   "n": 0,
+   "p10": null,
+   "p50": null,
+   "p90": null,
+   "mean": null,
+   "p50_ns": null
+  },
+  "L_bound": {
+   "n": 4064,
+   "p10": 2360.0,
+   "p50": 2416.0,
+   "p90": 2612.0,
+   "p50_ns": 1799.0
+  },
+  "load_rate_per_cu": {
+   "loads_per_cyc": 0.029831796066771443,
+   "bytes_per_cyc": 30.547759172373958,
+   "bytes_per_ns": 41.02458341223595
+  },
+  "inflight_kb_per_cu": {
+   "at_L_exact_p50": null,
+   "at_L_bound_p50": 72.1
+  },
+  "dk_median": {
+   "8": 220.0,
+   "9": 238.0,
+   "10": 256.0,
+   "11": 272.0,
+   "12": 292.0,
+   "13": 312.0,
+   "14": 326.0,
+   "15": 344.0,
+   "16": 364.0,
+   "17": 376.0,
+   "18": 392.0,
+   "19": 408.0,
+   "20": 428.0,
+   "21": 444.0,
+   "22": 460.0,
+   "23": 476.0,
+   "24": 500.0,
+   "25": 516.0,
+   "26": 532.0,
+   "27": 546.0,
+   "28": 568.0,
+   "29": 588.0,
+   "30": 608.0,
+   "31": 644.0,
+   "32": 686.0,
+   "33": 716.0,
+   "34": 748.0,
+   "35": 788.0,
+   "36": 844.0,
+   "37": 896.0,
+   "38": 960.0,
+   "39": 1018.0,
+   "40": 1060.0,
+   "41": 1084.0,
+   "42": 1112.0,
+   "43": 1144.0,
+   "44": 1180.0,
+   "45": 1212.0,
+   "46": 1252.0,
+   "47": 1300.0,
+   "48": 1352.0,
+   "49": 1378.0,
+   "50": 1414.0,
+   "51": 1456.0,
+   "52": 1508.0,
+   "53": 1566.0,
+   "54": 1640.0,
+   "55": 1772.0,
+   "56": 1960.0,
+   "57": 1982.0,
+   "58": 2016.0,
+   "59": 2050.0,
+   "60": 2088.0,
+   "61": 2130.0,
+   "62": 2184.0,
+   "63": 2224.0,
+   "64": 2264.0,
+   "65": 2284.0,
+   "66": 2304.0,
+   "67": 2324.0,
+   "68": 2344.0,
+   "69": 2360.0,
+   "70": 2376.0,
+   "71": 2392.0,
+   "72": 2412.0
+  },
+  "k_match": null,
+  "dk_at": {
+   "32": 686.0,
+   "44": 1180.0,
+   "48": 1352.0
+  },
+  "per_wave": [
+   {
+    "name": "se0_sm0_sl0_wv0.json",
+    "se": 0,
+    "vmem_ops": 4128,
+    "loads": 4064,
+    "exact": 0,
+    "bound": 508
+   },
+   {
+    "name": "se0_sm1_sl0_wv0.json",
+    "se": 0,
+    "vmem_ops": 4128,
+    "loads": 4064,
+    "exact": 0,
+    "bound": 508
+   },
+   {
+    "name": "se0_sm2_sl0_wv0.json",
+    "se": 0,
+    "vmem_ops": 4128,
+    "loads": 4064,
+    "exact": 0,
+    "bound": 508
+   },
+   {
+    "name": "se0_sm3_sl0_wv0.json",
+    "se": 0,
+    "vmem_ops": 4128,
+    "loads": 4064,
+    "exact": 0,
+    "bound": 508
+   },
+   {
+    "name": "se2_sm0_sl0_wv0.json",
+    "se": 2,
+    "vmem_ops": 4128,
+    "loads": 4064,
+    "exact": 0,
+    "bound": 508
+   },
+   {
+    "name": "se2_sm1_sl0_wv0.json",
+    "se": 2,
+    "vmem_ops": 4128,
+    "loads": 4064,
+    "exact": 0,
+    "bound": 508
+   },
+   {
+    "name": "se2_sm2_sl0_wv0.json",
+    "se": 2,
+    "vmem_ops": 4128,
+    "loads": 4064,
+    "exact": 0,
+    "bound": 508
+   },
+   {
+    "name": "se2_sm3_sl0_wv0.json",
+    "se": 2,
+    "vmem_ops": 4128,
+    "loads": 4064,
+    "exact": 0,
+    "bound": 508
+   }
+  ],
+  "name": "v7_K16384_cold_d15"
+ },
+ "mfma_eff": 95.37
+}

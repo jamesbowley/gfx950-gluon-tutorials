@@ -72,6 +72,19 @@ def config(r):
     return {"dp": "data-parallel"}.get(p, p)
 
 
+def mn_tile(spec):
+    """The MxN part of a tile spec."""
+    return "x".join(spec.split("x")[:2])
+
+
+def output_tile(tile, library):
+    """Tile in torch output MxN order. hipBLASLt names MT as column-major N x M."""
+    parts = tile.split("x")
+    if len(parts) >= 2 and library in ("hipBLASLt", "AITER torch", "AITER hipblaslt"):
+        return f"{parts[1]}x{parts[0]}"
+    return mn_tile(tile)
+
+
 def load(path, layout="plain"):
     from pad_report import best_fields, times
 
@@ -85,15 +98,22 @@ def load(path, layout="plain"):
         # streamk_wip forced data-parallel: timed where capped splits or hands the launch to v9, and
         # the headline kernel elsewhere
         t = times(r, lay)
+        our_tile = mn_tile(r.get("v20_tile", "256x256x64"))
+        best_output_tile = output_tile(tile, b["best_lib"])
         rows.append(dict(
             key=key(r["M"], r["N"], r["K"], r["out"]), shape=f"{r['M']}x{r['N']}x{r['K']}",
             M=int(r["M"]), N=int(r["N"]), K=int(r["K"]), tiles=int(r["tiles"]), waves=int(r["waves"]),
             S=int(r["S"]), k=int(r["k_steps"]), config=config(r), label=r["v20_label"],
-            best=best, best_lib=b["best_lib"], best_tile=tile,
-            same=tile == "256x256", tile_cat=tile_cat(tile),
+            best=best, best_lib=b["best_lib"], best_tile=tile, best_output_tile=best_output_tile,
+            our_tile=our_tile, same=best_output_tile == our_tile if CFG["v27_view"] else tile == "256x256",
+            tile_cat=tile_cat(tile),
             g9=pct(t["v9"], best), g20=pct(t["v20"], best), g20dp=pct(t["dp"], best),
             g20_v9=pct(t["v20"], t["v9"]),
             g20_pick=pct(t["v20"], fnum(r["aiter_pick_tflops"])), raw=r))
+        if "v9new_tflops" in r:
+            v9new_tile = mn_tile(r["v9new_tile"])
+            rows[-1].update(g9new=pct(fnum(r["v9new_tflops"]), best), g26=pct(fnum(r["v26_tflops"]), best),
+                            v9new_tile=v9new_tile, same_v9new=best_output_tile == v9new_tile)
     return rows
 
 
@@ -137,9 +157,41 @@ SUMMARY_GROUPS = (
 )
 
 
+def same_own_tile(r, col):
+    """Best library uses the tile of the kernel represented by this bar."""
+    return r["same_v9new"] if col == "g9new" else r["same"]
+
+
+same_own_tile.by_kernel = True
+
+
+def different_own_tile(r, col):
+    return not same_own_tile(r, col)
+
+
+different_own_tile.by_kernel = True
+
+
+SUMMARY_GROUPS_V27 = SUMMARY_GROUPS[:4] + (
+    ("Best library uses the same MxN tile", same_own_tile),
+    ("Best library uses a different MxN tile", different_own_tile),
+)
+
+
 KERNELS3 = (("v9", "g9", 0.4), ("streamk_wip, data-parallel only", "g20dp", 0.7), ("streamk_wip", "g20", 1.0))
 KERNELS2 = (("v9", "g9", 0.4), ("streamk_wip", "g20", 1.0))
+KERNELS_V27 = (("new AITER v9", "g9new", 0.5), ("tile-rule data-parallel", "g20dp", 0.7),
+               ("streamk_wip", "g20", 1.0))
+# Figure 0 of a --kernel v27 run: the new AITER v9 and v26 (timed in the same run) as well.
+KERNELS5 = (("v9", "g9", 0.4), ("new v9", "g9new", 0.55), ("v26", "g26", 0.55),
+            ("streamk_wip, data-parallel only", "g20dp", 0.7), ("streamk_wip", "g20", 1.0))
 STATE_TITLE = {"warm": "Warm caches (back to back)", "cold": "Cold caches (2048 MB rotating buffer)"}
+STATES = ("warm", "cold")  # ("cold",) with --cold-only
+
+
+def wide():
+    """Width factor of the bar figures: room for the counts column."""
+    return 1.4 if CFG["counts"] else 1.0
 
 
 def diverging(ax, rows, groups, kernels, title, show_labels=True):
@@ -148,8 +200,9 @@ def diverging(ax, rows, groups, kernels, title, show_labels=True):
     step = len(kernels) + 1
     out, ypos, labels = {}, [], []
     for gi, (gname, pred) in enumerate(groups):
-        sel = [r for r in rows if pred(r)]
         for ki, (kname, col, alpha) in enumerate(kernels):
+            sel = ([r for r in rows if pred(r, col)] if getattr(pred, "by_kernel", False)
+                   else [r for r in rows if pred(r)])
             y = -(gi * step + ki)
             ypos.append(y)
             labels.append(f"{gname}: {kname}" if ki == 0 else kname)
@@ -164,16 +217,21 @@ def diverging(ax, rows, groups, kernels, title, show_labels=True):
             for val, x, cnt in ((b, -t / 2 - b / 2, behind), (a, t / 2 + a / 2, ahead)):
                 if val >= 7:
                     ax.text(x, y, str(cnt), ha="center", va="center", fontsize=7.5, color="white")
-            ax.text(103, y, f"{med:+.1f}%", va="center", fontsize=8.5,
-                    fontweight="bold" if kname == "streamk_wip" else "normal")
+            weight = "bold" if kname == "streamk_wip" else "normal"
+            ax.text(103, y, f"{med:+.1f}%", va="center", fontsize=8.5, fontweight=weight)
+            if CFG["counts"]:
+                ax.text(170, y, f"{behind} / {tie} / {ahead}", ha="center", va="center", fontsize=8.5,
+                        fontweight=weight)
             out[(gname, kname)] = (n, ahead, tie, behind, med)
     ax.axvline(0, color="k", lw=0.8)
-    ax.set_xlim(-100, 115)
+    ax.set_xlim(-100, 205 if CFG["counts"] else 115)
     ax.set_xticks([-100, -75, -50, -25, 0, 25, 50, 75, 100])
     ax.set_xticklabels(["100%", "75%", "50%", "25%", "0", "25%", "50%", "75%", "100%"])
     ax.text(-50, max(ypos) + 1.0, "behind by more than 1%", ha="center", fontsize=9, color="tab:red")
     ax.text(50, max(ypos) + 1.0, "ahead by more than 1%", ha="center", fontsize=9, color="tab:blue")
     ax.text(108, max(ypos) + 1.0, "median", ha="center", fontsize=9)
+    if CFG["counts"]:
+        ax.text(170, max(ypos) + 1.0, "behind / within 1% / ahead", ha="center", fontsize=9)
     ax.set_xlabel("share of shapes (numbers in the bars are shape counts; grey = within 1%)")
     ax.set_title(title)
     ax.grid(alpha=0.3, axis="x")
@@ -191,14 +249,25 @@ def diverging(ax, rows, groups, kernels, title, show_labels=True):
 def figure0(runs, md):
     """v9, streamk_wip forced data-parallel and streamk_wip against the best library, per group,
     warm and cold side by side."""
-    fig, axes = plt.subplots(1, 2, figsize=(15, 8.6), sharey=True)
+    kernels = KERNELS_V27 if CFG["v27_view"] else KERNELS5 if "g9new" in runs[STATES[0]][0] else KERNELS3
+    tall = 8.6 * (len(kernels) + 1) / 4
+    fig, axes = plt.subplots(1, len(STATES), figsize=((15 if len(STATES) == 2 else 9.5) * wide(), tall), sharey=True,
+                             squeeze=False)
     rows_out = {}
-    for i, (ax, state) in enumerate(zip(axes, ("warm", "cold"))):
-        res = diverging(ax, runs[state], SUMMARY_GROUPS, KERNELS3, STATE_TITLE[state], show_labels=i == 0)
+    groups = SUMMARY_GROUPS_V27 if CFG["v27_view"] else SUMMARY_GROUPS
+    for i, (ax, state) in enumerate(zip(axes[0], STATES)):
+        res = diverging(ax, runs[state], groups, kernels, STATE_TITLE[state], show_labels=i == 0)
         rows_out.update({(state,) + k: v for k, v in res.items()})
-    fig.suptitle("v9, streamk_wip forced data-parallel, and streamk_wip, against the best of AITER's pick and "
-                 "hipBLASLt (630 shapes;\nv9 to data-parallel = the persistent kernel, data-parallel to streamk_wip = "
-                 "stream-K)", fontsize=12)
+    if kernels is KERNELS_V27:
+        fig.suptitle("New AITER v9, tile-rule data-parallel, and streamk_wip,\nagainst the best of AITER's pick and "
+                     f"hipBLASLt ({len(runs[STATES[0]])} shapes)", fontsize=12)
+    elif kernels is KERNELS5:
+        fig.suptitle("v9 (existing and new), v26, streamk_wip forced data-parallel, and streamk_wip,\nagainst the "
+                     f"best of AITER's pick and hipBLASLt ({len(runs[STATES[0]])} shapes)", fontsize=12)
+    else:
+        fig.suptitle("v9, streamk_wip forced data-parallel, and streamk_wip, against the best of AITER's pick and "
+                     "hipBLASLt (630 shapes;\nv9 to data-parallel = the persistent kernel, data-parallel to streamk_wip = "
+                     "stream-K)", fontsize=12)
     fig.tight_layout()
     path = os.path.join(OUT, "fig0_summary.png")
     fig.savefig(path, dpi=130)
@@ -230,7 +299,7 @@ def figure4(state, runs, md):
     persistent data-parallel kernel. v9 against streamk_wip by number of full waves."""
     rows = [r for r in runs[state] if r["S"] == 0]
     groups = (("All S = 0 shapes", lambda r: True),) + WAVE_GROUPS
-    fig, ax = plt.subplots(figsize=(10, 5.8))
+    fig, ax = plt.subplots(figsize=(10 * wide(), 5.8))
     res = diverging(ax, rows, groups, KERNELS2, STATE_TITLE[state])
     fig.suptitle(f"Shapes with no leftover tiles (S = 0, {len(rows)} shapes): v9 against streamk_wip, which runs "
                  "data-parallel here,\nboth against the best of AITER's pick and hipBLASLt", fontsize=11)
@@ -245,12 +314,19 @@ def figure4(state, runs, md):
 def figure5(state, runs, md):
     """S > 0: rows are S buckets; under one wave and one wave or more in separate panels."""
     rows = [r for r in runs[state] if r["S"] > 0]
-    fig, axes = plt.subplots(1, 2, figsize=(15, 7.2), sharey=True)
+    fig, axes = plt.subplots(1, 2, figsize=(15 * wide(), 9.5 if CFG["v27_view"] else 7.2), sharey=True)
     res = {}
     for i, (ax, (wname, wpred)) in enumerate(zip(axes, WAVE_SPLIT)):
         sel = [r for r in rows if wpred(r)]
-        groups = ((f"All ({len(sel)} shapes)", lambda r: True),) + s_groups()
-        out = diverging(ax, sel, groups, KERNELS3, f"{wname}, {len(sel)} shapes", show_labels=i == 0)
+        tile_groups = ()
+        if CFG["v27_view"]:
+            tile_groups = (
+                ("Best library: same MxN tile", same_own_tile),
+                ("Best library: different MxN tile", different_own_tile),
+            )
+        groups = ((f"All ({len(sel)} shapes)", lambda r: True),) + tile_groups + s_groups()
+        kernels = KERNELS_V27 if CFG["v27_view"] else KERNELS3
+        out = diverging(ax, sel, groups, kernels, f"{wname}, {len(sel)} shapes", show_labels=i == 0)
         res.update({(wname,) + k: v for k, v in out.items()})
     fig.suptitle(f"Shapes with leftover tiles (S > 0, {len(rows)} shapes, {state} caches), by S = output tiles mod "
                  "256,\nagainst the best of AITER's pick and hipBLASLt; data-parallel only to streamk_wip = stream-K",
@@ -318,6 +394,8 @@ def figure1(state, runs, md):
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 6.2))
 
     for st, ls in ((state, "-"), (other, "--")):
+        if st not in runs:
+            continue
         for name, col, color in (("v9", "g9", "tab:gray"), ("streamk_wip", "g20", "tab:blue")):
             g = sorted(r[col] for r in runs[st])
             n = len(g)
@@ -530,15 +608,27 @@ def write_md(md, paths):
         L += ["Layout: v9 and streamk_wip on the padded layout (each row stride that is a multiple of 512 bytes "
               "gets 256 more); AITER's pick and hipBLASLt contiguous, as AITER calls them.", ""]
     names = (("v9", "v9"), ("streamk_wip, data-parallel only", "data-parallel only"), ("streamk_wip", "streamk_wip"))
+    if (STATES[0], SUMMARY_GROUPS[0][0], "v26") in md["fig0"]:
+        names = (("v9", "v9"), ("new v9", "new v9"), ("v26", "v26")) + names[1:]
+    m0, both = STATES[0], len(STATES) > 1
+
+    def alt(*lines):
+        """The pointer to the other cache state's file, when there is one."""
+        return ["", *lines, ""] if both else [""]
+
     L += ["## Figure 0: summary", "", "![fig0](fig0_summary.png)", "",
           "\"Data-parallel only\" is streamk_wip with `STREAMK_POLICY=dp`: the same persistent kernel without the "
           "stream-K split. v9 to data-parallel only is the persistent kernel's change; data-parallel only to "
           "streamk_wip is what stream-K adds.", "",
+          *(["In Figures 0, 4 and 5, the right-hand count column is `behind / within 1% / ahead`.", ""]
+            if CFG["counts"] else []),
           "| Caches | Shapes | Count | " + " | ".join(f"{s}: faster | {s}: within 1% | {s}: slower | {s}: median"
                                                    for _, s in names) + " |",
           "|---|---|---:|" + "---:|---:|---:|---:|" * len(names)]
-    for st in ("warm", "cold"):
+    for st in STATES:
         for gname, _ in SUMMARY_GROUPS:
+            if (st, gname, names[0][0]) not in md["fig0"]:
+                continue
             cells, n = [], 0
             for kname, _ in names:
                 n, a, t, b, med = md["fig0"][(st, gname, kname)]
@@ -546,19 +636,19 @@ def write_md(md, paths):
             L.append(f"| {st.capitalize()} | {gname} | {n} | " + " | ".join(cells) + " |")
     L += [""]
     f1 = md["fig1"]
-    L += ["## Figure 1: progress over v9", "", "![fig1](fig1_progress_warm.png)", ""]
-    for st in ("warm", "cold"):
+    L += ["## Figure 1: progress over v9", "", f"![fig1](fig1_progress_{m0}.png)", ""]
+    for st in STATES:
         d = f1[st]
         L += [f"- {st.capitalize()}: v9 {c(d['v9'])}; streamk_wip {c(d['v20'])}. "
               f"streamk_wip improved on v9 by more than 1% on {d['improved']} shapes and fell back on {d['worse']}. "
               f"{d['q']['behind with v9, ahead now']} shapes went from behind to ahead, "
               f"{d['q']['ahead with v9, behind now']} the other way. "
               f"hipBLASLt is the faster library on {d['hbl_best']} shapes; the best library uses 256x256 on {d['same']}."]
-    L += ["", "Cold version: `fig1_progress_cold.png` (both states are drawn in panel (a) of each).", ""]
+    L += alt("Cold version: `fig1_progress_cold.png` (both states are drawn in panel (a) of each).")
 
     f2 = md["fig2"]
-    L += ["## Figure 2: the same-tile losses, by S and k-steps", "", "![fig2](fig2_same_tile_S_k_warm.png)", ""]
-    for st in ("warm", "cold"):
+    L += ["## Figure 2: the same-tile losses, by S and k-steps", "", f"![fig2](fig2_same_tile_S_k_{m0}.png)", ""]
+    for st in STATES:
         d = f2[st]
         L += [f"- {st.capitalize()}: {d['n']} shapes where the best library uses 256x256; streamk_wip is behind on "
               f"{d['losses']}, {d['losses_dp']} of them data-parallel and {d['losses_in_band']} in the shaded band "
@@ -569,11 +659,11 @@ def write_md(md, paths):
               f"against v9 {c(d['rest_v9'])}.",
               "  - Worst: " + "; ".join(f"{r['shape']} (S = {r['S']}, k = {r['k']}, {r['label']}, "
                                          f"{r['g20']:+.1f}% vs best, {r['g20_v9']:+.1f}% vs v9)" for r in d["worst"]) + "."]
-    L += ["", "Cold version: `fig2_same_tile_S_k_cold.png`.", ""]
+    L += alt("Cold version: `fig2_same_tile_S_k_cold.png`.")
 
     f3 = md["fig3"]
-    L += ["## Figure 3: where the remaining losses are", "", "![fig3](fig3_losses_warm.png)", ""]
-    for st in ("warm", "cold"):
+    L += ["## Figure 3: where the remaining losses are", "", f"![fig3](fig3_losses_{m0}.png)", ""]
+    for st in STATES:
         d = f3[st]
         L += [f"- {st.capitalize()}: streamk_wip is behind the best library on {d['losses']} shapes."]
         for cat, t in d["by_cat"].items():
@@ -581,26 +671,26 @@ def write_md(md, paths):
                   f"(under 1 wave / 256-1023 / 1024+): {' / '.join(str(v) for v in d['table'][cat])}."]
         if d["unknown"]:
             L += [f"  - {d['unknown']} shapes have no parsable tile (AITER's Triton pick) and are left out."]
-    L += ["", "Cold version: `fig3_losses_cold.png`.", ""]
+    L += alt("Cold version: `fig3_losses_cold.png`.")
 
-    L += ["## Figure 4: shapes with no leftover tiles (S = 0)", "", "![fig4](fig4_s0_by_waves_warm.png)", "",
+    L += ["## Figure 4: shapes with no leftover tiles (S = 0)", "", f"![fig4](fig4_s0_by_waves_{m0}.png)", "",
           "With S = 0 capped always runs data-parallel, so streamk_wip here is the persistent data-parallel kernel "
           "and stream-K plays no part.", ""]
-    for st in ("warm", "cold"):
+    for st in STATES:
         d = md["fig4"][st]
         L += [f"- {st.capitalize()}: " + "; ".join(
             f"{g}: v9 {d[(g, 'v9')][4]:+.1f}% ({d[(g, 'v9')][3]} behind), streamk_wip {d[(g, 'streamk_wip')][4]:+.1f}% "
             f"({d[(g, 'streamk_wip')][3]} behind) of {d[(g, 'v9')][0]}" for g in
             ["All S = 0 shapes"] + [w[0] for w in WAVE_GROUPS]) + "."]
-    L += ["", "Cold version: `fig4_s0_by_waves_cold.png`.", "",
-          "## Figure 5: shapes with leftover tiles (S > 0), by S", "", "![fig5](fig5_s_buckets_warm.png)", "",
+    L += alt("Cold version: `fig4_s0_by_waves_cold.png`.")[:-1] + [
+          "", "## Figure 5: shapes with leftover tiles (S > 0), by S", "", f"![fig5](fig5_s_buckets_{m0}.png)", "",
           "Rows are S buckets; under one wave and one wave or more are separate panels. Data-parallel only to "
-          "streamk_wip is stream-K's own effect. Cold version: `fig5_s_buckets_cold.png`.", "",
-          "## Figure 6: shapes with leftover tiles (S > 0), by S and k-steps", "", "![fig6](fig6_s_k_heatmap_warm.png)",
+          "streamk_wip is stream-K's own effect." + (" Cold version: `fig5_s_buckets_cold.png`." if both else ""), "",
+          "## Figure 6: shapes with leftover tiles (S > 0), by S and k-steps", "", f"![fig6](fig6_s_k_heatmap_{m0}.png)",
           "", "Each cell is the median over the shapes in it (n), with the number more than 1% behind the best "
           "library. Left: streamk_wip against the best library. Right: stream-K's gain, streamk_wip against the same "
-          "kernel forced data-parallel; 0.0% means capped ran data-parallel on every shape in the cell. Cold version: "
-          "`fig6_s_k_heatmap_cold.png`.", ""]
+          "kernel forced data-parallel; 0.0% means capped ran data-parallel on every shape in the cell."
+          + (" Cold version: `fig6_s_k_heatmap_cold.png`." if both else ""), ""]
     if "fig7" in md:
         L += ["## Figure 7: padding, spread between fresh-buffer rounds and padded against contiguous", "",
               "![fig7](fig7_padding.png)", "",
@@ -691,7 +781,8 @@ def figure7(runs, md):
     return path
 
 
-CFG = dict(layout="plain", data="Data: `details_capped_hbl.csv` (warm: back to back on the same buffers) and "
+CFG = dict(layout="plain", counts=False, v27_view=False,
+           data="Data: `details_capped_hbl.csv` (warm: back to back on the same buffers) and "
            "`details_capped_hbl_rot2048.csv` (cold: 2048 MB rotating buffer), 630 shapes, MI355X, torch "
            "2.10.0+rocm7.2.4 with hipBLASLt 1.2.2, AITER `main` `a1455f1c4`, v20 snapshot `7c55c4017abfc6cc`.")
 
@@ -704,20 +795,41 @@ def main():
     p.add_argument("--layout", choices=["plain", "pad", "mixed"], default="plain")
     p.add_argument("--out", default=OUT)
     p.add_argument("--data", default=None, help="the data line of figures.md")
+    p.add_argument("--cold-only", action="store_true", help="a run with no warm sweep: cold figures only")
+    p.add_argument("--counts", action="store_true",
+                   help="the bar figures (0, 4, 5) get a column after the median: behind / within 1% / ahead")
+    p.add_argument("--v27-view", action="store_true",
+                   help="bar figures compare new AITER v9, tile-rule data-parallel and streamk_wip")
+    p.add_argument("--issue-only", action="store_true",
+                   help="write only Figure 0 and cold Figure 5 (requires --cold-only)")
     args = p.parse_args()
+    global STATES
     OUT = args.out
     CFG["layout"] = args.layout
+    CFG["counts"] = args.counts
+    CFG["v27_view"] = args.v27_view
     if args.data:
         CFG["data"] = args.data
     os.makedirs(OUT, exist_ok=True)
-    runs = {"warm": load(args.warm, args.layout), "cold": load(args.cold, args.layout)}
-    assert {r["key"] for r in runs["warm"]} == {r["key"] for r in runs["cold"]}, "warm and cold shapes differ"
+    if args.cold_only:
+        assert args.layout == "plain", "--cold-only draws the contiguous layout"
+        STATES = ("cold",)
+        runs = {"cold": load(args.cold, args.layout)}
+    else:
+        runs = {"warm": load(args.warm, args.layout), "cold": load(args.cold, args.layout)}
+        assert {r["key"] for r in runs["warm"]} == {r["key"] for r in runs["cold"]}, "warm and cold shapes differ"
     md = {}
+    if args.issue_only:
+        assert args.cold_only, "--issue-only requires --cold-only"
+        paths = [figure0(runs, md), figure5("cold", runs, md)]
+        for path in paths:
+            print("wrote", path)
+        return
     paths = [figure0(runs, md)]
-    for st in ("warm", "cold"):
+    for st in STATES:
         paths += [figure1(st, runs, md), figure2(st, runs, md), figure3(st, runs, md),
                   figure4(st, runs, md), figure5(st, runs, md), figure6(st, runs, md)]
-    if "v20_pad_tflops" in runs["warm"][0]["raw"]:
+    if "v20_pad_tflops" in runs[STATES[0]][0]["raw"]:
         paths.append(figure7(runs, md))
     paths.append(write_md(md, paths))
     for p in paths:

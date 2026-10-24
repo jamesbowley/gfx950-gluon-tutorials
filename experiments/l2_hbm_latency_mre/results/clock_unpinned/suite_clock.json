@@ -1,0 +1,19 @@
+{
+ "label": "unpinned",
+ "smi_before": "\n\n============================ ROCm System Management Interface ============================\n=============================== Current clock frequencies ================================\nGPU[0]\t\t: fclk clock level: 0: (1250Mhz)\nGPU[0]\t\t: mclk clock level: 0: (2000Mhz)\nGPU[0]\t\t: sclk clock level: S: (94Mhz)\nGPU[0]\t\t: socclk clock level: S: (38Mhz)\n==========================================================================================\n================================== End of ROCm SMI Log ===================================\n",
+ "smi_after": "\n\n============================ ROCm System Management Interface ============================\n=============================== Current clock frequencies ================================\nGPU[0]\t\t: fclk clock level: 0: (1250Mhz)\nGPU[0]\t\t: mclk clock level: 0: (2000Mhz)\nGPU[0]\t\t: sclk clock level: 1: (157Mhz)\nGPU[0]\t\t: socclk clock level: S: (38Mhz)\n==========================================================================================\n================================== End of ROCm SMI Log ===================================\n",
+ "grbm_ghz": {
+  "depth_hbm_d16_all": [
+   2.659602671343767,
+   2.611537665562914,
+   2.6023257337526204,
+   2.617579816017316
+  ],
+  "gemm_cold": [
+   2.507570307390451,
+   2.470478080773214,
+   2.4897554163845634,
+   2.494708170724664
+  ]
+ }
+}

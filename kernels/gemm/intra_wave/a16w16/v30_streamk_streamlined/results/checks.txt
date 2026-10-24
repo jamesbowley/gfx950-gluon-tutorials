@@ -1,0 +1,52 @@
+dp         1024x1024x512 dp/owner S=0 n=1 programs=0 grid=256 error=0.00000 correct=True guard=True rearmed=True
+capped     1088x1024x8192 one_tile/rs S=16 n=8 programs=128 grid=256 error=0.00000 correct=True guard=True rearmed=True
+owner      1088x1024x512 one_tile/owner S=16 n=4 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+rs         1088x1024x512 one_tile/rs S=16 n=4 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+l2         1088x1024x512 one_tile/rs S=16 n=4 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+two_tile   1088x1024x512 two_tile/owner S=272 n=1 programs=256 grid=256 error=0.00000 correct=True guard=True rearmed=True
+spread     1024x1792x512 spread/owner S=192 n=1 programs=256 grid=256 error=0.00000 correct=True guard=True rearmed=True
+compact    192x704x512 one_tile/owner S=33 n=2 programs=66 grid=66 error=0.00000 correct=True guard=True rearmed=True
+ragged     1080x1016x496 one_tile/rs S=16 n=2 programs=32 grid=256 error=0.00000 correct=True guard=True rearmed=True
+graph replay passed: 20 rounds of single, two-node and mixed
+dp         2048x2048x1024 dp/owner S=0 n=1 programs=0 grid=256 error=0.00000 correct=True guard=True rearmed=True
+capped     2176x2048x8192 one_tile/rs S=16 n=8 programs=128 grid=256 error=0.00000 correct=True guard=True rearmed=True
+owner      2176x2048x1024 one_tile/owner S=16 n=4 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+rs         2176x2048x1024 one_tile/rs S=16 n=4 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+l2         2176x2048x1024 one_tile/rs S=16 n=4 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+two_tile   2176x2048x1024 two_tile/owner S=272 n=1 programs=256 grid=256 error=0.00000 correct=True guard=True rearmed=True
+spread     2048x3584x1024 spread/owner S=192 n=1 programs=256 grid=256 error=0.00000 correct=True guard=True rearmed=True
+compact    384x1408x1024 one_tile/owner S=33 n=2 programs=66 grid=66 error=0.00000 correct=True guard=True rearmed=True
+ragged     2160x2032x1008 one_tile/rs S=16 n=2 programs=32 grid=256 error=0.00000 correct=True guard=True rearmed=True
+graph replay passed: 20 rounds of single, two-node and mixed
+dp         4096x2048x512 dp/owner S=0 n=1 programs=0 grid=256 error=0.00000 correct=True guard=True rearmed=True
+capped     4352x2048x8192 one_tile/rs S=16 n=8 programs=128 grid=256 error=0.00000 correct=True guard=True rearmed=True
+owner      4352x2048x512 one_tile/owner S=16 n=4 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+rs         4352x2048x512 one_tile/rs S=16 n=4 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+l2         4352x2048x512 one_tile/rs S=16 n=4 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+two_tile   4352x2048x512 two_tile/owner S=272 n=1 programs=256 grid=256 error=0.00000 correct=True guard=True rearmed=True
+spread     4096x3584x512 spread/owner S=192 n=1 programs=256 grid=256 error=0.00000 correct=True guard=True rearmed=True
+compact    768x1408x512 one_tile/owner S=33 n=2 programs=66 grid=66 error=0.00000 correct=True guard=True rearmed=True
+ragged     4320x2032x496 one_tile/rs S=16 n=2 programs=32 grid=256 error=0.00000 correct=True guard=True rearmed=True
+graph replay passed: 20 rounds of single, two-node and mixed
+dp         2048x4096x512 dp/owner S=0 n=1 programs=0 grid=256 error=0.00000 correct=True guard=True rearmed=True
+capped     2176x4096x8192 one_tile/rs S=16 n=8 programs=128 grid=256 error=0.00000 correct=True guard=True rearmed=True
+owner      2176x4096x512 one_tile/owner S=16 n=4 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+rs         2176x4096x512 one_tile/rs S=16 n=4 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+l2         2176x4096x512 one_tile/rs S=16 n=4 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+two_tile   2176x4096x512 two_tile/owner S=272 n=1 programs=256 grid=256 error=0.00000 correct=True guard=True rearmed=True
+spread     2048x7168x512 spread/owner S=192 n=1 programs=256 grid=256 error=0.00000 correct=True guard=True rearmed=True
+compact    384x2816x512 one_tile/owner S=33 n=2 programs=66 grid=66 error=0.00000 correct=True guard=True rearmed=True
+ragged     2160x4064x496 one_tile/rs S=16 n=2 programs=32 grid=256 error=0.00000 correct=True guard=True rearmed=True
+graph replay passed: 20 rounds of single, two-node and mixed
+dp         4096x4096x512 dp/owner S=0 n=1 programs=0 grid=256 error=0.00000 correct=True guard=True rearmed=True
+capped     4352x4096x8192 one_tile/rs S=16 n=8 programs=128 grid=256 error=0.00000 correct=True guard=True rearmed=True
+owner      4352x4096x512 one_tile/owner S=16 n=4 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+rs         4352x4096x512 one_tile/rs S=16 n=4 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+l2         4352x4096x512 one_tile/rs S=16 n=4 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+two_tile   4352x4096x512 two_tile/owner S=272 n=1 programs=256 grid=256 error=0.00000 correct=True guard=True rearmed=True
+spread     4096x7168x512 spread/owner S=192 n=1 programs=256 grid=256 error=0.00000 correct=True guard=True rearmed=True
+compact    768x2816x512 one_tile/owner S=33 n=2 programs=66 grid=66 error=0.00000 correct=True guard=True rearmed=True
+ragged     4320x4064x496 one_tile/rs S=16 n=2 programs=32 grid=256 error=0.00000 correct=True guard=True rearmed=True
+graph replay passed: 20 rounds of single, two-node and mixed
+stale-flag failed as expected
+stale-count hung as expected

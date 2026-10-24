@@ -1,0 +1,457 @@
+{
+ "tag": "bs_def1",
+ "time": "2026-10-20 08:48:52",
+ "shape": [
+  1024,
+  1024,
+  7168
+ ],
+ "tile": "128x128x128",
+ "env": {
+  "HIP_VISIBLE_DEVICES": "1",
+  "TENSILE_STREAMK_FIXED_GRID": null
+ },
+ "torch": "2.13.0+rocm7.14.0",
+ "hip": "7.14.60850",
+ "gpu_pci_bus": 5,
+ "rounds": 5,
+ "launches_per_round": 1000,
+ "correct": {
+  "hbl": true,
+  "dp": true,
+  "rsall": true,
+  "owall": true,
+  "owall+b": true,
+  "owall+s": true,
+  "owall+bs": true,
+  "ow3": true,
+  "ow3+b": true,
+  "ow3+bs": true,
+  "ow2": true,
+  "ow2+b": true,
+  "ow2+s": true,
+  "ow2+bs": true,
+  "auto": true,
+  "auto+b": true
+ },
+ "launched": {
+  "hbl": {},
+  "dp": {
+   "kernel": null,
+   "tile": null,
+   "policy": null,
+   "fixup": null,
+   "streamk_tiles": null,
+   "streamk_programs": null,
+   "owner_opt": null
+  },
+  "rsall": {
+   "kernel": "v28_streamk_owner",
+   "tile": "128x128x128",
+   "policy": "one_tile",
+   "fixup": "rs",
+   "streamk_tiles": 64,
+   "streamk_programs": 256,
+   "owner_opt": ""
+  },
+  "owall": {
+   "kernel": "v28_streamk_owner",
+   "tile": "128x128x128",
+   "policy": "one_tile",
+   "fixup": "owner",
+   "streamk_tiles": 64,
+   "streamk_programs": 256,
+   "owner_opt": ""
+  },
+  "owall+b": {
+   "kernel": "v28_streamk_owner",
+   "tile": "128x128x128",
+   "policy": "one_tile",
+   "fixup": "owner",
+   "streamk_tiles": 64,
+   "streamk_programs": 256,
+   "owner_opt": "b"
+  },
+  "owall+s": {
+   "kernel": "v28_streamk_owner",
+   "tile": "128x128x128",
+   "policy": "one_tile",
+   "fixup": "owner",
+   "streamk_tiles": 64,
+   "streamk_programs": 256,
+   "owner_opt": "s"
+  },
+  "owall+bs": {
+   "kernel": "v28_streamk_owner",
+   "tile": "128x128x128",
+   "policy": "one_tile",
+   "fixup": "owner",
+   "streamk_tiles": 64,
+   "streamk_programs": 256,
+   "owner_opt": "bs"
+  },
+  "ow3": {
+   "kernel": "v28_streamk_owner",
+   "tile": "128x128x128",
+   "policy": "one_tile",
+   "fixup": "owner",
+   "streamk_tiles": 64,
+   "streamk_programs": 192,
+   "owner_opt": ""
+  },
+  "ow3+b": {
+   "kernel": "v28_streamk_owner",
+   "tile": "128x128x128",
+   "policy": "one_tile",
+   "fixup": "owner",
+   "streamk_tiles": 64,
+   "streamk_programs": 192,
+   "owner_opt": "b"
+  },
+  "ow3+bs": {
+   "kernel": "v28_streamk_owner",
+   "tile": "128x128x128",
+   "policy": "one_tile",
+   "fixup": "owner",
+   "streamk_tiles": 64,
+   "streamk_programs": 192,
+   "owner_opt": "bs"
+  },
+  "ow2": {
+   "kernel": "v28_streamk_owner",
+   "tile": "128x128x128",
+   "policy": "one_tile",
+   "fixup": "owner",
+   "streamk_tiles": 64,
+   "streamk_programs": 128,
+   "owner_opt": ""
+  },
+  "ow2+b": {
+   "kernel": "v28_streamk_owner",
+   "tile": "128x128x128",
+   "policy": "one_tile",
+   "fixup": "owner",
+   "streamk_tiles": 64,
+   "streamk_programs": 128,
+   "owner_opt": "b"
+  },
+  "ow2+s": {
+   "kernel": "v28_streamk_owner",
+   "tile": "128x128x128",
+   "policy": "one_tile",
+   "fixup": "owner",
+   "streamk_tiles": 64,
+   "streamk_programs": 128,
+   "owner_opt": "s"
+  },
+  "ow2+bs": {
+   "kernel": "v28_streamk_owner",
+   "tile": "128x128x128",
+   "policy": "one_tile",
+   "fixup": "owner",
+   "streamk_tiles": 64,
+   "streamk_programs": 128,
+   "owner_opt": "bs"
+  },
+  "auto": {
+   "kernel": "v28_streamk_owner",
+   "tile": "64x128x128",
+   "policy": "one_tile",
+   "fixup": "owner",
+   "streamk_tiles": 128,
+   "streamk_programs": 256,
+   "owner_opt": ""
+  },
+  "auto+b": {
+   "kernel": "v28_streamk_owner",
+   "tile": "64x128x128",
+   "policy": "one_tile",
+   "fixup": "owner",
+   "streamk_tiles": 128,
+   "streamk_programs": 256,
+   "owner_opt": "b"
+  }
+ },
+ "kernels": {
+  "hbl": [
+   {
+    "name": "Cijk_Alik_Bljk_BBS_BH_Bias_HA_S_SAV_UserArgs_MT128x128x128_MI16x16x1_SN_LDSB0_AFC1_AG0_AGGSUA0_AGNTAB0_AFEM1_AFEM1_ASEM1_CD1_1_CLR0_CLS0_CADS0_DTLA0_DTLB0_DTLM0_DTVA0_DTVB0_DTVMXSA0_DTVMXSB0_DTVSM0_DPLB0_EPS0_ELFLR0_EMLLn1_FDSI0_GRPM1_GRVWA8_GRVWB8_GSU0_GSUAMB_GLS0_HPLR0_ISA950_ICIW0_IU1_K1_LDSTI0_LBSPPA1024_LBSPPB1024_LBSPPMXSA0_LBSPPMXSB0_LBSPPM0_LPA16_LPB16_LPMXSA0_LPMXSB0_LPM0_LRVW8_LWPMn1_MIAV0_MIWT4_4_MXLIBL_MXSFNS_MO40_MGRIPM1_NTn1_NTA3_NTB1_NTC5_NTD3_NTE0_NTMXSA0_NTMXSB0_NTM0_NTWS0_NVn1_NVA0_NVB0_NVC0_NVD0_NVE0_NVMXSA0_NVMXSB0_NVM0_NVWS0_NEPBS16_NLCA1_NLCB1_ONLL1_PAP0_PGL0_PGR2_PLR1_PKA1_SGROB0_SIA3_SS1_SPO1_SRVW0_SSO0_SVW4_SK5_SKFTR0_SKFDPO0_SKXCCM8_SNLL0_SIP1_SGRO0_TDMI0_TDMIM0_TDMS0_TIN0_THn1_THA0_THB0_THC0_THD0_THE0_THMXSA0_THMXSB0_THM0_THWS0_TLDS1_TLDSM1_ULSGRO0_USL1_USLMX0_UIOFGRO0_UPLRP0_USFGRO0_USI0_VSn1_VWA4_VWB4_WSGRA0_WSGRB0_WS64_WG32_8_1.kd",
+    "calls": 20,
+    "avg_us": 27.62
+   }
+  ],
+  "dp": [
+   {
+    "name": "v9_tile.kd",
+    "calls": 20,
+    "avg_us": 57.85
+   }
+  ],
+  "rsall": [
+   {
+    "name": "v28_streamk_owner.kd",
+    "calls": 20,
+    "avg_us": 27.49
+   }
+  ],
+  "owall": [
+   {
+    "name": "v28_streamk_owner.kd",
+    "calls": 20,
+    "avg_us": 30.95
+   }
+  ],
+  "owall+b": [
+   {
+    "name": "v28_streamk_owner.kd",
+    "calls": 20,
+    "avg_us": 28.71
+   }
+  ],
+  "owall+s": [
+   {
+    "name": "v28_streamk_owner.kd",
+    "calls": 20,
+    "avg_us": 28.86
+   }
+  ],
+  "owall+bs": [
+   {
+    "name": "v28_streamk_owner.kd",
+    "calls": 20,
+    "avg_us": 28.48
+   }
+  ],
+  "ow3": [
+   {
+    "name": "v28_streamk_owner.kd",
+    "calls": 20,
+    "avg_us": 32.35
+   }
+  ],
+  "ow3+b": [
+   {
+    "name": "v28_streamk_owner.kd",
+    "calls": 20,
+    "avg_us": 30.92
+   }
+  ],
+  "ow3+bs": [
+   {
+    "name": "v28_streamk_owner.kd",
+    "calls": 20,
+    "avg_us": 30.33
+   }
+  ],
+  "ow2": [
+   {
+    "name": "v28_streamk_owner.kd",
+    "calls": 20,
+    "avg_us": 39.03
+   }
+  ],
+  "ow2+b": [
+   {
+    "name": "v28_streamk_owner.kd",
+    "calls": 20,
+    "avg_us": 38.24
+   }
+  ],
+  "ow2+s": [
+   {
+    "name": "v28_streamk_owner.kd",
+    "calls": 20,
+    "avg_us": 38.52
+   }
+  ],
+  "ow2+bs": [
+   {
+    "name": "v28_streamk_owner.kd",
+    "calls": 20,
+    "avg_us": 37.86
+   }
+  ],
+  "auto": [
+   {
+    "name": "v28_streamk_owner.kd",
+    "calls": 20,
+    "avg_us": 31.71
+   }
+  ],
+  "auto+b": [
+   {
+    "name": "v28_streamk_owner.kd",
+    "calls": 20,
+    "avg_us": 30.93
+   }
+  ]
+ },
+ "us": {
+  "hbl": [
+   26.817,
+   26.651,
+   26.584,
+   26.983,
+   26.847
+  ],
+  "dp": [
+   57.429,
+   57.49,
+   57.478,
+   57.486,
+   57.429
+  ],
+  "rsall": [
+   26.933,
+   27.072,
+   27.249,
+   27.044,
+   27.094
+  ],
+  "owall": [
+   30.306,
+   30.269,
+   30.366,
+   30.271,
+   30.318
+  ],
+  "owall+b": [
+   28.098,
+   28.278,
+   28.137,
+   28.083,
+   28.146
+  ],
+  "owall+s": [
+   28.306,
+   28.323,
+   28.221,
+   28.229,
+   28.271
+  ],
+  "owall+bs": [
+   27.89,
+   27.767,
+   27.747,
+   27.896,
+   27.904
+  ],
+  "ow3": [
+   31.784,
+   31.807,
+   31.794,
+   31.814,
+   31.765
+  ],
+  "ow3+b": [
+   30.329,
+   30.32,
+   30.363,
+   30.413,
+   30.354
+  ],
+  "ow3+bs": [
+   29.763,
+   29.761,
+   29.757,
+   29.778,
+   29.778
+  ],
+  "ow2": [
+   38.672,
+   38.618,
+   38.686,
+   38.651,
+   38.656
+  ],
+  "ow2+b": [
+   37.986,
+   37.882,
+   37.996,
+   37.987,
+   37.945
+  ],
+  "ow2+s": [
+   38.087,
+   37.992,
+   38.077,
+   38.082,
+   38.069
+  ],
+  "ow2+bs": [
+   37.476,
+   37.449,
+   37.525,
+   37.523,
+   37.458
+  ],
+  "auto": [
+   30.925,
+   30.91,
+   30.857,
+   30.903,
+   30.905
+  ],
+  "auto+b": [
+   30.112,
+   30.109,
+   30.147,
+   30.138,
+   30.109
+  ]
+ },
+ "us_median": {
+  "hbl": 26.817,
+  "dp": 57.478,
+  "rsall": 27.072,
+  "owall": 30.306,
+  "owall+b": 28.137,
+  "owall+s": 28.271,
+  "owall+bs": 27.89,
+  "ow3": 31.794,
+  "ow3+b": 30.354,
+  "ow3+bs": 29.763,
+  "ow2": 38.656,
+  "ow2+b": 37.986,
+  "ow2+s": 38.077,
+  "ow2+bs": 37.476,
+  "auto": 30.905,
+  "auto+b": 30.112
+ },
+ "tflops": {
+  "hbl": 560.6,
+  "dp": 261.5,
+  "rsall": 555.3,
+  "owall": 496.0,
+  "owall+b": 534.2,
+  "owall+s": 531.7,
+  "owall+bs": 539.0,
+  "ow3": 472.8,
+  "ow3+b": 495.2,
+  "ow3+bs": 505.1,
+  "ow2": 388.9,
+  "ow2+b": 395.7,
+  "ow2+s": 394.8,
+  "ow2+bs": 401.1,
+  "auto": 486.4,
+  "auto+b": 499.2
+ },
+ "spread": {
+  "hbl": 0.015,
+  "dp": 0.0011,
+  "rsall": 0.0117,
+  "owall": 0.0032,
+  "owall+b": 0.0069,
+  "owall+s": 0.0036,
+  "owall+bs": 0.0057,
+  "ow3": 0.0016,
+  "ow3+b": 0.0031,
+  "ow3+bs": 0.0007,
+  "ow2": 0.0017,
+  "ow2+b": 0.003,
+  "ow2+s": 0.0025,
+  "ow2+bs": 0.002,
+  "auto": 0.0022,
+  "auto+b": 0.0013
+ }
+}

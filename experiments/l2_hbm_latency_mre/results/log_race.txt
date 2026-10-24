@@ -1,0 +1,51 @@
+physical GPU 0
+roles {'target': {'xcc': 0, 'se': 0, 'cu': 0}, 'same_xcd': {'xcc': 0, 'se': 1, 'cu': 5}, 'other_xcd': {'xcc': 1, 'se': 0, 'cu': 0}}
+place 1 delta   0 ticks: leader 1224, follower 1218.0 cyc (p10 984.8, p90 1299.2), gap 0.0 cyc, counts [2, 2, 0, 0]
+place 1 delta   2 ticks: leader 1216, follower 1120.0 cyc (p10 872.8, p90 1328.8000000000002), gap 96.04 cyc, counts [2, 2, 0, 0]
+place 1 delta   4 ticks: leader 1218, follower 1092.0 cyc (p10 880.4, p90 1231.2), gap 96.032 cyc, counts [2, 2, 0, 0]
+place 1 delta   6 ticks: leader 1222, follower 992.0 cyc (p10 776.4, p90 1142.0), gap 193.024 cyc, counts [2, 2, 0, 0]
+place 1 delta   8 ticks: leader 1214, follower 1028.0 cyc (p10 796.0, p90 1225.2), gap 191.696 cyc, counts [2, 2, 0, 0]
+place 1 delta  10 ticks: leader 1174, follower 906.0 cyc (p10 668.0, p90 1046.4), gap 287.616 cyc, counts [2, 2, 0, 0]
+place 1 delta  15 ticks: leader 1230, follower 824.0 cyc (p10 600.4, p90 972.0000000000001), gap 385.6287425149701 cyc, counts [2, 2, 0, 0]
+place 1 delta  20 ticks: leader 1226, follower 696.0 cyc (p10 465.6, p90 855.6), gap 479.44000000000005 cyc, counts [2, 2, 0, 0]
+place 1 delta  25 ticks: leader 1238, follower 538.0 cyc (p10 321.2, p90 723.6), gap 675.864 cyc, counts [2, 2, 0, 0]
+place 1 delta  30 ticks: leader 1220, follower 440.0 cyc (p10 296.0, p90 575.2), gap 767.232 cyc, counts [2, 2, 0, 0]
+place 1 delta  40 ticks: leader 1230, follower 320.0 cyc (p10 300.0, p90 463.6000000000002), gap 965.84 cyc, counts [2, 2, 0, 0]
+place 1 delta  50 ticks: leader 1220, follower 318.0 cyc (p10 300.0, p90 324.0), gap 1246.336 cyc, counts [2, 2, 0, 0]
+place 1 delta  70 ticks: leader 1232, follower 310.0 cyc (p10 300.0, p90 324.0), gap 1738.3679999999997 cyc, counts [2, 2, 0, 0]
+place 1 delta 100 ticks: leader 1206, follower 310.0 cyc (p10 296.0, p90 324.0), gap 2397.4 cyc, counts [2, 2, 0, 0]
+place 0 delta   0 ticks: leader 1226, follower 1214.0 cyc (p10 965.2, p90 1473.2000000000003), gap 0.0 cyc, counts [2, 0, 0, 0]
+place 0 delta   2 ticks: leader 1208, follower 1212.0 cyc (p10 981.2, p90 1333.6000000000001), gap 0.0 cyc, counts [2, 0, 0, 0]
+place 0 delta   4 ticks: leader 1228, follower 1142.0 cyc (p10 900.0, p90 1304.8000000000002), gap 96.096 cyc, counts [2, 0, 0, 0]
+place 0 delta   6 ticks: leader 1208, follower 1130.0 cyc (p10 865.2, p90 1278.0), gap 96.09580838323353 cyc, counts [2, 0, 0, 0]
+place 0 delta   8 ticks: leader 1190, follower 1008.0 cyc (p10 776.8, p90 1146.0), gap 192.176 cyc, counts [2, 0, 0, 0]
+place 0 delta  10 ticks: leader 1238, follower 1076.0 cyc (p10 818.4, p90 1198.8), gap 192.95808383233532 cyc, counts [2, 0, 0, 0]
+place 0 delta  15 ticks: leader 1216, follower 934.0 cyc (p10 702.0, p90 1007.6), gap 287.59200000000004 cyc, counts [2, 0, 0, 0]
+place 0 delta  20 ticks: leader 1234, follower 780.0 cyc (p10 521.6, p90 998.8000000000001), gap 482.55999999999995 cyc, counts [2, 0, 0, 0]
+place 0 delta  25 ticks: leader 1126, follower 576.0 cyc (p10 416.8, p90 800.0000000000001), gap 576.5279999999999 cyc, counts [2, 0, 0, 0]
+place 0 delta  30 ticks: leader 1208, follower 504.0 cyc (p10 309.2, p90 780.4000000000002), gap 675.976 cyc, counts [2, 0, 0, 0]
+place 0 delta  40 ticks: leader 1222, follower 272.0 cyc (p10 212.0, p90 342.8), gap 958.56 cyc, counts [2, 0, 0, 0]
+place 0 delta  50 ticks: leader 1212, follower 212.0 cyc (p10 204.0, p90 286.8), gap 1158.624 cyc, counts [2, 0, 0, 0]
+place 0 delta  70 ticks: leader 1194, follower 208.0 cyc (p10 208.0, p90 208.0), gap 1629.552 cyc, counts [2, 0, 0, 0]
+place 0 delta 100 ticks: leader 1230, follower 208.0 cyc (p10 208.0, p90 208.0), gap 2414.6 cyc, counts [2, 0, 0, 0]
+place 2 delta   0 ticks: leader 1234, follower 1278.0 cyc (p10 1057.2, p90 1497.2), gap 0.0 cyc, counts [2, 2, 0, 0]
+place 2 delta   2 ticks: leader 1220, follower 1148.0 cyc (p10 965.2, p90 1239.6), gap 96.12 cyc, counts [2, 2, 0, 0]
+place 2 delta   4 ticks: leader 1214, follower 1136.0 cyc (p10 948.4, p90 1294.0), gap 96.152 cyc, counts [2, 2, 0, 0]
+place 2 delta   6 ticks: leader 1220, follower 1058.0 cyc (p10 860.8, p90 1288.0), gap 192.208 cyc, counts [2, 2, 0, 0]
+place 2 delta   8 ticks: leader 1132, follower 1008.0 cyc (p10 860.4, p90 1230.4), gap 193.28 cyc, counts [2, 2, 0, 0]
+place 2 delta  10 ticks: leader 1224, follower 1000.0 cyc (p10 765.2, p90 1098.0), gap 288.24 cyc, counts [2, 2, 0, 0]
+place 2 delta  15 ticks: leader 1232, follower 904.0 cyc (p10 732.4, p90 1034.4), gap 384.48 cyc, counts [2, 2, 0, 0]
+place 2 delta  20 ticks: leader 1222, follower 912.0 cyc (p10 712.4, p90 1078.0000000000002), gap 480.31999999999994 cyc, counts [2, 2, 0, 0]
+place 2 delta  25 ticks: leader 1222, follower 832.0 cyc (p10 708.4, p90 959.6), gap 672.5600000000001 cyc, counts [2, 2, 0, 0]
+place 2 delta  30 ticks: leader 1222, follower 838.0 cyc (p10 716.0, p90 967.6), gap 768.4471057884232 cyc, counts [2, 2, 0, 0]
+place 2 delta  40 ticks: leader 1214, follower 838.0 cyc (p10 708.4, p90 964.0), gap 960.8000000000001 cyc, counts [2, 2, 0, 0]
+place 2 delta  50 ticks: leader 1128, follower 836.0 cyc (p10 712.4, p90 967.2), gap 1247.688 cyc, counts [2, 2, 0, 0]
+place 2 delta  70 ticks: leader 1222, follower 838.0 cyc (p10 712.4, p90 964.0), gap 1728.7200000000003 cyc, counts [2, 2, 0, 0]
+place 2 delta 100 ticks: leader 1226, follower 834.0 cyc (p10 708.0, p90 963.6), gap 2400.801603206413 cyc, counts [2, 2, 0, 0]
+pmc place 3 delta 0: {'TCC_EA0_RDREQ_sum': 620.0, 'TCC_HIT_sum': 6979.0, 'TCC_MISS_sum': 453.0, 'TCC_TAG_STALL_sum': 1.0}  leader 1212 follower None
+pmc place 1 delta 0: {'TCC_EA0_RDREQ_sum': 612.0, 'TCC_HIT_sum': 7114.0, 'TCC_MISS_sum': 470.0, 'TCC_TAG_STALL_sum': 48.0}  leader 1180 follower 1192.0
+pmc place 1 delta 100: {'TCC_EA0_RDREQ_sum': 612.0, 'TCC_HIT_sum': 7114.0, 'TCC_MISS_sum': 470.0, 'TCC_TAG_STALL_sum': 48.0}  leader 1186 follower 312.0
+pmc place 0 delta 0: {'TCC_EA0_RDREQ_sum': 620.0, 'TCC_HIT_sum': 7005.0, 'TCC_MISS_sum': 461.0, 'TCC_TAG_STALL_sum': 1.0}  leader 1202 follower 1214.0
+pmc place 2 delta 0: {'TCC_EA0_RDREQ_sum': 880.0, 'TCC_HIT_sum': 7006.0, 'TCC_MISS_sum': 722.0, 'TCC_TAG_STALL_sum': 48.0}  leader 1200 follower 1230.0
+wrote results/race_sweep.json
+RACEDONE

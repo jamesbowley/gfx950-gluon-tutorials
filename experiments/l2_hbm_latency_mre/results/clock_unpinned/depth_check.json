@@ -1,0 +1,335 @@
+{
+ "pmc_L2_s2": {
+  "l2_hit": 1.0,
+  "ea_bytes": 0.0,
+  "burst_bytes": 1048576,
+  "expected_l2_hit": 1.0
+ },
+ "pmc_L2_s0": {
+  "l2_hit": 1.0,
+  "ea_bytes": 0.0,
+  "burst_bytes": 268435456,
+  "expected_l2_hit": 1.0
+ },
+ "pmc_LLC_s2": {
+  "l2_hit": 0.0,
+  "ea_bytes": 1048576.0,
+  "burst_bytes": 1048576,
+  "expected_l2_hit": 0.0
+ },
+ "pmc_LLC_s0": {
+  "l2_hit": 0.0,
+  "ea_bytes": 268435456.0,
+  "burst_bytes": 268435456,
+  "expected_l2_hit": 0.0
+ },
+ "pmc_HBM_s2": {
+  "l2_hit": 0.00012202562538133008,
+  "ea_bytes": 1048960.0,
+  "burst_bytes": 1048576,
+  "expected_l2_hit": 0.0
+ },
+ "pmc_HBM_s0": {
+  "l2_hit": 6.865983628443482e-05,
+  "ea_bytes": 268436480.0,
+  "burst_bytes": 268435456,
+  "expected_l2_hit": 0.0
+ },
+ "att_L2_d0": {
+  "ghz": 2.3999472851871375,
+  "n": 1024,
+  "exact_share": 1.0,
+  "rt": {
+   "n": 820,
+   "p10": 188.0,
+   "p50": 208.0,
+   "p90": 216.0
+  },
+  "rt_fast": {
+   "n": 820,
+   "p10": 188.0,
+   "p50": 208.0,
+   "p90": 216.0
+  },
+  "rt_cold": {
+   "n": 0,
+   "p10": null,
+   "p50": null,
+   "p90": null
+  },
+  "issue_stalled": 0.0,
+  "issue_stall_p90": 0.0,
+  "occ_p50": 4.0,
+  "occ_p90": 4.0,
+  "occ_max": 4,
+  "bytes_per_clk": 17.219448094612353,
+  "little_kb": 3.403121394346335,
+  "mean_l": 202.37560975609756,
+  "kernel_ghz": 2.401796407185629,
+  "ui": "/home/jbowley/repos/gfx950-gluon-tutorials/experiments/l2_hbm_latency_mre/tmp/clock_unpinned/depth_check_L2_d0/ui_output_agent_9604_dispatch_8"
+ },
+ "att_L2_d2": {
+  "ghz": 2.3996598639455784,
+  "n": 1024,
+  "exact_share": 0.6329268292682927,
+  "rt": {
+   "n": 519,
+   "p10": 196.0,
+   "p50": 212.0,
+   "p90": 224.0
+  },
+  "rt_fast": {
+   "n": 519,
+   "p10": 196.0,
+   "p50": 212.0,
+   "p90": 224.0
+  },
+  "rt_cold": {
+   "n": 0,
+   "p10": null,
+   "p50": null,
+   "p90": null
+  },
+  "issue_stalled": 0.0,
+  "issue_stall_p90": 0.0,
+  "occ_p50": 11.0,
+  "occ_p90": 11.0,
+  "occ_max": 12,
+  "bytes_per_clk": 49.37918040508714,
+  "little_kb": 10.274548499017726,
+  "mean_l": 213.06829268292682,
+  "kernel_ghz": 2.401195219123506,
+  "ui": "/home/jbowley/repos/gfx950-gluon-tutorials/experiments/l2_hbm_latency_mre/tmp/clock_unpinned/depth_check_L2_d2/ui_output_agent_48926_dispatch_8"
+ },
+ "att_L2_d16": {
+  "ghz": 2.400141843971631,
+  "n": 1024,
+  "exact_share": 0.0,
+  "rt": {
+   "n": 0,
+   "p10": null,
+   "p50": null,
+   "p90": null
+  },
+  "rt_fast": {
+   "n": 0,
+   "p10": null,
+   "p50": null,
+   "p90": null
+  },
+  "rt_cold": {
+   "n": 0,
+   "p10": null,
+   "p50": null,
+   "p90": null
+  },
+  "issue_stalled": 0.8048780487804879,
+  "issue_stall_p90": 20.0,
+  "occ_p50": 65.0,
+  "occ_p90": 65.0,
+  "occ_max": 66,
+  "bytes_per_clk": 64.0,
+  "little_kb": 64.73475609756098,
+  "mean_l": 1035.7560975609756,
+  "kernel_ghz": 2.4015968063872255,
+  "ui": "/home/jbowley/repos/gfx950-gluon-tutorials/experiments/l2_hbm_latency_mre/tmp/clock_unpinned/depth_check_L2_d16/ui_output_agent_2823_dispatch_8"
+ },
+ "att_LLC_d0": {
+  "ghz": 2.4008596288919177,
+  "n": 1024,
+  "exact_share": 1.0,
+  "rt": {
+   "n": 820,
+   "p10": 384.0,
+   "p50": 542.0,
+   "p90": 684.0
+  },
+  "rt_fast": {
+   "n": 820,
+   "p10": 384.0,
+   "p50": 542.0,
+   "p90": 684.0
+  },
+  "rt_cold": {
+   "n": 0,
+   "p10": null,
+   "p50": null,
+   "p90": null
+  },
+  "issue_stalled": 0.0,
+  "issue_stall_p90": 0.0,
+  "occ_p50": 3.0,
+  "occ_p90": 4.0,
+  "occ_max": 4,
+  "bytes_per_clk": 7.162368052471561,
+  "little_kb": 3.755602973855038,
+  "mean_l": 536.9365853658536,
+  "kernel_ghz": 2.397011952191235,
+  "ui": "/home/jbowley/repos/gfx950-gluon-tutorials/experiments/l2_hbm_latency_mre/tmp/clock_unpinned/depth_check_LLC_d0/ui_output_agent_17093_dispatch_8"
+ },
+ "att_LLC_d2": {
+  "ghz": 2.4006918819188194,
+  "n": 1024,
+  "exact_share": 0.9085365853658537,
+  "rt": {
+   "n": 745,
+   "p10": 484.0,
+   "p50": 640.0,
+   "p90": 686.4000000000001
+  },
+  "rt_fast": {
+   "n": 745,
+   "p10": 484.0,
+   "p50": 640.0,
+   "p90": 686.4000000000001
+  },
+  "rt_cold": {
+   "n": 0,
+   "p10": null,
+   "p50": null,
+   "p90": null
+  },
+  "issue_stalled": 0.0,
+  "issue_stall_p90": 0.0,
+  "occ_p50": 11.0,
+  "occ_p90": 12.0,
+  "occ_max": 12,
+  "bytes_per_clk": 18.868250539956804,
+  "little_kb": 11.35115102986883,
+  "mean_l": 616.0390243902439,
+  "kernel_ghz": 2.401796407185629,
+  "ui": "/home/jbowley/repos/gfx950-gluon-tutorials/experiments/l2_hbm_latency_mre/tmp/clock_unpinned/depth_check_LLC_d2/ui_output_agent_50342_dispatch_8"
+ },
+ "att_LLC_d16": {
+  "ghz": 2.3955627976936578,
+  "n": 1024,
+  "exact_share": 0.0,
+  "rt": {
+   "n": 0,
+   "p10": null,
+   "p50": null,
+   "p90": null
+  },
+  "rt_fast": {
+   "n": 0,
+   "p10": null,
+   "p50": null,
+   "p90": null
+  },
+  "rt_cold": {
+   "n": 0,
+   "p10": null,
+   "p50": null,
+   "p90": null
+  },
+  "issue_stalled": 0.901219512195122,
+  "issue_stall_p90": 80.0,
+  "occ_p50": 65.0,
+  "occ_p90": 65.0,
+  "occ_max": 65,
+  "bytes_per_clk": 46.8942071125028,
+  "little_kb": 64.3432663615386,
+  "mean_l": 1405.0243902439024,
+  "kernel_ghz": 2.3972055888223553,
+  "ui": "/home/jbowley/repos/gfx950-gluon-tutorials/experiments/l2_hbm_latency_mre/tmp/clock_unpinned/depth_check_LLC_d16/ui_output_agent_49214_dispatch_8"
+ },
+ "att_HBM_d0": {
+  "ghz": 2.4032446134347274,
+  "n": 1024,
+  "exact_share": 1.0,
+  "rt": {
+   "n": 820,
+   "p10": 732.0,
+   "p50": 978.0,
+   "p90": 1240.4
+  },
+  "rt_fast": {
+   "n": 0,
+   "p10": null,
+   "p50": null,
+   "p90": null
+  },
+  "rt_cold": {
+   "n": 820,
+   "p10": 732.0,
+   "p50": 978.0,
+   "p90": 1240.4
+  },
+  "issue_stalled": 0.0,
+  "issue_stall_p90": 0.0,
+  "occ_p50": 4.0,
+  "occ_p90": 4.0,
+  "occ_max": 4,
+  "bytes_per_clk": 4.146835443037975,
+  "little_kb": 3.922959270801173,
+  "mean_l": 968.7170731707317,
+  "kernel_ghz": 2.4025948103792416,
+  "ui": "/home/jbowley/repos/gfx950-gluon-tutorials/experiments/l2_hbm_latency_mre/tmp/clock_unpinned/depth_check_HBM_d0/ui_output_agent_29084_dispatch_8"
+ },
+ "att_HBM_d2": {
+  "ghz": 2.4024133391838527,
+  "n": 1024,
+  "exact_share": 0.8268292682926829,
+  "rt": {
+   "n": 678,
+   "p10": 844.0,
+   "p50": 1012.0,
+   "p90": 1328.0
+  },
+  "rt_fast": {
+   "n": 0,
+   "p10": null,
+   "p50": null,
+   "p90": null
+  },
+  "rt_cold": {
+   "n": 678,
+   "p10": 844.0,
+   "p50": 1012.0,
+   "p90": 1328.0
+  },
+  "issue_stalled": 0.0,
+  "issue_stall_p90": 0.0,
+  "occ_p50": 12.0,
+  "occ_p90": 12.0,
+  "occ_max": 12,
+  "bytes_per_clk": 10.814669623974828,
+  "little_kb": 11.729733276132988,
+  "mean_l": 1110.6439024390245,
+  "kernel_ghz": 2.4025948103792416,
+  "ui": "/home/jbowley/repos/gfx950-gluon-tutorials/experiments/l2_hbm_latency_mre/tmp/clock_unpinned/depth_check_HBM_d2/ui_output_agent_17213_dispatch_8"
+ },
+ "att_HBM_d16": {
+  "ghz": 2.4015,
+  "n": 1024,
+  "exact_share": 0.0,
+  "rt": {
+   "n": 0,
+   "p10": null,
+   "p50": null,
+   "p90": null
+  },
+  "rt_fast": {
+   "n": 0,
+   "p10": null,
+   "p50": null,
+   "p90": null
+  },
+  "rt_cold": {
+   "n": 0,
+   "p10": null,
+   "p50": null,
+   "p90": null
+  },
+  "issue_stalled": 0.9902439024390244,
+  "issue_stall_p90": 364.8000000000002,
+  "occ_p50": 65.0,
+  "occ_p90": 65.0,
+  "occ_max": 65,
+  "bytes_per_clk": 25.4292298362644,
+  "little_kb": 63.63558165333017,
+  "mean_l": 2562.5170731707317,
+  "kernel_ghz": 2.4023952095808383,
+  "ui": "/home/jbowley/repos/gfx950-gluon-tutorials/experiments/l2_hbm_latency_mre/tmp/clock_unpinned/depth_check_HBM_d16/ui_output_agent_61787_dispatch_8"
+ }
+}

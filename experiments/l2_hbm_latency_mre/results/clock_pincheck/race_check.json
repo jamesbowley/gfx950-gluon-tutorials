@@ -1,0 +1,74 @@
+{
+ "configs": [
+  {
+   "place": 3,
+   "delta": 0,
+   "lines": 64,
+   "passes": 2,
+   "period": 2000,
+   "leader": {
+    "xcc": 0,
+    "se": 0,
+    "cu": 0
+   },
+   "follower": {
+    "xcc": 0,
+    "se": 0,
+    "cu": 0
+   }
+  },
+  {
+   "place": 3,
+   "delta": 0,
+   "lines": 16,
+   "passes": 2,
+   "period": 2000,
+   "leader": {
+    "xcc": 0,
+    "se": 0,
+    "cu": 0
+   },
+   "follower": {
+    "xcc": 0,
+    "se": 0,
+    "cu": 0
+   }
+  }
+ ],
+ "summary": [
+  {
+   "counts": [
+    2,
+    0,
+    0,
+    0
+   ],
+   "ghz": 2.4044,
+   "leader": [
+    1216.0,
+    302.0
+   ],
+   "leader_late_ticks": 9.0
+  },
+  {
+   "counts": [
+    2,
+    0,
+    0,
+    0
+   ],
+   "ghz": 2.4028,
+   "leader": [
+    1132.0,
+    208.0
+   ],
+   "leader_late_ticks": 9.0
+  }
+ ],
+ "tiers": {
+  "HBM": 1216.0,
+  "L2": 302.0,
+  "L1": 208.0,
+  "ghz": 2.4044
+ }
+}

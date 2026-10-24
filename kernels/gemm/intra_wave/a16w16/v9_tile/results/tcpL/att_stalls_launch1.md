@@ -1,0 +1,45 @@
+### 256x256_4096x4096x8192
+
+Per loop iteration (2 k-steps) and wave: 4225 cycles issued (sum of instruction latency), 2617 of them stalled.
+
+| class | latency cycles | stall cycles |
+|---|---|---|
+| mfma | 2672 | 1648 |
+| other | 588 | 388 |
+| ds_read | 496 | 240 |
+| buffer_load | 272 | 144 |
+| s_barrier | 97 | 97 |
+| s_waitcnt lgkmcnt | 64 | 64 |
+| s_waitcnt vmcnt+lgkmcnt | 36 | 36 |
+
+Most stalled instructions:
+
+- `s_waitcnt lgkmcnt(7)`: 20
+- `s_barrier`: 13
+- `s_barrier`: 12
+- `v_mfma_f32_16x16x32_bf16 a[228:231], v[80:83], v[60:63], a[228:231]`: 12
+- `v_mfma_f32_16x16x32_bf16 a[220:223], v[100:103], v[52:55], a[220:223]`: 12
+- `v_mfma_f32_16x16x32_bf16 a[212:215], v[80:83], v[52:55], a[212:215]`: 12
+
+### 256x128_4096x4096x8192
+
+Per loop iteration (2 k-steps) and wave: 2448 cycles issued (sum of instruction latency), 1384 of them stalled.
+
+| class | latency cycles | stall cycles |
+|---|---|---|
+| mfma | 1439 | 851 |
+| other | 398 | 232 |
+| ds_read | 354 | 140 |
+| s_barrier | 98 | 98 |
+| s_waitcnt vmcnt+lgkmcnt | 48 | 48 |
+| buffer_load | 112 | 16 |
+
+Most stalled instructions:
+
+- `s_waitcnt vmcnt(14) lgkmcnt(0)`: 20
+- `s_barrier`: 13
+- `s_barrier`: 12
+- `s_barrier`: 12
+- `s_barrier`: 12
+- `v_mfma_f32_16x16x32_bf16 a[84:87], v[68:71], v[112:115], a[84:87]`: 12
+

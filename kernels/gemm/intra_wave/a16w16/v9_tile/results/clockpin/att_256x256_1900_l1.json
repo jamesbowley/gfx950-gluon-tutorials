@@ -1,0 +1,116 @@
+{
+ "ui": "/home/jbowley/repos/gfx950-gluon-tutorials/kernels/gemm/intra_wave/a16w16/v9_tile/tmp/clockpin/1900/l1/sweep_att/256x256_4096x4096x8192/ui_output_agent_16291_dispatch_5",
+ "loop_only": true,
+ "loop_code_range": [
+  616,
+  1142
+ ],
+ "waves": 8,
+ "ses": [
+  0,
+  2
+ ],
+ "ghz_realtime": 1.592,
+ "loads_per_wave": 2016.0,
+ "loads_per_cu": 8064.0,
+ "stretched_loads_per_cu": 0.0,
+ "stretch_threshold_cyc": 16,
+ "L_exact": {
+  "n": 8,
+  "p10": 3833.2,
+  "p50": 3930.0,
+  "p90": 4088.0,
+  "mean": 3961.5,
+  "p50_ns": 2467.9
+ },
+ "L_bound": {
+  "n": 4024,
+  "p10": 2796.0,
+  "p50": 2836.0,
+  "p90": 2848.0,
+  "p50_ns": 1780.9
+ },
+ "load_rate_per_cu": {
+  "loads_per_cyc": 0.030057700289742355,
+  "bytes_per_cyc": 30.77908509669617,
+  "bytes_per_ns": 49.01409131801252
+ },
+ "inflight_kb_per_cu": {
+  "at_L_exact_p50": 118.1,
+  "at_L_bound_p50": 85.2
+ },
+ "dk_median": {},
+ "k_match": null,
+ "dk_at": {
+  "32": null,
+  "44": null,
+  "48": null
+ },
+ "per_wave": [
+  {
+   "name": "se0_sm0_sl0_wv0.json",
+   "se": 0,
+   "vmem_ops": 2080,
+   "loads": 2016,
+   "exact": 1,
+   "bound": 503
+  },
+  {
+   "name": "se0_sm1_sl0_wv0.json",
+   "se": 0,
+   "vmem_ops": 2080,
+   "loads": 2016,
+   "exact": 1,
+   "bound": 503
+  },
+  {
+   "name": "se0_sm2_sl0_wv0.json",
+   "se": 0,
+   "vmem_ops": 2080,
+   "loads": 2016,
+   "exact": 1,
+   "bound": 503
+  },
+  {
+   "name": "se0_sm3_sl0_wv0.json",
+   "se": 0,
+   "vmem_ops": 2080,
+   "loads": 2016,
+   "exact": 1,
+   "bound": 503
+  },
+  {
+   "name": "se2_sm0_sl0_wv0.json",
+   "se": 2,
+   "vmem_ops": 2080,
+   "loads": 2016,
+   "exact": 1,
+   "bound": 503
+  },
+  {
+   "name": "se2_sm1_sl0_wv0.json",
+   "se": 2,
+   "vmem_ops": 2080,
+   "loads": 2016,
+   "exact": 1,
+   "bound": 503
+  },
+  {
+   "name": "se2_sm2_sl0_wv0.json",
+   "se": 2,
+   "vmem_ops": 2080,
+   "loads": 2016,
+   "exact": 1,
+   "bound": 503
+  },
+  {
+   "name": "se2_sm3_sl0_wv0.json",
+   "se": 2,
+   "vmem_ops": 2080,
+   "loads": 2016,
+   "exact": 1,
+   "bound": 503
+  }
+ ],
+ "name": "256x256_1900_l1"
+}

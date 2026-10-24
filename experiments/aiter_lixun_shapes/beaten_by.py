@@ -195,6 +195,8 @@ def selected(rows):
 def cmd_select(args):
     keys = {}
     for state, path in (("warm", args.warm), ("cold", args.cold)):
+        if path is None:
+            continue
         for r, *_ in selected(read_rows(path)):
             keys.setdefault(key(r["M"], r["N"], r["K"], r["out"]), set()).add(state)
     with open(args.out, "w", newline="") as f:
@@ -309,6 +311,8 @@ def row_md(i, r, b, gap, family, name, probe):
     per_wg = f"{d['lib_tiles'] * d['lib_k_steps'] / main:.1f}" if main and d["lib_tiles"] != "" else ""
     lib = b["best_lib"] + (f" (splitK {e['cfg'].get('splitK')})" if src == "pick" and e.get("cfg") else "")
     handoff = ", handed to v9" if str(r.get("v20_v9_delegated")) == "True" else ""
+    if "v20_tile" in r:
+        handoff += f", {r['v20_tile']}"
     return (f"| {i} | {r['M']}x{r['N']}x{r['K']} | {r['out'][:4]} | {gap:+.1f}% | {lib} | `{short(name)}` | "
             f"{d['tile']} | {d['lib_tiles']} / {d['lib_waves']} | {wg} | {d['lib_k_steps']} / {per_wg or '-'} | "
             f"{r['tiles']} / {r['waves']} / {r['S']} | {r['k_steps']} | {r['v20_label']}{handoff} | "
@@ -338,6 +342,8 @@ def cmd_report(args):
             probe = json.load(f)["shapes"]
     tables, sels = [], {}
     for state, path in (("warm", args.warm), ("cold", args.cold)):
+        if path is None:
+            continue
         t, sel = table(state, read_rows(path), probe)
         sels[state] = sel
         tables += t
@@ -387,7 +393,7 @@ def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = p.add_subparsers(dest="mode", required=True)
     s = sub.add_parser("select")
-    s.add_argument("--warm", required=True)
+    s.add_argument("--warm", default=None, help="omit for a cold-only run")
     s.add_argument("--cold", required=True)
     s.add_argument("--out", required=True)
     q = sub.add_parser("probe")
@@ -395,7 +401,7 @@ def main():
     q.add_argument("--out", required=True)
     q.add_argument("--jit-tag", default="main")
     r = sub.add_parser("report")
-    r.add_argument("--warm", required=True)
+    r.add_argument("--warm", default=None, help="omit for a cold-only run")
     r.add_argument("--cold", required=True)
     r.add_argument("--probe", default=None)
     r.add_argument("--out", required=True)

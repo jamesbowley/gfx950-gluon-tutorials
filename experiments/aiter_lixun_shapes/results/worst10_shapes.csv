@@ -1,0 +1,62 @@
+group,index,M,N,K,out,tiles_256,waves_256,S_256,v27_tile,v27_config,v27_tflops,best_lib,best_tile,best_tflops,gap_pct,lib_tile_supported
+worst,553,512,2304,16384,bfloat16,18,0,18,64x128x128,spread,459.7,AITER torch,128x256,709.8,-35.24,True
+worst,466,512,1280,8192,bfloat16,10,0,10,64x64x128,"data-parallel, handed to v9_tile",318.5,hipBLASLt,64x160,420.8,-24.31,False
+worst,414,1280,1024,7168,bfloat16,20,0,20,64x128x128,"data-parallel, handed to v9_tile",417.9,hipBLASLt,80x256,543.0,-23.04,False
+worst,417,1536,1024,7168,bfloat16,24,0,24,64x128x128,"data-parallel, handed to v9_tile",503.0,AITER torch,96x128,645.1,-22.03,False
+worst,602,512,5120,25600,bfloat16,40,0,40,128x128x128,spread,699.8,hipBLASLt,128x160,879.1,-20.4,False
+worst,413,1280,512,7168,bfloat16,10,0,10,64x64x128,"data-parallel, handed to v9_tile",291.0,AITER torch,80x256,364.0,-20.05,False
+worst,478,1024,1280,8192,bfloat16,20,0,20,64x128x128,"data-parallel, handed to v9_tile",463.7,AITER torch,128x256,578.2,-19.8,True
+worst,354,2048,2560,6144,bfloat16,80,0,80,128x256x64,"data-parallel, handed to v9_tile",735.6,AITER torch,128x160,912.6,-19.4,False
+worst,203,2304,2048,4096,bfloat16,72,0,72,128x256x64,"data-parallel, handed to v9_tile",714.2,hipBLASLt,160x128,885.1,-19.31,False
+worst,559,1024,2304,16384,bfloat16,36,0,36,128x128x128,spread,704.8,hipBLASLt,256x256,872.8,-19.25,True
+worst,603,1024,5120,25600,bfloat16,80,0,80,128x256x64,spread,922.4,hipBLASLt,256x160,1140.9,-19.15,False
+worst,342,512,3072,6144,float32,24,0,24,64x128x128,"data-parallel, handed to v9_tile",453.2,hipBLASLt,128x96,554.0,-18.19,False
+worst,201,2304,512,4096,bfloat16,18,0,18,64x128x128,"data-parallel, handed to v9_tile",364.3,hipBLASLt,80x64,443.3,-17.82,False
+worst,337,512,1280,6144,bfloat16,10,0,10,64x64x128,"data-parallel, handed to v9_tile",292.6,hipBLASLt,64x160,354.1,-17.37,False
+worst,204,2560,512,4096,bfloat16,20,0,20,64x128x128,"data-parallel, handed to v9_tile",402.5,hipBLASLt,80x64,485.5,-17.1,False
+worst,232,4352,1024,4096,bfloat16,68,0,68,128x256x64,"data-parallel, handed to v9_tile",672.0,hipBLASLt,160x128,804.2,-16.44,False
+worst,340,512,2304,6144,bfloat16,18,0,18,64x128x128,"data-parallel, handed to v9_tile",367.9,AITER flydsl,96x96,439.8,-16.35,False
+worst,467,512,2560,8192,bfloat16,20,0,20,64x128x128,"data-parallel, handed to v9_tile",465.9,AITER torch,128x256,555.5,-16.13,True
+worst,469,512,4608,8192,bfloat16,36,0,36,128x128x128,"data-parallel, handed to v9_tile",609.5,hipBLASLt,128x160,725.1,-15.94,False
+worst,395,512,1536,7168,bfloat16,12,0,12,64x64x128,"data-parallel, handed to v9_tile",350.2,hipBLASLt,64x192,415.9,-15.8,False
+worst,181,1280,1024,4096,bfloat16,20,0,20,64x128x128,"data-parallel, handed to v9_tile",409.5,hipBLASLt,80x64,485.4,-15.64,False
+worst,560,1024,4608,16384,bfloat16,72,0,72,128x256x64,spread,862.1,hipBLASLt,256x144,1018.8,-15.38,False
+worst,343,512,3072,6144,bfloat16,24,0,24,64x128x128,"data-parallel, handed to v9_tile",466.4,AITER flydsl,64x96,549.1,-15.06,False
+worst,394,512,1024,7168,bfloat16,8,0,8,64x64x128,"one-tile owner, n = 2",327.1,hipBLASLt,128x128,384.5,-14.93,True
+worst,416,1536,512,7168,bfloat16,12,0,12,64x64x128,"data-parallel, handed to v9_tile",344.2,hipBLASLt,96x256,403.7,-14.74,False
+worst,202,2304,1024,4096,bfloat16,36,0,36,128x128x128,"data-parallel, handed to v9_tile",555.7,hipBLASLt,80x128,651.4,-14.69,False
+worst,381,1024,5120,6400,bfloat16,80,0,80,128x256x64,"data-parallel, handed to v9_tile",767.8,hipBLASLt,128x160,891.7,-13.89,False
+worst,305,1024,5120,5120,bfloat16,80,0,80,128x256x64,"data-parallel, handed to v9_tile",730.8,hipBLASLt,128x160,846.9,-13.71,False
+worst,297,512,5120,5120,bfloat16,40,0,40,128x128x128,"data-parallel, handed to v9_tile",564.7,hipBLASLt,128x96,653.3,-13.56,False
+worst,350,1024,6144,6144,bfloat16,96,0,96,128x256x64,"data-parallel, handed to v9_tile",851.0,hipBLASLt,256x192,984.2,-13.53,False
+worst,415,1280,2048,7168,bfloat16,40,0,40,128x128x128,"data-parallel, handed to v9_tile",638.3,AITER torch,160x128,737.7,-13.47,False
+worst,310,1536,1024,5120,float32,24,0,24,64x128x128,"data-parallel, handed to v9_tile",443.1,hipBLASLt,96x64,511.8,-13.42,False
+worst,402,768,1024,7168,bfloat16,12,0,12,64x64x128,"data-parallel, handed to v9_tile",351.3,hipBLASLt,96x256,404.9,-13.24,False
+worst,405,1024,1024,7168,bfloat16,16,0,16,64x128x128,"one-tile owner, n = 2",478.8,AITER torch,128x128,550.7,-13.06,True
+worst,341,512,2560,6144,bfloat16,20,0,20,64x128x128,"data-parallel, handed to v9_tile",412.7,AITER torch,128x256,473.9,-12.91,True
+worst,554,512,4608,16384,bfloat16,36,0,36,128x128x128,spread,696.5,hipBLASLt,128x160,798.5,-12.77,False
+worst,403,768,2048,7168,bfloat16,24,0,24,64x128x128,"data-parallel, handed to v9_tile",499.6,hipBLASLt,128x256,572.1,-12.67,True
+worst,160,512,8704,4096,bfloat16,68,0,68,128x256x64,"data-parallel, handed to v9_tile",655.2,hipBLASLt,128x160,745.9,-12.16,False
+worst,46,1024,5120,1280,bfloat16,80,0,80,128x256x64,"data-parallel, handed to v9_tile",532.1,hipBLASLt,128x160,604.8,-12.02,False
+worst,73,5120,2048,1536,bfloat16,160,0,160,256x256x64,"data-parallel, handed to v9_tile",836.4,hipBLASLt,160x256,949.5,-11.91,False
+worst,268,10240,512,4096,bfloat16,80,0,80,128x256x64,"data-parallel, handed to v9_tile",758.2,AITER torch,160x128,860.0,-11.84,False
+worst,161,512,10240,4096,bfloat16,80,0,80,128x256x64,"data-parallel, handed to v9_tile",761.1,hipBLASLt,192x128,862.4,-11.75,False
+worst,36,5120,4096,1024,bfloat16,320,1,64,256x256x64,data-parallel,863.6,hipBLASLt,160x256,977.9,-11.69,False
+worst,180,1280,512,4096,bfloat16,10,0,10,64x64x128,"data-parallel, handed to v9_tile",282.6,AITER flydsl,48x32,319.5,-11.55,False
+worst,396,512,2048,7168,bfloat16,16,0,16,64x128x128,"one-tile owner, n = 2",480.1,hipBLASLt,128x128,541.8,-11.39,True
+worst,380,512,5120,6400,bfloat16,40,0,40,128x128x128,"data-parallel, handed to v9_tile",599.9,hipBLASLt,128x160,676.3,-11.3,False
+worst,235,5120,1024,4096,bfloat16,80,0,80,128x256x64,"data-parallel, handed to v9_tile",783.0,hipBLASLt,160x128,882.7,-11.29,False
+worst,206,2560,2048,4096,bfloat16,80,0,80,128x256x64,"data-parallel, handed to v9_tile",785.7,hipBLASLt,160x128,885.5,-11.27,False
+worst,128,1024,6144,3072,float32,96,0,96,128x256x64,"data-parallel, handed to v9_tile",750.7,hipBLASLt,128x192,845.4,-11.2,False
+worst,140,1024,5120,3200,bfloat16,80,0,80,128x256x64,"data-parallel, handed to v9_tile",732.6,hipBLASLt,128x160,823.0,-10.98,False
+worst,47,2048,5120,1280,bfloat16,160,0,160,256x256x64,"data-parallel, handed to v9_tile",754.2,hipBLASLt,256x160,847.0,-10.96,False
+worst,406,1024,1536,7168,bfloat16,24,0,24,64x128x128,"data-parallel, handed to v9_tile",510.5,hipBLASLt,128x256,571.8,-10.72,True
+worst,419,1792,512,7168,bfloat16,14,0,14,64x64x128,"data-parallel, handed to v9_tile",394.8,hipBLASLt,112x256,439.2,-10.11,False
+control,223,4096,1024,4096,bfloat16,64,0,64,128x128x128,"data-parallel, handed to v9_tile",891.4,AITER flydsl,128x128,824.3,8.14,True
+control,286,512,7168,4224,bfloat16,56,0,56,128x128x128,"data-parallel, handed to v9_tile",765.6,AITER flydsl,128x128,729.6,4.93,True
+control,245,6912,1024,4096,bfloat16,108,0,108,128x256x64,"data-parallel, handed to v9_tile",1002.9,AITER opus,128x256,935.3,7.23,True
+control,99,1024,8192,2048,bfloat16,128,0,128,128x256x64,"data-parallel, handed to v9_tile",974.7,hipBLASLt,128x256,926.5,5.2,True
+control,252,7424,2048,4096,bfloat16,232,0,232,256x256x64,"data-parallel, handed to v9_tile",1338.0,hipBLASLt,240x256,1128.6,18.55,False
+control,454,16384,512,7168,bfloat16,128,0,128,256x256x64,"one-tile owner, n = 2",1155.8,AITER opus,128x256,1080.0,7.02,True
+control,173,1024,2048,4096,bfloat16,32,0,32,64x128x128,"data-parallel, handed to v9_tile",627.9,AITER flydsl,64x128,599.7,4.7,True
+control,55,512,4096,1536,bfloat16,32,0,32,64x128x128,"data-parallel, handed to v9_tile",481.8,hipBLASLt,64x128,448.9,7.33,True

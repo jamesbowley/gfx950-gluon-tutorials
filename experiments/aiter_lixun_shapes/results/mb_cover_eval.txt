@@ -1,0 +1,36 @@
+REFIT M<=16, N>=8192: 22 shapes; 16x16x256 faster than the best 16x128/16x256 by >2% on 9, slower on 9; median time ratio 1.006
+   M=4 N=13056 K=1024  16x16x256 / wide = 0.70
+   M=16 N=12288 K=4096  16x16x256 / wide = 0.87
+   M=1 N=21760 K=8192  16x16x256 / wide = 0.97
+   M=16 N=22016 K=2048  16x16x256 / wide = 1.02
+   M=16 N=19456 K=2048  16x16x256 / wide = 1.03
+   M=8 N=20992 K=1024  16x16x256 / wide = 1.07
+cover + cache exception, top fits (TARGET, K_MIN, CACHE bytes): [(1.093, (128, 4096, 16777216)), (1.094, (128, 4096, 67108864)), (1.1, (256, 2048, 16777216)), (1.101, (256, 2048, 67108864)), (1.103, (192, 2048, 16777216))]
+REFIT MB leave one out: 1.069 / 1.215 / 1.594 / 1.095, 85 > 1.05, 39 > 1.15
+tilesel small-M: 62 shapes 1.077 / 1.296 / 1.563 / 1.110, 35 > 1.05, 16 > 1.15, table kind not timed 14
+tilesel small-N: 21 shapes 1.025 / 1.165 / 1.566 / 1.058, 6 > 1.05, 3 > 1.15, table kind not timed 4
+top fits (TARGET CUs, K_MIN, ONE_ROW, split): [(1.161, (128, 4096, True, 'table')), (1.165, (256, 2048, True, 'table')), (1.17, (128, 4096, False, 'table')), (1.17, (192, 1024, True, 'table')), (1.17, (128, 2048, True, 'table')), (1.171, (256, 1024, True, 'table'))]
+  (128, 1024, False, 'own'): REFIT 1.281
+  (128, 1024, False, 'table'): REFIT 1.206
+  (128, 2048, True, 'table'): REFIT 1.170
+REFIT MB (in sample at the fitted point): 1.113 / 1.405 / 2.706 / 1.161, 101 > 1.05, 60 > 1.15 | fallbacks 55
+REFIT MB leave one out: 1.113 / 1.405 / 2.706 / 1.161, 101 > 1.05, 60 > 1.15
+tilesel small-M (held out): 52 shapes 1.071 / 1.296 / 1.534 / 1.108, 29 > 1.05, 13 > 1.15, table kind not timed 9
+tilesel small-N (held out): 21 shapes 1.025 / 1.165 / 1.566 / 1.058, 6 > 1.05, 3 > 1.15, table kind not timed 4
+worst misses (regret, shape, rule tile/kind, best tile/kind):
+  2.71 (256, 256, 1280) rule 256x64x64 cap | best 16x16x256 dp
+  2.08 (128, 1024, 1536) rule 128x32x128 cap | best 16x16x256 cap
+  1.99 (256, 512, 2048) rule 256x64x64 cap | best 16x16x256 dp
+  1.94 (64, 1280, 1024) rule 64x64x128 rsall | best 16x16x256 cap
+  1.89 (256, 1536, 1280) rule 256x64x64 cap | best 32x32x128 cap
+  1.69 (256, 3328, 2048) rule 256x64x64 cap | best 64x64x128 dp
+  1.68 (256, 3840, 2048) rule 256x64x64 cap | best 64x64x128 cap
+  1.60 (256, 256, 4096) rule 256x64x64 cap | best 16x16x256 cap
+  1.59 (64, 256, 2048) rule 64x64x128 dp | best 16x16x256 dp
+  1.54 (128, 512, 3072) rule 128x32x128 cap | best 16x16x256 cap
+  1.54 (64, 1792, 1024) rule 64x64x128 cap | best 16x16x256 dp
+  1.49 (256, 6656, 1024) rule 256x64x64 cap | best 128x64x128 dp
+  1.46 (128, 256, 4096) rule 128x32x128 cap | best 16x16x256 rs4
+  1.45 (128, 1792, 16384) rule 128x32x128 cap | best 128x128x64 rs16
+  1.44 (128, 256, 5888) rule 128x32x128 cap | best 16x16x128 rsall
+misses > 1.15: 60; their K: Counter({'<=2048': 28, '<=8192': 24, '>8192': 8}); best tile programs per CU: Counter({4: 45, 1: 12, 2: 3})

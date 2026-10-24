@@ -1,0 +1,5 @@
+08:31:51 bs 128x128x64 full: PASS (264 configurations)
+08:32:59 bs 128x128x128 full: PASS (264 configurations)
+08:34:09 bs 256x128x64 full: PASS (264 configurations)
+08:34:56 bs 128x128x128 no-full full: PASS (180 configurations)
+08:35:49 bs 256x256x64 no-full full: PASS (180 configurations)

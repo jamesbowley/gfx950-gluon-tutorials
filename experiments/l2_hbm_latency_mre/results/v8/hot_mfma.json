@@ -1,0 +1,22 @@
+{
+  "loop_first_index": 565,
+  "loop_last_index": 1091,
+  "epilogue_first_index": 1092,
+  "mfma_count_in_loop": 256,
+  "total_mfma_cycles_in_loop": 4096,
+  "loop_hitcount": 504,
+  "epilogue_hitcount": 8,
+  "num_iterations": 63.0,
+  "wave_durations": {
+    "se0_sm0_sl0_wv0.json": 272060,
+    "se2_sm0_sl0_wv0.json": 272068
+  },
+  "average_loop_duration": 272064.0,
+  "average_prologue_duration": 4452.0,
+  "average_epilogue_duration": 12288.0,
+  "pro_ratio": "1.54%",
+  "loop_ratio": "94.20%",
+  "epi_ratio": "4.25%",
+  "average_iteration_duration": 4318.476190476191,
+  "mfma efficiency": "94.85%"
+}

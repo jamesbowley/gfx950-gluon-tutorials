@@ -1,0 +1,33 @@
+{
+ "config": {
+  "place": 3,
+  "delta": 0,
+  "lines": 64,
+  "passes": 2,
+  "period": 2000,
+  "leader": {
+   "xcc": 0,
+   "se": 0,
+   "cu": 0
+  },
+  "follower": {
+   "xcc": 0,
+   "se": 0,
+   "cu": 0
+  }
+ },
+ "summary": {
+  "counts": [
+   2,
+   0,
+   0,
+   0
+  ],
+  "ghz": 2.4026,
+  "leader": [
+   1214.0,
+   302.0
+  ],
+  "leader_late_ticks": 8.0
+ }
+}

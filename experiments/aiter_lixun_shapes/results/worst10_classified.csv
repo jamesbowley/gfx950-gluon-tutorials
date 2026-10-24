@@ -1,0 +1,62 @@
+group,M,N,K,out,waves_256,S_256,best_lib,best_lib_tile,lib_tile_supported,best_lib_tflops,v27_auto_tile,v27_auto_config,v27_auto_tflops,gap_before_pct,best_valid_kind,best_valid_tile,best_valid_tflops,gap_after_pct,best_any_kind,best_any_tile,gap_after_if_bf16_partials_pct,cls
+worst,512,2304,16384,bfloat16,0,18,AITER torch,128x256,True,709.8,64x128x128,spread,459.5,-35.3,rsall,256x128x64,727.6,2.5,rs12p,256x256x64,11.3,selection
+worst,512,1280,8192,bfloat16,0,10,hipBLASLt,64x160,False,420.8,64x64x128,"data-parallel, handed to v9_tile",341.1,-18.9,rs6,128x128x64,470.2,11.7,rs6b,128x128x64,21.1,selection
+worst,1280,1024,7168,bfloat16,0,20,hipBLASLt,80x256,False,543.0,64x128x128,"data-parallel, handed to v9_tile",415.9,-23.4,rs3,128x128x128,572.2,5.4,rs6p,128x256x64,10.1,selection
+worst,1536,1024,7168,bfloat16,0,24,AITER torch,96x128,False,645.1,64x128x128,"data-parallel, handed to v9_tile",500.7,-22.4,rs5,256x128x64,592.1,-8.2,rs5p,256x128x64,3.0,unsupported tile
+worst,512,5120,25600,bfloat16,0,40,hipBLASLt,128x160,False,879.1,128x128x128,spread,704.7,-19.8,rs6,256x256x64,1090.0,24.0,rs6b,256x256x64,31.1,selection
+worst,1280,512,7168,bfloat16,0,10,AITER torch,80x256,False,364.0,64x64x128,"data-parallel, handed to v9_tile",289.1,-20.6,rs6,128x128x64,397.7,9.3,rs6p,128x128x64,17.7,selection
+worst,1024,1280,8192,bfloat16,0,20,AITER torch,128x256,True,578.2,64x128x128,"data-parallel, handed to v9_tile",464.6,-19.6,rs3,128x128x128,617.6,6.8,rs6p,128x256x64,19.7,selection
+worst,2048,2560,6144,bfloat16,0,80,AITER torch,128x160,False,912.6,128x256x64,"data-parallel, handed to v9_tile",732.6,-19.7,ow3,256x256x64,943.0,3.3,rsallp,256x256x64,12.7,selection
+worst,2304,2048,4096,bfloat16,0,72,hipBLASLt,160x128,False,885.1,128x256x64,"data-parallel, handed to v9_tile",716.3,-19.1,sp,256x128x64,799.0,-9.7,rs3p,256x256x64,-4.3,unsupported tile
+worst,1024,2304,16384,bfloat16,0,36,hipBLASLt,256x256,True,872.8,128x128x128,spread,703.7,-19.4,rs7,256x256x64,983.1,12.6,rsallp,256x256x64,20.6,selection
+worst,1024,5120,25600,bfloat16,0,80,hipBLASLt,256x160,False,1140.9,128x256x64,spread,919.2,-19.4,owall,256x256x64,1263.4,10.7,rsallp,256x256x64,16.8,selection
+worst,512,3072,6144,float32,0,24,hipBLASLt,128x96,False,554.0,64x128x128,"data-parallel, handed to v9_tile",460.9,-16.8,rs5,128x256x64,522.1,-5.8,rs5p,128x256x64,5.8,unsupported tile
+worst,2304,512,4096,bfloat16,0,18,hipBLASLt,80x64,False,443.3,64x128x128,"data-parallel, handed to v9_tile",366.1,-17.4,rs3,128x128x128,418.9,-5.5,rs3p,128x128x64,0.7,unsupported tile
+worst,512,1280,6144,bfloat16,0,10,hipBLASLt,64x160,False,354.1,64x64x128,"data-parallel, handed to v9_tile",291.0,-17.8,rs6,128x128x128,372.0,5.1,rs6p,128x128x128,13.5,selection
+worst,2560,512,4096,bfloat16,0,20,hipBLASLt,80x64,False,485.5,64x128x128,"data-parallel, handed to v9_tile",406.2,-16.3,rs3,128x128x128,458.8,-5.5,rs3b,128x128x64,0.4,unsupported tile
+worst,4352,1024,4096,bfloat16,0,68,hipBLASLt,160x128,False,804.2,128x256x64,"data-parallel, handed to v9_tile",673.1,-16.3,rs8,128x128x128,779.6,-3.1,rs3p,256x256x64,-1.5,unsupported tile
+worst,512,2304,6144,bfloat16,0,18,AITER flydsl,96x96,False,439.8,64x128x128,"data-parallel, handed to v9_tile",372.8,-15.2,rsall,128x128x128,508.9,15.7,rsallp,128x128x128,23.7,selection
+worst,512,2560,8192,bfloat16,0,20,AITER torch,128x256,True,555.5,64x128x128,"data-parallel, handed to v9_tile",473.4,-14.8,rs3,128x128x64,591.4,6.5,rs3p,128x128x64,21.8,selection
+worst,512,4608,8192,bfloat16,0,36,hipBLASLt,128x160,False,725.1,128x128x128,"data-parallel, handed to v9_tile",608.8,-16.0,rs6,256x256x64,757.8,4.5,rs7p,256x256x64,15.7,selection
+worst,512,1536,7168,bfloat16,0,12,hipBLASLt,64x192,False,415.9,64x64x128,"data-parallel, handed to v9_tile",354.7,-14.7,rs5,128x128x64,450.1,8.2,rs5p,128x128x64,13.9,selection
+worst,1280,1024,4096,bfloat16,0,20,hipBLASLt,80x64,False,485.4,64x128x128,"data-parallel, handed to v9_tile",410.3,-15.5,rs3,128x128x128,461.8,-4.9,rs3p,128x128x64,2.6,unsupported tile
+worst,1024,4608,16384,bfloat16,0,72,hipBLASLt,256x144,False,1018.8,128x256x64,spread,861.8,-15.4,ow3,256x256x64,1160.6,13.9,rs3p,256x256x64,17.6,selection
+worst,512,3072,6144,bfloat16,0,24,AITER flydsl,64x96,False,549.1,64x128x128,"data-parallel, handed to v9_tile",469.2,-14.6,rs5,128x256x64,542.4,-1.2,rs5p,128x256x64,10.1,selection
+worst,512,1024,7168,bfloat16,0,8,hipBLASLt,128x128,True,384.5,64x64x128,"one-tile owner, n = 2",327.8,-14.7,all,128x128x64,377.1,-1.9,rsallb,128x128x64,8.5,selection
+worst,1536,512,7168,bfloat16,0,12,hipBLASLt,96x256,False,403.7,64x64x128,"data-parallel, handed to v9_tile",342.1,-15.3,rs5,128x128x64,445.0,10.2,rs5b,128x128x64,16.8,selection
+worst,2304,1024,4096,bfloat16,0,36,hipBLASLt,80x128,False,651.4,128x128x128,"data-parallel, handed to v9_tile",560.3,-14.0,sp,128x128x64,620.5,-4.7,rs6b,256x256x64,-3.6,unsupported tile
+worst,1024,5120,6400,bfloat16,0,80,hipBLASLt,128x160,False,891.7,128x256x64,"data-parallel, handed to v9_tile",765.7,-14.1,ow3,256x256x64,967.0,8.4,rsallp,256x256x64,16.1,selection
+worst,1024,5120,5120,bfloat16,0,80,hipBLASLt,128x160,False,846.9,128x256x64,"data-parallel, handed to v9_tile",729.2,-13.9,ow3,256x256x64,903.4,6.7,rs3p,256x256x64,15.1,selection
+worst,512,5120,5120,bfloat16,0,40,hipBLASLt,128x96,False,653.3,128x128x128,"data-parallel, handed to v9_tile",563.6,-13.7,ow3,256x128x64,652.7,-0.1,rs6b,256x256x64,8.8,selection
+worst,1024,6144,6144,bfloat16,0,96,hipBLASLt,256x192,False,984.2,128x256x64,"data-parallel, handed to v9_tile",849.6,-13.7,ow2,256x256x64,976.5,-0.8,ow2p,256x256x64,2.9,selection
+worst,1280,2048,7168,bfloat16,0,40,AITER torch,160x128,False,737.7,128x128x128,"data-parallel, handed to v9_tile",635.0,-13.9,rs3,256x128x64,736.0,-0.2,rs6b,256x256x64,15.9,selection
+worst,1536,1024,5120,float32,0,24,hipBLASLt,96x64,False,511.8,64x128x128,"data-parallel, handed to v9_tile",444.0,-13.2,rs5,256x128x64,499.9,-2.3,rs5p,128x256x64,10.9,unsupported tile
+worst,768,1024,7168,bfloat16,0,12,hipBLASLt,96x256,False,404.9,64x64x128,"data-parallel, handed to v9_tile",350.5,-13.4,rs5,128x128x64,451.2,11.4,rs5b,128x128x64,17.5,selection
+worst,1024,1024,7168,bfloat16,0,16,AITER torch,128x128,True,550.7,64x128x128,"one-tile owner, n = 2",478.5,-13.1,rsall,128x128x128,539.0,-2.1,rsallb,128x256x64,8.8,implementation
+worst,512,2560,6144,bfloat16,0,20,AITER torch,128x256,True,473.9,64x128x128,"data-parallel, handed to v9_tile",415.3,-12.4,rs3,128x128x128,538.0,13.5,rsallp,128x128x128,19.3,selection
+worst,512,4608,16384,bfloat16,0,36,hipBLASLt,128x160,False,798.5,128x128x128,spread,696.1,-12.8,rs7,256x256x64,948.9,18.8,rs7p,256x256x64,28.0,selection
+worst,768,2048,7168,bfloat16,0,24,hipBLASLt,128x256,True,572.1,64x128x128,"data-parallel, handed to v9_tile",498.5,-12.9,rs5,256x128x64,591.9,3.5,rs5p,128x256x64,16.6,selection
+worst,512,8704,4096,bfloat16,0,68,hipBLASLt,128x160,False,745.9,128x256x64,"data-parallel, handed to v9_tile",658.3,-11.7,sp,256x128x64,762.0,2.2,rs3p,256x256x64,5.3,selection
+worst,1024,5120,1280,bfloat16,0,80,hipBLASLt,128x160,False,604.8,128x256x64,"data-parallel, handed to v9_tile",541.2,-10.5,dp,128x256x64,543.6,-10.1,dp,128x256x64,-10.1,unsupported tile
+worst,5120,2048,1536,bfloat16,0,160,hipBLASLt,160x256,False,949.5,256x256x64,"data-parallel, handed to v9_tile",834.7,-12.1,dp,256x256x64,837.3,-11.8,dp,256x256x64,-11.8,unsupported tile
+worst,10240,512,4096,bfloat16,0,80,AITER torch,160x128,False,860.0,128x256x64,"data-parallel, handed to v9_tile",765.8,-11.0,sp,128x256x64,818.6,-4.8,rs3p,256x256x64,-0.1,unsupported tile
+worst,512,10240,4096,bfloat16,0,80,hipBLASLt,192x128,False,862.4,128x256x64,"data-parallel, handed to v9_tile",760.1,-11.9,sp,256x128x64,813.3,-5.7,rs3p,256x256x64,-0.6,unsupported tile
+worst,5120,4096,1024,bfloat16,1,64,hipBLASLt,160x256,False,977.9,256x256x64,data-parallel,862.7,-11.8,dp,128x128x64,942.9,-3.6,dp,128x128x64,-3.6,unsupported tile
+worst,1280,512,4096,bfloat16,0,10,AITER flydsl,48x32,False,319.5,64x64x128,"data-parallel, handed to v9_tile",283.5,-11.3,rs3,128x64x128,307.4,-3.8,rs6p,128x128x64,4.7,unsupported tile
+worst,512,2048,7168,bfloat16,0,16,hipBLASLt,128x128,True,541.8,64x128x128,"one-tile owner, n = 2",479.7,-11.5,rsall,128x128x128,539.1,-0.5,rsallp,128x256x64,9.5,selection
+worst,512,5120,6400,bfloat16,0,40,hipBLASLt,128x160,False,676.3,128x128x128,"data-parallel, handed to v9_tile",600.5,-11.2,all,256x128x64,703.1,4.0,rs6b,256x256x64,16.5,selection
+worst,5120,1024,4096,bfloat16,0,80,hipBLASLt,160x128,False,882.7,128x256x64,"data-parallel, handed to v9_tile",777.6,-11.9,dp,128x128x64,847.2,-4.0,rs3p,256x256x64,-0.6,unsupported tile
+worst,2560,2048,4096,bfloat16,0,80,hipBLASLt,160x128,False,885.5,128x256x64,"data-parallel, handed to v9_tile",790.2,-10.8,dp,128x128x64,862.9,-2.6,rs3p,256x256x64,3.0,unsupported tile
+worst,1024,6144,3072,float32,0,96,hipBLASLt,128x192,False,845.4,128x256x64,"data-parallel, handed to v9_tile",751.8,-11.1,dp,128x256x64,759.0,-10.2,dp,128x256x64,-10.2,unsupported tile
+worst,1024,5120,3200,bfloat16,0,80,hipBLASLt,128x160,False,823.0,128x256x64,"data-parallel, handed to v9_tile",729.8,-11.3,all,128x256x64,745.6,-9.4,rs3p,256x256x64,-1.1,unsupported tile
+worst,2048,5120,1280,bfloat16,0,160,hipBLASLt,256x160,False,847.0,256x256x64,"data-parallel, handed to v9_tile",749.0,-11.6,dp,256x256x64,756.3,-10.7,dp,256x256x64,-10.7,unsupported tile
+worst,1024,1536,7168,bfloat16,0,24,hipBLASLt,128x256,True,571.8,64x128x128,"data-parallel, handed to v9_tile",508.8,-11.0,rs5,256x128x64,605.2,5.8,rs5p,256x128x64,17.2,selection
+worst,1792,512,7168,bfloat16,0,14,hipBLASLt,112x256,False,439.2,64x64x128,"data-parallel, handed to v9_tile",392.9,-10.5,rs4,128x128x128,477.3,8.7,rs8p,128x256x64,18.9,selection
+control,4096,1024,4096,bfloat16,0,64,AITER flydsl,128x128,True,824.3,128x128x128,"data-parallel, handed to v9_tile",896.1,8.7,cap,128x128x128,912.2,10.7,cap,128x128x128,10.7,control
+control,512,7168,4224,bfloat16,0,56,AITER flydsl,128x128,True,729.6,128x128x128,"data-parallel, handed to v9_tile",767.6,5.2,cap,128x128x128,776.1,6.4,cap,128x128x128,6.4,control
+control,6912,1024,4096,bfloat16,0,108,AITER opus,128x256,True,935.3,128x256x64,"data-parallel, handed to v9_tile",1003.8,7.3,dp,128x256x64,1012.5,8.3,dp,128x256x64,8.3,control
+control,1024,8192,2048,bfloat16,0,128,hipBLASLt,128x256,True,926.5,128x256x64,"data-parallel, handed to v9_tile",975.0,5.2,cap,256x128x64,1002.2,8.2,cap,256x128x64,8.2,control
+control,7424,2048,4096,bfloat16,0,232,hipBLASLt,240x256,False,1128.6,256x256x64,"data-parallel, handed to v9_tile",1326.3,17.5,"v27 auto (data-parallel, handed to v9_tile)",256x256x64,1326.3,17.5,"v27 auto (data-parallel, handed to v9_tile)",256x256x64,17.5,control
+control,16384,512,7168,bfloat16,0,128,AITER opus,128x256,True,1080.0,256x256x64,"one-tile owner, n = 2",1148.4,6.3,sp,256x256x64,1164.4,7.8,owallp,256x256x64,11.8,control
+control,1024,2048,4096,bfloat16,0,32,AITER flydsl,64x128,True,599.7,64x128x128,"data-parallel, handed to v9_tile",634.2,5.8,dp,64x128x128,649.9,8.4,rsallp,128x256x64,13.7,control
+control,512,4096,1536,bfloat16,0,32,hipBLASLt,64x128,True,448.9,64x128x128,"data-parallel, handed to v9_tile",481.5,7.3,cap,128x64x128,513.7,14.4,cap,128x64x128,14.4,control

@@ -1,0 +1,358 @@
+{
+ "ui": "/home/jbowley/repos/gfx950-gluon-tutorials/experiments/tcp_latency/tmp/att/stream_16_4_HBM_all/ui_output_agent_35066_dispatch_35",
+ "waves": 32,
+ "ses": [
+  0,
+  2
+ ],
+ "ghz_realtime": 2.397,
+ "loads_per_wave": 2048.0,
+ "loads_per_cu": 32768.0,
+ "stretched_loads_per_cu": 14917.5,
+ "stretch_threshold_cyc": 16,
+ "L_exact": {
+  "n": 11682,
+  "p10": 2440.0,
+  "p50": 3808.0,
+  "p90": 6415.5999999999985,
+  "p50_ns": 1588.6
+ },
+ "L_bound": {
+  "n": 4798,
+  "p10": 2728.0,
+  "p50": 4160.0,
+  "p90": 6968.0
+ },
+ "dk_median": {
+  "8": 696.0,
+  "9": 800.0,
+  "10": 900.0,
+  "11": 988.0,
+  "12": 1068.0,
+  "13": 1160.0,
+  "14": 1256.0,
+  "15": 1340.0,
+  "16": 1420.0,
+  "17": 1508.0,
+  "18": 1600.0,
+  "19": 1680.0,
+  "20": 1760.0,
+  "21": 1844.0,
+  "22": 1932.0,
+  "23": 2004.0,
+  "24": 2072.0,
+  "25": 2156.0,
+  "26": 2244.0,
+  "27": 2316.0,
+  "28": 2400.0,
+  "29": 2504.0,
+  "30": 2604.0,
+  "31": 2696.0,
+  "32": 2792.0,
+  "33": 2880.0,
+  "34": 2976.0,
+  "35": 3052.0,
+  "36": 3140.0,
+  "37": 3232.0,
+  "38": 3336.0,
+  "39": 3424.0,
+  "40": 3504.0,
+  "41": 3592.0,
+  "42": 3688.0,
+  "43": 3760.0,
+  "44": 3840.0,
+  "45": 3920.0,
+  "46": 4016.0,
+  "47": 4100.0,
+  "48": 4176.0,
+  "49": 4256.0,
+  "50": 4348.0,
+  "51": 4428.0,
+  "52": 4508.0,
+  "53": 4592.0,
+  "54": 4680.0,
+  "55": 4756.0,
+  "56": 4832.0,
+  "57": 4916.0,
+  "58": 5020.0,
+  "59": 5116.0,
+  "60": 5196.0,
+  "61": 5292.0,
+  "62": 5392.0,
+  "63": 5488.0,
+  "64": 5576.0,
+  "65": 5660.0,
+  "66": 5764.0,
+  "67": 5844.0,
+  "68": 5928.0,
+  "69": 6020.0,
+  "70": 6120.0,
+  "71": 6200.0,
+  "72": 6280.0
+ },
+ "k_match": 44,
+ "dk_at": {
+  "32": 2792.0,
+  "44": 3840.0,
+  "48": 4176.0
+ },
+ "per_wave": [
+  {
+   "name": "se0_sm0_sl0_wv0.json",
+   "se": 0,
+   "vmem_ops": 2048,
+   "loads": 2048,
+   "exact": 402,
+   "bound": 113
+  },
+  {
+   "name": "se0_sm0_sl1_wv0.json",
+   "se": 0,
+   "vmem_ops": 2048,
+   "loads": 2048,
+   "exact": 324,
+   "bound": 191
+  },
+  {
+   "name": "se0_sm0_sl2_wv0.json",
+   "se": 0,
+   "vmem_ops": 2048,
+   "loads": 2048,
+   "exact": 370,
+   "bound": 145
+  },
+  {
+   "name": "se0_sm0_sl3_wv0.json",
+   "se": 0,
+   "vmem_ops": 2048,
+   "loads": 2048,
+   "exact": 341,
+   "bound": 174
+  },
+  {
+   "name": "se0_sm1_sl0_wv0.json",
+   "se": 0,
+   "vmem_ops": 2048,
+   "loads": 2048,
+   "exact": 434,
+   "bound": 81
+  },
+  {
+   "name": "se0_sm1_sl1_wv0.json",
+   "se": 0,
+   "vmem_ops": 2048,
+   "loads": 2048,
+   "exact": 340,
+   "bound": 175
+  },
+  {
+   "name": "se0_sm1_sl2_wv0.json",
+   "se": 0,
+   "vmem_ops": 2048,
+   "loads": 2048,
+   "exact": 367,
+   "bound": 148
+  },
+  {
+   "name": "se0_sm1_sl3_wv0.json",
+   "se": 0,
+   "vmem_ops": 2048,
+   "loads": 2048,
+   "exact": 335,
+   "bound": 180
+  },
+  {
+   "name": "se0_sm2_sl0_wv0.json",
+   "se": 0,
+   "vmem_ops": 2049,
+   "loads": 2048,
+   "exact": 441,
+   "bound": 74
+  },
+  {
+   "name": "se0_sm2_sl1_wv0.json",
+   "se": 0,
+   "vmem_ops": 2048,
+   "loads": 2048,
+   "exact": 348,
+   "bound": 167
+  },
+  {
+   "name": "se0_sm2_sl2_wv0.json",
+   "se": 0,
+   "vmem_ops": 2048,
+   "loads": 2048,
+   "exact": 383,
+   "bound": 132
+  },
+  {
+   "name": "se0_sm2_sl3_wv0.json",
+   "se": 0,
+   "vmem_ops": 2048,
+   "loads": 2048,
+   "exact": 340,
+   "bound": 175
+  },
+  {
+   "name": "se0_sm3_sl0_wv0.json",
+   "se": 0,
+   "vmem_ops": 2048,
+   "loads": 2048,
+   "exact": 408,
+   "bound": 107
+  },
+  {
+   "name": "se0_sm3_sl1_wv0.json",
+   "se": 0,
+   "vmem_ops": 2048,
+   "loads": 2048,
+   "exact": 316,
+   "bound": 199
+  },
+  {
+   "name": "se0_sm3_sl2_wv0.json",
+   "se": 0,
+   "vmem_ops": 2048,
+   "loads": 2048,
+   "exact": 364,
+   "bound": 151
+  },
+  {
+   "name": "se0_sm3_sl3_wv0.json",
+   "se": 0,
+   "vmem_ops": 2048,
+   "loads": 2048,
+   "exact": 320,
+   "bound": 195
+  },
+  {
+   "name": "se2_sm0_sl0_wv0.json",
+   "se": 2,
+   "vmem_ops": 2048,
+   "loads": 2048,
+   "exact": 426,
+   "bound": 89
+  },
+  {
+   "name": "se2_sm0_sl1_wv0.json",
+   "se": 2,
+   "vmem_ops": 2048,
+   "loads": 2048,
+   "exact": 334,
+   "bound": 181
+  },
+  {
+   "name": "se2_sm0_sl2_wv0.json",
+   "se": 2,
+   "vmem_ops": 2048,
+   "loads": 2048,
+   "exact": 379,
+   "bound": 136
+  },
+  {
+   "name": "se2_sm0_sl3_wv0.json",
+   "se": 2,
+   "vmem_ops": 2048,
+   "loads": 2048,
+   "exact": 351,
+   "bound": 164
+  },
+  {
+   "name": "se2_sm1_sl0_wv0.json",
+   "se": 2,
+   "vmem_ops": 2048,
+   "loads": 2048,
+   "exact": 411,
+   "bound": 104
+  },
+  {
+   "name": "se2_sm1_sl1_wv0.json",
+   "se": 2,
+   "vmem_ops": 2048,
+   "loads": 2048,
+   "exact": 326,
+   "bound": 189
+  },
+  {
+   "name": "se2_sm1_sl2_wv0.json",
+   "se": 2,
+   "vmem_ops": 2048,
+   "loads": 2048,
+   "exact": 355,
+   "bound": 160
+  },
+  {
+   "name": "se2_sm1_sl3_wv0.json",
+   "se": 2,
+   "vmem_ops": 2048,
+   "loads": 2048,
+   "exact": 340,
+   "bound": 175
+  },
+  {
+   "name": "se2_sm2_sl0_wv0.json",
+   "se": 2,
+   "vmem_ops": 2048,
+   "loads": 2048,
+   "exact": 425,
+   "bound": 90
+  },
+  {
+   "name": "se2_sm2_sl1_wv0.json",
+   "se": 2,
+   "vmem_ops": 2048,
+   "loads": 2048,
+   "exact": 335,
+   "bound": 180
+  },
+  {
+   "name": "se2_sm2_sl2_wv0.json",
+   "se": 2,
+   "vmem_ops": 2048,
+   "loads": 2048,
+   "exact": 372,
+   "bound": 143
+  },
+  {
+   "name": "se2_sm2_sl3_wv0.json",
+   "se": 2,
+   "vmem_ops": 2048,
+   "loads": 2048,
+   "exact": 328,
+   "bound": 187
+  },
+  {
+   "name": "se2_sm3_sl0_wv0.json",
+   "se": 2,
+   "vmem_ops": 2049,
+   "loads": 2048,
+   "exact": 412,
+   "bound": 103
+  },
+  {
+   "name": "se2_sm3_sl1_wv0.json",
+   "se": 2,
+   "vmem_ops": 2048,
+   "loads": 2048,
+   "exact": 331,
+   "bound": 184
+  },
+  {
+   "name": "se2_sm3_sl2_wv0.json",
+   "se": 2,
+   "vmem_ops": 2048,
+   "loads": 2048,
+   "exact": 383,
+   "bound": 132
+  },
+  {
+   "name": "se2_sm3_sl3_wv0.json",
+   "se": 2,
+   "vmem_ops": 2048,
+   "loads": 2048,
+   "exact": 341,
+   "bound": 174
+  }
+ ],
+ "name": "stream_16_4_HBM_all"
+}

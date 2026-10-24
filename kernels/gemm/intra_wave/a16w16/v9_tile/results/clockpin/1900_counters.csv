@@ -1,0 +1,3 @@
+tile,M,N,K,tiles,correct,kcycles,mfma_busy,pmc_us,pmc_clock_ghz,l2_hit,l2_req_M,ea_rdreq_M,ea_rdreq_dram_M,l_tcp_cyc,l_tcp_ns,inflight_tcp_kb,tcp_bns_per_cu,tcp_pending_stall,lat_clock_ghz,l_vmem_cyc,l_vmem_ns,inflight_vmem_kb,vmem_rd_share
+256x256,4096,4096,8192,256,True,321.9,0.8143,196.46,1.636,0.8027,17.341,3.16,3.16,353.0619,216.9469,9.0222,42.5556,0.4347,1.636,681.785,414.7783,17.6685,0.9846
+256x128,4096,4096,8192,512,True,386.1,0.6789,232.46,1.667,0.8267,25.714,4.196,4.196,408.7066,243.2536,13.0107,54.7318,0.3887,1.6752,889.9806,542.3519,28.7435,0.9897

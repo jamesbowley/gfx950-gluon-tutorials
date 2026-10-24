@@ -1,0 +1,225 @@
+physical GPU 0 results in /home/jbowley/repos/gfx950-gluon-tutorials/experiments/l2_hbm_latency_mre/results/clock_unpinned
+roles {'target': {'xcc': 0, 'se': 0, 'cu': 0}, 'same_xcd': {'xcc': 0, 'se': 1, 'cu': 1}, 'other_xcd': {'xcc': 1, 'se': 0, 'cu': 0}}
+solo: HBM 1220 cyc, L2 296 cyc at 2.40 GHz (in-kernel), started 8.0 ticks after t0
+solo: HBM 1132 cyc, L1 208 cyc at 2.40 GHz (in-kernel), started 8.0 ticks after t0
+wrote results/race_check.json
+depth_L2_d0_s2: exact 100%, rt p50 208.0 (fast 208.0, cold None), in flight 4.0 (max 4), issue stalled 0%, 17.3 B/clk, ATT 2.40 GHz
+wrote results/depth_sweep.json
+depth_L2_d1_s2: exact 69%, rt p50 208.0 (fast 208.0, cold None), in flight 7.0 (max 8), issue stalled 0%, 33.8 B/clk, ATT 2.40 GHz
+wrote results/depth_sweep.json
+depth_L2_d2_s2: exact 64%, rt p50 212.0 (fast 212.0, cold None), in flight 11.0 (max 12), issue stalled 0%, 49.5 B/clk, ATT 2.40 GHz
+wrote results/depth_sweep.json
+depth_L2_d4_s2: exact 42%, rt p50 280.0 (fast 280.0, cold None), in flight 18.0 (max 20), issue stalled 0%, 63.9 B/clk, ATT 2.40 GHz
+wrote results/depth_sweep.json
+depth_L2_d6_s2: exact 34%, rt p50 400.0 (fast 400.0, cold None), in flight 26.0 (max 28), issue stalled 0%, 63.9 B/clk, ATT 2.40 GHz
+wrote results/depth_sweep.json
+depth_L2_d8_s2: exact 0%, rt p50 None (fast None, cold None), in flight 33.0 (max 33), issue stalled 75%, 64.0 B/clk, ATT 2.39 GHz
+wrote results/depth_sweep.json
+depth_L2_d10_s2: exact 21%, rt p50 644.0 (fast 644.0, cold None), in flight 42.0 (max 43), issue stalled 22%, 64.0 B/clk, ATT 2.40 GHz
+wrote results/depth_sweep.json
+depth_L2_d11_s2: exact 0%, rt p50 None (fast None, cold None), in flight 45.0 (max 46), issue stalled 75%, 64.0 B/clk, ATT 2.40 GHz
+wrote results/depth_sweep.json
+depth_L2_d12_s2: exact 0%, rt p50 None (fast None, cold None), in flight 49.0 (max 50), issue stalled 75%, 64.0 B/clk, ATT 2.40 GHz
+wrote results/depth_sweep.json
+depth_L2_d14_s2: exact 0%, rt p50 None (fast None, cold None), in flight 57.0 (max 57), issue stalled 75%, 64.0 B/clk, ATT 2.40 GHz
+wrote results/depth_sweep.json
+depth_L2_d16_s2: exact 0%, rt p50 None (fast None, cold None), in flight 65.0 (max 65), issue stalled 75%, 64.0 B/clk, ATT 2.40 GHz
+wrote results/depth_sweep.json
+depth_LLC_d0_s2: exact 100%, rt p50 578.0 (fast 578.0, cold None), in flight 4.0 (max 4), issue stalled 0%, 7.1 B/clk, ATT 2.40 GHz
+wrote results/depth_sweep.json
+depth_LLC_d1_s2: exact 75%, rt p50 624.0 (fast 624.0, cold None), in flight 7.0 (max 8), issue stalled 0%, 13.6 B/clk, ATT 2.40 GHz
+wrote results/depth_sweep.json
+depth_LLC_d2_s2: exact 83%, rt p50 652.0 (fast 652.0, cold None), in flight 11.0 (max 12), issue stalled 0%, 18.7 B/clk, ATT 2.40 GHz
+wrote results/depth_sweep.json
+depth_LLC_d4_s2: exact 77%, rt p50 668.0 (fast 668.0, cold None), in flight 19.0 (max 20), issue stalled 0%, 29.8 B/clk, ATT 2.40 GHz
+wrote results/depth_sweep.json
+depth_LLC_d6_s2: exact 65%, rt p50 680.0 (fast 680.0, cold None), in flight 27.0 (max 28), issue stalled 0%, 40.4 B/clk, ATT 2.40 GHz
+wrote results/depth_sweep.json
+depth_LLC_d8_s2: exact 57%, rt p50 752.0 (fast 752.0, cold None), in flight 35.0 (max 36), issue stalled 0%, 46.7 B/clk, ATT 2.40 GHz
+wrote results/depth_sweep.json
+depth_LLC_d10_s2: exact 68%, rt p50 940.0 (fast 940.0, cold None), in flight 43.0 (max 44), issue stalled 0%, 46.5 B/clk, ATT 2.40 GHz
+wrote results/depth_sweep.json
+depth_LLC_d11_s2: exact 44%, rt p50 992.0 (fast 992.0, cold None), in flight 46.0 (max 48), issue stalled 44%, 45.8 B/clk, ATT 2.40 GHz
+wrote results/depth_sweep.json
+depth_LLC_d12_s2: exact 2%, rt p50 1024.0 (fast 1024.0, cold None), in flight 49.0 (max 50), issue stalled 91%, 46.2 B/clk, ATT 2.40 GHz
+wrote results/depth_sweep.json
+depth_LLC_d14_s2: exact 0%, rt p50 None (fast None, cold None), in flight 57.0 (max 57), issue stalled 88%, 46.0 B/clk, ATT 2.40 GHz
+wrote results/depth_sweep.json
+depth_LLC_d16_s2: exact 0%, rt p50 None (fast None, cold None), in flight 65.0 (max 66), issue stalled 90%, 47.2 B/clk, ATT 2.40 GHz
+wrote results/depth_sweep.json
+depth_HBM_d0_s2: exact 100%, rt p50 964.0 (fast None, cold 964.0), in flight 4.0 (max 4), issue stalled 0%, 4.2 B/clk, ATT 2.40 GHz
+wrote results/depth_sweep.json
+depth_HBM_d1_s2: exact 75%, rt p50 984.0 (fast None, cold 984.0), in flight 8.0 (max 8), issue stalled 0%, 8.1 B/clk, ATT 2.40 GHz
+wrote results/depth_sweep.json
+depth_HBM_d2_s2: exact 88%, rt p50 1024.0 (fast None, cold 1024.0), in flight 11.0 (max 12), issue stalled 0%, 11.3 B/clk, ATT 2.40 GHz
+wrote results/depth_sweep.json
+depth_HBM_d4_s2: exact 77%, rt p50 1102.0 (fast None, cold 1102.0), in flight 19.0 (max 20), issue stalled 0%, 17.8 B/clk, ATT 2.40 GHz
+wrote results/depth_sweep.json
+depth_HBM_d6_s2: exact 74%, rt p50 1192.0 (fast None, cold 1192.0), in flight 27.0 (max 28), issue stalled 0%, 24.0 B/clk, ATT 2.40 GHz
+wrote results/depth_sweep.json
+depth_HBM_d8_s2: exact 62%, rt p50 1444.0 (fast None, cold 1444.0), in flight 35.0 (max 36), issue stalled 0%, 25.7 B/clk, ATT 2.40 GHz
+wrote results/depth_sweep.json
+depth_HBM_d10_s2: exact 71%, rt p50 1692.0 (fast None, cold 1692.0), in flight 43.0 (max 44), issue stalled 0%, 25.9 B/clk, ATT 2.40 GHz
+wrote results/depth_sweep.json
+depth_HBM_d11_s2: exact 48%, rt p50 1812.0 (fast None, cold 1812.0), in flight 46.0 (max 48), issue stalled 61%, 25.7 B/clk, ATT 2.40 GHz
+wrote results/depth_sweep.json
+depth_HBM_d12_s2: exact 1%, rt p50 1840.0 (fast None, cold 1840.0), in flight 49.0 (max 50), issue stalled 98%, 25.8 B/clk, ATT 2.40 GHz
+wrote results/depth_sweep.json
+depth_HBM_d14_s2: exact 0%, rt p50 None (fast None, cold None), in flight 57.0 (max 57), issue stalled 99%, 24.5 B/clk, ATT 2.40 GHz
+wrote results/depth_sweep.json
+depth_HBM_d16_s2: exact 0%, rt p50 None (fast None, cold None), in flight 65.0 (max 65), issue stalled 98%, 23.3 B/clk, ATT 2.40 GHz
+wrote results/depth_sweep.json
+depth_L2_d0_s0: exact 100%, rt p50 200.0 (fast 200.0, cold None), in flight 4.0 (max 4), issue stalled 0%, 17.6 B/clk, ATT 2.38 GHz
+wrote results/depth_sweep.json
+depth_L2_d1_s0: exact 69%, rt p50 208.0 (fast 208.0, cold None), in flight 7.0 (max 8), issue stalled 0%, 33.7 B/clk, ATT 2.38 GHz
+wrote results/depth_sweep.json
+depth_L2_d2_s0: exact 75%, rt p50 224.0 (fast 224.0, cold None), in flight 11.0 (max 12), issue stalled 0%, 46.9 B/clk, ATT 2.37 GHz
+wrote results/depth_sweep.json
+depth_L2_d4_s0: exact 53%, rt p50 328.0 (fast 328.0, cold None), in flight 18.0 (max 20), issue stalled 0%, 54.7 B/clk, ATT 2.37 GHz
+wrote results/depth_sweep.json
+depth_L2_d6_s0: exact 55%, rt p50 464.0 (fast 464.0, cold None), in flight 26.0 (max 28), issue stalled 0%, 56.8 B/clk, ATT 2.37 GHz
+wrote results/depth_sweep.json
+depth_L2_d8_s0: exact 51%, rt p50 556.0 (fast 556.0, cold None), in flight 34.0 (max 36), issue stalled 0%, 61.0 B/clk, ATT 2.37 GHz
+wrote results/depth_sweep.json
+depth_L2_d10_s0: exact 52%, rt p50 762.0 (fast 762.0, cold None), in flight 42.0 (max 44), issue stalled 0%, 57.6 B/clk, ATT 2.37 GHz
+wrote results/depth_sweep.json
+depth_L2_d11_s0: exact 31%, rt p50 744.0 (fast 744.0, cold None), in flight 46.0 (max 48), issue stalled 4%, 61.4 B/clk, ATT 2.37 GHz
+wrote results/depth_sweep.json
+depth_L2_d12_s0: exact 1%, rt p50 820.0 (fast 820.0, cold None), in flight 49.0 (max 50), issue stalled 76%, 61.0 B/clk, ATT 2.37 GHz
+wrote results/depth_sweep.json
+depth_L2_d14_s0: exact 0%, rt p50 None (fast None, cold None), in flight 57.0 (max 57), issue stalled 76%, 61.3 B/clk, ATT 2.37 GHz
+wrote results/depth_sweep.json
+depth_L2_d16_s0: exact 0%, rt p50 None (fast None, cold None), in flight 65.0 (max 65), issue stalled 80%, 59.0 B/clk, ATT 2.37 GHz
+wrote results/depth_sweep.json
+depth_LLC_d0_s0: exact 100%, rt p50 656.0 (fast 656.0, cold None), in flight 4.0 (max 4), issue stalled 0%, 6.6 B/clk, ATT 2.38 GHz
+wrote results/depth_sweep.json
+depth_LLC_d1_s0: exact 79%, rt p50 716.0 (fast 716.0, cold None), in flight 7.0 (max 8), issue stalled 0%, 11.6 B/clk, ATT 2.38 GHz
+wrote results/depth_sweep.json
+depth_LLC_d2_s0: exact 85%, rt p50 888.0 (fast 888.0, cold None), in flight 11.0 (max 12), issue stalled 0%, 13.3 B/clk, ATT 2.38 GHz
+wrote results/depth_sweep.json
+depth_LLC_d4_s0: exact 71%, rt p50 1296.0 (fast 1296.0, cold None), in flight 19.0 (max 20), issue stalled 0%, 15.4 B/clk, ATT 2.38 GHz
+wrote results/depth_sweep.json
+depth_LLC_d6_s0: exact 70%, rt p50 2110.0 (fast 2110.0, cold None), in flight 26.0 (max 28), issue stalled 0%, 13.0 B/clk, ATT 2.38 GHz
+wrote results/depth_sweep.json
+depth_LLC_d8_s0: exact 65%, rt p50 2328.0 (fast 2328.0, cold None), in flight 35.0 (max 36), issue stalled 0%, 15.2 B/clk, ATT 2.38 GHz
+wrote results/depth_sweep.json
+depth_LLC_d10_s0: exact 58%, rt p50 3288.0 (fast 3288.0, cold None), in flight 43.0 (max 44), issue stalled 0%, 13.9 B/clk, ATT 2.38 GHz
+wrote results/depth_sweep.json
+depth_LLC_d11_s0: exact 49%, rt p50 3436.0 (fast 3436.0, cold None), in flight 46.0 (max 48), issue stalled 36%, 13.5 B/clk, ATT 2.38 GHz
+wrote results/depth_sweep.json
+depth_LLC_d12_s0: exact 1%, rt p50 3756.0 (fast 3756.0, cold None), in flight 49.0 (max 50), issue stalled 94%, 14.3 B/clk, ATT 2.38 GHz
+wrote results/depth_sweep.json
+depth_LLC_d14_s0: exact 0%, rt p50 None (fast None, cold None), in flight 57.0 (max 58), issue stalled 91%, 14.4 B/clk, ATT 2.38 GHz
+wrote results/depth_sweep.json
+depth_LLC_d16_s0: exact 0%, rt p50 None (fast None, cold None), in flight 65.0 (max 65), issue stalled 90%, 15.1 B/clk, ATT 2.38 GHz
+wrote results/depth_sweep.json
+depth_HBM_d0_s0: exact 100%, rt p50 984.0 (fast None, cold 984.0), in flight 4.0 (max 4), issue stalled 0%, 4.0 B/clk, ATT 2.38 GHz
+wrote results/depth_sweep.json
+depth_HBM_d1_s0: exact 79%, rt p50 1108.0 (fast None, cold 1108.0), in flight 8.0 (max 8), issue stalled 0%, 6.9 B/clk, ATT 2.38 GHz
+wrote results/depth_sweep.json
+depth_HBM_d2_s0: exact 95%, rt p50 1368.0 (fast None, cold 1368.0), in flight 11.0 (max 12), issue stalled 0%, 8.8 B/clk, ATT 2.38 GHz
+wrote results/depth_sweep.json
+depth_HBM_d4_s0: exact 78%, rt p50 1740.0 (fast None, cold 1740.0), in flight 19.0 (max 20), issue stalled 0%, 11.4 B/clk, ATT 2.38 GHz
+wrote results/depth_sweep.json
+depth_HBM_d6_s0: exact 82%, rt p50 2534.0 (fast None, cold 2534.0), in flight 27.0 (max 28), issue stalled 0%, 11.3 B/clk, ATT 2.38 GHz
+wrote results/depth_sweep.json
+depth_HBM_d8_s0: exact 60%, rt p50 2992.0 (fast None, cold 2992.0), in flight 35.0 (max 36), issue stalled 0%, 12.1 B/clk, ATT 2.38 GHz
+wrote results/depth_sweep.json
+depth_HBM_d10_s0: exact 76%, rt p50 4360.0 (fast None, cold 4360.0), in flight 43.0 (max 44), issue stalled 1%, 10.7 B/clk, ATT 2.38 GHz
+wrote results/depth_sweep.json
+depth_HBM_d11_s0: exact 53%, rt p50 3952.0 (fast None, cold 3952.0), in flight 47.0 (max 48), issue stalled 31%, 12.0 B/clk, ATT 2.38 GHz
+wrote results/depth_sweep.json
+depth_HBM_d12_s0: exact 2%, rt p50 4320.0 (fast None, cold 4320.0), in flight 49.0 (max 50), issue stalled 99%, 10.3 B/clk, ATT 2.38 GHz
+wrote results/depth_sweep.json
+depth_HBM_d14_s0: exact 0%, rt p50 None (fast None, cold None), in flight 57.0 (max 57), issue stalled 100%, 12.0 B/clk, ATT 2.38 GHz
+wrote results/depth_sweep.json
+depth_HBM_d16_s0: exact 0%, rt p50 None (fast None, cold None), in flight 65.0 (max 65), issue stalled 99%, 11.3 B/clk, ATT 2.38 GHz
+wrote results/depth_sweep.json
+depth_L2_mix50_d4_s2: exact 80%, rt p50 1052.0 (fast 1044.0, cold 1064.0), in flight 19.0 (max 20), issue stalled 0%, 18.0 B/clk, ATT 2.40 GHz
+wrote results/depth_sweep.json
+depth_L2_mix50_d11_s2: exact 40%, rt p50 1452.0 (fast 1456.0, cold 1452.0), in flight 46.0 (max 48), issue stalled 50%, 31.1 B/clk, ATT 2.40 GHz
+wrote results/depth_sweep.json
+depth_L2_mix50_d16_s2: exact 0%, rt p50 None (fast None, cold None), in flight 65.0 (max 66), issue stalled 93%, 25.6 B/clk, ATT 2.40 GHz
+wrote results/depth_sweep.json
+depth_LLC_mix50_d4_s2: exact 74%, rt p50 876.0 (fast 860.0, cold 884.0), in flight 19.0 (max 20), issue stalled 0%, 21.2 B/clk, ATT 2.40 GHz
+wrote results/depth_sweep.json
+depth_LLC_mix50_d11_s2: exact 63%, rt p50 1800.0 (fast 1772.0, cold 1808.0), in flight 47.0 (max 48), issue stalled 31%, 25.7 B/clk, ATT 2.39 GHz
+wrote results/depth_sweep.json
+depth_LLC_mix50_d16_s2: exact 0%, rt p50 None (fast None, cold None), in flight 65.0 (max 66), issue stalled 93%, 32.7 B/clk, ATT 2.40 GHz
+wrote results/depth_sweep.json
+depth_L2_mix50_d4_s0: exact 78%, rt p50 1352.0 (fast 1318.0, cold 1376.0), in flight 19.0 (max 20), issue stalled 0%, 14.5 B/clk, ATT 2.37 GHz
+wrote results/depth_sweep.json
+depth_L2_mix50_d11_s0: exact 67%, rt p50 2032.0 (fast 2028.0, cold 2044.0), in flight 47.0 (max 48), issue stalled 21%, 22.9 B/clk, ATT 2.38 GHz
+wrote results/depth_sweep.json
+depth_L2_mix50_d16_s0: exact 0%, rt p50 None (fast None, cold None), in flight 65.0 (max 65), issue stalled 95%, 22.5 B/clk, ATT 2.37 GHz
+wrote results/depth_sweep.json
+depth_LLC_mix50_d4_s0: exact 76%, rt p50 1456.0 (fast 1408.0, cold 1490.0), in flight 19.0 (max 20), issue stalled 0%, 13.8 B/clk, ATT 2.38 GHz
+wrote results/depth_sweep.json
+depth_LLC_mix50_d11_s0: exact 33%, rt p50 3860.0 (fast 3854.0, cold 3892.0), in flight 47.0 (max 48), issue stalled 44%, 11.4 B/clk, ATT 2.38 GHz
+wrote results/depth_sweep.json
+depth_LLC_mix50_d16_s0: exact 0%, rt p50 None (fast None, cold None), in flight 65.0 (max 66), issue stalled 94%, 9.2 B/clk, ATT 2.38 GHz
+wrote results/depth_sweep.json
+mix_int_h0_s2: stalled 95%, D_44 1744.0, by kind {'hot': None, 'cold': 1744.0}, 25.3 B/clk, L2 hit 0.00 (exp 0.00)
+wrote results/mix_sweep.json
+mix_int_h1_s2: stalled 98%, D_44 1640.0, by kind {'hot': 1648.0, 'cold': 1640.0}, 27.4 B/clk, L2 hit 0.25 (exp 0.25)
+wrote results/mix_sweep.json
+mix_int_h2_s2: stalled 97%, D_44 1704.0, by kind {'hot': 1726.0, 'cold': 1696.0}, 24.9 B/clk, L2 hit 0.50 (exp 0.50)
+wrote results/mix_sweep.json
+mix_int_h3_s2: stalled 94%, D_44 1608.0, by kind {'hot': 1620.0, 'cold': 1592.0}, 27.8 B/clk, L2 hit 0.75 (exp 0.75)
+wrote results/mix_sweep.json
+mix_int_h4_s2: stalled 93%, D_44 704.0, by kind {'hot': 704.0, 'cold': None}, 61.2 B/clk, L2 hit 1.00 (exp 1.00)
+wrote results/mix_sweep.json
+mix_split_h2_s2: stalled 79%, D_44 1704.0, by kind {'hot': 1716.0, 'cold': 1692.0}, 26.0 B/clk, L2 hit 0.50 (exp 0.50)
+wrote results/mix_sweep.json
+mix_int_h0_s1: stalled 96%, D_44 2530.0, by kind {'hot': None, 'cold': 2530.0}, 17.8 B/clk, L2 hit 0.00 (exp 0.00)
+wrote results/mix_sweep.json
+mix_int_h1_s1: stalled 98%, D_44 1936.0, by kind {'hot': 1944.0, 'cold': 1934.0}, 23.0 B/clk, L2 hit 0.23 (exp 0.25)
+wrote results/mix_sweep.json
+mix_int_h2_s1: stalled 95%, D_44 1504.0, by kind {'hot': 1508.0, 'cold': 1500.0}, 29.7 B/clk, L2 hit 0.49 (exp 0.50)
+wrote results/mix_sweep.json
+mix_int_h3_s1: stalled 96%, D_44 1678.0, by kind {'hot': 1680.0, 'cold': 1664.0}, 26.0 B/clk, L2 hit 0.75 (exp 0.75)
+wrote results/mix_sweep.json
+mix_int_h4_s1: stalled 96%, D_44 720.0, by kind {'hot': 720.0, 'cold': None}, 61.7 B/clk, L2 hit 1.00 (exp 1.00)
+wrote results/mix_sweep.json
+mix_split_h2_s1: stalled 86%, D_44 1652.0, by kind {'hot': 1656.0, 'cold': 1652.0}, 28.0 B/clk, L2 hit 0.50 (exp 0.50)
+wrote results/mix_sweep.json
+mix_int_h0_s0: stalled 93%, D_44 3728.0, by kind {'hot': None, 'cold': 3728.0}, 12.4 B/clk, L2 hit 0.00 (exp 0.00)
+wrote results/mix_sweep.json
+mix_int_h1_s0: stalled 97%, D_44 3056.0, by kind {'hot': 3036.0, 'cold': 3078.0}, 15.2 B/clk, L2 hit 0.23 (exp 0.25)
+wrote results/mix_sweep.json
+mix_int_h2_s0: stalled 97%, D_44 1872.0, by kind {'hot': 1860.0, 'cold': 1886.0}, 23.5 B/clk, L2 hit 0.49 (exp 0.50)
+wrote results/mix_sweep.json
+mix_int_h3_s0: stalled 95%, D_44 1928.0, by kind {'hot': 1932.0, 'cold': 1902.0}, 23.3 B/clk, L2 hit 0.75 (exp 0.75)
+wrote results/mix_sweep.json
+mix_int_h4_s0: stalled 93%, D_44 724.0, by kind {'hot': 724.0, 'cold': None}, 60.2 B/clk, L2 hit 1.00 (exp 1.00)
+wrote results/mix_sweep.json
+mix_split_h2_s0: stalled 90%, D_44 2602.0, by kind {'hot': 2652.0, 'cold': 2572.0}, 17.6 B/clk, L2 hit 0.50 (exp 0.50)
+wrote results/mix_sweep.json
+wrote results/gemm_2x16_K2048.json
+wrote results/gemm_2x16_K2048_fresh.json
+wrote results/suite_clock.json
+GRBM GHz: {'depth_hbm_d16_all': [2.66, 2.61, 2.6, 2.62], 'gemm_cold': [2.51, 2.47, 2.49, 2.49]}
+smi before:
+
+
+============================ ROCm System Management Interface ============================
+=============================== Current clock frequencies ================================
+GPU[0]		: fclk clock level: 0: (1250Mhz)
+GPU[0]		: mclk clock level: 0: (2000Mhz)
+GPU[0]		: sclk clock level: S: (94Mhz)
+GPU[0]		: socclk clock level: S: (38Mhz)
+==========================================================================================
+================================== End of ROCm SMI Log ===================================
+
+smi after:
+
+
+============================ ROCm System Management Interface ============================
+=============================== Current clock frequencies ================================
+GPU[0]		: fclk clock level: 0: (1250Mhz)
+GPU[0]		: mclk clock level: 0: (2000Mhz)
+GPU[0]		: sclk clock level: 1: (157Mhz)
+GPU[0]		: socclk clock level: S: (38Mhz)
+==========================================================================================
+================================== End of ROCm SMI Log ===================================
+
