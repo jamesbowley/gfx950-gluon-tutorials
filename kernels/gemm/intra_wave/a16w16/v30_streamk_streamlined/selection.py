@@ -318,7 +318,12 @@ def resolve_config(M, N, K, *, config, device, strict=True):
         and not l2
         and streamk_programs < num_programs
     )
-    grid = streamk_programs if compact else num_programs
+    if compact:
+        grid = streamk_programs
+    elif streamk_tiles == 0:
+        grid = min(num_programs, total_tiles)
+    else:
+        grid = num_programs
     rs = reduce_scatter_config(tile, split_n if config.policy == "one_tile" else 1)
     return {
         **config.to_dict(),

@@ -10,6 +10,7 @@ a16w16/
 ├── bench_ext.py                    # bench.py plus everything below (section 2)
 ├── v9_tile/                        # v9 with the tile size as a parameter (256x128, 128x256, 128x128); tile-size study
 ├── v9_ragged/                      # v9 for M, N, K not multiples of the tile (clamped loads, masked stores, masked last pair)
+├── v9_kreverse/                    # v9 with K run backward on odd dispatch waves (KORDER=0|1|2, --version 9k); MALL reuse study
 ├── v10_persistant/                 # v9 as a persistent kernel (one program per CU loops over tiles)
 ├── v11_persistant_overlap_global/  # + next tile's first global->LDS loads in the epilogue
 ├── v12_persistant_overlap_lds/     # + next tile's first LDS reads in the epilogue

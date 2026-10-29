@@ -8,6 +8,7 @@ workgroups, does splitting it over 64 CUs (as split-k does) buy bandwidth?
 HIP_VISIBLE_DEVICES=0 python bench.py --sweep check        # placement validation (1 s)
 HIP_VISIBLE_DEVICES=0 python bench.py --sweep A B C D E F --full   # HBM sweeps, about 2.5 minutes
 HIP_VISIBLE_DEVICES=6 python bench.py --sweep check D G H I J --results-dir results/gpu6  # cache tiers
+HIP_VISIBLE_DEVICES=6 python bench.py --sweep K --results-dir results/gpu6  # load cache modifier (NT), 15 s
 HIP_VISIBLE_DEVICES=6 python pmc.py --results-dir results/gpu6    # counter validation, about 2 minutes
 python plot.py                                                     # results/*.csv -> images/*.png
 ```
@@ -15,16 +16,23 @@ python plot.py                                                     # results/*.c
 Machine: MI355X, 8 XCDs x 32 CUs, SPX compute partition, NPS1 memory partition, memory clock
 2000 MHz (8 TB/s theoretical), Triton 3.8 Gluon. All data points are the median of 10 runs. Before
 each timed run, a 1 GB read-only stream evicts L2 and the 256 MB MALL (Infinity Cache), so every
-byte comes from HBM ("cold") unless stated otherwise.
+byte comes from HBM ("cold") unless stated otherwise. Sweeps A-J use default-cached loads (no cache-policy
+bits). Sweep K shows this caps full-chip HBM reads about 11% below what non-temporal loads get.
 
 ## TL;DR
 
+- **Full-chip HBM reads need non-temporal loads to reach their ceiling.** With `buffer_load(...,
+  cache=".cs")` (or `".cg"`; both emit `sc0 nt`), 256 CUs read **7.1-7.2 TB/s** cold, against
+  6.2-6.5 TB/s with default caching (sweep K). This matches the 7.16 TB/s contiguous-read probe in
+  issue 2127. NT doesn't change the per-CU cap: the two curves are identical up to about 96 CUs.
+  All other HBM read numbers below use default caching.
 - **The first limit a memory-bound kernel hits is per CU, not per XCD or HBM.** One CU reads at
   most about 60 GB/s from HBM (about 25 B/clk), however many waves or loads in flight it has. From
   the MALL it reaches about 100 GB/s, so the cap behaves like a fixed number of outstanding misses
   per CU divided by memory latency. Writes are posted and reach about 150 GB/s per CU.
 - **With the default round-robin dispatch, read bandwidth scales linearly with CUs up to about 130
-  CUs** (roughly 5.5 TB/s), then saturates at 6.0-6.3 TB/s.
+  CUs** (roughly 5.5 TB/s), then saturates at 6.0-6.3 TB/s (7.1 TB/s from about 190 CUs with NT
+  loads).
 - **32 vs 64 CUs:** with round-robin, 64 workgroups read 3.38 TB/s against 1.82 TB/s for 32 (1.85x).
   Copy gains 1.67x, write 1.24x. So splitting a 32-workgroup memory-bound kernel across 64 CUs nearly
   doubles its bandwidth, *provided the kernel already keeps enough loads in flight per CU*. If it
@@ -45,15 +53,15 @@ byte comes from HBM ("cold") unless stated otherwise.
   |---|---|
   | L2 hits | 31.7 TB/s with 4 waves, 38.8 TB/s with 16 waves (100% of the 2 KB/clk per XCD peak) |
   | MALL hits | 7.0-7.9 TB/s |
-  | HBM | 6.2-6.4 TB/s |
+  | HBM | 6.2-6.4 TB/s default caching, 7.1-7.2 TB/s with NT loads (sweep K) |
 
   - **Per CU:** 64 B/clk (153 GB/s) from L1 or L2, about 110 GB/s from the MALL, about 60 GB/s
     from HBM.
   - **The MALL ceiling is set by the fabric, not the MALL.** MALL hits obey the same limits as HBM:
     1.35 TB/s per XCD, 4.1 TB/s for XCDs 0-3, 7.5-7.9 TB/s for all 8.
   - **L2 contents survive kernel launches.**
-- **Ridge band (bf16 dense):** 195-402 FLOP/byte against HBM, and about 65 against L2. Serving
-  bytes from the MALL only moves the measured ridge from 249 to 196.
+- **Ridge band (bf16 dense):** 195-350 FLOP/byte against HBM, and about 65 against L2. Serving
+  bytes from the MALL only moves the measured ridge from 217 to 196.
 
 ## Method
 
@@ -252,7 +260,7 @@ Setup: 256 CUs, round-robin, 4 waves x `UNROLL=4` (16 KB tiles). All values are 
 | 64-128 KB (16-32 MB) | 31.6-31.8 | 7.4 | 0% L1 hits and 100% L2 hits in steady state. Writes still hit L2, but every line is written back on every pass |
 | 192 KB (48 MB) | 8.0 | 7.5 | L2 hit rate 15%, 85% of bytes cross the fabric |
 | 256 KB-1 MB (64-256 MB) | 7.0-7.3 | 7.4-7.5 | 0% L2 hits; everything comes from beyond the XCD, i.e. MALL hits |
-| 2-4 MB (0.5-1 GB) | 6.3-6.4 | 5.3-5.4 | HBM |
+| 2-4 MB (0.5-1 GB) | 6.3-6.4 | 5.3-5.4 | HBM (default caching; NT reads get 7.1-7.2, sweep K) |
 
 - **Read tiers:**
   - **Up to 48 KB per CU:** the CU's own load path limits bandwidth, at 64 B/clk
@@ -287,7 +295,8 @@ steady-state TB/s.
   the per-half limit at about 4.1 TB/s. That per-half limit fits half of NPS1 traffic crossing the
   5.5 TB/s IOD-to-IOD bisection.
 - **Only the full chip gains from MALL hits** (7.5 vs 6.3 TB/s), because only there is HBM
-  efficiency, rather than the fabric, the binding limit for cold traffic.
+  efficiency, rather than the fabric, the binding limit for cold traffic. Against NT cold reads
+  (7.1-7.2 TB/s, sweep K), the full-chip MALL gain shrinks to about 5-12%.
 - **CUs per XCD** (all 8 XCDs, 16 MB each): 1, 2, 4, 8 and 16 CUs per XCD give 0.90, 1.78, 3.40,
   5.97 and 7.94 TB/s.
   - That's about 110 GB/s per CU from the MALL, against about 60 GB/s from HBM (sweep A). This is
@@ -333,6 +342,37 @@ One pass per launch, 256 CUs. Times are the mean time per workgroup, in µs.
   the counters report a 5% L2 hit rate. Under plain `rocprofv3 --kernel-trace` it stays at 8.0 TB/s.
   So retention across launches has to be measured without counters.
 
+### K. Load cache modifier (non-temporal reads)
+
+![K cache modifier](images/K_cache_modifier.png)
+
+Issue 2127 reports 7.16 TB/s for a contiguous non-temporal read probe, above every HBM read in
+sweeps A-J. Sweep K reruns the cold read with each `buffer_load` cache modifier (GPU 6, Triton 3.9,
+median of 10). The modifiers compile to three distinct encodings:
+
+| modifier | `buffer_load_dwordx4` bits | best TB/s, 256 CUs, 2 GB | best TB/s, 256 CUs, 4 GB |
+|---|---|---|---|
+| default, `.ca` | none | 6.40-6.41 | 6.49-6.52 |
+| `.cv` | `sc0 sc1` | 6.40 | 6.45 |
+| `.cg`, `.cs` | `sc0 nt` | 7.12 | 7.15-7.19 |
+
+- **The earlier HBM numbers are correct for default caching.** Event timing and in-kernel
+  timestamps agree to within about 2%, and default loads land on the sweep A and G values.
+- **NT loads are 11% faster at the full chip.** `.cg` and `.cs` emit the same instruction and give
+  the same result. `.cv` (system-coherent) gains nothing.
+- **NT raises the chip ceiling, not the per-CU cap.** Up to about 96 CUs the default and NT curves
+  match, at about 60 GB/s per CU. They separate only once the chip-wide limit binds. NT saturates
+  at about 7.1 TB/s from about 190 CUs, while default caching flattens at about 6.2 TB/s and dips
+  slightly at 256.
+- **Fewer loads in flight is better under NT.** 4 waves x u4 is best (7.15-7.19 TB/s), and 16 waves
+  x u4 drops to 6.8 TB/s. Under default caching, more waves help slightly.
+- **Access pattern still doesn't matter** in this kernel. 256 separate 8-16 MB chunks and one
+  contiguous grid-stride front are within about 1% under NT. The 256-region cost in issue 2127
+  comes from its B access pattern (128 B pieces per row), not from the region count alone.
+- **For kernels:** streaming data with no reuse (B in skinny GEMMs, single-pass reductions) should
+  use `cache=".cs"`. Data that other workgroups or XCDs re-read should keep the default, because NT
+  misses aren't shared through the MALL (issue 2127, square GEMM: 1.34-2.29x more HBM bytes).
+
 ## Ridge band (bf16 dense)
 
 ![ridge band](images/ridge_band.png)
@@ -344,7 +384,8 @@ Inputs:
     [results.md](../../kernels/gemm/intra_wave/a16w16/tmp/compare/results.md);
 - bandwidth:
   - theoretical HBM: \(B_\text{theo}\) = 8.0 TB/s;
-  - measured: HBM 6.27 TB/s, MALL hits 7.94 TB/s, L2 hits 38.8 TB/s (sweeps G, H and I).
+  - measured: HBM 7.19 TB/s with NT loads (sweep K; 6.27 TB/s with default caching, sweep G), MALL
+    hits 7.94 TB/s, L2 hits 38.8 TB/s (sweeps H and I).
 
 Your best measured numbers are lower bounds on what's achievable, and the datasheet numbers are
 upper bounds. So the rigorous ridge interval comes from the *mixed* pairings. The two consistent
@@ -352,7 +393,7 @@ pairings are point estimates inside it.
 
 | boundary | \(F_\text{meas}/B_\text{theo}\) (low end) | meas/meas | theo/theo | \(F_\text{theo}/B_\text{meas}\) (high end) |
 |---|---|---|---|---|
-| HBM | **195** | 249 | 315 | **402** |
+| HBM | **195** | 217 (249 with default caching) | 315 | **350** (402 with default caching) |
 | MALL hits (NPS1, as seen by the XCDs) | about 142 (using 11 TB/s, the bisection bound for uniform NPS1 traffic) | 196 | n/a | 317 |
 | L2 hits | 40 (using the whitepaper's 39.3 TB/s at 2.4 GHz) | 40 | 64 | 65 |
 
@@ -362,9 +403,10 @@ pairings are point estimates inside it.
 - **Inside the band:** the answer depends on the clock and bandwidth the kernel actually gets, so
   it has to be measured.
 
-For HBM, measured/measured (about 250) is the better single guess.
+For HBM, measured/measured is the better single guess: about 220 for a kernel that streams with NT
+loads, about 250 for one that uses default caching.
 
-Serving bytes from the MALL rather than HBM only moves the measured ridge from 249 to 196. It is
+Serving bytes from the MALL rather than HBM only moves the measured ridge from 217 to 196. It is
 L2 reuse (about 65 FLOP/byte against L2) that turns a GEMM compute-bound.
 
 Caveats:
@@ -397,10 +439,10 @@ reduction cost. Writes gain much less (1.24x), because 32 CUs already write at o
 
 - [kernel.py](kernel.py): `bw_kernel`, the placement modes, the instrumentation helpers
   (`_getreg`, `_uniform`, `_pin`, `_timestamps`) and the split-k proxy kernels.
-- [bench.py](bench.py): sweeps `check`, `T` (tuning), `A`-`J`, timing, record analysis and the
+- [bench.py](bench.py): sweeps `check`, `T` (tuning), `A`-`K`, timing, record analysis and the
   `P` vs `4P` slope measurement (`run_passes`).
   - Writes `<results-dir>/<sweep>.csv` plus `<sweep>_clocks.txt` (`amd-smi` snapshots).
   - `--point G:read_512KB --passes 16 --reps 5` runs a single point back to back, for profilers.
 - [pmc.py](pmc.py): rocprofv3 counter validation of the tiers. Writes `results/gpu6/pmc.csv`.
-- [plot.py](plot.py): `images/*.png`. Sweeps A-F are read from `results/`, G-J from `results/gpu6/`
+- [plot.py](plot.py): `images/*.png`. Sweeps A-F are read from `results/`, G-K from `results/gpu6/`
   (`--tiers-dir`).

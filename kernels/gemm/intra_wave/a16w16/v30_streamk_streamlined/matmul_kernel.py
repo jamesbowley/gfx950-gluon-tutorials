@@ -22,9 +22,10 @@ launcher derives only shape- and topology-dependent launch
 constants. Each program has four waves, with one resident program per queried CU.
 Ragged shapes are specialized at compile time: a ragged M or N clamps the loads of the
 last tile to the matrix edge and masks its stores; a ragged K (EVEN_K false) is
-virtually padded to a whole number of K-step pairs (K_PAD): each tile's masked physical
-tail pair is scheduled first, then all remaining pairs read from aligned column zero,
-so the hot loop stays unmasked. No input tensor is physically padded to K_PAD. The
+virtually padded to a whole number of K-step pairs (K_PAD). Each tile runs its last
+pair first (on a ragged K the masked physical tail), then all remaining pairs read
+from aligned column zero, so the hot loop stays unmasked. No input tensor is
+physically padded to K_PAD. The
 kernel needs a TN problem (x row-major, w row-major (N, K)) with leading strides that
 are multiples of 8 (16-byte loads and stores) and K a multiple of 16.
 
@@ -56,6 +57,21 @@ Required Stream-K controls, with representative values:
   XCD-local (``one_tile`` with ``rs`` only) and requires a tile's programs to
   fit on one XCD.
 * ``GROUP_SIZE_M=4`` sets the output-tile grouping directly.
+
+The last persistent trip prefetches the program's first Stream-K pair. At
+256x256x64 this raises the end-to-end builds' (two-tile, spread) VGPR spills from
+7 to 17 on aligned shapes, but the spills stay out of the K loops, and no shape
+timed is slower: 0.965-1.003 of the time with a discarded last prefetch, over
+five tiles, with bias and ragged edges (results/last_prefetch*.md, WORKLOG
+entry 9).
+
+Tile order: the persistent tiles are the first total_tiles - S tile ids, with v9's
+XCD remap and GROUP_SIZE_M swizzle applied over those ids alone, and the Stream-K
+tiles are the last S ids. This keeps the Stream-K tail separate from the persistent
+mapping, which a configurable XCD mapping can replace later. Against v9's order
+(remap over all tiles, Stream-K tiles at the top of each XCD block) it is faster on
+two-tile with one trip, but up to about 1% slower on some 256x256x64 shapes and more
+on smaller tiles with LLC-cold inputs (WORKLOG entries 10, 11 and 13).
 """
 
 import math
@@ -105,6 +121,27 @@ def compute_gload_layout(shared_layout, load_contig, num_warps, threads_per_warp
 
 
 @gluon.jit
+def even_split_start(i, TOTAL, PARTS: gl.constexpr):
+    """First item of part i when TOTAL items are split over PARTS parts as evenly as
+    possible: every part gets TOTAL // PARTS items, the first TOTAL % PARTS one more.
+    Part i covers [even_split_start(i), even_split_start(i + 1))."""
+    return i * (TOTAL // PARTS) + gl.minimum(i, TOTAL % PARTS)
+
+
+@gluon.jit
+def even_split_size(i, TOTAL, PARTS: gl.constexpr):
+    """Items in part i of even_split_start's split."""
+    return TOTAL // PARTS + (i < TOTAL % PARTS).to(gl.int32)
+
+
+@gluon.jit
+def round_robin_to_xcd_blocked(i, count, NUM_XCDS: gl.constexpr):
+    """Id i of count, placed round-robin (it runs on XCD i % NUM_XCDS), renumbered so
+    that each XCD's ids form one contiguous block of an even split of count."""
+    return even_split_start(i % NUM_XCDS, count, NUM_XCDS) + i // NUM_XCDS
+
+
+@gluon.jit
 def _get_pids(
     pid,
     M,
@@ -123,27 +160,7 @@ def _get_pids(
     num_pid_n = gl.cdiv(N, BN)
 
     if NUM_XCDS != 1:
-        ## pid remapping on xcds
-        # Number of pids per XCD in the new arrangement
-        pids_per_xcd = (GRID_MN + NUM_XCDS - 1) // NUM_XCDS
-        # When GRID_MN cannot divide NUM_XCDS, some xcds will have
-        # pids_per_xcd pids, the other will have pids_per_xcd - 1 pids.
-        # We calculate the number of xcds that have pids_per_xcd pids as
-        # tall_xcds
-        tall_xcds = GRID_MN % NUM_XCDS
-        tall_xcds = NUM_XCDS if tall_xcds == 0 else tall_xcds
-        # Compute current XCD and local pid within the XCD
-        xcd = pid % NUM_XCDS
-        local_pid = pid // NUM_XCDS
-        # Calculate new pid based on the new grouping
-        if xcd < tall_xcds:
-            pid = xcd * pids_per_xcd + local_pid
-        else:
-            pid = (
-                tall_xcds * pids_per_xcd
-                + (xcd - tall_xcds) * (pids_per_xcd - 1)
-                + local_pid
-            )
+        pid = round_robin_to_xcd_blocked(pid, GRID_MN, NUM_XCDS)
 
     if GROUP_SIZE_M == 1:
         pid_m = pid // num_pid_n
@@ -208,9 +225,14 @@ def _gemm_a16w16_compute_bound_kernel(
     pre-computed load offsets, XCD-aware PID remapping + GROUP_SIZE_M swizzling) and
     adds:
 
-    1. A persistent loop over the first total_tiles - STREAMK_TILES tiles: each tile's
-       epilogue prefetches the first K-step pair of the program's next tile.
-    2. A Stream-K tail over the STREAMK_TILES leftover tiles, split in units of a
+    1. A persistent loop over the first total_full_tiles = total_tiles - STREAMK_TILES
+       tile ids, XCD-remapped over those ids alone: each tile's epilogue prefetches
+       the first K-step pair of the program's next tile. The last trip's epilogue
+       prefetches the first pair of the program's first Stream-K segment, which then
+       skips its prologue (masked off when the program has no segment). Without a
+       Stream-K tail it loads the last pair of tile total_full_tiles - 1, which is
+       discarded.
+    2. A Stream-K tail over the last STREAMK_TILES tile ids, split in units of a
        K-step pair, whose partials are combined by an owner or a reduce-scatter
        ending. Every program of the Stream-K phase must be resident at once: the
        endings wait on each other.
@@ -270,84 +292,97 @@ def _gemm_a16w16_compute_bound_kernel(
     a_rows_top = gl.multiple_of(offs_am * stride_am, 8)
     b_cols_left = gl.multiple_of(offs_bn * stride_bn, 8)
 
-    # One offset tensor per operand. The bottom / right halves (a_half / b_half) and
-    # the odd K-step (BLOCK_K * stride_ak / stride_bk) are shifts in the scalar base;
-    # a ragged tile replaces them with its clamped offsets (clamped_a_offsets).
-    # Offsets are relative to the tile, whose base is 64-bit.
-    a_top_offsets = a_rows_top[:, None] + offs_ak[None, :] * stride_ak
-    b_left_offsets = offs_bk[:, None] * stride_bk + b_cols_left[None, :]
+    # One half-tile offset tensor per operand, shared by both halves: the bottom /
+    # right half (a_bot_shift / b_right_shift) and the odd K-step (BLOCK_K *
+    # stride_ak / stride_bk) are shifts in the scalar base; a ragged tile replaces
+    # them with its clamped offsets (a_load_addressing). Offsets are relative to the
+    # tile, whose base is 64-bit.
+    a_offsets = a_rows_top[:, None] + offs_ak[None, :] * stride_ak
+    b_offsets = offs_bk[:, None] * stride_bk + b_cols_left[None, :]
 
-    a_half = BLOCK_M // 2 * stride_am
-    b_half = BLOCK_N // 2 * stride_bn
-    kofs = (a_top_offsets, a_half, b_left_offsets, b_half)
+    a_bot_shift = BLOCK_M // 2 * stride_am
+    b_right_shift = BLOCK_N // 2 * stride_bn
+    kofs = (a_offsets, a_bot_shift, b_offsets, b_right_shift)
 
-    # A ragged K is virtually padded to whole K-step pairs; every tile runs its last,
-    # partial pair first (masked), so the other pairs stay aligned to the row's start.
+    # A ragged K is virtually padded to whole K-step pairs; every tile runs its last
+    # pair first (on a ragged K partial and masked), so the other pairs stay aligned to
+    # the row's start.
     if EVEN_K:
+        gl.static_assert(K % (2 * BLOCK_K) == 0)
         K_PAD: gl.constexpr = K
     else:
-        K_PAD: gl.constexpr = (K + 2 * BLOCK_K - 1) // (2 * BLOCK_K) * (2 * BLOCK_K)
+        K_PAD: gl.constexpr = gl.cdiv(K, 2 * BLOCK_K) * (2 * BLOCK_K)
     K_RES: gl.constexpr = K_PAD - K
-    gl.static_assert(K_PAD % (2 * BLOCK_K) == 0)
     iterMax = gl.cdiv(K_PAD, BLOCK_K)
 
     gl.assume(iterMax > 3)
+    PAIRS_PER_TILE: gl.constexpr = K_PAD // (2 * BLOCK_K)
+    SK_PREFETCH: gl.constexpr = HAS_FULL and STREAMK_TILES > 0
 
     # Persistent phase. Pair zero is already in flight on entry to each tile;
     # its epilogue prefetches pair zero of the next virtual tile.
     if HAS_FULL:
+        # The last trip's prefetch target: the first pair of the program's first
+        # Stream-K segment, as quadrant_segment's prologue loads it.
+        sk_target = None
+        if SK_PREFETCH:
+            sk_has, sk_tile, sk_k0 = streamk_first_segment(
+                total_full_tiles,
+                STREAMK_TILES,
+                PAIRS_PER_TILE,
+                SPLIT_N,
+                END_TO_END,
+                L2,
+                XCD_SPLIT,
+                NUM_PROGRAMS,
+                NUM_XCDS,
+            )
+            sk_m, sk_n = _get_pids(
+                sk_tile, M, N, BLOCK_M, BLOCK_N, 0, 1, GROUP_SIZE_M
+            )
+            sk_col = gl.where(
+                sk_k0 == 0, K_PAD - 2 * BLOCK_K, (sk_k0 - 2) * BLOCK_K
+            ).to(gl.int64)
+            sk_khi = gl.where(sk_k0 == 0, 2 * BLOCK_K - K_RES, 2 * BLOCK_K) * sk_has
+            sk_target = (sk_m, sk_n, sk_col, sk_khi)
         first_m, first_n = _get_pids(
-            min(start, total_tiles - 1),
+            start,
             M,
             N,
             BLOCK_M,
             BLOCK_N,
-            total_tiles,
+            total_full_tiles,
             NUM_XCDS,
             GROUP_SIZE_M,
         )
         a_first = a_ptr + first_m.to(gl.int64) * BLOCK_M * stride_am
         b_first = b_ptr + first_n.to(gl.int64) * BLOCK_N * stride_bn
-        a_cur_top, a_cur_bot = a_top_offsets, a_top_offsets
-        if not EVEN_M:
-            a_cur_top, a_cur_bot = clamped_a_offsets(
-                M - 1 - first_m * BLOCK_M,
-                stride_am,
-                stride_ak,
-                BLOCK_M,
-                BLOCK_K,
-                gLoadLayoutA,
-            )
-        b_cur_left, b_cur_right = b_left_offsets, b_left_offsets
-        if not EVEN_N:
-            b_cur_left, b_cur_right = clamped_b_offsets(
-                N - 1 - first_n * BLOCK_N,
-                stride_bk,
-                stride_bn,
-                BLOCK_N,
-                BLOCK_K,
-                gLoadLayoutB,
-            )
-        aop = operand_offsets(
-            a_cur_top,
-            a_cur_bot,
-            a_top_offsets,
-            a_half,
-            BLOCK_K * stride_ak,
+        a_addr = a_load_addressing(
+            first_m,
+            a_offsets,
+            a_bot_shift,
+            M,
+            stride_am,
+            stride_ak,
+            BLOCK_M,
+            BLOCK_K,
+            gLoadLayoutA,
             EVEN_M,
         )
-        bop = operand_offsets(
-            b_cur_left,
-            b_cur_right,
-            b_left_offsets,
-            b_half,
-            BLOCK_K * stride_bk,
+        b_addr = b_load_addressing(
+            first_n,
+            b_offsets,
+            b_right_shift,
+            N,
+            stride_bk,
+            stride_bn,
+            BLOCK_N,
+            BLOCK_K,
+            gLoadLayoutB,
             EVEN_N,
         )
         if EVEN_K:
-            a_top, b_left = load_first_pair(
-                a_first, b_first, smem, aop, bop, dotOpLayoutA, dotOpLayoutB
-            )
+            mask_a0, mask_b0, mask_a1, mask_b1 = None, None, None, None
         else:
             mask_a0, mask_b0, mask_a1, mask_b1 = tail_pair_masks(
                 2 * BLOCK_K - K_RES,
@@ -357,34 +392,34 @@ def _gemm_a16w16_compute_bound_kernel(
                 BLOCK_K,
                 gLoadLayoutA,
                 gLoadLayoutB,
+                True,
             )
-            a_top, b_left = load_first_pair(
-                a_first + (K_PAD - 2 * BLOCK_K) * stride_ak,
-                b_first + (K_PAD - 2 * BLOCK_K) * stride_bk,
-                smem,
-                aop,
-                bop,
-                dotOpLayoutA,
-                dotOpLayoutB,
-                mask_a0,
-                mask_b0,
-                mask_a1,
-                mask_b1,
-            )
-        tile_offsets = (a_cur_top, a_cur_bot, b_cur_left, b_cur_right)
+        a_top, b_left = load_first_pair(
+            a_first + (K_PAD - 2 * BLOCK_K) * stride_ak,
+            b_first + (K_PAD - 2 * BLOCK_K) * stride_bk,
+            smem,
+            a_addr,
+            b_addr,
+            dotOpLayoutA,
+            dotOpLayoutB,
+            mask_a0,
+            mask_b0,
+            mask_a1,
+            mask_b1,
+        )
+        tile_addr = (a_addr, b_addr)
         for vpid in range(start, total_full_tiles, NUM_PROGRAMS):
-            a_top, b_left, tile_offsets = persistent_tile(
+            a_top, b_left, tile_addr = persistent_tile(
                 vpid,
                 a_top,
                 b_left,
-                tile_offsets,
+                tile_addr,
                 a_ptr,
                 b_ptr,
                 c_ptr,
                 bias_ptr,
                 smem,
                 kofs,
-                total_tiles,
                 strides,
                 M,
                 N,
@@ -403,33 +438,101 @@ def _gemm_a16w16_compute_bound_kernel(
                 EVEN_N,
                 EVEN_K,
                 K_RES,
+                total_full_tiles,
+                sk_target,
+                SK_PREFETCH,
             )
 
-    gl.amd.cdna4.async_copy.wait_group(0)
+    # The Stream-K phase picks up the last trip's prefetch.
+    if not SK_PREFETCH:
+        gl.amd.cdna4.async_copy.wait_group(0)
+    if not HAS_FULL:
+        a_top = 0
+        b_left = 0
 
-    PAIRS_PER_TILE: gl.constexpr = K_PAD // (2 * BLOCK_K)
     if END_TO_END and STREAMK_TILES > 0:
         # Two-tile and spread always use the full resident grid.
         SK_PAIRS: gl.constexpr = STREAMK_TILES * PAIRS_PER_TILE
         L: gl.constexpr = SK_PAIRS // NUM_PROGRAMS
         R: gl.constexpr = SK_PAIRS % NUM_PROGRAMS
         gl.static_assert(NUM_PROGRAMS <= SK_PAIRS)
-        spid = get_logical_chiplet_mapped_pids(NUM_PROGRAMS, NUM_XCDS)
-        sk_start = spid * L + gl.minimum(spid, R)
-        cur = (spid + 1) * L + gl.minimum(spid + 1, R)
+        rank = streamk_rank(NUM_PROGRAMS, NUM_XCDS)
+        sk_start = even_split_start(rank, SK_PAIRS, NUM_PROGRAMS)
+        cur = even_split_start(rank + 1, SK_PAIRS, NUM_PROGRAMS)
+        # Segments run last to first (STREAMK_VARIANTS.md, concept 6): each program
+        # starts at k-step 0 of its last tile, so an XCD's programs stay in step and
+        # share A / B in L2 (forward order drops two-tile's hits from 68% to 9%), and
+        # it publishes its partial before the owned tile's wait.
+        if SK_PREFETCH:
+            # The first segment, whose first pair the last persistent trip loaded.
+            t = (cur - 1) // PAIRS_PER_TILE
+            tile_start = t * PAIRS_PER_TILE
+            seg_start = gl.maximum(tile_start, sk_start)
+            is_owner = (cur == tile_start + PAIRS_PER_TILE).to(gl.int32)
+            n_peers = (rank - streamk_owner_of(tile_start, L, R)) * is_owner
+            quadrant_segment(
+                total_full_tiles + t,
+                (seg_start - tile_start) * 2,
+                cur - seg_start,
+                1 - is_owner,
+                n_peers,
+                rank,
+                0,
+                0,
+                0,
+                a_ptr,
+                b_ptr,
+                c_ptr,
+                bias_ptr,
+                p_ptr,
+                locks_ptr,
+                sync_ptr,
+                smem,
+                kofs,
+                strides,
+                M,
+                N,
+                BLOCK_M,
+                BLOCK_N,
+                BLOCK_K,
+                GROUP_SIZE_M,
+                ADD_BIAS,
+                -1,
+                False,
+                1,
+                1,
+                False,
+                NUM_PROGRAMS,
+                NUM_XCDS,
+                mfmaLayout,
+                gLoadLayoutA,
+                gLoadLayoutB,
+                EVEN_M,
+                EVEN_N,
+                EVEN_K,
+                K_PAD,
+                K_RES,
+                True,
+                OWNER_QPB,
+                0,
+                True,
+                a_top,
+                b_left,
+            )
+            cur = seg_start
         while cur > sk_start:
             t = (cur - 1) // PAIRS_PER_TILE
             tile_start = t * PAIRS_PER_TILE
             seg_start = gl.maximum(tile_start, sk_start)
             is_owner = (cur == tile_start + PAIRS_PER_TILE).to(gl.int32)
-            n_peers = (spid - streamk_owner_of(tile_start, L, R)) * is_owner
+            n_peers = (rank - streamk_owner_of(tile_start, L, R)) * is_owner
             quadrant_segment(
-                streamk_tile_id(t, total_tiles, total_full_tiles, NUM_XCDS),
+                total_full_tiles + t,
                 (seg_start - tile_start) * 2,
                 cur - seg_start,
                 1 - is_owner,
                 n_peers,
-                spid,
+                rank,
                 0,
                 0,
                 0,
@@ -484,9 +587,9 @@ def _gemm_a16w16_compute_bound_kernel(
         gl.static_assert(RS_NB == 1 or RS_NB * RS_R <= NBLK)
         if L2:
             gl.static_assert(GRID == 0)
-            spid = get_logical_chiplet_mapped_pids(NUM_PROGRAMS, NUM_XCDS)
+            rank = streamk_rank(NUM_PROGRAMS, NUM_XCDS)
             t, j, n_tile = xcd_local_chunk_of(
-                spid,
+                rank,
                 STREAMK_TILES,
                 NUM_PROGRAMS // NUM_XCDS,
                 NUM_XCDS,
@@ -495,34 +598,27 @@ def _gemm_a16w16_compute_bound_kernel(
             active = n_tile > 0
         else:
             if GRID > 0:
-                spid = get_logical_chiplet_mapped_pids(GRID, NUM_XCDS)
+                rank = streamk_rank(GRID, NUM_XCDS)
             else:
-                spid = streamk_compact_pid(
-                    get_logical_chiplet_mapped_pids(NUM_PROGRAMS, NUM_XCDS),
-                    WORKING,
-                    NUM_PROGRAMS,
-                    NUM_XCDS,
-                )
-            active = spid < WORKING
-            t = spid // SPLIT_N
-            j = spid % SPLIT_N
-            n_tile = spid * 0 + SPLIT_N
+                rank = streamk_rank(WORKING, NUM_XCDS, IDLE=True)
+            active = rank < WORKING
+            t = rank // SPLIT_N
+            j = rank % SPLIT_N
+            n_tile = SPLIT_N
         if active:
-            q = PAIRS_PER_TILE // SPLIT_N
-            r = PAIRS_PER_TILE % SPLIT_N
             is_partial = (j != 0).to(gl.int32)
             n_peers = (SPLIT_N - 1) * (1 - is_partial)
             OWNER_MAX_PEERS: gl.constexpr = SPLIT_N - 1 if SPLIT_N <= 8 else 0
             quadrant_segment(
-                streamk_tile_id(t, total_tiles, total_full_tiles, NUM_XCDS),
-                (j * q + gl.minimum(j, r)) * 2,
-                q + (j < r).to(gl.int32),
+                total_full_tiles + t,
+                even_split_start(j, PAIRS_PER_TILE, SPLIT_N) * 2,
+                even_split_size(j, PAIRS_PER_TILE, SPLIT_N),
                 is_partial,
                 n_peers,
-                spid,
+                rank,
                 j,
                 n_tile,
-                spid * 0 + RS_R,
+                RS_R,
                 a_ptr,
                 b_ptr,
                 c_ptr,
@@ -558,6 +654,9 @@ def _gemm_a16w16_compute_bound_kernel(
                 False,
                 OWNER_QPB,
                 OWNER_MAX_PEERS,
+                SK_PREFETCH,
+                a_top,
+                b_left,
             )
 
 
@@ -566,10 +665,11 @@ def _gemm_a16w16_compute_bound_kernel(
 # segments.
 #
 # accs is (acc_tl, acc_bl, acc_tr, acc_br) and smem is (smemA_top, smemA_bot,
-# smemB_left, smemB_right). An operand's offsets are aop = (a_top_offsets,
-# a_bot_offsets, a_half, a_odd) and bop = (b_left_offsets, b_right_offsets, b_half,
-# b_odd) (operand_offsets): a_half and a_odd are the bottom-half and odd-K-step
-# shifts that live in the scalar base.
+# smemB_left, smemB_right). An operand's load addressing is a_addr =
+# (a_top_offsets, a_bot_offsets, a_bot_shift, a_odd_shift) and b_addr =
+# (b_left_offsets, b_right_offsets, b_right_shift, b_odd_shift) (a_load_addressing /
+# b_load_addressing): each half loads from base + shift + offsets, the shifts living
+# in the scalar base.
 # ---------------------------------------------------------------------------------
 
 
@@ -620,37 +720,73 @@ def clamped_b_offsets(
 
 
 @gluon.jit
-def operand_offsets(top, bot, offsets, half, odd, EVEN: gl.constexpr):
-    """An operand's (top, bot, half, odd) offsets; the odd K-step is always a scalar
-    shift `odd` away. EVEN: the kernel-wide offsets for both halves, the second half a
-    scalar shift `half` away. Otherwise the tile's clamped top / bot offsets, which
-    differ per lane, so half is 0."""
-    if EVEN:
-        o0, o1, h = offsets, offsets, half
+def a_load_addressing(
+    m_idx,
+    a_offsets,
+    a_bot_shift,
+    M,
+    stride_am,
+    stride_ak,
+    BLOCK_M: gl.constexpr,
+    BLOCK_K: gl.constexpr,
+    gLoadLayoutA: gl.constexpr,
+    EVEN_M: gl.constexpr,
+):
+    """Tile m_idx's a_addr = (top_offs, bot_offs, bot_shift, odd_shift): the bottom
+    half loads from base + bot_shift + bot_offs and the odd K-step adds odd_shift.
+    EVEN_M: both halves share the half-tile offsets a_offsets. Otherwise the tile's
+    clamped offsets, which differ per lane, so bot_shift is 0."""
+    if EVEN_M:
+        top, bot, bot_shift = a_offsets, a_offsets, a_bot_shift
     else:
-        o0, o1, h = top, bot, 0
-    return o0, o1, h, odd
+        top, bot = clamped_a_offsets(
+            M - 1 - m_idx * BLOCK_M, stride_am, stride_ak, BLOCK_M, BLOCK_K, gLoadLayoutA
+        )
+        bot_shift = 0
+    return top, bot, bot_shift, BLOCK_K * stride_ak
+
+
+@gluon.jit
+def b_load_addressing(
+    n_idx,
+    b_offsets,
+    b_right_shift,
+    N,
+    stride_bk,
+    stride_bn,
+    BLOCK_N: gl.constexpr,
+    BLOCK_K: gl.constexpr,
+    gLoadLayoutB: gl.constexpr,
+    EVEN_N: gl.constexpr,
+):
+    """Tile n_idx's b_addr = (left_offs, right_offs, right_shift, odd_shift)
+    (a_load_addressing)."""
+    if EVEN_N:
+        left, right, right_shift = b_offsets, b_offsets, b_right_shift
+    else:
+        left, right = clamped_b_offsets(
+            N - 1 - n_idx * BLOCK_N, stride_bk, stride_bn, BLOCK_N, BLOCK_K, gLoadLayoutB
+        )
+        right_shift = 0
+    return left, right, right_shift, BLOCK_K * stride_bk
 
 
 @gluon.jit
 def k_tail_mask(
     k_hi,
     STEP: gl.constexpr,
-    ROWS: gl.constexpr,
     BLOCK_K: gl.constexpr,
     layout: gl.constexpr,
     K_FIRST: gl.constexpr,
 ):
     """Load mask of K-step STEP (0 or 1) of a half-tile in the last pair, whose first
-    k_hi of 2 BLOCK_K K values are inside the matrix. K_FIRST: B's [BLOCK_K, ROWS]
-    half-tile, else A's [ROWS, BLOCK_K]."""
+    k_hi of 2 BLOCK_K K values are inside the matrix. K_FIRST: B's [BLOCK_K, 1], else
+    A's [1, BLOCK_K]; the load broadcasts it over the half-tile."""
     if K_FIRST:
         k = gl.arange(0, BLOCK_K, gl.SliceLayout(1, layout))[:, None]
-        r = gl.arange(0, ROWS, gl.SliceLayout(0, layout))[None, :]
     else:
         k = gl.arange(0, BLOCK_K, gl.SliceLayout(0, layout))[None, :]
-        r = gl.arange(0, ROWS, gl.SliceLayout(1, layout))[:, None]
-    return (k + STEP * BLOCK_K < k_hi) & (r >= 0)
+    return k + STEP * BLOCK_K < k_hi
 
 
 @gluon.jit
@@ -662,16 +798,23 @@ def tail_pair_masks(
     BLOCK_K: gl.constexpr,
     gLoadLayoutA: gl.constexpr,
     gLoadLayoutB: gl.constexpr,
+    TAIL: gl.constexpr = False,
 ):
     """(mask_a0, mask_b0, mask_a1, mask_b1) for load_first_pair of a pair whose first
     k_hi K values are in the matrix. K-step 1 of the last pair always reaches past K,
-    K-step 0 only when K_RES > BLOCK_K; a mask that can never drop a lane is None."""
+    K-step 0 only when K_RES > BLOCK_K; a mask that can never drop a lane is None.
+    TAIL: k_hi is the last pair's 2 BLOCK_K - K_RES, so with K_RES >= BLOCK_K K-step 1
+    drops every lane and its masks are constant."""
     mask_a0, mask_b0 = None, None
     if K_RES > BLOCK_K:
-        mask_a0 = k_tail_mask(k_hi, 0, BLOCK_M // 2, BLOCK_K, gLoadLayoutA, False)
-        mask_b0 = k_tail_mask(k_hi, 0, BLOCK_N // 2, BLOCK_K, gLoadLayoutB, True)
-    mask_a1 = k_tail_mask(k_hi, 1, BLOCK_M // 2, BLOCK_K, gLoadLayoutA, False)
-    mask_b1 = k_tail_mask(k_hi, 1, BLOCK_N // 2, BLOCK_K, gLoadLayoutB, True)
+        mask_a0 = k_tail_mask(k_hi, 0, BLOCK_K, gLoadLayoutA, False)
+        mask_b0 = k_tail_mask(k_hi, 0, BLOCK_K, gLoadLayoutB, True)
+    if TAIL and K_RES >= BLOCK_K:
+        mask_a1 = gl.full([BLOCK_M // 2, BLOCK_K], 0, gl.int1, gLoadLayoutA)
+        mask_b1 = gl.full([BLOCK_K, BLOCK_N // 2], 0, gl.int1, gLoadLayoutB)
+    else:
+        mask_a1 = k_tail_mask(k_hi, 1, BLOCK_K, gLoadLayoutA, False)
+        mask_b1 = k_tail_mask(k_hi, 1, BLOCK_K, gLoadLayoutB, True)
     return mask_a0, mask_b0, mask_a1, mask_b1
 
 
@@ -680,8 +823,8 @@ def load_first_pair(
     a_base,
     b_base,
     smem,
-    aop,
-    bop,
+    a_addr,
+    b_addr,
     dotOpLayoutA: gl.constexpr,
     dotOpLayoutB: gl.constexpr,
     mask_a0=None,
@@ -693,8 +836,8 @@ def load_first_pair(
     and the first one's a_top / b_left. mask_*: load masks of A's and B's K-step 0 and
     1 (ragged K), None for unmasked."""
     smemA_top, smemA_bot, smemB_left, smemB_right = smem
-    a_top_offsets, a_bot_offsets, a_half, a_odd = aop
-    b_left_offsets, b_right_offsets, b_half, b_odd = bop
+    a_top_offsets, a_bot_offsets, a_bot_shift, a_odd_shift = a_addr
+    b_left_offsets, b_right_offsets, b_right_shift, b_odd_shift = b_addr
 
     g_idx = 0
     gl.amd.cdna4.async_copy.buffer_load_to_shared(
@@ -706,33 +849,33 @@ def load_first_pair(
     )
     gl.amd.cdna4.async_copy.commit_group()
     gl.amd.cdna4.async_copy.buffer_load_to_shared(
-        smemA_bot.index(g_idx), a_base + a_half, a_bot_offsets, mask=mask_a0
+        smemA_bot.index(g_idx), a_base + a_bot_shift, a_bot_offsets, mask=mask_a0
     )
     gl.amd.cdna4.async_copy.commit_group()
     gl.amd.cdna4.async_copy.buffer_load_to_shared(
-        smemB_right.index(g_idx), b_base + b_half, b_right_offsets, mask=mask_b0
+        smemB_right.index(g_idx), b_base + b_right_shift, b_right_offsets, mask=mask_b0
     )
     gl.amd.cdna4.async_copy.commit_group()
 
     g_idx = 1
     gl.amd.cdna4.async_copy.buffer_load_to_shared(
-        smemB_left.index(g_idx), b_base + b_odd, b_left_offsets, mask=mask_b1
+        smemB_left.index(g_idx), b_base + b_odd_shift, b_left_offsets, mask=mask_b1
     )
     gl.amd.cdna4.async_copy.commit_group()
     gl.amd.cdna4.async_copy.buffer_load_to_shared(
-        smemA_top.index(g_idx), a_base + a_odd, a_top_offsets, mask=mask_a1
+        smemA_top.index(g_idx), a_base + a_odd_shift, a_top_offsets, mask=mask_a1
     )
     gl.amd.cdna4.async_copy.commit_group()
     gl.amd.cdna4.async_copy.buffer_load_to_shared(
         smemA_bot.index(g_idx),
-        a_base + a_half + a_odd,
+        a_base + a_bot_shift + a_odd_shift,
         a_bot_offsets,
         mask=mask_a1,
     )
     gl.amd.cdna4.async_copy.commit_group()
     gl.amd.cdna4.async_copy.buffer_load_to_shared(
         smemB_right.index(g_idx),
-        b_base + b_half + b_odd,
+        b_base + b_right_shift + b_odd_shift,
         b_right_offsets,
         mask=mask_b1,
     )
@@ -752,20 +895,22 @@ def k_step_pair(
     smem,
     a_base,
     b_base,
-    aop,
-    bop,
+    a_addr,
+    b_addr,
     dotOpLayoutA: gl.constexpr,
     dotOpLayoutB: gl.constexpr,
+    SKIP_ODD: gl.constexpr = False,
 ):
     """One iteration of v9's main loop, two K-steps: consumes a_top / b_left (in
     registers) and buffers 0 and 1, prefetches the two K-steps at a_base / b_base into
     the same buffers, and returns the accumulators and the next a_top / b_left. Every
     wait keeps 5 groups of async copies in flight. Constant-zero accumulators make the
-    first four MFMAs zero-C MFMAs."""
+    first four MFMAs zero-C MFMAs. SKIP_ODD: buffer 1 holds only K padding, so its
+    MFMAs are dropped; its waits and the prefetches stay."""
     acc_tl, acc_bl, acc_tr, acc_br = accs
     smemA_top, smemA_bot, smemB_left, smemB_right = smem
-    a_top_offsets, a_bot_offsets, a_half, a_odd = aop
-    b_left_offsets, b_right_offsets, b_half, b_odd = bop
+    a_top_offsets, a_bot_offsets, a_bot_shift, a_odd_shift = a_addr
+    b_left_offsets, b_right_offsets, b_right_shift, b_odd_shift = b_addr
 
     ## =============================================================
     ## Sub-iteration 0: consume buffer 0, prefetch into buffer 0
@@ -806,7 +951,7 @@ def k_step_pair(
     b_left = smemB_left.index(1).load(dotOpLayoutB)
 
     gl.amd.cdna4.async_copy.buffer_load_to_shared(
-        smemA_bot.index(0), a_base + a_half, a_bot_offsets
+        smemA_bot.index(0), a_base + a_bot_shift, a_bot_offsets
     )
     gl.amd.cdna4.async_copy.commit_group()
 
@@ -819,64 +964,68 @@ def k_step_pair(
     a_top = smemA_top.index(1).load(dotOpLayoutA)
 
     gl.amd.cdna4.async_copy.buffer_load_to_shared(
-        smemB_right.index(0), b_base + b_half, b_right_offsets
+        smemB_right.index(0), b_base + b_right_shift, b_right_offsets
     )
     gl.amd.cdna4.async_copy.commit_group()
 
     ## =============================================================
     ## Loop unroll: Sub-iteration 1: consume buffer 1, prefetch
-    ## into buffer 1. The odd K-step's loads add a_odd / b_odd to the base.
+    ## into buffer 1. The odd K-step's loads add a_odd_shift / b_odd_shift to the base.
     ## =============================================================
 
     ########################################
     ## Region 0: C_tl = DOT(a_top, b_left)
     ########################################
-    acc_tl = gl.amd.cdna3.mfma(a_top, b_left, acc_tl, cd_regclass="a")
+    if not SKIP_ODD:
+        acc_tl = gl.amd.cdna3.mfma(a_top, b_left, acc_tl, cd_regclass="a")
 
     gl.amd.cdna4.async_copy.wait_group(5)
     a_bot = smemA_bot.index(1).load(dotOpLayoutA)
 
     gl.amd.cdna4.async_copy.buffer_load_to_shared(
-        smemB_left.index(1), b_base + b_odd, b_left_offsets
+        smemB_left.index(1), b_base + b_odd_shift, b_left_offsets
     )
     gl.amd.cdna4.async_copy.commit_group()
 
     ########################################
     ## Region 1: C_bl = DOT(a_bot, b_left)
     ########################################
-    acc_bl = gl.amd.cdna3.mfma(a_bot, b_left, acc_bl, cd_regclass="a")
+    if not SKIP_ODD:
+        acc_bl = gl.amd.cdna3.mfma(a_bot, b_left, acc_bl, cd_regclass="a")
 
     gl.amd.cdna4.async_copy.wait_group(5)
     b_right = smemB_right.index(1).load(dotOpLayoutB)
 
     gl.amd.cdna4.async_copy.buffer_load_to_shared(
-        smemA_top.index(1), a_base + a_odd, a_top_offsets
+        smemA_top.index(1), a_base + a_odd_shift, a_top_offsets
     )
     gl.amd.cdna4.async_copy.commit_group()
 
     ########################################
     ## Region 2: C_tr = DOT(a_top, b_right)
     ########################################
-    acc_tr = gl.amd.cdna3.mfma(a_top, b_right, acc_tr, cd_regclass="a")
+    if not SKIP_ODD:
+        acc_tr = gl.amd.cdna3.mfma(a_top, b_right, acc_tr, cd_regclass="a")
 
     gl.amd.cdna4.async_copy.wait_group(5)
     b_left = smemB_left.index(0).load(dotOpLayoutB)
 
     gl.amd.cdna4.async_copy.buffer_load_to_shared(
-        smemA_bot.index(1), a_base + a_half + a_odd, a_bot_offsets
+        smemA_bot.index(1), a_base + a_bot_shift + a_odd_shift, a_bot_offsets
     )
     gl.amd.cdna4.async_copy.commit_group()
 
     ########################################
     ## Region 3: C_br = DOT(a_bot, b_right)
     ########################################
-    acc_br = gl.amd.cdna3.mfma(a_bot, b_right, acc_br, cd_regclass="a")
+    if not SKIP_ODD:
+        acc_br = gl.amd.cdna3.mfma(a_bot, b_right, acc_br, cd_regclass="a")
 
     gl.amd.cdna4.async_copy.wait_group(5)
     a_top = smemA_top.index(0).load(dotOpLayoutA)
 
     gl.amd.cdna4.async_copy.buffer_load_to_shared(
-        smemB_right.index(1), b_base + b_half + b_odd, b_right_offsets
+        smemB_right.index(1), b_base + b_right_shift + b_odd_shift, b_right_offsets
     )
     gl.amd.cdna4.async_copy.commit_group()
 
@@ -956,14 +1105,13 @@ def persistent_tile(
     vpid,
     a_top,
     b_left,
-    cur,
+    tile_addr,
     a_ptr,
     b_ptr,
     c_ptr,
     bias_ptr,
     smem,
     kofs,
-    total_tiles,
     strides,
     M,
     N,
@@ -982,22 +1130,32 @@ def persistent_tile(
     EVEN_N: gl.constexpr,
     EVEN_K: gl.constexpr,
     K_RES: gl.constexpr,
+    total_full_tiles,
+    sk_target,
+    SK_PREFETCH: gl.constexpr,
 ):
     """One full-K tile of the persistent loop, for virtual pid vpid: v9's main loop and
     epilogue, the epilogue prefetching the next tile.
 
+    SK_PREFETCH: on the program's last trip the prefetch loads sk_target = (m, n,
+    column, k_hi), the first pair of the program's first Stream-K segment, keeping its
+    first k_hi K values (0: masked off). Without it the last trip's prefetch stays
+    unmasked and is discarded: masks cost more than the loads
+    (results/last_prefetch.md).
+
     Expects the tile's first pair in flight in buffers 0 and 1 and its first operands in
     a_top / b_left; prefetches the same for vpid + NUM_PROGRAMS (clamped to the last
-    tile, so every trip issues the same instructions and wait counts) and returns that
-    tile's a_top / b_left and load offsets. cur is this tile's clamped load offsets
-    (a_top, a_bot, b_left, b_right), used on a ragged M / N.
+    persistent tile, so every trip issues the same instructions and wait counts),
+    or on the last trip the Stream-K target (SK_PREFETCH), and returns that
+    tile's a_top / b_left and load addressing. tile_addr is this tile's (a_addr,
+    b_addr) (a_load_addressing / b_load_addressing).
 
-    On a ragged K (K is K_PAD here) the pair in flight is the tile's last, partial pair,
-    so the main loop starts at column 0, and the next tile's prefetch loads that tile's
-    last pair, masked."""
+    The pair in flight is the tile's last pair (K is K_PAD here; on a ragged K the
+    pair is partial), so the main loop starts at column 0, and the next tile's
+    prefetch loads that tile's last pair, masked on a ragged K."""
     stride_am, stride_ak, stride_bk, stride_bn, stride_cm, stride_cn = strides
-    a_top_offsets, a_half, b_left_offsets, b_half = kofs
-    a_cur_top, a_cur_bot, b_cur_left, b_cur_right = cur
+    a_offsets, a_bot_shift, b_offsets, b_right_shift = kofs
+    a_addr, b_addr = tile_addr
     smemA_top, smemA_bot, smemB_left, smemB_right = smem
     dotOpLayoutA: gl.constexpr = gl.DotOperandLayout(
         operand_index=0, parent=mfmaLayout, k_width=8
@@ -1008,63 +1166,38 @@ def persistent_tile(
     iterMax = gl.cdiv(K, BLOCK_K)
 
     pid_m, pid_n = _get_pids(
-        vpid, M, N, BLOCK_M, BLOCK_N, total_tiles, NUM_XCDS, GROUP_SIZE_M
+        vpid, M, N, BLOCK_M, BLOCK_N, total_full_tiles, NUM_XCDS, GROUP_SIZE_M
     )
     next_m, next_n = _get_pids(
-        min(vpid + NUM_PROGRAMS, total_tiles - 1),
+        min(vpid + NUM_PROGRAMS, total_full_tiles - 1),
         M,
         N,
         BLOCK_M,
         BLOCK_N,
-        total_tiles,
+        total_full_tiles,
         NUM_XCDS,
         GROUP_SIZE_M,
     )
+    has_next = vpid + NUM_PROGRAMS < total_full_tiles
+    if SK_PREFETCH:
+        sk_m, sk_n, sk_col, sk_khi = sk_target
+        next_m = gl.where(has_next, next_m, sk_m)
+        next_n = gl.where(has_next, next_n, sk_n)
+        next_col = gl.where(has_next, K - 2 * BLOCK_K, sk_col)
     a_next = a_ptr + next_m.to(gl.int64) * BLOCK_M * stride_am
     b_next = b_ptr + next_n.to(gl.int64) * BLOCK_N * stride_bn
 
-    # The first pair is in flight, so the first prefetch is K-step 2 (on a ragged K,
-    # column 0).
-    if EVEN_K:
-        a_base = (
-            a_ptr + pid_m.to(gl.int64) * BLOCK_M * stride_am + BLOCK_K * stride_ak * 2
-        )
-        b_base = (
-            b_ptr + pid_n.to(gl.int64) * BLOCK_N * stride_bn + BLOCK_K * stride_bk * 2
-        )
-        mask_a0, mask_b0, mask_a1, mask_b1 = None, None, None, None
+    # The last pair is in flight, so the first prefetch is column 0.
+    a_base = a_ptr + pid_m.to(gl.int64) * BLOCK_M * stride_am
+    b_base = b_ptr + pid_n.to(gl.int64) * BLOCK_N * stride_bn
+    if SK_PREFETCH:
+        a_next += next_col * stride_ak
+        b_next += next_col * stride_bk
     else:
-        a_base = a_ptr + pid_m.to(gl.int64) * BLOCK_M * stride_am
-        b_base = b_ptr + pid_n.to(gl.int64) * BLOCK_N * stride_bn
         a_next += (K - 2 * BLOCK_K) * stride_ak
         b_next += (K - 2 * BLOCK_K) * stride_bk
-        mask_a0, mask_b0, mask_a1, mask_b1 = tail_pair_masks(
-            2 * BLOCK_K - K_RES,
-            K_RES,
-            BLOCK_M,
-            BLOCK_N,
-            BLOCK_K,
-            gLoadLayoutA,
-            gLoadLayoutB,
-        )
     m_left = M - pid_m * BLOCK_M
     n_left = gl.multiple_of(N - pid_n * BLOCK_N, 8)
-    aop = operand_offsets(
-        a_cur_top,
-        a_cur_bot,
-        a_top_offsets,
-        a_half,
-        BLOCK_K * stride_ak,
-        EVEN_M,
-    )
-    bop = operand_offsets(
-        b_cur_left,
-        b_cur_right,
-        b_left_offsets,
-        b_half,
-        BLOCK_K * stride_bk,
-        EVEN_N,
-    )
 
     ## Main loop — same as v9, its first iteration peeled: without bias, the
     ## constant-zero accumulator becomes the MFMA's inline-0 C operand, so no AGPRs
@@ -1073,7 +1206,17 @@ def persistent_tile(
         bias_ptr, pid_n, n_left, BLOCK_M, BLOCK_N, mfmaLayout, ADD_BIAS, EVEN_N
     )
     accs, a_top, b_left = k_step_pair(
-        accs, a_top, b_left, smem, a_base, b_base, aop, bop, dotOpLayoutA, dotOpLayoutB
+        accs,
+        a_top,
+        b_left,
+        smem,
+        a_base,
+        b_base,
+        a_addr,
+        b_addr,
+        dotOpLayoutA,
+        dotOpLayoutB,
+        (not EVEN_K) and K_RES >= BLOCK_K,
     )
     a_base += BLOCK_K * stride_ak * 2
     b_base += BLOCK_K * stride_bk * 2
@@ -1085,8 +1228,8 @@ def persistent_tile(
             smem,
             a_base,
             b_base,
-            aop,
-            bop,
+            a_addr,
+            b_addr,
             dotOpLayoutA,
             dotOpLayoutB,
         )
@@ -1095,42 +1238,52 @@ def persistent_tile(
     acc_tl, acc_bl, acc_tr, acc_br = accs
 
     # The next tile's load offsets, for its prefetch below and for its own trip.
-    next_a_top, next_a_bot = a_cur_top, a_cur_bot
-    if not EVEN_M:
-        next_a_top, next_a_bot = clamped_a_offsets(
-            M - 1 - next_m * BLOCK_M,
-            stride_am,
-            stride_ak,
-            BLOCK_M,
-            BLOCK_K,
-            gLoadLayoutA,
-        )
-    next_b_left, next_b_right = b_cur_left, b_cur_right
-    if not EVEN_N:
-        next_b_left, next_b_right = clamped_b_offsets(
-            N - 1 - next_n * BLOCK_N,
-            stride_bk,
-            stride_bn,
-            BLOCK_N,
-            BLOCK_K,
-            gLoadLayoutB,
-        )
-    na_top, na_bot, na_half, na_odd = operand_offsets(
-        next_a_top,
-        next_a_bot,
-        a_top_offsets,
-        a_half,
-        BLOCK_K * stride_ak,
+    na_addr = a_load_addressing(
+        next_m,
+        a_offsets,
+        a_bot_shift,
+        M,
+        stride_am,
+        stride_ak,
+        BLOCK_M,
+        BLOCK_K,
+        gLoadLayoutA,
         EVEN_M,
     )
-    nb_left, nb_right, nb_half, nb_odd = operand_offsets(
-        next_b_left,
-        next_b_right,
-        b_left_offsets,
-        b_half,
-        BLOCK_K * stride_bk,
+    nb_addr = b_load_addressing(
+        next_n,
+        b_offsets,
+        b_right_shift,
+        N,
+        stride_bk,
+        stride_bn,
+        BLOCK_N,
+        BLOCK_K,
+        gLoadLayoutB,
         EVEN_N,
     )
+    na_top, na_bot, na_bot_shift, na_odd_shift = na_addr
+    nb_left, nb_right, nb_right_shift, nb_odd_shift = nb_addr
+    # Computed here rather than with a_next, so they are not live across the K loop.
+    if SK_PREFETCH:
+        k_hi = gl.where(has_next, 2 * BLOCK_K - K_RES, sk_khi)
+        mask_a0 = k_tail_mask(k_hi, 0, BLOCK_K, gLoadLayoutA, False)
+        mask_b0 = k_tail_mask(k_hi, 0, BLOCK_K, gLoadLayoutB, True)
+        mask_a1 = k_tail_mask(k_hi, 1, BLOCK_K, gLoadLayoutA, False)
+        mask_b1 = k_tail_mask(k_hi, 1, BLOCK_K, gLoadLayoutB, True)
+    elif EVEN_K:
+        mask_a0, mask_b0, mask_a1, mask_b1 = None, None, None, None
+    else:
+        mask_a0, mask_b0, mask_a1, mask_b1 = tail_pair_masks(
+            2 * BLOCK_K - K_RES,
+            K_RES,
+            BLOCK_M,
+            BLOCK_N,
+            BLOCK_K,
+            gLoadLayoutA,
+            gLoadLayoutB,
+            True,
+        )
 
     ## Epilogue: 4-quadrant stores with natural-pipeline ordering, as in v9, each
     ## async copy prefetching the next tile's first pair.
@@ -1166,22 +1319,22 @@ def persistent_tile(
     c_tr_base = c_tl_base + BLOCK_N * stride_cn // 2
     c_bl_base = c_tl_base + BLOCK_M * stride_cm // 2
     c_br_base = c_bl_base + BLOCK_N * stride_cn // 2
-    if not (EVEN_M and EVEN_N):
+    if EVEN_M and EVEN_N:
+        mask_tl, mask_tr, mask_bl, mask_br = None, None, None, None
+    else:
         # The ragged last tile stores only the rows and columns inside C.
         in_top = offs_cm[:, None] < m_left
         in_bot = offs_cm[:, None] + BLOCK_M // 2 < m_left
         if EVEN_N:
-            in_left = (
-                offs_cn[None, :] < BLOCK_N
-            )  # no column limit; gives the mask its shape
-            in_right = in_left
+            mask_tl, mask_tr = in_top, in_top
+            mask_bl, mask_br = in_bot, in_bot
         else:
             in_left = offs_cn[None, :] < n_left
             in_right = offs_cn[None, :] + BLOCK_N // 2 < n_left
-        mask_tl = in_top & in_left
-        mask_tr = in_top & in_right
-        mask_bl = in_bot & in_left
-        mask_br = in_bot & in_right
+            mask_tl = in_top & in_left
+            mask_tr = in_top & in_right
+            mask_bl = in_bot & in_left
+            mask_br = in_bot & in_right
 
     ## Iter iterMax - 2: same 4-region pattern as main loop, each AC prefetching the
     ## next tile's K-step 0 into the buffer the main loop would refill here, so every
@@ -1208,7 +1361,7 @@ def persistent_tile(
     g_idx = 1 - l_idx
     b_left = smemB_left.index(g_idx).load(dotOpLayoutB)
     gl.amd.cdna4.async_copy.buffer_load_to_shared(
-        smemA_bot.index(0), a_next + na_half, na_bot, mask=mask_a0
+        smemA_bot.index(0), a_next + na_bot_shift, na_bot, mask=mask_a0
     )
     gl.amd.cdna4.async_copy.commit_group()
 
@@ -1216,7 +1369,7 @@ def persistent_tile(
     gl.amd.cdna4.async_copy.wait_group(5)
     a_top = smemA_top.index(g_idx).load(dotOpLayoutA)
     gl.amd.cdna4.async_copy.buffer_load_to_shared(
-        smemB_right.index(0), b_next + nb_half, nb_right, mask=mask_b0
+        smemB_right.index(0), b_next + nb_right_shift, nb_right, mask=mask_b0
     )
     gl.amd.cdna4.async_copy.commit_group()
 
@@ -1228,7 +1381,7 @@ def persistent_tile(
     gl.amd.cdna4.async_copy.wait_group(5)
     a_bot = smemA_bot.index(g_idx).load(dotOpLayoutA)
     gl.amd.cdna4.async_copy.buffer_load_to_shared(
-        smemB_left.index(1), b_next + nb_odd, nb_left, mask=mask_b1
+        smemB_left.index(1), b_next + nb_odd_shift, nb_left, mask=mask_b1
     )
     gl.amd.cdna4.async_copy.commit_group()
 
@@ -1236,155 +1389,141 @@ def persistent_tile(
     gl.amd.cdna4.async_copy.wait_group(5)
     b_right = smemB_right.index(g_idx).load(dotOpLayoutB)
     gl.amd.cdna4.async_copy.buffer_load_to_shared(
-        smemA_top.index(1), a_next + na_odd, na_top, mask=mask_a1
+        smemA_top.index(1), a_next + na_odd_shift, na_top, mask=mask_a1
     )
     gl.amd.cdna4.async_copy.commit_group()
 
     c_tl = acc_tl.to(c_ptr.dtype.element_ty)
     c_tl = gl.convert_layout(c_tl, layout=gStoreLayoutC)
-    if EVEN_M and EVEN_N:
-        gl.amd.cdna3.buffer_store(ptr=c_tl_base, offsets=c_offsets, stored_value=c_tl)
-    else:
-        gl.amd.cdna3.buffer_store(
-            ptr=c_tl_base, offsets=c_offsets, stored_value=c_tl, mask=mask_tl
-        )
+    gl.amd.cdna3.buffer_store(
+        ptr=c_tl_base, offsets=c_offsets, stored_value=c_tl, mask=mask_tl
+    )
 
     acc_tr = gl.amd.cdna3.mfma(a_top, b_right, acc_tr, cd_regclass="a")
     gl.amd.cdna4.async_copy.buffer_load_to_shared(
-        smemA_bot.index(1), a_next + na_half + na_odd, na_bot, mask=mask_a1
+        smemA_bot.index(1), a_next + na_bot_shift + na_odd_shift, na_bot, mask=mask_a1
     )
     gl.amd.cdna4.async_copy.commit_group()
 
     c_bl = acc_bl.to(c_ptr.dtype.element_ty)
     c_bl = gl.convert_layout(c_bl, layout=gStoreLayoutC)
-    if EVEN_M and EVEN_N:
-        gl.amd.cdna3.buffer_store(ptr=c_bl_base, offsets=c_offsets, stored_value=c_bl)
-    else:
-        gl.amd.cdna3.buffer_store(
-            ptr=c_bl_base, offsets=c_offsets, stored_value=c_bl, mask=mask_bl
-        )
+    gl.amd.cdna3.buffer_store(
+        ptr=c_bl_base, offsets=c_offsets, stored_value=c_bl, mask=mask_bl
+    )
 
     acc_br = gl.amd.cdna3.mfma(a_bot, b_right, acc_br, cd_regclass="a")
 
     # The next tile's K-step 0 operands (prefetched at iterMax - 2), read while the
     # last MFMAs and stores drain; this tile's operand registers are all dead after
-    # acc_br.
+    # acc_br. Both reads are deferred to here rather than interleaved as in the main
+    # loop: reading b_left after acc_tr keeps it live across the c_bl store, which
+    # costs 24-36 AGPR moves per tile and, on a ragged M and N, an extra spill.
     gl.amd.cdna4.async_copy.wait_group(5)
     b_left = smemB_left.index(0).load(dotOpLayoutB)
     a_top = smemA_top.index(0).load(dotOpLayoutA)
     gl.amd.cdna4.async_copy.buffer_load_to_shared(
-        smemB_right.index(1), b_next + nb_half + nb_odd, nb_right, mask=mask_b1
+        smemB_right.index(1), b_next + nb_right_shift + nb_odd_shift, nb_right, mask=mask_b1
     )
     gl.amd.cdna4.async_copy.commit_group()
 
     c_tr = acc_tr.to(c_ptr.dtype.element_ty)
     c_tr = gl.convert_layout(c_tr, layout=gStoreLayoutC)
-    if EVEN_M and EVEN_N:
-        gl.amd.cdna3.buffer_store(ptr=c_tr_base, offsets=c_offsets, stored_value=c_tr)
-    else:
-        gl.amd.cdna3.buffer_store(
-            ptr=c_tr_base, offsets=c_offsets, stored_value=c_tr, mask=mask_tr
-        )
+    gl.amd.cdna3.buffer_store(
+        ptr=c_tr_base, offsets=c_offsets, stored_value=c_tr, mask=mask_tr
+    )
 
     c_br = acc_br.to(c_ptr.dtype.element_ty)
     c_br = gl.convert_layout(c_br, layout=gStoreLayoutC)
-    if EVEN_M and EVEN_N:
-        gl.amd.cdna3.buffer_store(ptr=c_br_base, offsets=c_offsets, stored_value=c_br)
-    else:
-        gl.amd.cdna3.buffer_store(
-            ptr=c_br_base, offsets=c_offsets, stored_value=c_br, mask=mask_br
-        )
+    gl.amd.cdna3.buffer_store(
+        ptr=c_br_base, offsets=c_offsets, stored_value=c_br, mask=mask_br
+    )
 
-    return a_top, b_left, (next_a_top, next_a_bot, next_b_left, next_b_right)
+    return a_top, b_left, (na_addr, nb_addr)
 
 
 # ---------------------------------------------------------------------------------
 # Stream-K: programs and tiles
 # ---------------------------------------------------------------------------------
+# The persistent loop covers the XCD-remapped tile ids [0, total_full_tiles) (_get_pids
+# with GRID_MN = total_full_tiles), so Stream-K tile t is tile total_full_tiles + t.
 
 
 @gluon.jit
-def get_logical_chiplet_mapped_pids(NUM_PROGRAMS: gl.constexpr, NUM_XCDS: gl.constexpr):
-    """The program id renumbered so that each XCD's programs are consecutive (hardware
-    pid p runs on XCD p % NUM_XCDS). The first NUM_PROGRAMS % NUM_XCDS XCDs ("tall")
-    hold one program more."""
+def streamk_rank(N: gl.constexpr, NUM_XCDS: gl.constexpr, IDLE: gl.constexpr = False):
+    """Rank of this program among the N programs taking part in Stream-K: an
+    XCD-blocked id, so each XCD's ranks are contiguous (hardware pid p runs on XCD
+    p % NUM_XCDS; the first N % NUM_XCDS XCDs hold one rank more). The participants
+    are hardware pids 0 .. N-1, so when fewer than the launched programs take part the
+    idle ones are spread over the XCDs instead of packed onto the last XCDs. IDLE says
+    the launch has programs beyond N; they get rank N."""
     pid = gl.program_id(axis=0)
+    rank = pid
     if NUM_XCDS != 1:
-        pids_per_xcd = (NUM_PROGRAMS + NUM_XCDS - 1) // NUM_XCDS
-        tall_xcds = NUM_PROGRAMS % NUM_XCDS
-        tall_xcds = NUM_XCDS if tall_xcds == 0 else tall_xcds
-        xcd = pid % NUM_XCDS
-        local_pid = pid // NUM_XCDS
-        if xcd < tall_xcds:
-            pid = xcd * pids_per_xcd + local_pid
-        else:
-            pid = (
-                tall_xcds * pids_per_xcd
-                + (xcd - tall_xcds) * (pids_per_xcd - 1)
-                + local_pid
-            )
-    return pid
+        rank = round_robin_to_xcd_blocked(pid, N, NUM_XCDS)
+    if IDLE:
+        rank = gl.where(pid < N, rank, N)
+    return rank
 
 
 @gluon.jit
-def streamk_compact_pid(
-    spid, SNP: gl.constexpr, NUM_PROGRAMS: gl.constexpr, NUM_XCDS: gl.constexpr
+def streamk_first_segment(
+    total_full_tiles,
+    STREAMK_TILES: gl.constexpr,
+    PAIRS_PER_TILE: gl.constexpr,
+    SPLIT_N: gl.constexpr,
+    END_TO_END: gl.constexpr,
+    L2: gl.constexpr,
+    XCD_SPLIT: gl.constexpr,
+    NUM_PROGRAMS: gl.constexpr,
+    NUM_XCDS: gl.constexpr,
 ):
-    """Stream-K id of XCD-mapped program spid when SNP programs take part, or
-    NUM_PROGRAMS if it idles. XCD x keeps its first SNP // NUM_XCDS programs (one more
-    for the first SNP % NUM_XCDS XCDs), numbered contiguously as spids are, so the idle
-    programs are spread over the XCDs."""
-    PER: gl.constexpr = NUM_PROGRAMS // NUM_XCDS
-    BASE: gl.constexpr = SNP // NUM_XCDS
-    TALL: gl.constexpr = SNP % NUM_XCDS
-    xcd = spid // PER
-    local = spid % PER
-    active = local < BASE + (xcd < TALL).to(gl.int32)
-    return gl.where(active, xcd * BASE + gl.minimum(xcd, TALL) + local, NUM_PROGRAMS)
-
-
-@gluon.jit
-def streamk_tile_id(t, total_tiles, total_full_tiles, NUM_XCDS: gl.constexpr):
-    """Tile id of Stream-K tile t: the persistent loop covers the XCD-remapped virtual
-    pids v < total_full_tiles (_get_pids), which leaves the top of every XCD's block of
-    tile ids, and tile t is the t-th smallest of those. t follows the Stream-K ids,
-    which are already grouped by XCD, so consecutive t are neighbouring tiles."""
-    per = (total_tiles + NUM_XCDS - 1) // NUM_XCDS
-    tall = total_tiles % NUM_XCDS
-    tall = gl.where(tall == 0, NUM_XCDS, tall)
-    l0 = total_full_tiles // NUM_XCDS
-    # Leftover tiles per block: per - l0 in the first `tall` blocks, one fewer in the
-    # rest.
-    n_tall = per - l0
-    n_short = gl.maximum(per - 1 - l0, 1)
-    head = tall * n_tall
-    tile_id = (t // n_tall) * per + l0 + t % n_tall
-    if t >= head:
-        t2 = t - head
-        tile_id = tall * per + (t2 // n_short) * (per - 1) + l0 + t2 % n_short
-    return tile_id
+    """(has, tile id, k0) of the first segment the Stream-K phase runs on this program
+    (the kernel's segment assignment, full-grid launches only); has is 0 for an idle
+    program, whose tile and k0 are then tile 0's last pair."""
+    if END_TO_END:
+        SK_PAIRS: gl.constexpr = STREAMK_TILES * PAIRS_PER_TILE
+        rank = streamk_rank(NUM_PROGRAMS, NUM_XCDS)
+        sk_start = even_split_start(rank, SK_PAIRS, NUM_PROGRAMS)
+        cur = even_split_start(rank + 1, SK_PAIRS, NUM_PROGRAMS)
+        t = (cur - 1) // PAIRS_PER_TILE
+        tile_start = t * PAIRS_PER_TILE
+        k0 = (gl.maximum(tile_start, sk_start) - tile_start) * 2
+        has = 1
+    else:
+        if L2:
+            rank = streamk_rank(NUM_PROGRAMS, NUM_XCDS)
+            t, j, n_tile = xcd_local_chunk_of(
+                rank, STREAMK_TILES, NUM_PROGRAMS // NUM_XCDS, NUM_XCDS, XCD_SPLIT
+            )
+            has = (n_tile > 0).to(gl.int32)
+        else:
+            rank = streamk_rank(STREAMK_TILES * SPLIT_N, NUM_XCDS, IDLE=True)
+            has = (rank < STREAMK_TILES * SPLIT_N).to(gl.int32)
+            t = rank // SPLIT_N
+            j = rank % SPLIT_N
+        k0 = even_split_start(j, PAIRS_PER_TILE, SPLIT_N) * 2 * has
+        t = t * has
+    return has, total_full_tiles + t, k0
 
 
 @gluon.jit
 def xcd_local_chunk_of(
-    spid,
+    rank,
     S: gl.constexpr,
     PER: gl.constexpr,
     NUM_XCDS: gl.constexpr,
     N: gl.constexpr,
 ):
-    """(tile, chunk, programs on the tile) of XCD-mapped program spid in the XCD-local
-    split (l2), with 0 programs if it idles. XCD x = spid // PER owns S // NUM_XCDS
-    consecutive Stream-K tiles (one more for x < S % NUM_XCDS); its local program l
-    works on its tile l // N as chunk l % N, so a tile's N programs are on one XCD. The
-    host checks ceil(S / NUM_XCDS) N <= PER."""
-    LO: gl.constexpr = S // NUM_XCDS
-    TALL: gl.constexpr = S % NUM_XCDS
-    x = spid // PER
-    local = spid % PER
+    """(tile, chunk, programs on the tile) of the program with this rank in the
+    XCD-local split (l2), with 0 programs if it idles. XCD x = rank // PER owns part x
+    of an even split of the S Stream-K tiles over the XCDs; its local program l works
+    on its tile l // N as chunk l % N, so a tile's N programs are on one XCD. The host
+    checks ceil(S / NUM_XCDS) N <= PER."""
+    x = rank // PER
+    local = rank % PER
     tl = local // N
-    t = x * LO + gl.minimum(x, TALL) + tl
-    n = N * (tl < LO + (x < TALL).to(gl.int32)).to(gl.int32)
+    t = even_split_start(x, S, NUM_XCDS) + tl
+    n = N * (tl < even_split_size(x, S, NUM_XCDS)).to(gl.int32)
     return t, local % N, n
 
 
@@ -1577,15 +1716,18 @@ def edge_mask(
     EVEN_N: gl.constexpr,
 ):
     """In-bounds mask of a ROWS x COLS block of C with m_left rows and n_left columns
-    before the matrix edge (either may exceed the block)."""
-    r = gl.arange(0, ROWS, gl.SliceLayout(1, layout))[:, None]
-    c = gl.arange(0, COLS, gl.SliceLayout(0, layout))[None, :]
+    before the matrix edge (either may exceed the block). On a single ragged
+    dimension it is [ROWS, 1] or [1, COLS]; the store broadcasts it over the block."""
+    if not EVEN_M:
+        r = gl.arange(0, ROWS, gl.SliceLayout(1, layout))[:, None]
+    if not EVEN_N:
+        c = gl.arange(0, COLS, gl.SliceLayout(0, layout))[None, :]
     if not EVEN_M and not EVEN_N:
         mask = (r < m_left) & (c < n_left)
     elif not EVEN_M:
-        mask = (r < m_left) & (c >= 0)
+        mask = r < m_left
     else:
-        mask = (r >= 0) & (c < n_left)
+        mask = c < n_left
     return mask
 
 
@@ -1678,19 +1820,19 @@ def store_partial(
     acc,
     q: gl.constexpr,
     p_ptr,
-    spid,
+    rank,
     p_offsets,
     HALF_M: gl.constexpr,
     HALF_N: gl.constexpr,
     CACHE: gl.constexpr = ".wt",
 ):
-    """Quadrant q of a partial to slot P[spid]: write-through, or the default policy
+    """Quadrant q of a partial to slot P[rank]: write-through, or the default policy
     for the l2 exchange."""
     QUAD: gl.constexpr = HALF_M * HALF_N
     SLOT: gl.constexpr = 4 * QUAD
     gl.amd.cdna3.buffer_store(
         stored_value=acc,
-        ptr=p_ptr + spid.to(gl.int64) * SLOT + q * QUAD,
+        ptr=p_ptr + rank.to(gl.int64) * SLOT + q * QUAD,
         offsets=p_offsets,
         cache=CACHE,
     )
@@ -1749,7 +1891,7 @@ def owner_store(
 @gluon.jit
 def peer_sums(
     p_ptr,
-    spid,
+    rank,
     n_peers,
     p_offsets,
     z,
@@ -1761,7 +1903,7 @@ def peer_sums(
     MAX_PEERS: gl.constexpr,
 ):
     """The sums of quadrants q0 .. q0 + NQ - 1 (NQ = 1, 2 or 4) over the partials of
-    peers spid + PEER_STEP i, i = 1 .. n_peers, as four tensors (the last 4 - NQ stay z,
+    peers rank + PEER_STEP i, i = 1 .. n_peers, as four tensors (the last 4 - NQ stay z,
     zeros); a peer's NQ quadrants are one batch of loads.
     - MAX_PEERS > 0: a compile-time loop over MAX_PEERS peers, the loads of peers past
       n_peers masked off, so that several peers' batches can be in flight at once.
@@ -1773,7 +1915,7 @@ def peer_sums(
     s0, s1, s2, s3 = z, z, z, z
     if MAX_PEERS > 0:
         for j in gl.static_range(MAX_PEERS):
-            peer = (spid + PEER_STEP * (1 + j)).to(gl.int64)
+            peer = (rank + PEER_STEP * (1 + j)).to(gl.int64)
             live = j < n_peers
             s0 += gl.amd.cdna3.buffer_load(
                 ptr=p_ptr + peer * SLOT + q0 * QUAD,
@@ -1807,7 +1949,7 @@ def peer_sums(
                 ).to(gl.float32)
     else:
         for j in range(n_peers):
-            peer = (spid + PEER_STEP * (1 + j)).to(gl.int64)
+            peer = (rank + PEER_STEP * (1 + j)).to(gl.int64)
             x0 = gl.amd.cdna3.buffer_load(
                 ptr=p_ptr + peer * SLOT + q0 * QUAD, offsets=p_offsets, cache=".cv"
             ).to(gl.float32)
@@ -1849,7 +1991,7 @@ def owner_ending(
     accs,
     is_partial,
     n_peers,
-    spid,
+    rank,
     pid_n,
     bias_ptr,
     p_ptr,
@@ -1870,8 +2012,8 @@ def owner_ending(
     MAX_PEERS: gl.constexpr,
 ):
     """The owner ending of a segment. A contributor (is_partial) stores its four
-    quadrants to P[spid], drains and raises locks[spid]. The owner waits for its
-    n_peers peers' flags (spid + PEER_STEP i), reads their partials QPB quadrants at a
+    quadrants to P[rank], drains and raises locks[rank]. The owner waits for its
+    n_peers peers' flags (rank + PEER_STEP i), reads their partials QPB quadrants at a
     time (16 fp32 loads per wave: 4 at 128x128, 2 at 256x128 / 128x256, 1 at 256x256;
     peer_sums), adds each batch's sums into the accumulator once, outside the peer loop
     (a loop or branch that carries the AGPR accumulator spills), and stores that batch
@@ -1883,7 +2025,7 @@ def owner_ending(
     for pj in range(n_peers):
         while (
             gl.atomic_add(
-                locks_ptr + spid + PEER_STEP * (1 + pj), 0, sem="relaxed", scope="gpu"
+                locks_ptr + rank + PEER_STEP * (1 + pj), 0, sem="relaxed", scope="gpu"
             )
             == 0
         ):
@@ -1900,14 +2042,14 @@ def owner_ending(
     if not STORE_EACH:
         if is_partial != 0:
             for q in gl.static_range(4):
-                store_partial(accs[q], q, p_ptr, spid, p_offsets, HALF_M, HALF_N)
+                store_partial(accs[q], q, p_ptr, rank, p_offsets, HALF_M, HALF_N)
     for q0 in gl.static_range(0, 4, QPB):
         if STORE_EACH:
             if is_partial != 0:
-                store_partial(accs[q0], q0, p_ptr, spid, p_offsets, HALF_M, HALF_N)
+                store_partial(accs[q0], q0, p_ptr, rank, p_offsets, HALF_M, HALF_N)
         sums = peer_sums(
             p_ptr,
-            spid,
+            rank,
             n_peers,
             p_offsets,
             z,
@@ -1944,17 +2086,17 @@ def owner_ending(
         # The flag may only become visible after all four waves' partial stores have
         # completed.
         drain_and_barrier()
-        gl.atomic_xchg(locks_ptr + spid, 1, sem="relaxed", scope="gpu")
+        gl.atomic_xchg(locks_ptr + rank, 1, sem="relaxed", scope="gpu")
     for pj in range(n_peers):
         gl.atomic_xchg(
-            locks_ptr + spid + PEER_STEP * (1 + pj), 0, sem="relaxed", scope="gpu"
+            locks_ptr + rank + PEER_STEP * (1 + pj), 0, sem="relaxed", scope="gpu"
         )
 
 
 @gluon.jit
 def block_col(v, VN: gl.constexpr):
     """Column of register vector (32x32 block) v in its quadrant, VN blocks across."""
-    col = v * 0
+    col = 0
     if VN == 4:
         col = (v % 2) * 32 + (v // 2 % 2) * 64
     elif VN == 2:
@@ -2079,7 +2221,7 @@ def reduce_scatter_slice(
         SL: gl.constexpr = gl.BlockedLayout([1, 4], [8, 8], [4, 1], [1, 0])
     for g in range(blk_lo, blk_hi, NB):
         blk = g + i
-        valid = (blk < blk_hi) & (in_blk >= 0)
+        valid = blk < blk_hi
         p_off = blk * 1024 + in_blk
         s = gl.zeros((NB, 32, 32), gl.float32, L3)
         for p0 in range(0, n, U):
@@ -2128,7 +2270,7 @@ def reduce_scatter_slice(
 @gluon.jit
 def rs_ending(
     accs,
-    spid,
+    rank,
     j,
     n_tile,
     r_tile,
@@ -2154,17 +2296,17 @@ def rs_ending(
     EVEN_N: gl.constexpr,
 ):
     """The reduce-scatter ending of tile-aligned segment j of n_tile (its slots are
-    spid - j .. + n_tile - 1). A whole tile stores C directly. A split tile's programs
+    rank - j .. + n_tile - 1). A whole tile stores C directly. A split tile's programs
     all store their partial and arrive on the tile's barrier; the first r_tile wait on
     it and each reduces its slice (reduce_scatter_slice)."""
     HALF_M: gl.constexpr = BLOCK_M // 2
     HALF_N: gl.constexpr = BLOCK_N // 2
-    is_split = (n_tile > 1).to(gl.int32)
+    is_split = gl.to_tensor(n_tile > 1).to(gl.int32)
     p_offsets = lane_contiguous_offsets(HALF_M, HALF_N, mfmaLayout)
     z = gl.zeros((HALF_M, HALF_N), gl.float32, mfmaLayout)
     for q in gl.static_range(4):
         if is_split != 0:
-            store_partial(accs[q], q, p_ptr, spid, p_offsets, HALF_M, HALF_N)
+            store_partial(accs[q], q, p_ptr, rank, p_offsets, HALF_M, HALF_N)
         if is_split == 0:
             owner_store(
                 accs[q],
@@ -2190,13 +2332,13 @@ def rs_ending(
         # completed.
         drain_and_barrier()
         is_reader = j < r_tile
-        tile_barrier(sync_ptr, spid - j, n_tile, is_reader)
+        tile_barrier(sync_ptr, rank - j, n_tile, is_reader)
         if is_reader:
             reduce_scatter_slice(
                 p_ptr,
                 bias_ptr,
                 c_bases[0] + pid_n * BLOCK_N * stride_cn,
-                spid - j,
+                rank - j,
                 j,
                 n_tile,
                 r_tile,
@@ -2220,7 +2362,7 @@ def rs_ending(
 @gluon.jit
 def l2_rs_ending(
     accs,
-    spid,
+    rank,
     j,
     n_tile,
     r_tile,
@@ -2251,12 +2393,12 @@ def l2_rs_ending(
     with the partials kept in the XCD's L2 (default-policy stores, .cg loads)."""
     HALF_M: gl.constexpr = BLOCK_M // 2
     HALF_N: gl.constexpr = BLOCK_N // 2
-    is_split = (n_tile > 1).to(gl.int32)
+    is_split = gl.to_tensor(n_tile > 1).to(gl.int32)
     p_offsets = lane_contiguous_offsets(HALF_M, HALF_N, mfmaLayout)
     z = gl.zeros((HALF_M, HALF_N), gl.float32, mfmaLayout)
     for q in gl.static_range(4):
         if is_split != 0:
-            store_partial(accs[q], q, p_ptr, spid, p_offsets, HALF_M, HALF_N, "")
+            store_partial(accs[q], q, p_ptr, rank, p_offsets, HALF_M, HALF_N, "")
         if is_split == 0:
             owner_store(
                 accs[q],
@@ -2281,14 +2423,14 @@ def l2_rs_ending(
         drain_and_barrier()
         is_reader = j < r_tile
         l2_tile_barrier(
-            sync_ptr, spid - j, n_tile, r_tile, j, is_reader, NUM_PROGRAMS, NUM_XCDS
+            sync_ptr, rank - j, n_tile, r_tile, j, is_reader, NUM_PROGRAMS, NUM_XCDS
         )
         if is_reader:
             reduce_scatter_slice(
                 p_ptr,
                 bias_ptr,
                 c_bases[0] + pid_n * BLOCK_N * stride_cn,
-                spid - j,
+                rank - j,
                 j,
                 n_tile,
                 r_tile,
@@ -2316,7 +2458,7 @@ def quadrant_segment(
     n_pairs,
     is_partial,
     n_peers,
-    spid,
+    rank,
     j,
     n_tile,
     r_tile,
@@ -2355,24 +2497,32 @@ def quadrant_segment(
     SEG_LOOP: gl.constexpr,
     OWNER_QPB: gl.constexpr,
     OWNER_MAX_PEERS: gl.constexpr,
+    PREFETCHED: gl.constexpr = False,
+    a_top_in=None,
+    b_left_in=None,
 ):
     """K-steps [k0, k0 + 2 n_pairs) of tile tile_id (n_pairs >= 1), from its own
     prologue, then the segment's ending: XCD-local reduce-scatter (l2_rs_ending, L2),
-    reduce-scatter (rs_ending) or the owner ending (owner_ending). spid is the
+    reduce-scatter (rs_ending) or the owner ending (owner_ending). rank is the
     program's workspace slot, j its chunk (role 0 owns the tile), n_tile / r_tile the
     tile's programs and readers.
 
-    On a ragged K pair p of a tile (K-steps 2p, 2p + 1) is at columns 2 BLOCK_K (p - 1)
-    for p >= 1, and pair 0 is the last, partial pair, at K_PAD - 2 BLOCK_K, loaded with
-    the lanes past K masked. So only the segment that starts at k0 = 0 masks, in its
-    prologue. Every pair runs through the main-loop body; the last one's prefetch
-    reloads the last pair (clamped), which the drain discards.
+    Pair p of a tile (K-steps 2p, 2p + 1) is at columns 2 BLOCK_K (p - 1) for p >= 1,
+    and pair 0 is the last pair, at K_PAD - 2 BLOCK_K, loaded on a ragged K with the
+    lanes past K masked. So only the segment
+    that starts at k0 = 0 masks, in its prologue. Every pair runs through the
+    main-loop body; the last one's prefetch reloads the last pair (clamped), which the
+    drain discards.
 
     SEG_LOOP: the caller runs segments in a loop (the end-to-end path), so the C row
     offsets are made tile-dependent (clamped to the tile's last row); otherwise the
-    compiler hoists them above the loop and holds them, spilled, across it."""
+    compiler hoists them above the loop and holds them, spilled, across it.
+
+    PREFETCHED: the first pair is already in flight in the state load_first_pair
+    leaves (the last persistent trip's epilogue loaded it), with its first operands in
+    a_top_in / b_left_in."""
     stride_am, stride_ak, stride_bk, stride_bn, stride_cm, stride_cn = strides
-    a_top_offsets, a_half, b_left_offsets, b_half = kofs
+    a_offsets, a_bot_shift, b_offsets, b_right_shift = kofs
     dotOpLayoutA: gl.constexpr = gl.DotOperandLayout(
         operand_index=0, parent=mfmaLayout, k_width=8
     )
@@ -2383,67 +2533,56 @@ def quadrant_segment(
     m_left = M - pid_m * BLOCK_M
     n_left = gl.multiple_of(N - pid_n * BLOCK_N, 8)
 
-    a_cur_top, a_cur_bot = a_top_offsets, a_top_offsets
-    if not EVEN_M:
-        a_cur_top, a_cur_bot = clamped_a_offsets(
-            m_left - 1, stride_am, stride_ak, BLOCK_M, BLOCK_K, gLoadLayoutA
-        )
-    b_cur_left, b_cur_right = b_left_offsets, b_left_offsets
-    if not EVEN_N:
-        b_cur_left, b_cur_right = clamped_b_offsets(
-            n_left - 1, stride_bk, stride_bn, BLOCK_N, BLOCK_K, gLoadLayoutB
-        )
-    aop = operand_offsets(
-        a_cur_top,
-        a_cur_bot,
-        a_top_offsets,
-        a_half,
-        BLOCK_K * stride_ak,
+    a_addr = a_load_addressing(
+        pid_m,
+        a_offsets,
+        a_bot_shift,
+        M,
+        stride_am,
+        stride_ak,
+        BLOCK_M,
+        BLOCK_K,
+        gLoadLayoutA,
         EVEN_M,
     )
-    bop = operand_offsets(
-        b_cur_left,
-        b_cur_right,
-        b_left_offsets,
-        b_half,
-        BLOCK_K * stride_bk,
+    b_addr = b_load_addressing(
+        pid_n,
+        b_offsets,
+        b_right_shift,
+        N,
+        stride_bk,
+        stride_bn,
+        BLOCK_N,
+        BLOCK_K,
+        gLoadLayoutB,
         EVEN_N,
     )
 
-    if EVEN_K:
-        a_tile = (
-            a_ptr
-            + pid_m.to(gl.int64) * BLOCK_M * stride_am
-            + k0.to(gl.int64) * BLOCK_K * stride_ak
-        )
-        b_tile = (
-            b_ptr
-            + pid_n.to(gl.int64) * BLOCK_N * stride_bn
-            + k0.to(gl.int64) * BLOCK_K * stride_bk
-        )
-        a_top, b_left = load_first_pair(
-            a_tile, b_tile, smem, aop, bop, dotOpLayoutA, dotOpLayoutB
-        )
+    # Pair i of the segment (i >= 1) at a_tile + 2 BLOCK_K i; its first pair at a_tile,
+    # or for k0 = 0 the last pair (partial and masked at K on a ragged K).
+    a_row = a_ptr + pid_m.to(gl.int64) * BLOCK_M * stride_am
+    b_row = b_ptr + pid_n.to(gl.int64) * BLOCK_N * stride_bn
+    a_tile = a_row + (k0 - 2).to(gl.int64) * BLOCK_K * stride_ak
+    b_tile = b_row + (k0 - 2).to(gl.int64) * BLOCK_K * stride_bk
+    if PREFETCHED:
+        a_top, b_left = a_top_in, b_left_in
     else:
-        # Pair i of the segment (i >= 1) at a_tile + 2 BLOCK_K i; its first pair at
-        # a_tile, or for k0 = 0 the last, partial pair, masked at K.
-        a_row = a_ptr + pid_m.to(gl.int64) * BLOCK_M * stride_am
-        b_row = b_ptr + pid_n.to(gl.int64) * BLOCK_N * stride_bn
-        a_tile = a_row + (k0 - 2).to(gl.int64) * BLOCK_K * stride_ak
-        b_tile = b_row + (k0 - 2).to(gl.int64) * BLOCK_K * stride_bk
-        first_col = gl.where(k0 == 0, K_PAD - 2 * BLOCK_K, (k0 - 2) * BLOCK_K).to(
-            gl.int64
-        )
-        k_hi = gl.where(k0 == 0, 2 * BLOCK_K - K_RES, 2 * BLOCK_K)
-        mask_a0, mask_b0, mask_a1, mask_b1 = tail_pair_masks(
-            k_hi, K_RES, BLOCK_M, BLOCK_N, BLOCK_K, gLoadLayoutA, gLoadLayoutB
-        )
+        first_col = gl.where(
+            k0 == 0, K_PAD - 2 * BLOCK_K, (k0 - 2) * BLOCK_K
+        ).to(gl.int64)
+        if EVEN_K:
+            mask_a0, mask_b0, mask_a1, mask_b1 = None, None, None, None
+        else:
+            k_hi = gl.where(k0 == 0, 2 * BLOCK_K - K_RES, 2 * BLOCK_K)
+            mask_a0, mask_b0, mask_a1, mask_b1 = tail_pair_masks(
+                k_hi, K_RES, BLOCK_M, BLOCK_N, BLOCK_K, gLoadLayoutA, gLoadLayoutB
+            )
         a_top, b_left = load_first_pair(
             a_row + first_col * stride_ak,
             b_row + first_col * stride_bk,
             smem,
-            aop,
-            bop,
+            a_addr,
+            b_addr,
             dotOpLayoutA,
             dotOpLayoutB,
             mask_a0,
@@ -2451,15 +2590,29 @@ def quadrant_segment(
             mask_a1,
             mask_b1,
         )
-        # The last pair's clamped prefetch must stay inside the row: for k0 = 0,
-        # a_tile itself is a pair before it.
-        nxt_lo = (k0 == 0).to(gl.int64) * 2
+    # The last pair's clamped prefetch must stay inside the row: for k0 = 0, a_tile
+    # itself is a pair before it.
+    nxt_lo = (k0 == 0).to(gl.int64) * 2
 
+    # The first pair is peeled: the constant-zero accumulator becomes the MFMA's
+    # inline-0 C operand, so no AGPRs are zeroed per segment (a loop-carried zero
+    # would be materialised).
     accs = init_acc(bias_ptr, pid_n, BLOCK_M, BLOCK_N, mfmaLayout, False)
-    for i in range(n_pairs):
-        nxt = gl.minimum(i + 1, n_pairs - 1).to(gl.int64) * 2
-        if not EVEN_K:
-            nxt = gl.maximum(nxt, nxt_lo)
+    nxt = gl.maximum(gl.minimum(1, n_pairs - 1).to(gl.int64) * 2, nxt_lo)
+    accs, a_top, b_left = k_step_pair(
+        accs,
+        a_top,
+        b_left,
+        smem,
+        a_tile + nxt * BLOCK_K * stride_ak,
+        b_tile + nxt * BLOCK_K * stride_bk,
+        a_addr,
+        b_addr,
+        dotOpLayoutA,
+        dotOpLayoutB,
+    )
+    for i in range(1, n_pairs):
+        nxt = gl.maximum(gl.minimum(i + 1, n_pairs - 1).to(gl.int64) * 2, nxt_lo)
         accs, a_top, b_left = k_step_pair(
             accs,
             a_top,
@@ -2467,8 +2620,8 @@ def quadrant_segment(
             smem,
             a_tile + nxt * BLOCK_K * stride_ak,
             b_tile + nxt * BLOCK_K * stride_bk,
-            aop,
-            bop,
+            a_addr,
+            b_addr,
             dotOpLayoutA,
             dotOpLayoutB,
         )
@@ -2500,7 +2653,7 @@ def quadrant_segment(
     if L2:
         l2_rs_ending(
             accs,
-            spid,
+            rank,
             j,
             n_tile,
             r_tile,
@@ -2530,7 +2683,7 @@ def quadrant_segment(
     elif REDUCE_SCATTER:
         rs_ending(
             accs,
-            spid,
+            rank,
             j,
             n_tile,
             r_tile,
@@ -2560,7 +2713,7 @@ def quadrant_segment(
             accs,
             is_partial,
             n_peers,
-            spid,
+            rank,
             pid_n,
             bias_ptr,
             p_ptr,
@@ -2704,7 +2857,14 @@ def _launch_constants(M, N, K, config, num_programs, num_xcds):
         and not l2
         and streamk_programs < num_programs
     )
-    grid = streamk_programs if compact else num_programs
+    # Data-parallel launches have no Stream-K phase to keep resident, so a grid of
+    # fewer tiles than programs launches only the programs with a tile.
+    if compact:
+        grid = streamk_programs
+    elif streamk_tiles == 0:
+        grid = min(num_programs, total_tiles)
+    else:
+        grid = num_programs
     rs_split = split_n if config.policy == "one_tile" else 1
     readers = min(1 << (rs_split.bit_length() - 1), tile.blocks)
     blocks_per_group = max(
@@ -2789,6 +2949,10 @@ def gemm_a16w16(
         persistent_partials,
     )
     owner_qpb = min(4, 16 // max(1, tile.block_m * tile.block_n // 4096))
+    total_full_tiles = launch["TOTAL_TILES"] - launch["STREAMK_TILES"]
+    has_full = total_full_tiles > 0
+    # The persistent prologue loads program_id's first tile unclamped.
+    assert not has_full or launch["GRID"] <= total_full_tiles
     _gemm_a16w16_compute_bound_kernel[(launch["GRID"], 1)](
         x,
         b,
@@ -2825,8 +2989,7 @@ def gemm_a16w16(
         END_TO_END=launch["END_TO_END"],
         L2=launch["L2"],
         XCD_SPLIT=launch["XCD_SPLIT"],
-        HAS_FULL=launch["TOTAL_TILES"] > launch["STREAMK_TILES"]
-        or (even_m and even_n and even_k),
+        HAS_FULL=has_full,
         GRID=launch["GRID"] if launch["COMPACT"] else 0,
         OWNER_QPB=owner_qpb,
         num_warps=NUM_WARPS,

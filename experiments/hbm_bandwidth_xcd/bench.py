@@ -513,6 +513,26 @@ def sweep_J(bufs, flush, args):
     out.save()
 
 
+K_CACHES = ["", ".ca", ".cg", ".cs", ".cv"]
+
+
+def sweep_K(bufs, flush, args):
+    """Load cache modifier: full-chip cold reads per modifier and pattern, plus default vs NT (.cs) vs active CUs."""
+    out = CSVOut("K")
+    for size_gb, cache, pattern, (nw, u) in itertools.product([2, 4], K_CACHES, ["chunked", "grid"],
+                                                               [(4, 4), (8, 4), (8, 8), (16, 4)]):
+        cfg = BWConfig(op="read", mode="rr", W=NUM_CUS, pattern=pattern, num_warps=nw, unroll=u, cache_ld=cache)
+        cfg = replace(cfg, n_iter=n_iter_for(size_gb * GB, NUM_CUS, cfg.tile_elems))
+        out.add(run_cfg(cfg, bufs, flush, args.iters, sweep_tag="modifier", size_gb=size_gb,
+                        cache_ld=cache or "default"))
+    ws = list(range(1, 257)) if args.full else W_LIST
+    for cache, (nw, u), W in itertools.product(["", ".cs"], [(4, 4), (8, 4)], ws):
+        cfg = BWConfig(op="read", mode="rr", W=W, num_warps=nw, unroll=u, cache_ld=cache)
+        cfg = replace(cfg, n_iter=n_iter_for(2 * GB, W, cfg.tile_elems))
+        out.add(run_cfg(cfg, bufs, flush, args.iters, sweep_tag="scaling", size_gb=2, cache_ld=cache or "default"))
+    out.save()
+
+
 def run_point(bufs, spec, passes, reps):
     """Run one sweep point `reps` times back-to-back with no flush (for rocprofv3 --pmc)."""
     sweep, tag = spec.split(":", 1)
@@ -529,7 +549,7 @@ def run_point(bufs, spec, passes, reps):
 
 
 SWEEPS = dict(check=sweep_check, T=sweep_T, A=sweep_A, B=sweep_B, C=sweep_C, D=sweep_D, E=sweep_E, F=sweep_F,
-              G=sweep_G, H=sweep_H, I=sweep_I, J=sweep_J)
+              G=sweep_G, H=sweep_H, I=sweep_I, J=sweep_J, K=sweep_K)
 
 
 def main():

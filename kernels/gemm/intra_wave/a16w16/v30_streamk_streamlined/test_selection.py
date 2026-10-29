@@ -119,6 +119,14 @@ class SelectionTests(unittest.TestCase):
         self.assertEqual(two["STREAMK_PROGRAMS"], 256)
         self.assertEqual(spread["STREAMK_PROGRAMS"], 256)
 
+    def test_dp_grid_is_at_most_the_tile_count(self):
+        config = exact_config(policy="dp").to_dict()
+        below = resolve_config(192, 704, 512, config=config, device=GFX950)
+        above = resolve_config(1088, 1024, 512, config=config, device=GFX950)
+        self.assertEqual((below["TOTAL_TILES"], below["GRID"]), (33, 33))
+        self.assertEqual((above["TOTAL_TILES"], above["GRID"]), (272, 256))
+        self.assertFalse(below["COMPACT"])
+
     def test_spread_requires_more_than_half_a_wave(self):
         tile = TileSpec(64, 64, 64)
         device = DeviceConfig("test", 8, 1, 160 * 1024)

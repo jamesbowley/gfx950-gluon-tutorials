@@ -3,6 +3,27 @@
 Things measured but not explained, or fixes not yet made, with enough detail to pick them up later.
 Newest first. What was tried and dropped, and why, is in [DROPPED.md](DROPPED.md).
 
+## Reversed K order on alternate dispatch waves: gate it, explain the short-run regression (2026-10-28)
+
+**What.** In [v9_kreverse](v9_kreverse/WORKLOG.md), odd dispatch waves run K backward, so each wave starts on the
+k-steps its predecessor finished. The hot loop costs nothing extra. When a wave's footprint (about `20480 * K` bytes
+for full-width waves) exceeds the 256 MB MALL, reversal cut HBM traffic per launch by 24% at K = 16384 and 9% at
+K = 32768. The results:
+- 16384³: +1.6% TFLOPS in the trace and +1.1-1.3% sustained.
+- 8192x8192x32768: +0.5-0.6%.
+- 8192x8192x16384: -0.6% in the 1000-launch trace but +0.2-0.9% when sustained and power-limited.
+- K = 8192, below the threshold: 0.1-0.3% behind.
+
+L2 misses rise 4-16% with reversal on the 4-wave large-K shapes, which is unexplained.
+
+**To try.**
+1. Enable it only above the footprint threshold, and remeasure 8192x8192x16384 at a pinned clock
+   (`GRBM_GUI_ACTIVE`, ATT) to separate a per-cycle cost from the power effect.
+2. Check whether the programs of an XCD drift apart in K after a backward start. That is the guess for the extra L2
+   misses.
+3. Port it to the persistent kernels (v10+), flipping direction on alternate tile iterations.
+4. Repeat on a second GPU.
+
 ## Stream-K on more than 256 programs for skinny, memory-bound shapes (2026-10-20)
 
 **What.** v27's `STREAMK_PERSISTENT_PROGRAMS=P` (`pdp{P}`) ran the persistent data-parallel loop on P = 512, 768 or

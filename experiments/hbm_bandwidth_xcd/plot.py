@@ -324,21 +324,68 @@ def plot_I(df):
     save(fig, "I_l2_scaling")
 
 
+K_LABELS = {"default": "default (no bits)", ".ca": ".ca (no bits)", ".cv": ".cv (sc0 sc1)", ".cg": ".cg (sc0 nt)",
+            ".cs": ".cs (sc0 nt)"}
+
+
+def plot_K(df):
+    fig, axes = plt.subplots(1, 2, figsize=(17, 5), gridspec_kw=dict(width_ratios=[1.3, 1]))
+    ax = axes[0]
+    m = df[(df.sweep_tag == "modifier") & (df.size_gb == 4)]
+    cfgs = m[["num_warps", "unroll"]].drop_duplicates().values
+    caches = list(K_LABELS)
+    width = 0.8 / len(cfgs)
+    for k, (nw, u) in enumerate(cfgs):
+        vals = [
+            m[(m.cache_ld == c) & (m.num_warps == nw) & (m.unroll == u)].gbps.max() / 1000 for c in caches
+        ]
+        ax.bar(np.arange(len(caches)) + (k - (len(cfgs) - 1) / 2) * width, vals, width, label=f"{nw}w x u{u}")
+    ax.axhline(PEAK_TBPS, color="r", lw=0.8, ls=":", label="8 TB/s theoretical")
+    ax.set_xticks(range(len(caches)), [K_LABELS[c] for c in caches])
+    ax.set_ylim(5, 8.3)
+    ax.set_ylabel("TB/s (event-timed, best of chunked / grid)")
+    ax.set_title("256 CUs, 4 GB cold read, by load cache modifier (ISA bits in brackets)")
+    ax.legend(fontsize=8, ncol=3)
+    ax.grid(alpha=0.3, axis="y")
+    ax = axes[1]
+    s = df[df.sweep_tag == "scaling"]
+    for (cache, nw, u), style in [(("default", 8, 4), "C0-"), (("default", 4, 4), "C0--"), ((".cs", 8, 4), "C1-"),
+                                  ((".cs", 4, 4), "C1--")]:
+        t = s[(s.cache_ld == cache) & (s.num_warps == nw) & (s.unroll == u)].sort_values("W")
+        ax.plot(t.W, t.gbps / 1000, style, label=f"{K_LABELS[cache]}, {nw}w x u{u}")
+    ax.axhline(PEAK_TBPS, color="r", lw=0.8, ls=":")
+    ax.set_xlabel("active workgroups (= CUs), round-robin")
+    ax.set_ylabel("TB/s")
+    ax.set_title("2 GB cold read vs active CUs")
+    ax.legend(fontsize=8)
+    ax.grid(alpha=0.3)
+    fig.suptitle("Sweep K: non-temporal loads raise the full-chip HBM read ceiling, not the per-CU cap (GPU 6)")
+    save(fig, "K_cache_modifier")
+
+
 F_THEO, F_MEAS = 2.52e15, 1.56e15  # bf16 dense: 256 CUs x 4096 FLOP/clk x 2.4 GHz; best a16w16 GEMM
 B_THEO = 8.0e12
 
 
-def ridge_inputs(g, h, i):
-    return dict(hbm=g[g.sweep_tag == "read_4096KB"].slope_gbps.iloc[0] * 1e9, mall=h.slope_gbps.max() * 1e9,
-                l2=i.slope_gbps.max() * 1e9)
+def ridge_inputs(g, h, i, k=None):
+    b = dict(hbm=g[g.sweep_tag == "read_4096KB"].slope_gbps.iloc[0] * 1e9, mall=h.slope_gbps.max() * 1e9,
+             l2=i.slope_gbps.max() * 1e9)
+    if k is not None:
+        nt = k[(k.sweep_tag == "modifier") & k.cache_ld.isin([".cs", ".cg"])]
+        b["hbm_default"], b["hbm"] = b["hbm"], nt.gbps.max() * 1e9
+    return b
 
 
 def plot_ridge(b):
     ai = np.logspace(0, 4, 400)
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.loglog(ai, np.minimum(F_THEO, ai * B_THEO) / 1e12, "C0-", lw=2, label="theoretical: 2.52 PFLOPS, 8.0 TB/s")
+    nt = " (NT loads)" if "hbm_default" in b else ""
     ax.loglog(ai, np.minimum(F_MEAS, ai * b["hbm"]) / 1e12, "C1-", lw=2,
-              label=f"measured: 1.56 PFLOPS, HBM {b['hbm'] / 1e12:.2f} TB/s")
+              label=f"measured: 1.56 PFLOPS, HBM {b['hbm'] / 1e12:.2f} TB/s{nt}")
+    if "hbm_default" in b:
+        ax.loglog(ai, np.minimum(F_MEAS, ai * b["hbm_default"]) / 1e12, "C1:",
+                  label=f"measured, HBM {b['hbm_default'] / 1e12:.2f} TB/s (default caching)")
     ax.loglog(ai, np.minimum(F_MEAS, ai * b["mall"]) / 1e12, "C2--",
               label=f"measured, MALL hits {b['mall'] / 1e12:.2f} TB/s")
     ax.loglog(ai, np.minimum(F_MEAS, ai * b["l2"]) / 1e12, "C3--", label=f"measured, L2 hits {b['l2'] / 1e12:.1f} TB/s")
@@ -359,7 +406,7 @@ def main():
     import argparse
 
     p = argparse.ArgumentParser()
-    p.add_argument("--tiers-dir", default=os.path.join(RESULTS, "gpu6"), help="CSVs for sweeps G-J (and their D)")
+    p.add_argument("--tiers-dir", default=os.path.join(RESULTS, "gpu6"), help="CSVs for sweeps G-K (and their D)")
     args = p.parse_args()
     for name, fn in [("A", plot_A), ("B", plot_B), ("C", plot_C), ("D", plot_D), ("E", plot_E), ("F", plot_F)]:
         df = load(name)
@@ -372,8 +419,11 @@ def main():
         plot_H(h, load("D", args.tiers_dir))
     if i is not None:
         plot_I(i)
+    k = load("K", args.tiers_dir)
+    if k is not None:
+        plot_K(k)
     if g is not None and h is not None and i is not None:
-        b = ridge_inputs(g, h, i)
+        b = ridge_inputs(g, h, i, k)
         plot_ridge(b)
         for name, bw in b.items():
             print(f"ridge vs {name} {bw / 1e12:.2f} TB/s: theo/meas {F_THEO / bw:.0f}, meas/meas {F_MEAS / bw:.0f}")

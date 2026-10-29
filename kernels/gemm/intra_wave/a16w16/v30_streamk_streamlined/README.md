@@ -99,7 +99,9 @@ offline pruning; the launcher does not call its resolver.
 `K_PAD` is a virtual scheduling extent, not tensor padding. The final masked
 physical pair runs first, followed by aligned full pairs from column zero.
 This keeps every segment in two-step units and leaves the steady-state pair
-loop unmasked.
+loop unmasked. An even K uses the same order, unmasked, so there is one K
+order: on even K it was timing-neutral (within 0.2%) against running the
+pairs from column zero.
 
 ## L2 exchange
 

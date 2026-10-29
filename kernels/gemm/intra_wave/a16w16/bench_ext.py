@@ -22,8 +22,8 @@
 # THE SOFTWARE.
 ##############################################################################
 
-"""bench.py extended for the versions beyond the tutorial: v10-v27, v9_tile (--version 9t) and
-v9_ragged (9r), with --M / --N, --tile (v9_tile and v27), --bias and optionally padded B / C rows (--pad).
+"""bench.py extended for the versions beyond the tutorial: v10-v27, v9_tile (--version 9t),
+v9_ragged (9r) and v9_kreverse (9k, K order from $KORDER), with --M / --N, --tile (v9_tile and v27), --bias and optionally padded B / C rows (--pad).
 bench.py itself stays as on main, the baseline. See BENCH_EXT.md. As in bench.py, --schedule-hint
 overrides the schedule_hint the kernel's matmul() passes to its launch (v5 on: "mfma-schedule").
 """
@@ -95,6 +95,7 @@ VERSION_MAP = {
     27: "v27_streamk_tile",
     "9t": "v9_tile",
     "9r": "v9_ragged",
+    "9k": "v9_kreverse",
 }
 
 DEVICE = triton.runtime.driver.active.get_active_torch_device()

@@ -46,6 +46,10 @@ def case_shapes(tile):
         "ragged": (17 * bm - bm // 8, 16 * bn - bn // 8, k - 16),
         "ragged_m": (17 * bm - bm // 8, 16 * bn, k),
         "ragged_n": (17 * bm, 16 * bn - bn // 8, k),
+        # K_RES > BLOCK_K (K-step 0 of the last pair masked too) and K_RES ==
+        # BLOCK_K (K-step 1 all padding, step 0 unmasked).
+        "kres_gt": (17 * bm, 16 * bn, k - bk - 16),
+        "kres_eq": (17 * bm, 16 * bn, k - bk),
     }
 
 
@@ -98,6 +102,59 @@ def configurations(tile):
             dict(policy="one_tile", split_n=4, fixup="owner"),
             False,
         ),
+        ("dp_below_wave", shapes["compact"], dict(policy="dp"), False),
+        ("kres_gt_dp", shapes["kres_gt"], dict(policy="dp"), True),
+        (
+            "kres_gt_rs",
+            shapes["kres_gt"],
+            dict(policy="one_tile", split_n=4, fixup="rs"),
+            False,
+        ),
+        ("kres_eq_dp", shapes["kres_eq"], dict(policy="dp"), False),
+        (
+            "kres_eq_owner",
+            shapes["kres_eq"],
+            dict(policy="one_tile", split_n=4, fixup="owner"),
+            True,
+        ),
+    ]
+
+
+def extra_configurations(tile):
+    """Persistent phases of one and several trips, before no Stream-K tail and before
+    each kind of tail: the last trip's prefetch of the first Stream-K pair."""
+    bm, bn, bk = tile.block_m, tile.block_n, tile.block_k
+    k = 8 * bk
+    return [
+        ("dp_1wave", (16 * bm, 16 * bn, k), dict(policy="dp"), False),
+        ("dp_4wave", (32 * bm, 32 * bn, k), dict(policy="dp"), True),
+        ("dp_4w_kres", (32 * bm, 32 * bn, k - bk - 16), dict(policy="dp"), False),
+        (
+            "rs_3wave",
+            (49 * bm, 16 * bn, k),
+            dict(policy="one_tile", split_n=4, fixup="rs"),
+            False,
+        ),
+        (
+            "rs_3w_kres",
+            (49 * bm, 16 * bn, k - bk - 16),
+            dict(policy="one_tile", split_n=4, fixup="rs"),
+            True,
+        ),
+        (
+            "l2_3w_kres",
+            (49 * bm, 16 * bn, k - bk),
+            dict(policy="one_tile", split_n=4, fixup="rs", exchange="l2"),
+            False,
+        ),
+        ("two_tile_2w", (33 * bm, 16 * bn, k), dict(policy="two_tile"), False),
+        (
+            "two_tile_kres",
+            (33 * bm - bm // 8, 16 * bn, k - bk - 16),
+            dict(policy="two_tile"),
+            True,
+        ),
+        ("spread_2w", (16 * bm, 44 * bn, k), dict(policy="spread"), False),
     ]
 
 
@@ -406,6 +463,7 @@ def main():
     parser.add_argument("--stale-flag", action="store_true")
     parser.add_argument("--streams", action="store_true")
     parser.add_argument("--persistent-partials", action="store_true")
+    parser.add_argument("--extra", action="store_true")
     args = parser.parse_args()
     global PERSISTENT
     PERSISTENT = args.persistent_partials
@@ -426,7 +484,7 @@ def main():
     if args.streams:
         concurrent_streams(tile, device)
         return
-    for case in configurations(tile):
+    for case in extra_configurations(tile) if args.extra else configurations(tile):
         run_case(*case, tile, device, args.launches)
 
 
