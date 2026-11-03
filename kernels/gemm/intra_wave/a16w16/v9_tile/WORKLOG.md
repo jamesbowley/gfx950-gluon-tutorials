@@ -2082,3 +2082,113 @@ the rules each trips, the median repeat's idle split and its hot spots by code i
 - **Open:** §18.5 traced the same plugin-off kernels lower: 256x256 90.5% and 256x192 82.4% on one ATT run each,
   against 95.5-95.8% and 86.2-87.9% here over three (same GPU, same instruction counts). Not investigated; the
   ATT clocks of §18.5 were not recorded.
+
+## 20. One wave of 256x256: clock against busy CUs, memory traffic, and the ideal split (2026-11-03)
+
+Two questions about the first wave of the [Stream-K wave-quantization figure](images/wave_quant_tiles/streamk_k4096_128x256.png)
+(M = 4096, K = 4096, N = 256..4096, so 16..256 tiles of 256x256x64, one per CU):
+
+1. How does the clock change with the number of busy CUs? This must be measured without a second effect: a skinny
+   shape that reads more memory, drawing power and lowering the clock on its own.
+2. What would a Stream-K with no split cost give? This is the "ideal split" line: the same total k-steps spread
+   over all 256 CUs.
+
+- **Points** (presets in [sweep.py](sweep.py), all 256x256x64 data-parallel, bf16, K = 4096):
+  - `SQ4096`: T = 16, 32, ..., 256 tiles on the most-square grid (aspect at most 2, e.g. 4x4, 6x8, 12x12). Fixed K,
+    so every busy CU does the same work and only the number of busy CUs changes. From 160 tiles up these are the
+    figure's shapes (16 tile rows), and at 128 too.
+  - `WQ1W4096`: the figure's first wave again (M = 4096).
+  - `SHAPEGRID4096`: T in {32, 64, 128, 192, 256}, each from the square grid to 1 x T (the long side on M, e.g.
+    T = 256: 16x16, 32x8, 64x4, 128x2, 256x1).
+  - `SKIDEAL4096`: 4096x4096xK' with K' = K T / 256 (= N here). This is the first-wave point's total k-steps
+    spread over 256 CUs, with the same FLOPs, so TFLOPS compare directly. It is Stream-K without the partial
+    sums, the wait and the fixup.
+  - `WQ31_1W4096`: v31's default plan over the first wave, for the overlay check.
+- **Measurement:** [run_one_wave.sh](run_one_wave.sh) on GPU 6 (HIP 6 = rocm-smi 6 = PCI e5:00.0, the figure's GPU)
+  under the GPU guard, with the figure's environments and `--rotating-mb 2048`. It runs `timing --graph`, `clock`
+  (hwmon, 3 s back to back) and `counters` (sets 0-2). A warm `clock` pass (`--rotating-mb 0`, inputs held in the
+  256 MB MALL) covers the `SHAPEGRID` points that fit. All points are correct.
+- **Figure and tables:** [plot_one_wave.py](plot_one_wave.py) (run it in v31's environment for `streamk_plan`).
+- **CSVs:** `results/ow_{wq1w,sq,shapegrid,skideal}4096_{timing_graph,clock,counters}.csv`,
+  `ow_shapegrid4096_warm_clock.csv`, `ow_wq314096_{timing_graph,clock}.csv`, and
+  `ow_recheck4096_clock.csv` / `ow_repeat4096_clock.csv` (repeats around 144 tiles).
+
+![one wave: clock, memory traffic and the ideal split](images/wave_quant_tiles/one_wave_k4096.png)
+
+The supplementary version keeps only the busy-CU panels and the first-wave panels
+([one_wave_supplement_k4096.png](images/wave_quant_tiles/one_wave_supplement_k4096.png), drawn by the same script).
+Its caption, with the numbers taken from the data, is written next to it as
+[one_wave_supplement_k4096.md](images/wave_quant_tiles/one_wave_supplement_k4096.md):
+
+![supporting experiments: the power limit and the Stream-K ceiling](images/wave_quant_tiles/one_wave_supplement_k4096.png)
+
+**In short:**
+
+- **The figure's first wave shows the CU-count effect alone.** The near-square grids and the M = 4096 shapes
+  give the same clock to within 0.03 GHz at every T (except 144, below) and the same power to within 40 W.
+  - The clock stays at 2.40 GHz up to 48 busy CUs, then falls to 2.32 at 64, 2.14 at 128, 2.00 at 192 and
+    1.81 at 256.
+  - Power rises from about 470 W at 16 CUs to the 1400 W cap at 208.
+  - Between 48 and 208 CUs the clock falls while power is still under the cap, so another limit acts there
+    (see the warm runs below).
+  - The busy CUs do the same work in cycles: ns per k-step x clock is 2606 cycles at 16 tiles and 2641 at 256.
+    The per-CU time is simply 1 / clock.
+- **Memory traffic only matters once the shape is very skinny and the GPU is mostly busy.**
+  - The L2's reads from the fabric (MALL or HBM) do not grow with the aspect until 1:64. Each XCD's L2 fetches its
+    own operands, so at T = 256 the square grid, 32x8 and 64x4 all read 201 MB (2.0x, 1.7x and 1.1x the unique
+    bytes). Only 128x2 (302 MB) and 256x1 (554 MB) read more. (`TCC_EA0_RDREQ_DRAM` equals `TCC_EA0_RDREQ`
+    everywhere, so the counters cannot tell MALL hits from HBM reads.)
+  - At the cap (T = 256): 16x16 runs at 1.81 GHz, 32x8 and 64x4 at 1.77, and 128x2 at 1.70 (3.0 TB/s). At 256x1
+    the kernel is memory-bound: 154 µs against 94, with the CUs stalled and the clock back up to 2.08 GHz.
+  - Under the cap (T = 64-192): the skinny shapes draw up to 116 W more (T = 128: 1070 W square, 1186 W at
+    128x1), and the clock does not move (2.14-2.20). At T = 192 the clock stays at 2.00 across all four shapes,
+    even though the skinniest reaches the cap.
+  - So there are two regions. Up to aspect 1:16 (fabric reads up to about 2.2 TB/s), only the CU count sets the
+    clock. Past that, and only with at least 128 busy CUs, memory adds power and, at the cap, costs clock.
+- **HBM reads cost clock even for square shapes, under the cap.** With the inputs warm in the MALL, the clock is
+  higher at T = 128 (2.22-2.26 against 2.14) and T = 192 (2.10-2.12 against 2.00), at the same or higher socket
+  power. At T <= 64 it is unchanged, and at T = 256 it is 1.83 against 1.77-1.81. So the limit that acts below the
+  cap responds to HBM traffic, not to socket power alone.
+- **The ideal split sits just above the dashed line of the figure.** The dashed line is the least-squares line
+  through the full-wave times, 4.7 + 86.9 x tiles / 256 µs, with a k-step of 1.36 µs on the full chip.
+  - The ideal split is 0.7-6 k-steps above it, most at the shortest K' (4 k-steps per CU at N = 256).
+  - v31's Stream-K is 5-10 k-steps above the ideal split where it splits (N <= 2048). That gap is the cost of
+    the split itself; the rest of its gap to the dashed line is short-work cost that no split avoids.
+  - At N = 2048: ideal 1329 TFLOPS, v31 1153, data-parallel 904. At N = 256: 468, 346 and 120.
+  - The ideal split runs at the full-chip clock, not at the partly full wave's: 2.22 against 2.40 GHz at N = 256,
+    and 1.85 against 2.15 at N = 2048. Part of what data-parallel "keeps" in a partly full wave is this clock.
+
+| N | K' | us: data-parallel | v31 | ideal | dashed | ideal - dashed (k-steps) | v31 - ideal (k-steps) | GHz: data-parallel | ideal |
+|---|---|---|---|---|---|---|---|---|---|
+| 256 | 256 | 71.7 | 24.8 | 18.3 | 10.2 | +6.0 | +4.8 | 2.40 | 2.22 |
+| 512 | 512 | 70.7 | 33.2 | 22.2 | 15.6 | +4.8 | +8.1 | 2.40 | 2.13 |
+| 1024 | 1024 | 72.0 | 45.1 | 31.5 | 26.5 | +3.7 | +10.0 | 2.32 | 2.00 |
+| 1536 | 1536 | 73.4 | 53.4 | 41.9 | 37.3 | +3.4 | +8.5 | 2.24 | 1.93 |
+| 2048 | 2048 | 76.0 | 59.5 | 51.7 | 48.2 | +2.6 | +5.8 | 2.15 | 1.85 |
+| 3072 | 3072 | 81.3 | 84.1 (dp) | 74.1 | 69.9 | +3.1 | | 2.00 | 1.78 |
+| 4096 | 4096 | 94.1 | 95.8 (dp) | 93.5 | 91.6 | +1.4 | | 1.81 | 1.80 |
+
+### 20.1 Overlay on the wave-quantization figure
+
+Today's first wave against the figure's session (`wq31dp4096_*`, `wq31_4096_*`):
+
+- 256x256 times are within ±2.3%, apart from -4.6% at N = 2560.
+- v31 times are within ±1.5%.
+- Clocks are within 0.03 GHz, apart from 144 tiles.
+
+That misses the 1% / 0.02 GHz bar for overlaying the new lines on the old figure as they are, so panels (e)
+and (f) use today's data-parallel and v31 runs. The drift is small enough that the ideal-split line could be
+added to the figure's panels (a) and (b), with the numbers quoted from today's session.
+
+### 20.2 Caveats
+
+- **144 tiles is bimodal.** 3072x3072 read 2.15-2.34 GHz (1180-1331 W) over six 3 s runs, and 4096x2304 read
+  2.13-2.34 (2.34 once in six). The 128- and 160-tile neighbours repeat within 0.03 GHz. The plot uses the median
+  of the repeats.
+- **No pinned-clock pass yet.** [run_one_wave_pin.sh](run_one_wave_pin.sh) runs `SHAPEGRID4096` at a pinned
+  clock, and `plot_one_wave.py` fits P = P0 + a x busy CUs + b x fabric TB/s from it. Pinning needs
+  `sudo rocm-smi -d 6 --setperfdeterminism 1500` on the host (the container's sysfs is read-only).
+- The x-axis of panels (c) and (d) is the L2's reads from the fabric, not HBM alone. The warm points are drawn at
+  their cold traffic.
+- The `SKIDEAL` points write one bf16 256x256 tile per CU. Real Stream-K writes fp32 partials and reads them
+  back, so the ideal line does not include that traffic.

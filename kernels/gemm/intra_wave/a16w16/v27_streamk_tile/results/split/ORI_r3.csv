@@ -1,0 +1,5 @@
+kind,tile,M,N,K,rep,correct,error,kernel,policy,fixup,streamk_tiles,tiles,S,waves,k_steps,n,n_hi,ending,programs,pairs_per_prog,busy_cus,us_median,tflops,tbps,grid,gpu,round,chunk,pos,ts,iters,stage,rnd,block,is_ref
+cap,256x256x64,4096,4096,4096,0,True,,v9_tile,,,,256,0,1,64,1,1,dp,256,32,256,94.061,1461.2,1.07,,2,,0,0,1792248524.1,1000,ORI,3,,1
+rsall,16x16x128,32,256,32768,0,True,,v27_streamk_tile,one_tile,rs,32,32,32,0,256,32,32,rs,1024,4.0,256,10.32,52.0,1.83,1024,2,,0,1,1792248524.2,1000,ORI,3,16x16x128|w0|S32|k256|32x256x32768,0
+rs16,16x16x128,32,256,32768,0,True,,v27_streamk_tile,one_tile,rs,32,32,32,0,256,16,16,rs,512,8.0,256,10.94,49.1,1.727,512,2,,0,2,1792248524.3,1000,ORI,3,16x16x128|w0|S32|k256|32x256x32768,0
+cap,256x256x64,4096,4096,4096,0,True,,v9_tile,,,,256,0,1,64,1,1,dp,256,32,256,94.761,1450.4,1.062,,2,,0,3,1792248524.4,1000,ORI,3,,1

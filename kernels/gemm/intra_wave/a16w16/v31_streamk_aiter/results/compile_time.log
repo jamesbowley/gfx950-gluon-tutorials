@@ -1,0 +1,9 @@
+2026-10-31 05:35:00 guard: start on rocm-smi GPU 1: bash /tmp/aiter_v31_smoke/run_compile.sh
+dp, one wave (no loop)     4096x4096x8192 dp/owner/None: first call   1.12 s, second   0.56 ms
+dp, tail (persistent)      4352x4096x512 dp/owner/None: first call   0.71 s, second   0.35 ms
+rs (S=16)                  4352x4096x8192 one_tile/rs/12: first call   1.28 s, second   0.54 ms
+owner (S=128)              4096x6144x8192 one_tile/owner/2: first call   1.28 s, second   0.61 ms
+rs, another M (S=32)       4608x4096x8192 one_tile/rs/8: first call   1.22 s, second   0.55 ms
+rs, another K              4352x4096x6144 one_tile/rs/12: first call   1.29 s, second   0.49 ms
+v9 for comparison          4352x4096x8192: first call   0.56 s
+2026-10-31 05:35:12 guard: exit 0: bash /tmp/aiter_v31_smoke/run_compile.sh

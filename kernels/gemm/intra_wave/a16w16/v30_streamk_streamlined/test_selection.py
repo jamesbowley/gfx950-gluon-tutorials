@@ -127,6 +127,71 @@ class SelectionTests(unittest.TestCase):
         self.assertEqual((above["TOTAL_TILES"], above["GRID"]), (272, 256))
         self.assertFalse(below["COMPACT"])
 
+    def test_l2_compact_grid_is_whole_tiles_per_xcd(self):
+        def l2_launch(M, N, K, split_n):
+            config = exact_config(
+                policy="one_tile", fixup="rs", split_n=split_n, exchange="l2"
+            ).to_dict()
+            return resolve_config(M, N, K, config=config, device=GFX950)
+
+        for split_n, grid in ((4, 32), (8, 64)):
+            with self.subTest(split_n=split_n):
+                launch = l2_launch(128, 128, 2048, split_n)
+                self.assertEqual(launch["STREAMK_TILES"], 4)
+                self.assertTrue(launch["COMPACT"])
+                self.assertEqual(launch["GRID"], grid)
+        # 33 tiles: five per XCD.
+        launch = l2_launch(192, 704, 512, 4)
+        self.assertEqual((launch["COMPACT"], launch["GRID"]), (True, 160))
+        # One tile at split 32 fills XCD 0, so the grid is the full wave.
+        launch = l2_launch(64, 64, 8192, 32)
+        self.assertEqual((launch["COMPACT"], launch["GRID"]), (False, 256))
+
+    def test_rs_reads_with_the_idle_programs(self):
+        def launch(M, N, K, split_n, fixup="rs", exchange="wt", block=128):
+            config = exact_config(
+                block_m=block,
+                block_n=block,
+                block_k=128 if block == 128 else 64,
+                policy="one_tile",
+                fixup=fixup,
+                split_n=split_n,
+                exchange=exchange,
+            ).to_dict()
+            return resolve_config(M, N, K, config=config, device=GFX950)
+
+        # 17x16 128x128 tiles, S = 16: R = min(16 blocks, 256 / 16) = 16.
+        rs = launch(2176, 2048, 8192, 2)
+        self.assertEqual(rs["STREAMK_TILES"], 16)
+        self.assertEqual((rs["RS_R"], rs["RS_E"], rs["BAR_STRIDE"]), (16, 14, 16))
+        self.assertEqual((rs["RS_NB"], rs["RS_U"]), (1, 16))
+        self.assertEqual((rs["COMPACT"], rs["GRID"]), (False, 256))
+        # S n = 256: no idle programs, the tile's own readers, slots t n.
+        full = launch(2176, 2048, 8192, 16)
+        self.assertEqual(
+            (full["RS_R"], full["RS_E"], full["BAR_STRIDE"]), (16, 0, 16)
+        )
+        # A non-power-of-two split that fills the grid keeps its 2 own readers.
+        three = launch(128 * 85, 128 * 3 + 128, 8192, 3)
+        self.assertEqual(three["STREAMK_TILES"], 84)
+        self.assertEqual((three["RS_R"], three["RS_E"]), (2, 0))
+        # 64x64 tiles have 4 blocks, so 4 readers at most.
+        small = launch(1088, 1024, 512, 4, block=64)
+        self.assertEqual((small["RS_R"], small["RS_E"], small["BAR_STRIDE"]), (4, 0, 16))
+        # A compact launch adds the extra readers: 33 tiles, R = 4, E = 2.
+        compact = launch(384, 1408, 1024, 2)
+        self.assertEqual(compact["STREAMK_TILES"], 33)
+        self.assertEqual((compact["RS_R"], compact["RS_E"]), (4, 2))
+        self.assertEqual((compact["COMPACT"], compact["GRID"]), (True, 132))
+        # Owner and L2 keep the own-readers rule and no extra readers.
+        for other in (
+            launch(2176, 2048, 8192, 2, fixup="owner"),
+            launch(2176, 2048, 8192, 2, exchange="l2"),
+        ):
+            self.assertEqual(
+                (other["RS_R"], other["RS_E"], other["BAR_STRIDE"]), (2, 0, 0)
+            )
+
     def test_spread_requires_more_than_half_a_wave(self):
         tile = TileSpec(64, 64, 64)
         device = DeviceConfig("test", 8, 1, 160 * 1024)

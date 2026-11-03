@@ -1,0 +1,16 @@
+{
+ "below": {
+  "min_idle": 12,
+  "rs_min_per_tile": 6,
+  "rs_kpp": 8,
+  "rs_min_n": 4,
+  "owner_c": 3.0
+ },
+ "after": {
+  "min_idle": 20,
+  "rs_min_per_tile": 6,
+  "rs_kpp": 4,
+  "rs_min_n": 2,
+  "owner_c": 4.5
+ }
+}

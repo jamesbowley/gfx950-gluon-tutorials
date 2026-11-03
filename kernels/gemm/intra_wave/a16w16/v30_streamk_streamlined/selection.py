@@ -194,14 +194,21 @@ class ReduceScatterConfig:
     readers: int
     blocks_per_group: int
     partials_per_trip: int
+    # Idle programs per tile that read too, and the tile barrier's slot stride
+    # (0: slot t split_n).
+    extra: int = 0
+    barrier_stride: int = 0
 
 
 def pow2_floor(x):
     return 1 << (x.bit_length() - 1)
 
 
-def reduce_scatter_config(tile, split_n, loads_in_flight=16):
-    readers = min(pow2_floor(split_n), tile.blocks)
+def reduce_scatter_config(tile, split_n, loads_in_flight=16, readers=None):
+    """The tile's own power-of-two readers (at most its 32x32 blocks), or
+    ``readers``, and the slice's blocks per group and partials per trip."""
+    if readers is None:
+        readers = min(pow2_floor(split_n), tile.blocks)
     nb = max(
         1,
         min(
@@ -214,6 +221,27 @@ def reduce_scatter_config(tile, split_n, loads_in_flight=16):
         readers=readers,
         blocks_per_group=nb,
         partials_per_trip=max(loads_in_flight // nb, 1),
+    )
+
+
+def rs_readers(tile, streamk_tiles, split_n, num_programs, loads_in_flight=16):
+    """The one-tile write-through reduce-scatter with every resident program reading
+    (WORKLOG entries 16, 18). R = max(min(blocks, pow2_floor(P / S)), own readers)
+    readers per tile, so R S <= P; when R > split_n the extra = R - split_n idle
+    programs per tile join. Each tile's barrier gets its own 128-byte line (16 slots
+    of 2 words) where it fits: packed, the idle readers' polling slowed the
+    producers' arrivals on the shared line by up to 19%. With extra = 0 this is the
+    own-readers rule with only the barrier slots moved."""
+    own = reduce_scatter_config(tile, split_n, loads_in_flight).readers
+    per_tile = num_programs // streamk_tiles
+    readers = max(min(tile.blocks, pow2_floor(per_tile)), own)
+    rs = reduce_scatter_config(tile, split_n, loads_in_flight, readers)
+    return ReduceScatterConfig(
+        readers=readers,
+        blocks_per_group=rs.blocks_per_group,
+        partials_per_trip=rs.partials_per_trip,
+        extra=readers - min(split_n, readers),
+        barrier_stride=max(split_n, min(16, per_tile)),
     )
 
 
@@ -277,7 +305,7 @@ def resolve_config(M, N, K, *, config, device, strict=True):
 
     end_to_end = config.policy in ("two_tile", "spread")
     l2 = config.exchange == "l2" and streamk_tiles > 0
-    xcd_split = 1
+    per_xcd_tiles = 0
     if config.policy == "one_tile":
         split_cap = min(num_programs // streamk_tiles, pairs)
         split_n = config.split_n
@@ -292,13 +320,14 @@ def resolve_config(M, N, K, *, config, device, strict=True):
                 f"split_n={split_n} exceeds this shape's maximum {split_cap}",
             )
         if l2:
-            xcd_split = xcd_local_split(streamk_tiles, split_n, pairs, device)
-            if xcd_split != split_n:
+            xcd_max = xcd_local_split(streamk_tiles, split_n, pairs, device)
+            if xcd_max != split_n:
                 return _reject(
                     strict,
                     f"split_n={split_n} cannot be placed within one XCD; "
-                    f"maximum is {xcd_split}",
+                    f"maximum is {xcd_max}",
                 )
+            per_xcd_tiles = cdiv(streamk_tiles, device.num_xcds)
         streamk_programs = streamk_tiles * split_n
     elif end_to_end:
         split_n = 1
@@ -312,19 +341,29 @@ def resolve_config(M, N, K, *, config, device, strict=True):
         split_n = 1
         streamk_programs = 0
 
+    if config.policy == "one_tile" and config.fixup == "rs" and not l2:
+        rs = rs_readers(tile, streamk_tiles, split_n, num_programs)
+    else:
+        rs = reduce_scatter_config(tile, split_n if config.policy == "one_tile" else 1)
+    # The L2 split gives every XCD ceil(S / NUM_XCDS) tiles' programs (pid p runs
+    # on XCD p % NUM_XCDS), so its grid is a whole number of those per XCD. The wt
+    # reduce-scatter also launches its S extra idle readers per tile.
+    working_grid = (
+        device.num_xcds * per_xcd_tiles * split_n
+        if per_xcd_tiles
+        else streamk_programs + streamk_tiles * rs.extra
+    )
     compact = (
         streamk_tiles > 0
         and streamk_tiles == total_tiles
-        and not l2
-        and streamk_programs < num_programs
+        and working_grid < num_programs
     )
     if compact:
-        grid = streamk_programs
+        grid = working_grid
     elif streamk_tiles == 0:
         grid = min(num_programs, total_tiles)
     else:
         grid = num_programs
-    rs = reduce_scatter_config(tile, split_n if config.policy == "one_tile" else 1)
     return {
         **config.to_dict(),
         "NUM_PROGRAMS": num_programs,
@@ -336,12 +375,13 @@ def resolve_config(M, N, K, *, config, device, strict=True):
         "RESOLVED_SPLIT_N": split_n,
         "END_TO_END": end_to_end,
         "L2": l2,
-        "XCD_SPLIT": xcd_split,
         "COMPACT": compact,
         "GRID": grid,
         "RS_NB": rs.blocks_per_group,
         "RS_U": rs.partials_per_trip,
         "RS_R": rs.readers,
+        "RS_E": rs.extra,
+        "BAR_STRIDE": rs.barrier_stride,
     }
 
 

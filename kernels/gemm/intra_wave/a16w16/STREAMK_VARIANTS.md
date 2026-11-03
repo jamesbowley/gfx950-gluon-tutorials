@@ -86,10 +86,19 @@ Part 1 explains each idea once: what it changes, why we tried it, and what goes 
 
 ![C8: reduce-scatter ending](v14_streamk/images/concepts/c08_rs.png)
 
-- **What:** every program stores its whole partial. After a per-tile barrier, each program reads 1/n of every partial, adds them, and writes that slice of C.
+- **What:** every program stores its whole partial. After a per-tile barrier, each program reads 1/n of every partial, adds them, and writes that slice of C. (From v23 the readers are a power of two, at most n; from v30 the idle programs read too, see rs all below.)
 - **Why:** it removes the owner's serial chain. The reads are spread over n CUs, so the ending costs about 24 k-steps at any n.
 - **Issue:** it moves more bytes, 2n partials per tile against the owner's 2(n - 1): twice as many at n = 2, about the same at n = 16. And since every program stores and reads at the same moment, the bursts are limited by the whole chip's bandwidth.
 - **Example** (S = 4, K = 8192): at n = 16, rs takes 195 us and the owner 221 us. At n = 2, rs takes 240 us and the owner 235 us. The two endings cross near n = 8.
+
+#### Reduce-scatter with all programs (rs all, v30's rs)
+
+![C8b: reduce-scatter with all programs](v14_streamk/images/concepts/c08b_rs_all.png)
+
+- **What:** the CUs the tail leaves idle join each tile's barrier and read slices too, `R = max(min(blocks, pow2_floor(256 / S)), own readers)` readers per tile instead of at most n. With few tail CUs, how many CUs read is what limits the reduction.
+- **Issue:** every tile's barrier needs its own cache line. Packed, the idle readers' polling slowed the producers' arrivals by up to 19%.
+- **Fallback:** with no idle CUs to add (R <= n), it is plain rs. The L2 exchange keeps its own readers.
+- **Measured** ([v30 WORKLOG](v30_streamk_streamlined/WORKLOG.md), entries 16 and 18): never more than 1% slower than rs, up to 3.9% faster at small S·n and short K, and level with a separate reduce kernel.
 
 ### 9. Chunk-major placement
 
@@ -196,7 +205,7 @@ flowchart LR
 - **Built, not run, assumed independent.** Chunk-major with bf16 partials, and the L2 exchange with bf16 partials. The placement acts on the MAC phase's reads and the partial type on the ending's bytes. A spot check on a few cells would confirm it.
 
 **Settled earlier, so not in the sweep:**
-- all programs reading against power-of-two readers (v23, sweep E1);
+- all of a tile's n programs reading against power-of-two readers (v23, sweep E1). This is about the tile's own programs only; letting the idle programs read too (rs all, concept 8) came later, in v30;
 - v22's separate zeroing launch for the atomic ending, 13% longer than zeroing inside the GEMM;
 - fp32 atomics;
 - forward e2e, one-tile (v15, v16) or two-tile, which loses L2.

@@ -1,0 +1,4 @@
+2026-10-29 14:48:48 guard: start on rocm-smi GPU 1: bash -c python v31_streamk_aiter/dp_ab.py asm > v31_streamk_aiter/results/dp_asm.md && python v31_streamk_aiter/dp_ab.py time > v31_streamk_aiter/results/dp_timing.md
+[aiter] import [module_aiter_core] under /home/jbowley/repos/aiter/aiter/jit/module_aiter_core.so
+[aiter] import [module_aiter_core] under /home/jbowley/repos/aiter/aiter/jit/module_aiter_core.so
+2026-10-29 14:51:27 guard: exit 0: bash -c python v31_streamk_aiter/dp_ab.py asm > v31_streamk_aiter/results/dp_asm.md && python v31_streamk_aiter/dp_ab.py time > v31_streamk_aiter/results/dp_timing.md

@@ -43,6 +43,7 @@ def case_shapes(tile):
         "capped": (17 * bm, 16 * bn, max(k, 8192)),
         "spread": (16 * bm, 28 * bn, k),
         "compact": (3 * bm, 11 * bn, k),
+        "compact4": (2 * bm, 2 * bn, k),
         "ragged": (17 * bm - bm // 8, 16 * bn - bn // 8, k - 16),
         "ragged_m": (17 * bm - bm // 8, 16 * bn, k),
         "ragged_n": (17 * bm, 16 * bn - bn // 8, k),
@@ -83,6 +84,25 @@ def configurations(tile):
             shapes["compact"],
             dict(policy="one_tile", split_n=2, fixup="owner"),
             False,
+        ),
+        (
+            "l2_compact",
+            shapes["compact"],
+            dict(policy="one_tile", split_n=4, fixup="rs", exchange="l2"),
+            True,
+        ),
+        (
+            "l2_compact4",
+            shapes["compact4"],
+            dict(policy="one_tile", split_n=4, fixup="rs", exchange="l2"),
+            False,
+        ),
+        (
+            # Extra readers on a compact grid: S (n + E) programs.
+            "compact_rs",
+            shapes["compact"],
+            dict(policy="one_tile", split_n=2, fixup="rs"),
+            True,
         ),
         (
             "ragged",
@@ -260,6 +280,7 @@ def run_case(label, shape, options, with_bias, tile, device, launches):
         f"{label:10s} {M}x{N}x{K} "
         f"{launch['STREAMK_POLICY']}/{launch['STREAMK_FIXUP']} "
         f"S={launch['STREAMK_TILES']} n={launch['RESOLVED_SPLIT_N']} "
+        f"R={launch['RS_R']} E={launch['RS_E']} "
         f"programs={launch['STREAMK_PROGRAMS']} grid={launch['GRID']} "
         f"error={error:.5f} correct={correct} guard={guard} rearmed={rearmed}"
     )
@@ -281,11 +302,13 @@ def stale_count(tile, device):
     )
     a, weights, c, _, bias, ref = make_case(M, N, K, tile, False)
     _, locks, sync = launch_workspace(M, N, K, tile, device, config)
+    launch = resolve_config(M, N, K, config=config, device=device)
     locks.zero_()
     sync.zero_()
-    # A stale count equal to n means no arriver observes n - 1, so readers can
-    # never observe a generation bump. The external timeout must terminate it.
-    sync[0] = 2
+    # A stale count equal to the n + E arrivals (E idle readers) means no arriver
+    # observes n + E - 1, so readers can never observe a generation bump. The
+    # external timeout must terminate it.
+    sync[0] = 2 + launch["RS_E"]
     gemm(a, weights, bias, c, config)
     torch.cuda.synchronize()
     if torch.allclose(c, ref, atol=0.1, rtol=0.01):

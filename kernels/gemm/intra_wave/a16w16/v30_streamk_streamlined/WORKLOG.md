@@ -604,3 +604,549 @@ two-tile with two trips (2%).
 **Follow-up**: a per-shape XCD mapping, tuned with cold inputs, checked against
 the points above. It should also control the tail's shape, and use the LRU
 model of entry 11 to prune candidates whose waves spill the LLC.
+
+## 14. ragged_transpose, xcd_blocked_rank and the N <= NUM_XCDS guard (2026-10-29)
+
+**Code**:
+- `round_robin_to_xcd_blocked(i, count, NUM_XCDS)` becomes
+  `ragged_transpose(i, count, PARTS)`. The arithmetic is a column-major
+  renumbering of a ragged (local, part) grid and has nothing XCD-specific in
+  it. The docstring keeps the XCD table as the worked example, since XCD
+  placement is the use.
+- `streamk_rank` becomes `xcd_blocked_rank`. It ranks any set of N
+  participating programs; only its callers are Stream-K. It keeps the XCD name
+  because its correctness rests on hardware placing program p on XCD
+  p % NUM_XCDS.
+- `xcd_blocked_rank` skips the transpose when N <= NUM_XCDS (N is constexpr).
+  For pid < N, pid % NUM_XCDS = pid and pid // NUM_XCDS = 0, and
+  `even_split_start(pid, N, NUM_XCDS)` is pid * 0 + min(pid, N) for N < NUM_XCDS
+  and pid * 1 + min(pid, 0) for N = NUM_XCDS, so the transpose is the identity.
+  Programs with pid >= N occur only with IDLE, which sets their rank to N
+  anyway. Only the `STREAMK_TILES * SPLIT_N` callers can reach the case.
+  `_get_pids` is not guarded: its GRID_MN is a runtime value.
+
+**Checks**: `run_checks.sh`'s steps pass on all five tiles (80 cases, graph
+replay, stale-flag fails and stale-count hangs as expected).
+
+## 15. Tree reduction and a separate reduce kernel: neither replaces rs (2026-10-29)
+
+**Question.** Two untried alternatives to the one-tile reduce-scatter ending
+(`rs`, wt exchange): a tree reduction (point-to-point flags instead of the n-way
+barrier, log n serial rounds) and a separate reduce kernel (no flags or waits in
+the GEMM, a kernel boundary and launch instead). Is either faster at any shape or
+tile?
+
+**Code** (an experiment; production files unchanged):
+- `reduce_variants.py`: a copy of the kernel's persistent phase and uniform
+  one-tile tail, every helper imported from `matmul_kernel.py`, with the ending
+  chosen by a `FIXUP` constexpr:
+  - `rs`: the production ending, the control. Bitwise equal to production in
+    every check case, and 0.991-1.006 of its time on every timed point.
+  - `tree`: radix `R = 2^TREE_B`. Chunk j's children are `j + i R^k` for every
+    level with `j % R^(k+1) == 0` and `j + i R^k < n`. A chunk waits for its
+    children's locks, adds their partials into its AGPR accumulator and, unless it
+    is chunk 0, stores the sum to its own slot (`.wt`, drain) and raises its lock.
+    Each chunk sends once, so the existing per-program locks are enough. Chunk 0
+    stores C with the bias. Receivers lower their children's locks, so the tree
+    re-arms as the owner ending does. Children are either unrolled with masked
+    loads (`TREE_STATIC`, several in flight; default up to 7 children) or read in a
+    run-time loop, one at a time.
+  - `store_only`: every chunk stores its partial and exits. `separate` is this
+    GEMM followed by `_streamk_reduce_kernel`: S x READERS programs, each running
+    `reduce_scatter_slice` on one slice of one tile (default-policy loads; bias,
+    ragged M / N). The default READERS is the smallest power of two (at most the
+    tile's 32x32 blocks) that gives each of the 256 programs a slice.
+  - `reduce_only` (timing only): the reduce kernel alone.
+- `check_reduce_variants.py`, `timing_reduce_variants.py`,
+  `reduce_variants_summary.py`.
+
+**Checks** (`results/reduce_variants_checks.txt`), all five tiles:
+- Cases: tail at splits 2-4, long-K tail at 5 / 8 / 16, capped, compact, ragged,
+  ragged M, ragged N, K_RES > / = BLOCK_K, with and without bias. Variants: rs,
+  tree2 and tree4 (unrolled and loop), tree8 at split 16 (14 children), and
+  separate. 73 cases per tile.
+- Each case runs three launches, with the persistent partials poisoned with NaN
+  before each. Every case matches torch, the C guards hold, and the locks and
+  counts are zero afterwards.
+- A two-launch CUDA graph of tree2, tree4 and separate passes 20 replays over new
+  inputs.
+- Negative control: every lock preset to 1 makes the tree give a wrong result.
+
+**Method**: `timing.py`'s graphs (100 calls over 2 GB of rotating inputs, 9
+shuffled rounds of 5 replays, median us per call), all of one point's variants
+interleaved. Points were sharded over HIP GPUs 0-7; ratios are always within one
+GPU.
+- **focused** (`results/reduce_variants_focused.md`, two runs, plus eager
+  timing): 256x256x64 and 128x128x128 with one full wave plus S = 8, 16, 32, 64
+  leftover tiles; K 2048 and 8192; every power-of-two split up to the cap;
+  timing.py's four points; two compact points.
+- **wide** (`results/reduce_variants_wide.md`, two runs): all five tiles,
+  S = 16, 32, K 4096 and 16384, plus ragged M / N with bias at K 8192.
+- The two runs agree within about 0.01 everywhere.
+
+**Results** (`results/reduce_variants_summary.md`; production = the better of
+prod rs and prod owner at the same split, unless stated):
+
+- **The fixup budget is small.** rs minus store_only (the whole cost of
+  reducing, flags included) is:
+  - 2-4 us at 64x64x64 and 128x128x128;
+  - 3-6 us at 256x128x64 and 128x256x64;
+  - 4-8 us at 256x256x64 up to split 8;
+  - 9-15 us at 256x256x64 with split 16, or S = 64 at split 4.
+
+  That is 2-17% of the call. Most of it is moving the partials, not
+  synchronization: `reduce_only` alone (stale data, so approximate) is 2-14 us,
+  rising with n x S x tile bytes.
+- **Tree: never faster, usually much slower.** Over the 136 points it is never
+  more than 1% faster than production (best 0.994). Geomean 1.22 (focused) and
+  1.08 (wide).
+  - At split 2 it is the owner ending: 0.98-1.07.
+  - From split 4 every level adds a serial full-tile store, drain, flag and read
+    on one program, and chunk 0 writes C alone. At split 8 (best tree form) that
+    costs 1.03-1.18 at K = 8192-16384 and 1.12-1.55 at K = 2048-4096.
+  - At 256x256x64 the unrolled children spill (split 8: tree2 32, tree4 175
+    spills; up to 4.6x). The loop form does not spill but is still 1.04-1.25 at
+    splits 8-16 with K >= 4096, and 3.1-3.6x at split 16 with K = 2048 (one pair
+    per program).
+  - Radix 4 halves the depth, but is no better than radix 2 in its loop form.
+  - The point-to-point flags buy nothing measurable: the n-way barrier is not
+    where rs spends its time.
+- **Separate kernel: level, a few percent faster at short K and small splits.**
+  Geomean 0.999 on both sets.
+  - At a fixed split it is more than 1% faster than production in both runs at 13
+    of 56 focused and 7 of 80 wide points. All of them are K = 2048-4096, mostly
+    split 2-4; best 0.960 (256x256x64, S = 8, split 2, K = 2048).
+  - It is up to 4.5% slower at split 16 with K = 2048 and on compact 256x256x64
+    at split 4.
+  - **With each method at its own best split** (what a tuned config would pick),
+    the gain shrinks to at most 2.5% (256x256x64 4096x4608x2048: 0.975, with sep
+    at split 4 against production at split 2). Of the other 43 shapes:
+    - four short-K shapes at 0.982-0.988;
+    - four 1.01-1.02 slower (the 256x256x64 compact point, S = 64 at K = 2048 on
+      both tiles, timing.py's S = 16 point);
+    - 35 within 1%.
+- **Why sep wins where it does: reader count, not synchronization.**
+  - `sep R`, the same reduce kernel with rs's reader count (RS_R = n per tile),
+    is 0.98-1.06 of rs, and about 1.00 at split 2. So a kernel boundary plus a
+    launch costs about what the in-kernel barrier does, consistent with the
+    launch-gap estimate (sep - store_only - reduce_only, approximate) of 0-3 us.
+  - The gain comes from the default reader count: at split 2 rs reduces each tile
+    with its 2 programs (S x 2 busy CUs), while sep spreads it over about 256.
+    That only matters when the reduction is a large share of a short call, so
+    short K and small splits.
+- **Eager launches** (focused `--eager`): this harness's Python launch path takes
+  about 44 us per call. Below that GPU time every variant is host-bound, and sep's
+  second launch makes it 1.35x. Above it, eager matches the graph numbers.
+
+**Decision**: no change to production.
+- The tree is ruled out.
+- The separate kernel's best per-shape gain (2.5%) is not worth a second launch,
+  its eager cost and the extra code path.
+
+**Follow-up**: the one real effect, more readers per tile, could be had in-kernel.
+In a uniform one-tile tail with a full wave, `256 - S n` programs are idle. They
+could join each tile's reduce-scatter as extra readers, waiting on the same
+barrier, so `RS_R` would no longer be capped by n. Untested; it would apply to
+the same short-K, small-split points (up to about 4% at a fixed split). Entry 16
+tests it.
+
+## 16. Reduce-scatter with the idle programs as readers (rs_all) (2026-10-29)
+
+**Idea** (entry 15's follow-up, and the reading that the separate kernel's gain
+is the reduction's memory parallelism). With few programs in the tail (small
+S n), rs reduces each tile with at most n readers, and those few CUs bound the
+reduction's bandwidth. The 256 - S n programs the tail leaves idle are still
+resident, so they can read too. If that is the mechanism, the gain should shrink
+as S n grows and vanish once the tail fills the GPU.
+
+**Code** (`reduce_variants.py`, `FIXUP = 3`, `variant="rs_all"`; production
+unchanged):
+- **Readers per tile.** `R = max(min(blocks, pow2_floor(256 / S)), RS_R)`, a
+  power of two so the slices stay quadrant-aligned in `reduce_scatter_slice`. With
+  `R > n`, `E = R - n` idle programs join each tile; otherwise rs_all is rs.
+  - `rs_all_readers` computes R; `rs_all_r=` overrides it.
+- **Producers** store their partial as in rs. They arrive on a barrier that
+  counts n + E, and chunks j < R reduce slice j of R.
+- **Extra readers** are hardware pids from `S n` (the IDLE ranks); extra e reads
+  slice `n + e % E` of tile `e // E`.
+  - Each first waits for its masked last-trip prefetch (`wait_group(0)`), because
+    the slice's layout conversions use LDS.
+  - It then arrives on the barrier at once. A waiter that only polled could read
+    the generation after the last arrival had bumped it, and would spin forever.
+  - Then it waits and reduces its slice.
+- **Compact launches** grow the grid by S E programs.
+- **Two knobs:** `poll_sleep` (an `s_sleep` of 1, 8 or 32 in the poll) and
+  `spread_barriers`. Spread barriers are the default for rs_all; see below.
+
+**The first form lost up to 19%: one cache line.** rs puts tile t's (count,
+generation) at sync slot `t n`. At split 2 the slots are 16 bytes apart, so all
+8 tiles of S = 8 share one 128-byte line. In rs only the 16 producers touch it,
+but in rs_all 240 extra readers spin on it with atomics while the producers
+arrive (`results/reduce_variants_rs_all_barrier.md`, `timing_rs_all_barrier.py`,
+two runs).
+- Packed slots: 1.19-1.20x rs at 256x256x64 S = 8 split 2 K = 2048, 1.11-1.12x
+  at K = 8192, and 1.14-1.15x at 128x128x128 S = 16 split 2.
+- Sleeping in the poll helps only with long sleeps. s_sleep 8 gives 1.06-1.07,
+  1.01-1.02 and 1.09. s_sleep 32 gives 0.98-0.99, 0.991 and 1.033, but costs
+  where readers are few (1.000-1.002 against 0.977 at 128x128x128 S = 64).
+- A stride of `max(n, min(16, 256 / S))` slots gives each tile's barrier its own
+  line. That alone takes the same points to 0.960-0.973, 0.988-0.991 and
+  0.972-0.976, matching the separate kernel (0.956-0.964, 0.985-0.986,
+  0.973-0.975). Sleeping on top changes nothing or costs a little.
+- The control: rs's own readers with the spread barrier (`rs spread`) is
+  0.991-1.017. So the stride does not speed up rs; it only removes the
+  contention the extra readers create.
+
+**Checks** (`results/reduce_variants_rs_all_checks.txt`), all five tiles, 109
+cases each:
+- The entry 15 cases with rs_all (spread), rs_all with the sleeping poll, and
+  rs_all packed.
+- All match torch, the guards hold, partials are NaN-poisoned, and counts and
+  locks are back at zero after three launches.
+- A two-launch graph of each passes 20 replays.
+- `--stale-count` presets tile 0's count to n + E: the launch hangs (timeout 124)
+  on all five tiles, as it must.
+
+**Timing** (`results/reduce_variants_rs_all_{focused,wide,summary}.md`): entry
+15's focused and wide sets, two runs each, all variants again (graph only).
+rs all is spread; rs all packed is the first form. The runs agree within about
+0.01.
+- **rs all against rs**:
+  - Never more than 1% slower in both runs. Worst 1.006-1.014, at points with
+    few extra readers.
+  - More than 1% faster at 15 of 56 focused and 7 of 80 wide points. Best
+    0.966-0.970, all at K = 2048-4096 except two at K = 8192 (0.987-0.990).
+  - Geomean 0.993 (focused) and 0.997 (wide).
+- **rs all against the separate kernel**: level. Geomean 0.999 and 1.001; more
+  than 1% apart at 5 + 7 points either way.
+- **Against production at a fixed split** (the better of rs and owner): more than
+  1% faster at 11 focused and 6 wide points, best 0.967-0.971, all at S n <= 128.
+  - The points more than 1% slower are all E = 0 (rs_all is rs there) where the
+    owner ending beats rs: 256x256x64 S = 64 split 4, 1.011-1.035.
+- **By tail CUs** (points with E > 0, both runs, worse run):
+
+  | S n | points | rs all / rs, median (range) | sep / rs, median (range) |
+  |---|---|---|---|
+  | <= 32 | 22 | 0.990 (0.971-0.999) | 0.988 (0.966-0.998) |
+  | 64 | 34 | 0.998 (0.970-1.014) | 0.995 (0.975-1.007) |
+  | 128 | 35 | 0.998 (0.979-1.008) | 1.000 (0.975-1.023) |
+
+  At S n = 256 there are no idle programs. The gain is largest when few CUs
+  reduce and fades as S n grows, as predicted. Like the separate kernel's, it is
+  roughly constant in microseconds, so it is a larger ratio at short K.
+- **Best split per shape** against production's best split (rs or owner):
+  - rs all: 0.968-0.972 at best (256x256x64 4096x4608x2048, at split 2 where
+    production picks 2). 0.980-0.982 on 256x256x64 4096x4352x2048, 0.983-0.995 on
+    about ten more shapes (all K <= 8192), and within 1% elsewhere.
+  - Slower than production only on the S = 64 shapes (256x256x64 4096x5120,
+    128x128x128 2048x2560x2048), by 1.006-1.013. There E <= 2, and the owner
+    ending beats rs.
+  - The separate kernel at its best split: 0.975-0.978 on the first shape, and
+    1.015-1.020 on the compact 256x256x64 point, where rs all is 0.994.
+- **Where the separate kernel stays ahead.**
+  - 64x64x64 at K = 4096: sep 0.981-0.992, rs all 0.995-1.001. That tile has 4
+    blocks, so R <= 4 for both and the reader count cannot explain it.
+  - 128x128x128 2048x2176x2048 split 8: sep 0.981-0.983, rs all 0.992-0.993.
+  - A likely cause is that the small reduce kernel runs several workgroups per
+    CU, where the GEMM's readers are one fat workgroup per CU. That is occupancy,
+    not CU count, and it is not measured here.
+
+**Conclusion**: the reduction's memory parallelism is the effect, and rs_all
+captures it in the kernel without a second launch, provided each tile's barrier
+has its own cache line.
+- Its gain over rs is up to 3.4% at a fixed split and up to 3% at production's
+  best split, at small S n and short K.
+- It is never more than about 1% slower than rs.
+- The separate kernel has no remaining advantage except about 1% on the smallest
+  tile and short K.
+
+**Proposal for production** (not done here):
+- Let the one-tile rs ending use `R = max(min(blocks, pow2_floor(P / S)), RS_R)`
+  readers, and spread the tile barriers. The sync region already has 2P words, and
+  the stride `max(n, min(16, P / S))` keeps S stride <= P.
+- The idle programs need a short reader path after the persistent phase.
+- The L2 exchange needs its own design: its readers are XCD-local, and extra
+  readers from other XCDs would read through MALL.
+- It would also need an ending-skew check on two-tile / spread, which this
+  experiment does not cover.
+
+## 17. Even K: no masks on the last trip's Stream-K prefetch (2026-10-29)
+
+**Code**: `persistent_tile` builds the four `k_tail_mask` masks for its
+next-tile prefetch only when `SK_PREFETCH and not EVEN_K`. On an even K they are
+`None`, as without `SK_PREFETCH`.
+
+**Why it is safe.** With `EVEN_K`, `K_RES = 0`, so `sk_khi` is
+`2 BLOCK_K * sk_has` and `k_hi` is `2 BLOCK_K` on every trip except an idle
+program's last trip (0). The masks are all-true or, on that trip, all-false.
+- `sk_has = 0` only on the uniform path: rank >= `WORKING`, or an L2 chunk with
+  `n_tile = 0`. `streamk_first_segment` then targets Stream-K tile 0's last pair
+  (t = 0, k0 = 0, column `K_PAD - 2 BLOCK_K`). That pair is inside K, and its rows
+  and columns are clamped by `a_load_addressing` / `b_load_addressing` on a ragged
+  M / N.
+- Idle programs fail `if active:` and exit without reading `a_top`, `b_left` or
+  the LDS. The masked copies were issued and in flight at exit too, so only
+  memory traffic changes: one pair per idle program, data that tile 0's j = 0
+  program also loads.
+- End-to-end builds have `sk_has = 1`. Their masks already folded to constants,
+  and their assembly is identical.
+- `reduce_variants.py`'s rs_all idle readers `wait_group(0)` before using the
+  LDS, so they are unaffected (comment updated).
+
+**Assembly** (temporary `V30_SK_MASK_EVEN` switch, now removed; 256x256x64 unless
+noted). Mask code is the per-load `v_cndmask` that selects an OOB offset.
+
+| build | VGPRs | VGPR spills | instructions | v_cndmask |
+|---|---|---|---|---|
+| dp, spread, two-tile | identical | identical | identical | identical |
+| one-tile rs S = 8 / 16 / 32, K 8192 and 2048 | 492-496 to 480-484 | 0 | -146 to -183 | -8 to -16 |
+| l2 S = 16, owner S = 16, capped S = 16 | 492-496 to 480 | 0 | -146 to -183 | -8 |
+| even M / N with bias | 500 to 488 | 0 | -168 | -8 |
+| 128x256x64 rs / 64x64x64 rs | 376 to 368 / 108 to 80 | 0 | -5 / -29 | -6 / -4 |
+| ragged M / N, no bias | 500 to 512 | 0 | +27 | -16 |
+| ragged M / N with bias | 512 | 6 | +118 | -16 |
+| ragged M with bias | 512 | 11 to 19 | -29 | -12 |
+| ragged N with bias | 512 | 4 | -1 | -12 |
+
+**Why the ragged builds can lose.** The masks do not cost registers by
+themselves: each masked load used a short-lived select result, and the offsets
+stay live for the next trip either way. Without the selects the MFMA scheduler
+moves the prefetch loads up. In ragged M with bias, the first load issues after
+15 of the epilogue's MFMAs instead of 44, while the accumulators, the last pair's
+operands, the ragged store masks and the bias are live. At the 512-VGPR limit
+that adds per-trip spills: 4 VGPR reloads and one accumulator quad
+(`a[64:67]`) spilled and reloaded inside the persistent loop. Builds with
+headroom just keep the saved registers.
+
+**Pinning the loads does not work.** A `gl.amd.hint.sched_barrier()` before each
+of the 8 epilogue prefetch loads (the only scheduling control Gluon offers; it
+blocks every instruction class) made every 256x256x64 build hit 512 VGPRs, with
+7-31 VGPR spills, including the even ones, and 500-850 more instructions. It
+stops the MFMA scheduler's interleaving. Only the smaller tiles gained
+(64x64x64 76 VGPRs, 128x256x64 336). The masks' dependency delayed the loads a
+little without blocking anything else; nothing cheaper reproduces it.
+
+**Checks** (masks off): `run_checks.sh`'s steps and `--extra` pass on all five
+tiles (125 cases, graph replay, stale-flag fails, stale-count hangs).
+
+**Timing** (timing.py's method: graphs of 100 launches over 2 GB of rotating
+inputs, 9 shuffled rounds of 5 replays, median; GPU 1, two runs). none / masks:
+
+| point | shape | run 1 | run 2 |
+|---|---|---|---|
+| one-tile rs S = 8 | 3072x5632x8192 | 0.997 | 0.997 |
+| one-tile rs S = 16 | 4352x4096x8192 | 0.998 | 0.998 |
+| one-tile rs S = 32 | 4096x4608x8192 | 0.997 | 1.002 |
+| S = 16, K = 2048 | 4352x4096x2048 | 1.000 | 0.998 |
+| S = 16, 3 waves, K = 2048 | 12544x4096x2048 | 0.990 | 0.992 |
+| l2 S = 16, split 4 | 4352x4096x8192 | 0.998 | 0.998 |
+| owner S = 16, split 4 | 4352x4096x8192 | 0.997 | 0.996 |
+| capped S = 16 | 4352x4096x8192 | 0.998 | 0.999 |
+| even M / N with bias, split 4 | 4352x4096x8192 | 0.998 | 0.997 |
+| 128x256x64 rs split 8 | 2176x4096x8192 | 1.001 | 0.999 |
+| 64x64x64 rs split 4 | 1088x1024x8192 | 0.998 | 0.996 |
+| ragged M / N, no bias | 4320x4064x8192 | 1.000 | 1.001 |
+| ragged M / N with bias | 4320x4064x8192 | 1.004 | 1.003 |
+| ragged M with bias | 4320x4096x8192 | 1.004 | 1.004 |
+| ragged N with bias | 4352x4064x8192 | 1.002 | 1.002 |
+
+Spreads are 0.3-3.5% (mostly under 1%). The even builds gain 0.1-1%, most with
+three persistent trips. Ragged M / N with bias loses a repeatable 0.2-0.4%, inside
+the spreads. Gating the change on `EVEN_M and EVEN_N` as well would avoid that
+loss. It was not adopted, to keep one condition.
+
+## 18. rs_all is v30's write-through reduce-scatter (2026-10-29)
+
+**Decision**: entry 16's rs_all replaces the one-tile wt reduce-scatter. With no
+idle programs to add it is the old rs, so there is one implementation.
+
+**Code**:
+- **`selection.rs_readers(tile, S, n, P)`**: R = max(min(blocks,
+  pow2_floor(P / S)), own readers), E = R - min(n, R), NB / U for R, and the
+  barrier stride `max(n, min(16, P / S))` (one 128-byte line per tile).
+  `ReduceScatterConfig` gains `extra` and `barrier_stride`, both 0 for the
+  own-readers rule (`reduce_scatter_config`, which gains a `readers=` override).
+- **`_launch_constants` and `selection.resolve_config`** use `rs_readers` for one-tile rs
+  wt, and the own-readers rule for owner, L2 and end-to-end.
+  - The launch dict gains `RS_E` and `BAR_STRIDE`.
+  - The compact working grid becomes `S (n + E)`.
+  - The launcher's inline reader formula is gone.
+  - A cross-check over 6471 valid random configs found both functions agree on
+    every launch constant.
+- **Kernel**: new constexprs `RS_E` and `BAR_STRIDE` (default 0).
+  - `rs_ending` arrives on slot `t BAR_STRIDE` with `n + RS_E` arrivals, and
+    chunks `j < R` read slice j of R.
+  - In the uniform non-L2 branch, `RS_E > 0` adds the idle-reader path,
+    `rs_extra_reader`: pids from WORKING wait on their last-trip prefetch
+    (unmasked on an even K since entry 17), arrive, wait and reduce slice
+    `n + e % E` of tile `e // E`.
+  - A compact launch with E > 0 ranks its producers as a full grid does.
+  - With RS_E > 0 the static asserts check `RS_R == n + RS_E <= NBLK`, otherwise
+    the old ones.
+  - No `POLL_SLEEP`: with spread barriers it gained nothing.
+- **L2 is unchanged** (E = 0, slots t n). Idle readers on other XCDs would break
+  its XCD-local coherence.
+- **`reduce_variants.py`**:
+  - Its `streamk_first_segment` call drops entry 14's removed `XCD_SPLIT`, which
+    no longer compiled.
+  - Its FIXUP 0 "rs" computes the pre-entry-18 constants itself (own readers,
+    compact grid S n) instead of reading the launch dict.
+  - `timing_reduce_variants.py`'s `sep R` likewise uses the own-readers count.
+
+**Where E = 0** (rs_all is the old rs with the barrier slots moved, or not even
+that when the stride equals n):
+- S n = 256, which includes all four of timing.py's points;
+- 64x64 tiles with n >= 4 (4 blocks);
+- non-power-of-two n with `pow2_floor(P / S) <= n`, for example n = 3 at
+  S = 84 (R = 2).
+
+**Checks** (`results/rs_all_production_checks.txt`):
+- **`run_checks.sh`, all five tiles.** Every case passes, as do graph replay,
+  stale-flag (fails as expected) and stale-count (hangs as expected).
+  - check_streamk gains a `compact_rs` case: S = 33, split 2, so R = 4, E = 2
+    and the grid is 132.
+  - check_streamk prints R and E.
+  - `--stale-count` presets `n + E`.
+  - With extra readers: capped (n = 8, R = 16, E = 8), rs (n = 4, R = 16,
+    E = 12) and compact_rs. With E = 0: 64x64x64 rs and capped.
+- **`--extra`** passes on all five tiles: rs_3wave and rs_3w_kres with R = 16,
+  E = 12.
+- **`check_reduce_variants.py`** passes, 109 cases per tile with graph replay. The
+  copied old rs, the experiment's rs_all and production are **bitwise equal** in
+  every case. Every reader count sums a block's partials in the same order, so
+  only who reads changes.
+- **`test_selection.py`**: 21 pass, including a new `rs_readers` test (R, E,
+  stride, the compact grid, and unchanged owner and L2 constants).
+- **`asm_check.py`** (`results/asm_check_rs_all.md`): wt atomics go from 5 to 10
+  where idle programs read, because their path has its own barrier copy. There
+  are no spills (wt VGPRs 484 at 256x256x64, 260 at 128x128x128). The l2 builds
+  still have no atomics or cache maintenance.
+
+**Timing** (`results/rs_all_production_{focused,wide,summary}.md`, two runs each,
+the method of entries 15-16; `prod rs` is now rs_all, `rs` the copied old rs):
+- **prod rs against the experiment's rs all**: geomean 1.001 on both sets, never
+  more than 1% apart. The port matches the experiment.
+- **prod rs against the old rs**: never more than 1% slower in both runs, and
+  more than 1% faster at 15 of 56 focused and 8 of 80 wide points. Best
+  0.961-0.964 (256x256x64, S n = 16-32, K = 2048); geomean 0.994 and 0.997.
+- **Best of rs and owner per point, new against old**: more than 1% faster at
+  11 + 6 points, never more than 1% slower.
+- **Best split per shape** (44 shapes; production's best of rs and owner, old over
+  new):
+  - five short-K shapes gain 1-3%:
+    - 256x256x64 4096x4608x2048 1.018-1.030;
+    - 4096x4352x2048 1.017-1.019;
+    - 4096x4608x4096 1.010-1.014;
+    - 256x128x64 4096x2176x4096 1.010-1.012;
+    - 4096x2304x4096 1.008-1.011;
+  - the rest are 0.997-1.01;
+  - none is more than 0.3% slower.
+- **Against the separate reduce kernel**: level, geomean 0.999 and 1.002.
+- **timing.py** (`results/timing_rs_all.md`, GPU 1, two runs): all four points
+  have E = 0 and stride n, so v30 wt runs the old rs there. v30 wt / v29 wt is
+  0.905-0.999, from entries 8, 9 and 17. v30 l2 / v30 wt is unchanged at
+  1.001-1.049.
+
+**Docs**: `STREAMK_VARIANTS.md` concept 8 gains an rs all sub-section (what, why,
+the barrier-line issue, the fallback, the measurements). Its "settled earlier:
+all programs reading" line now says that compared a tile's own programs.
+
+**Out of scope, follow-ups**:
+- **XCD-local idle readers for the L2 exchange.** Only the idle programs on the
+  tile's XCD could join, and its flag rows would need room for them.
+- **`heuristics.default_fixup`** picks owner below split 8. rs now gains most at
+  small n, so the owner / rs crossover should be re-measured.
+
+## 19. Partial and store layouts without switches on the tile (2026-10-30)
+
+**Decision**: the partial offsets and the C / band store layouts no longer branch
+on the tile size. No timing change.
+
+**Code**:
+- **`lane_contiguous_offsets`** is one closed form for every quadrant size,
+  replacing the `HALF_M` / `HALF_N` branches:
+  - `f = in_block_row(r) + (r // 32) (VN MFMA_BLOCK_ELEMS)`;
+  - `g = in_block_col(c) + (c // 32) (MFMA_BLOCK_ELEMS - 32)`.
+  - At HALF 32 the block terms vanish; at HALF 128 `r // 32` equals the old
+    `(r // 32 % 2) + 2 (r // 64)`.
+  - `lane_map_matches` and its assert are unchanged.
+- **Named sizes**: `MFMA_LANE_ELEMS` (4), `MFMA_WARP_ELEMS` (256) and
+  `MFMA_BLOCK_ELEMS` (1024) are the elements of one 32x32 MFMA block held by a
+  lane, a warp and the block. `in_block_row` / `in_block_col` give the in-block
+  map with them. The old constants are now expressions:
+  - 512 is `2 MFMA_WARP_ELEMS`;
+  - 60, 240 and 992 are `16 MFMA_LANE_ELEMS - 4`, `MFMA_WARP_ELEMS - 16` and
+    `MFMA_BLOCK_ELEMS - 32`, each bit's new place value minus its old one.
+- **`reduce_scatter_slice`'s `in_blk`** uses the same constants, but keeps its own
+  expression without the modulo on bit 16 (its rows and columns are < 32).
+  - Calling the helpers there added 2-4 instructions per RS build.
+  - At 256x128x64 capped it also cost 80 accumulator moves and 108 VGPRs (292 to
+    400).
+  - A constexpr flag on the helpers changed the owner builds as well.
+- **Tried and dropped**: deriving the terms from the MFMA layout's linear-layout
+  bases (`partial_offset_terms` and four helpers, about 100 lines). Only the owner
+  and tree paths could have used it, since the RS readers pin the block order
+  anyway, so the exact-bases assert had to stay.
+- **VN-generic RS helpers**:
+  - `block_col` is `(v % VN) * 32`;
+  - the bias column uses `block_col`;
+  - `to_band` keeps only its general `[RB, CB, 32, 32]` path, the same element
+    order as the old `VN == 4` branches.
+- **`coalesced_store_layout(rows, cols, elem_bytes, num_warps)`** replaces both
+  `gStoreLayoutC` blocks, `reduce_variants.py`'s copy and `reduce_scatter_slice`'s
+  `SL` switch.
+  - It follows Triton's coalescing rule: up to 16 contiguous bytes per thread,
+    capped at an even share of the block; lanes across the columns, then rows;
+    warps down the rows.
+  - It matches every old layout except two:
+    - the 64x64 tile's C store, `[1, 8] / [16, 4]` (2x over-coverage, half the
+      lanes predicated off), becomes `[1, 4] / [8, 8]`;
+    - VN = 1 bands with NB >= 2 go from `[1, 4] / [8, 8]` to `[1, 8] / [16, 4]`.
+- `gStoreLayoutC` (`v9_ref.py`) is untouched.
+
+**Checks** (GPU 2, all eight tiles: 64x64x64, 128x64x64, 64x128x64,
+128x128x64, 128x128x128, 256x128x64, 128x256x64, 256x256x64):
+- `check_streamk.py`, the default and `--extra` cases, all 224 pass.
+- `check_reduce_variants.py` at 64x64x64 and 256x256x64, 109 cases each, passes:
+  results correct and bitwise equal to production.
+- `test_selection.py`, 21 pass.
+- A host-side brute force matches the closed form to the old map on every element
+  of all nine quadrant sizes, and the new `in_blk` to the old one.
+
+**Assembly** (AMDGCN, debug info stripped, against before the entry):
+- 175 of 224 builds are instruction-identical.
+- Outside 64x64x64 and 128x64x64, the rest differ by a few scalar instructions:
+  - the RS block column is `(v % VN) * 32` (`s_bfe_i32` instead of shifts);
+  - 128x128x128 spread is reordered only.
+- No `buffer_*` load or store changes outside the store-layout tiles, and no new
+  spills. The only other VGPR change is 256x256 `compact_rs`, 448 to 444.
+- **The store-layout helper**:
+  - Only 64x64x64 and 128x64x64 change.
+  - At 64x64, `buffer_store_dwordx4` with half the lanes off becomes
+    `buffer_store_dwordx2` with all lanes on, with half the LDS reads in the
+    conversion.
+  - VGPRs drop in most builds (kres_gt_rs 168 to 84, two_tile_kres 252 to 96,
+    ragged_m 280 to 88). They rise by 4-8 in four builds, and in ragged_n from
+    96 to 176, with no spills.
+  - At 128x64 a band's two `dwordx2` become one `dwordx4`.
+
+**Timing** (timing.py's method, before against after in one process, GPU 2, two
+runs of 9 and 15 rounds). new / old:
+
+| point | tile | shape | run 1 | run 2 |
+|---|---|---|---|---|
+| dp | 64x64x64 | 2048x2048x4096 | 0.998 | 0.999 |
+| capped | 64x64x64 | 1088x1024x8192 | 1.001 | 1.000 |
+| owner split 4 | 64x64x64 | 1088x1024x4096 | 1.003 | 0.999 |
+| rs split 4 | 64x64x64 | 1088x1024x4096 | 1.000 | 1.000 |
+| ragged N, owner | 64x64x64 | 1088x1016x4096 | 1.003 | 1.002 |
+| two-tile | 64x64x64 | 1088x1024x4096 | 0.999 | 0.997 |
+| rs split 4 | 128x64x64 | 2176x1024x4096 | 1.000 | 1.002 |
+| l2 split 4 | 128x64x64 | 2176x1024x4096 | 0.998 | 0.999 |
+| rs S = 16 | 256x256x64 | 4352x4096x8192 | 1.000 | 0.998 |
+| owner S = 16 | 256x256x64 | 4352x4096x8192 | 0.998 | 1.004 |
+| capped | 128x128x128 | 1024x1024x7168 | 1.000 | 1.000 |
+
+Every point is within 0.4%, inside the spreads (0.2-5.4%). The timing was taken
+with the derived offsets. The closed form's builds match those outside 64x64x64
+and 128x64x64, where its offset code is the original's.

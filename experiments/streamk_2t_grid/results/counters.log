@@ -1,0 +1,53 @@
+2026-11-02 21:26:46 guard: start on rocm-smi GPU 1: python experiments/streamk_2t_grid/counters.py --out experiments/streamk_2t_grid/results/counters.md
+W1102 21:26:46.736016 2033808 simple_timer.cpp:55] [rocprofv3] tool initialization ::     0.200768 sec
+W1102 21:26:46.736316 2033808 simple_timer.cpp:55] [rocprofv3] '/opt/venv/bin/python /home/jbowley/repos/gfx950-gluon-tutorials/experiments/streamk_2t_grid/../streamk_v31_rule/sweep.py worker --manifest /home/jbowley/repos/gfx950-gluon-tutorials/experiments/streamk_2t_grid/tmp/counters/manifest.json --points dp:256x256x64:3840x5120x8192,ow2:256x256x64:3840x5120x8192,rs4:256x256x64:3840x5120x8192,2t:256x256x64:3840x5120x8192,2tg240:256x256x64:3840x5120x8192,2tg224:256x256x64:3840x5120x8192,2tg200:256x256x64:3840x5120x8192,dp:256x256x64:4096x6144x8192,ow2:256x256x64:4096x6144x8192,2t:256x256x64:4096x6144x8192,2tg232:256x256x64:4096x6144x8192' ::     0.000000 sec
+W1102 21:26:47.714391 2033808 tool.cpp:3082] HSA version 1.21.0 initialized (instance=0)
+W1102 21:26:48.022763 2033973 simple_timer.cpp:55] [rocprofv3] tool initialization ::     0.197735 sec
+W1102 21:26:48.023060 2033973 simple_timer.cpp:55] [rocprofv3] '/bin/sh /sbin/ldconfig -p' ::     0.000000 sec
+W1102 21:26:49.492136 2033979 simple_timer.cpp:55] [rocprofv3] tool initialization ::     0.197956 sec
+W1102 21:26:49.492465 2033979 simple_timer.cpp:55] [rocprofv3] '/opt/venv/lib/python3.12/site-packages/_rocm_sdk_devel/bin/hipconfig --version' ::     0.000000 sec
+W1102 21:26:49.787781 2033982 simple_timer.cpp:55] [rocprofv3] tool initialization ::     0.198114 sec
+W1102 21:26:49.788092 2033982 simple_timer.cpp:55] [rocprofv3] 'sh -c -- /opt/venv/lib/python3.12/site-packages/_rocm_sdk_devel/lib/llvm/bin/clang++ --version' ::     0.000000 sec
+W1102 21:26:50.087688 2033985 simple_timer.cpp:55] [rocprofv3] tool initialization ::     0.202134 sec
+W1102 21:26:50.088046 2033985 simple_timer.cpp:55] [rocprofv3] '/opt/venv/lib/python3.12/site-packages/_rocm_sdk_devel/lib/llvm/bin/clang++ --version' ::     0.000000 sec
+W1102 21:26:50.381119 2033985 simple_timer.cpp:55] [rocprofv3] tool initialization ::     0.200979 sec
+W1102 21:26:50.381412 2033985 simple_timer.cpp:55] [rocprofv3] '/opt/venv/lib/python3.12/site-packages/_rocm_sdk_devel/lib/llvm/bin/clang++ --version' ::     0.000000 sec
+W1102 21:26:50.689508 2033985 simple_timer.cpp:55] [rocprofv3] tool initialization ::     0.198214 sec
+W1102 21:26:50.689819 2033985 simple_timer.cpp:55] [rocprofv3] '/opt/venv/lib/python3.12/site-packages/_rocm_sdk_devel/lib/llvm/bin/clang++ --version' ::     0.000000 sec
+W1102 21:26:50.691037 2033985 simple_timer.cpp:55] [rocprofv3] '/opt/venv/lib/python3.12/site-packages/_rocm_sdk_devel/lib/llvm/bin/clang++ --version' ::     0.001218 sec
+W1102 21:26:50.691664 2033985 simple_timer.cpp:55] [rocprofv3] output generation ::     0.000540 sec
+W1102 21:26:50.691758 2033985 simple_timer.cpp:55] [rocprofv3] tool finalization ::     0.000635 sec
+W1102 21:26:50.737467 2033979 simple_timer.cpp:55] [rocprofv3] '/opt/venv/lib/python3.12/site-packages/_rocm_sdk_devel/bin/hipconfig --version' ::     1.245002 sec
+W1102 21:26:50.738848 2033979 simple_timer.cpp:55] [rocprofv3] output generation ::     0.001202 sec
+W1102 21:26:50.738956 2033979 simple_timer.cpp:55] [rocprofv3] tool finalization ::     0.001313 sec
+[aiter] import [module_aiter_core] under /home/jbowley/repos/aiter/aiter/jit/module_aiter_core.so
+dp:256x256x64:3840x5120x8192 copies=11 correct=True
+ow2:256x256x64:3840x5120x8192 copies=11 correct=True
+rs4:256x256x64:3840x5120x8192 copies=11 correct=True
+2t:256x256x64:3840x5120x8192 copies=11 correct=True
+2tg240:256x256x64:3840x5120x8192 copies=11 correct=True
+2tg224:256x256x64:3840x5120x8192 copies=11 correct=True
+2tg200:256x256x64:3840x5120x8192 copies=11 correct=True
+dp:256x256x64:4096x6144x8192 copies=9 correct=True
+ow2:256x256x64:4096x6144x8192 copies=9 correct=True
+2t:256x256x64:4096x6144x8192 copies=9 correct=True
+2tg232:256x256x64:4096x6144x8192 copies=9 correct=True
+W1102 21:26:58.363476 2033808 simple_timer.cpp:55] [rocprofv3] '/opt/venv/bin/python /home/jbowley/repos/gfx950-gluon-tutorials/experiments/streamk_2t_grid/../streamk_v31_rule/sweep.py worker --manifest /home/jbowley/repos/gfx950-gluon-tutorials/experiments/streamk_2t_grid/tmp/counters/manifest.json --points dp:256x256x64:3840x5120x8192,ow2:256x256x64:3840x5120x8192,rs4:256x256x64:3840x5120x8192,2t:256x256x64:3840x5120x8192,2tg240:256x256x64:3840x5120x8192,2tg224:256x256x64:3840x5120x8192,2tg200:256x256x64:3840x5120x8192,dp:256x256x64:4096x6144x8192,ow2:256x256x64:4096x6144x8192,2t:256x256x64:4096x6144x8192,2tg232:256x256x64:4096x6144x8192' ::    11.627159 sec
+E1102 21:26:58.378174 2033808 output_stream.cpp:111] Opened result file: /home/jbowley/repos/gfx950-gluon-tutorials/experiments/streamk_2t_grid/tmp/counters/run_counter_collection.csv
+E1102 21:26:58.417820 2033808 output_stream.cpp:111] Opened result file: /home/jbowley/repos/gfx950-gluon-tutorials/experiments/streamk_2t_grid/tmp/counters/run_agent_info.csv
+W1102 21:26:58.419353 2033808 simple_timer.cpp:55] [rocprofv3] output generation ::     0.046001 sec
+W1102 21:26:58.421718 2033808 simple_timer.cpp:55] [rocprofv3] tool finalization ::     0.048369 sec
+| point | correct | L2 hit % | hits (M) | misses (M) |
+|---|---|---|---|---|
+| dp:256x256x64:3840x5120x8192 | True | 72.7 | 14.96 | 5.62 |
+| ow2:256x256x64:3840x5120x8192 | True | 73.7 | 15.38 | 5.50 |
+| rs4:256x256x64:3840x5120x8192 | True | 71.0 | 15.40 | 6.30 |
+| 2t:256x256x64:3840x5120x8192 | True | 46.8 | 10.53 | 12.00 |
+| 2tg240:256x256x64:3840x5120x8192 | True | 49.2 | 10.83 | 11.18 |
+| 2tg224:256x256x64:3840x5120x8192 | True | 43.6 | 9.72 | 12.57 |
+| 2tg200:256x256x64:3840x5120x8192 | True | 50.6 | 10.84 | 10.58 |
+| dp:256x256x64:4096x6144x8192 | True | 78.4 | 20.60 | 5.67 |
+| ow2:256x256x64:4096x6144x8192 | True | 76.2 | 20.63 | 6.45 |
+| 2t:256x256x64:4096x6144x8192 | True | 59.4 | 16.28 | 11.14 |
+| 2tg232:256x256x64:4096x6144x8192 | True | 30.6 | 8.59 | 19.52 |
+2026-11-02 21:26:58 guard: exit 0: python experiments/streamk_2t_grid/counters.py --out experiments/streamk_2t_grid/results/counters.md

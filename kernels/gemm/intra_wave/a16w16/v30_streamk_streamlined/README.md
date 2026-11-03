@@ -86,7 +86,9 @@ and omitted splits are rejected on this runtime path.
 The launcher obtains CU and XCD counts through AITER-compatible host helpers,
 then derives `S * split_n`, compact grid size, reader count, pair partitioning,
 and XCD placement. Tile-aligned uneven splits and a raw active-program override
-are not supported. Two-tile and spread always use all resident programs.
+are not supported. Two-tile and spread always use all resident programs. A
+compact launch (one-tile with no persistent phase) uses `S * split_n`
+programs, or with the L2 exchange `NUM_XCDS * ceil(S / NUM_XCDS) * split_n`.
 
 Experimental auto-tile and capped rules remain isolated in `heuristics.py` for
 offline config generation. They emit a complete dictionary before launch;
@@ -106,7 +108,10 @@ pairs from column zero.
 ## L2 exchange
 
 With `STREAMK_EXCHANGE="l2"` every program of a split tile runs on one XCD,
-and the partials and flags stay in that XCD's L2. There are no atomics and
+and the partials and flags stay in that XCD's L2. Each XCD runs
+`ceil(S / NUM_XCDS)` tiles; a compact launch sizes the grid to exactly that
+many programs per XCD (pid `p` runs on XCD `p % NUM_XCDS`), so with `S = 4`
+and `split_n = 4` it launches 32 programs, of which XCDs 4-7's are idle. There are no atomics and
 no host-side epoch. Each reader has a private row with one flag per writer
 in the tile; writers store 1 to their word in every row, and each reader
 polls its row with one L1-missing load and zeroes it once all are set. Only

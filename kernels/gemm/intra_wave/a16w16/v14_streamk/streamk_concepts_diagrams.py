@@ -329,6 +329,48 @@ def c08_rs():
     save(fig, "c08_rs.png")
 
 
+RS_ALL_SLICE = 5.5  # v30 entries 16 and 18: about 2.5 k-steps saved at S = 8, n = 2 (2.6-3.2 us)
+
+
+def c08b_rs_all():
+    """rs all: the CUs the tail leaves idle join the tile's barrier and read slices too."""
+    n, r_all = 2, 8
+    fig, axes = stacked("Reduce-scatter with all programs: idle CUs read slices too (n = 2 producers)",
+                        ns=(n, r_all))
+    rs_end = draw_rs(axes[0], n)
+    axes[0].set_title(f"rs: the n = {n} producers read 1/{n} each; ending {rs_end:.0f} k-steps",
+                      fontsize=9, loc="left")
+    ax = axes[1]
+    t_read = RS_STORE + RS_BARRIER
+    for r in range(r_all):
+        producer = r < n
+        if producer:
+            bar(ax, r, -3, 0, FULL_WAVE, "MAC" if r == 0 else None)
+            bar(ax, r, 0, RS_STORE, STORE, "store" if r == 0 else None, textcolour="white")
+            bar(ax, r, RS_STORE, t_read, label="barrier" if r == 0 else None, **WAIT)
+        else:
+            bar(ax, r, -3, 0, facecolor="white", edgecolor="grey", linestyle=":",
+                label="no tile" if r == n else None)
+            bar(ax, r, 0, t_read, label="arrive, wait" if r == n else None, **WAIT)
+        bar(ax, r, t_read, t_read + RS_ALL_SLICE, SLICE, f"read 1/{r_all} of all" if r == 0 else None,
+            textcolour="white")
+        bar(ax, r, t_read + RS_ALL_SLICE, t_read + RS_ALL_SLICE + RS_C, CSTORE)
+    end = t_read + RS_ALL_SLICE + RS_C
+    rows_axis(ax, [f"CU {r}" for r in range(n)] + [f"idle CU {r}" for r in range(n, r_all)],
+              xlabel="k-steps after the MAC phase")
+    ax.set_title(f"rs all: R = {r_all} readers, the {r_all - n} extra from CUs the tail left idle; "
+                 f"ending {end:.0f} k-steps", fontsize=9, loc="left")
+    for a in axes:
+        a.axvline(rs_end, color="black", linestyle="--", lw=1.0)
+        a.set_xlim(-3.5, 28)
+    axes[0].set_xlabel("")
+    rs_line = plt.Line2D([], [], color="black", linestyle="--", label="rs done, same n")
+    axes[1].legend(handles=[ENDING_LEGEND[i] for i in (0, 1, 3, 4)] + [rs_line], fontsize=7,
+                   frameon=False, loc="center left", bbox_to_anchor=(1.0, 0.5))
+    fig.tight_layout()
+    save(fig, "c08b_rs_all.png")
+
+
 def c11_bf16():
     fig, axes = stacked("bf16 partials: half the bytes to store and read; the sums stay fp32", ns=(4, 4))
     for ax, (name, st, sl) in zip(axes, (("fp32 partials, 1 rounding", RS_STORE, RS_SLICE),
@@ -468,7 +510,7 @@ def c12_l2():
 
 def main():
     for f in (c01_dp, c02_one_tile, c03_two_tile, c04_e2e, c05_aligned, c06_order, c07_owner, c08_rs,
-              c09_chunk_major, c10_atomic, c11_bf16, c12_l2):
+              c08b_rs_all, c09_chunk_major, c10_atomic, c11_bf16, c12_l2):
         f()
 
 

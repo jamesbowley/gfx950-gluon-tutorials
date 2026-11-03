@@ -51,8 +51,11 @@ Required Stream-K controls, with representative values:
   ``"spread"`` distributes the ``S>P/2`` tail tiles end to end.
 * ``split_n=4`` assigns four programs to each tail tile (``one_tile`` only).
 * ``fixup="owner"`` gathers one-tile partials on one program; ``"rs"`` has the
-  programs reduce-scatter output slices. Fixup does not change the K-pair
-  assignment above.
+  programs reduce-scatter output slices. With the wt exchange the programs the tail
+  leaves idle read slices too: R = max(min(blocks, pow2_floor(P / S)), own readers)
+  per tile, each tile's barrier in its own cache line (selection.rs_readers,
+  WORKLOG entries 16 and 18). Without idle programs to add it is the plain
+  reduce-scatter. Fixup does not change the K-pair assignment above.
 * ``exchange="wt"`` uses write-through partials; ``"l2"`` keeps the exchange
   XCD-local (``one_tile`` with ``rs`` only) and requires a tile's programs to
   fit on one XCD.
@@ -86,7 +89,7 @@ from triton.runtime.jit import constexpr_function
 
 from .hardware import streamk_topology
 from .runtime import streamk_workspace
-from .selection import StreamKConfig
+from .selection import StreamKConfig, reduce_scatter_config, rs_readers
 
 NUM_WARPS = 4
 
@@ -120,11 +123,33 @@ def compute_gload_layout(shared_layout, load_contig, num_warps, threads_per_warp
     )
 
 
+@constexpr_function
+def coalesced_store_layout(rows, cols, elem_bytes, num_warps, threads_per_warp=64):
+    """The row-major store layout of a rows x cols block that Triton's coalescing
+    derives: up to 16 contiguous bytes per thread (no more than an even share of the
+    block, so no thread repeats another's elements), the lanes across the columns
+    and then down the rows, the warps down the rows."""
+    per_thread = max(rows * cols // (num_warps * threads_per_warp), 1)
+    contig = min(16 // elem_bytes, cols, per_thread)
+    lanes_n = min(cols // contig, threads_per_warp)
+    return gl.BlockedLayout(
+        [1, contig], [threads_per_warp // lanes_n, lanes_n], [num_warps, 1], [1, 0]
+    )
+
+
 @gluon.jit
 def even_split_start(i, TOTAL, PARTS: gl.constexpr):
     """First item of part i when TOTAL items are split over PARTS parts as evenly as
     possible: every part gets TOTAL // PARTS items, the first TOTAL % PARTS one more.
-    Part i covers [even_split_start(i), even_split_start(i + 1))."""
+    Part i covers [even_split_start(i), even_split_start(i + 1)).
+
+    TOTAL = 10, PARTS = 4 (base 2, extra 2; b = base item, + = extra item):
+
+        item:   0  1  2 | 3  4  5 | 6  7 | 8  9
+                b  b  + | b  b  + | b  b | b  b
+        part:   0         1         2      3
+        start:  0         3         6      8     = i * 2 + min(i, 2)
+    """
     return i * (TOTAL // PARTS) + gl.minimum(i, TOTAL % PARTS)
 
 
@@ -135,15 +160,57 @@ def even_split_size(i, TOTAL, PARTS: gl.constexpr):
 
 
 @gluon.jit
-def round_robin_to_xcd_blocked(i, count, NUM_XCDS: gl.constexpr):
-    """Id i of count, placed round-robin (it runs on XCD i % NUM_XCDS), renumbered so
-    that each XCD's ids form one contiguous block of an even split of count."""
-    return even_split_start(i % NUM_XCDS, count, NUM_XCDS) + i // NUM_XCDS
+def ragged_transpose(i, count, PARTS: gl.constexpr):
+    """Id i of count, read row-major from a (local, part) grid of PARTS columns
+    (part i % PARTS, local i // PARTS), renumbered column-major so that each part's
+    ids form one contiguous block of even_split_start's split. The grid is ragged
+    when PARTS does not divide count; the result is a permutation of [0, count).
+
+    The main use is XCD placement: hardware runs program p on XCD p % NUM_XCDS, so
+    PARTS = NUM_XCDS gives each XCD one contiguous block of ids.
+
+    count = 10, PARTS = NUM_XCDS = 4 (xcd = i % 4, local = i // 4):
+
+                  local 0  local 1  local 2
+        xcd 0:    i 0      i 4      i 8      -> 0 1 2   (start 0)
+        xcd 1:    i 1      i 5      i 9      -> 3 4 5   (start 3)
+        xcd 2:    i 2      i 6               -> 6 7     (start 6)
+        xcd 3:    i 3      i 7               -> 8 9     (start 8)
+    """
+    return even_split_start(i % PARTS, count, PARTS) + i // PARTS
 
 
 @gluon.jit
-def _get_pids(
-    pid,
+def group_m_tile_coords(
+    tile,
+    M,
+    N,
+    BM: gl.constexpr,
+    BN: gl.constexpr,
+    GROUP_SIZE_M: gl.constexpr,
+):
+    """(m, n) coordinates in the tile grid of linear tile id tile, under the
+    GROUP_SIZE_M swizzle (GROUP_SIZE_M rows of tiles walked column by column)."""
+    num_pid_m = gl.cdiv(M, BM)
+    num_pid_n = gl.cdiv(N, BN)
+
+    if GROUP_SIZE_M == 1:
+        pid_m = tile // num_pid_n
+        pid_n = tile % num_pid_n
+    else:
+        num_pid_in_group = GROUP_SIZE_M * num_pid_n
+        group_id = tile // num_pid_in_group
+        first_pid_m = group_id * GROUP_SIZE_M
+        group_size_m = min(num_pid_m - first_pid_m, GROUP_SIZE_M)
+        pid_m = first_pid_m + ((tile % num_pid_in_group) % group_size_m)
+        pid_n = (tile % num_pid_in_group) // group_size_m
+
+    return pid_m, pid_n
+
+
+@gluon.jit
+def vpid_tile_coords(
+    vpid,
     M,
     N,
     BM: gl.constexpr,
@@ -152,28 +219,14 @@ def _get_pids(
     NUM_XCDS: gl.constexpr,
     GROUP_SIZE_M: gl.constexpr,
 ):
-    """XCD-aware PID remapping + GROUP_SIZE_M swizzle. Active at any grid_mn.
-
-    pid is a virtual pid of the persistent loop (program id + i NUM_PROGRAMS); with
-    NUM_XCDS 1 it is a tile id and only the swizzle applies."""
-    num_pid_m = gl.cdiv(M, BM)
-    num_pid_n = gl.cdiv(N, BN)
-
+    """(m, n) coordinates of the tile that persistent-loop virtual pid vpid
+    (program id + i NUM_PROGRAMS, < GRID_MN) computes. Its tile id is its XCD-blocked
+    rank among the GRID_MN virtual pids (ragged_transpose; vpid stays on its
+    program's XCD since NUM_XCDS divides NUM_PROGRAMS), then group_m_tile_coords."""
+    tile = vpid
     if NUM_XCDS != 1:
-        pid = round_robin_to_xcd_blocked(pid, GRID_MN, NUM_XCDS)
-
-    if GROUP_SIZE_M == 1:
-        pid_m = pid // num_pid_n
-        pid_n = pid % num_pid_n
-    else:
-        num_pid_in_group = GROUP_SIZE_M * num_pid_n
-        group_id = pid // num_pid_in_group
-        first_pid_m = group_id * GROUP_SIZE_M
-        group_size_m = min(num_pid_m - first_pid_m, GROUP_SIZE_M)
-        pid_m = first_pid_m + ((pid % num_pid_in_group) % group_size_m)
-        pid_n = (pid % num_pid_in_group) // group_size_m
-
-    return pid_m, pid_n
+        tile = ragged_transpose(vpid, GRID_MN, NUM_XCDS)
+    return group_m_tile_coords(tile, M, N, BM, BN, GROUP_SIZE_M)
 
 
 @gluon.jit
@@ -212,10 +265,11 @@ def _gemm_a16w16_compute_bound_kernel(
     RS_R: gl.constexpr,
     END_TO_END: gl.constexpr,
     L2: gl.constexpr = False,
-    XCD_SPLIT: gl.constexpr = 1,
     HAS_FULL: gl.constexpr = True,
     GRID: gl.constexpr = 0,
     OWNER_QPB: gl.constexpr = 1,
+    RS_E: gl.constexpr = 0,
+    BAR_STRIDE: gl.constexpr = 0,
 ):
     """
     Stream-K on top of v9_beyond_hotloop: persistent full tiles followed by a uniform
@@ -229,7 +283,8 @@ def _gemm_a16w16_compute_bound_kernel(
        tile ids, XCD-remapped over those ids alone: each tile's epilogue prefetches
        the first K-step pair of the program's next tile. The last trip's epilogue
        prefetches the first pair of the program's first Stream-K segment, which then
-       skips its prologue (masked off when the program has no segment). Without a
+       skips its prologue (on a ragged K masked off when the program has no segment;
+       on an even K the idle program's target is in bounds and never read). Without a
        Stream-K tail it loads the last pair of tile total_full_tiles - 1, which is
        discarded.
     2. A Stream-K tail over the last STREAMK_TILES tile ids, split in units of a
@@ -333,19 +388,18 @@ def _gemm_a16w16_compute_bound_kernel(
                 SPLIT_N,
                 END_TO_END,
                 L2,
-                XCD_SPLIT,
                 NUM_PROGRAMS,
                 NUM_XCDS,
             )
-            sk_m, sk_n = _get_pids(
-                sk_tile, M, N, BLOCK_M, BLOCK_N, 0, 1, GROUP_SIZE_M
+            sk_m, sk_n = group_m_tile_coords(
+                sk_tile, M, N, BLOCK_M, BLOCK_N, GROUP_SIZE_M
             )
             sk_col = gl.where(
                 sk_k0 == 0, K_PAD - 2 * BLOCK_K, (sk_k0 - 2) * BLOCK_K
             ).to(gl.int64)
             sk_khi = gl.where(sk_k0 == 0, 2 * BLOCK_K - K_RES, 2 * BLOCK_K) * sk_has
             sk_target = (sk_m, sk_n, sk_col, sk_khi)
-        first_m, first_n = _get_pids(
+        first_m, first_n = vpid_tile_coords(
             start,
             M,
             N,
@@ -452,28 +506,27 @@ def _gemm_a16w16_compute_bound_kernel(
 
     if END_TO_END and STREAMK_TILES > 0:
         # Two-tile and spread always use the full resident grid.
-        SK_PAIRS: gl.constexpr = STREAMK_TILES * PAIRS_PER_TILE
-        L: gl.constexpr = SK_PAIRS // NUM_PROGRAMS
-        R: gl.constexpr = SK_PAIRS % NUM_PROGRAMS
-        gl.static_assert(NUM_PROGRAMS <= SK_PAIRS)
-        rank = streamk_rank(NUM_PROGRAMS, NUM_XCDS)
-        sk_start = even_split_start(rank, SK_PAIRS, NUM_PROGRAMS)
-        cur = even_split_start(rank + 1, SK_PAIRS, NUM_PROGRAMS)
+        rank, sk_pair_start, seg_end = e2e_pair_range(
+            STREAMK_TILES, PAIRS_PER_TILE, NUM_PROGRAMS, NUM_XCDS
+        )
         # Segments run last to first (STREAMK_VARIANTS.md, concept 6): each program
         # starts at k-step 0 of its last tile, so an XCD's programs stay in step and
         # share A / B in L2 (forward order drops two-tile's hits from 68% to 9%), and
         # it publishes its partial before the owned tile's wait.
         if SK_PREFETCH:
             # The first segment, whose first pair the last persistent trip loaded.
-            t = (cur - 1) // PAIRS_PER_TILE
-            tile_start = t * PAIRS_PER_TILE
-            seg_start = gl.maximum(tile_start, sk_start)
-            is_owner = (cur == tile_start + PAIRS_PER_TILE).to(gl.int32)
-            n_peers = (rank - streamk_owner_of(tile_start, L, R)) * is_owner
+            sk_t, seg_start, k0, is_owner, n_peers = e2e_segment_ending_at(
+                seg_end,
+                sk_pair_start,
+                rank,
+                STREAMK_TILES,
+                PAIRS_PER_TILE,
+                NUM_PROGRAMS,
+            )
             quadrant_segment(
-                total_full_tiles + t,
-                (seg_start - tile_start) * 2,
-                cur - seg_start,
+                total_full_tiles + sk_t,
+                k0,
+                seg_end - seg_start,
                 1 - is_owner,
                 n_peers,
                 rank,
@@ -519,17 +572,20 @@ def _gemm_a16w16_compute_bound_kernel(
                 a_top,
                 b_left,
             )
-            cur = seg_start
-        while cur > sk_start:
-            t = (cur - 1) // PAIRS_PER_TILE
-            tile_start = t * PAIRS_PER_TILE
-            seg_start = gl.maximum(tile_start, sk_start)
-            is_owner = (cur == tile_start + PAIRS_PER_TILE).to(gl.int32)
-            n_peers = (rank - streamk_owner_of(tile_start, L, R)) * is_owner
+            seg_end = seg_start
+        while seg_end > sk_pair_start:
+            sk_t, seg_start, k0, is_owner, n_peers = e2e_segment_ending_at(
+                seg_end,
+                sk_pair_start,
+                rank,
+                STREAMK_TILES,
+                PAIRS_PER_TILE,
+                NUM_PROGRAMS,
+            )
             quadrant_segment(
-                total_full_tiles + t,
-                (seg_start - tile_start) * 2,
-                cur - seg_start,
+                total_full_tiles + sk_t,
+                k0,
+                seg_end - seg_start,
                 1 - is_owner,
                 n_peers,
                 rank,
@@ -572,35 +628,44 @@ def _gemm_a16w16_compute_bound_kernel(
                 OWNER_QPB,
                 0,
             )
-            cur = seg_start
+            seg_end = seg_start
     elif STREAMK_TILES > 0:
         # Uniform tile-aligned split: every tile has exactly SPLIT_N programs.
         WORKING: gl.constexpr = STREAMK_TILES * SPLIT_N
         NBLK: gl.constexpr = BLOCK_M * BLOCK_N // 1024
         gl.static_assert(SPLIT_N <= PAIRS_PER_TILE)
-        gl.static_assert(RS_R > 0 and RS_R <= SPLIT_N)
-        gl.static_assert(
-            2 * RS_R > SPLIT_N or RS_R == NBLK,
-            "RS_R does not match SPLIT_N",
-        )
+        # The wt reduce-scatter reads with RS_R = SPLIT_N + RS_E programs when RS_E
+        # idle programs join each tile (rs_readers); otherwise with its own.
+        RS_ALL: gl.constexpr = REDUCE_SCATTER and not L2
+        if RS_ALL and RS_E > 0:
+            gl.static_assert(RS_R == SPLIT_N + RS_E and RS_R <= NBLK)
+        else:
+            gl.static_assert(RS_R > 0 and RS_R <= SPLIT_N)
+            gl.static_assert(
+                2 * RS_R > SPLIT_N or RS_R == NBLK,
+                "RS_R does not match SPLIT_N",
+            )
         gl.static_assert((RS_R & (RS_R - 1)) == 0)
         gl.static_assert(RS_NB == 1 or RS_NB * RS_R <= NBLK)
         if L2:
-            gl.static_assert(GRID == 0)
-            rank = streamk_rank(NUM_PROGRAMS, NUM_XCDS)
+            L2_GRID: gl.constexpr = NUM_PROGRAMS if GRID == 0 else GRID
+            gl.static_assert(L2_GRID % NUM_XCDS == 0)
+            rank = xcd_blocked_rank(L2_GRID, NUM_XCDS)
             t, j, n_tile = xcd_local_chunk_of(
                 rank,
                 STREAMK_TILES,
-                NUM_PROGRAMS // NUM_XCDS,
+                L2_GRID // NUM_XCDS,
                 NUM_XCDS,
-                XCD_SPLIT,
+                SPLIT_N,
             )
             active = n_tile > 0
         else:
-            if GRID > 0:
-                rank = streamk_rank(GRID, NUM_XCDS)
+            # A compact launch with extra readers ranks its producers as a full
+            # grid does: pids from WORKING are the readers.
+            if GRID > 0 and RS_E == 0:
+                rank = xcd_blocked_rank(GRID, NUM_XCDS)
             else:
-                rank = streamk_rank(WORKING, NUM_XCDS, IDLE=True)
+                rank = xcd_blocked_rank(WORKING, NUM_XCDS, IDLE=True)
             active = rank < WORKING
             t = rank // SPLIT_N
             j = rank % SPLIT_N
@@ -657,7 +722,41 @@ def _gemm_a16w16_compute_bound_kernel(
                 SK_PREFETCH,
                 a_top,
                 b_left,
+                RS_E,
+                BAR_STRIDE,
             )
+        if RS_ALL and RS_E > 0:
+            # Programs without a segment (hardware pids from WORKING) read too.
+            e = gl.program_id(axis=0) - WORKING
+            if (e >= 0) & (e < STREAMK_TILES * RS_E):
+                # The last trip's prefetch (unmasked on an even K) may still be in
+                # flight into the LDS the slice's layout conversions use.
+                gl.amd.cdna4.async_copy.wait_group(0)
+                rs_extra_reader(
+                    e // RS_E,
+                    SPLIT_N + e % RS_E,
+                    total_full_tiles,
+                    p_ptr,
+                    bias_ptr,
+                    c_ptr,
+                    sync_ptr,
+                    M,
+                    N,
+                    stride_cm,
+                    stride_cn,
+                    BLOCK_M,
+                    BLOCK_N,
+                    GROUP_SIZE_M,
+                    SPLIT_N,
+                    RS_R,
+                    RS_E,
+                    RS_NB,
+                    RS_U,
+                    ADD_BIAS,
+                    EVEN_M,
+                    EVEN_N,
+                    BAR_STRIDE,
+                )
 
 
 # ---------------------------------------------------------------------------------
@@ -1138,9 +1237,11 @@ def persistent_tile(
     epilogue, the epilogue prefetching the next tile.
 
     SK_PREFETCH: on the program's last trip the prefetch loads sk_target = (m, n,
-    column, k_hi), the first pair of the program's first Stream-K segment, keeping its
-    first k_hi K values (0: masked off). Without it the last trip's prefetch stays
-    unmasked and is discarded: masks cost more than the loads
+    column, k_hi), the first pair of the program's first Stream-K segment. On a ragged
+    K it keeps the first k_hi K values (0: masked off). On an even K it is unmasked:
+    k_hi is 2 BLOCK_K, or 0 on an idle program, whose target (Stream-K tile 0's last
+    pair) is in bounds and never read. Without SK_PREFETCH the last trip's prefetch
+    stays unmasked and is discarded. Either way masks cost more than the loads
     (results/last_prefetch.md).
 
     Expects the tile's first pair in flight in buffers 0 and 1 and its first operands in
@@ -1165,10 +1266,10 @@ def persistent_tile(
     )
     iterMax = gl.cdiv(K, BLOCK_K)
 
-    pid_m, pid_n = _get_pids(
+    pid_m, pid_n = vpid_tile_coords(
         vpid, M, N, BLOCK_M, BLOCK_N, total_full_tiles, NUM_XCDS, GROUP_SIZE_M
     )
-    next_m, next_n = _get_pids(
+    next_m, next_n = vpid_tile_coords(
         min(vpid + NUM_PROGRAMS, total_full_tiles - 1),
         M,
         N,
@@ -1265,13 +1366,16 @@ def persistent_tile(
     na_top, na_bot, na_bot_shift, na_odd_shift = na_addr
     nb_left, nb_right, nb_right_shift, nb_odd_shift = nb_addr
     # Computed here rather than with a_next, so they are not live across the K loop.
-    if SK_PREFETCH:
+    if SK_PREFETCH and not EVEN_K:
         k_hi = gl.where(has_next, 2 * BLOCK_K - K_RES, sk_khi)
         mask_a0 = k_tail_mask(k_hi, 0, BLOCK_K, gLoadLayoutA, False)
         mask_b0 = k_tail_mask(k_hi, 0, BLOCK_K, gLoadLayoutB, True)
         mask_a1 = k_tail_mask(k_hi, 1, BLOCK_K, gLoadLayoutA, False)
         mask_b1 = k_tail_mask(k_hi, 1, BLOCK_K, gLoadLayoutB, True)
     elif EVEN_K:
+        # Also with SK_PREFETCH: an idle program's target is in bounds and never
+        # read. Dropping the masks frees registers, but at the 512-VGPR limit
+        # (256x256x64, ragged M with bias) the earlier loads add spills; accepted.
         mask_a0, mask_b0, mask_a1, mask_b1 = None, None, None, None
     else:
         mask_a0, mask_b0, mask_a1, mask_b1 = tail_pair_masks(
@@ -1288,14 +1392,14 @@ def persistent_tile(
     ## Epilogue: 4-quadrant stores with natural-pipeline ordering, as in v9, each
     ## async copy prefetching the next tile's first pair.
 
-    # Store layout sized to the half tile: 8 contiguous elements per thread keep the
-    # 16-byte store, and one warp spans exactly BLOCK_N // 2 columns ([4, 16] lanes at
-    # BLOCK_N = 256, the tutorial's constant).
-    STORE_CONTIG: gl.constexpr = 8
-    STORE_LANES_N: gl.constexpr = (BLOCK_N // 2) // STORE_CONTIG
-    STORE_LANES_M: gl.constexpr = 64 // STORE_LANES_N
-    gStoreLayoutC: gl.constexpr = gl.BlockedLayout(
-        [1, STORE_CONTIG], [STORE_LANES_M, STORE_LANES_N], [4, 1], [1, 0]
+    # Store layout sized to the half tile: 16 contiguous bytes per thread where the
+    # quadrant has enough elements, and one warp spans BLOCK_N // 2 columns ([4, 16]
+    # lanes at BLOCK_N = 256, the tutorial's constant).
+    gStoreLayoutC: gl.constexpr = coalesced_store_layout(
+        BLOCK_M // 2,
+        BLOCK_N // 2,
+        c_ptr.dtype.element_ty.primitive_bitwidth // 8,
+        gl.num_warps(),
     )
 
     offs_cm = gl.arange(0, BLOCK_M // 2, gl.SliceLayout(1, gStoreLayoutC))
@@ -1444,22 +1548,26 @@ def persistent_tile(
 # ---------------------------------------------------------------------------------
 # Stream-K: programs and tiles
 # ---------------------------------------------------------------------------------
-# The persistent loop covers the XCD-remapped tile ids [0, total_full_tiles) (_get_pids
-# with GRID_MN = total_full_tiles), so Stream-K tile t is tile total_full_tiles + t.
+# The persistent loop covers the XCD-remapped tile ids [0, total_full_tiles)
+# (vpid_tile_coords with GRID_MN = total_full_tiles), so Stream-K tile t is tile
+# total_full_tiles + t.
 
 
 @gluon.jit
-def streamk_rank(N: gl.constexpr, NUM_XCDS: gl.constexpr, IDLE: gl.constexpr = False):
-    """Rank of this program among the N programs taking part in Stream-K: an
-    XCD-blocked id, so each XCD's ranks are contiguous (hardware pid p runs on XCD
-    p % NUM_XCDS; the first N % NUM_XCDS XCDs hold one rank more). The participants
-    are hardware pids 0 .. N-1, so when fewer than the launched programs take part the
-    idle ones are spread over the XCDs instead of packed onto the last XCDs. IDLE says
-    the launch has programs beyond N; they get rank N."""
+def xcd_blocked_rank(
+    N: gl.constexpr, NUM_XCDS: gl.constexpr, IDLE: gl.constexpr = False
+):
+    """Rank of this program among the N participating programs: an XCD-blocked id,
+    so each XCD's ranks are contiguous (hardware pid p runs on XCD p % NUM_XCDS; the
+    first N % NUM_XCDS XCDs hold one rank more). The participants are hardware pids
+    0 .. N-1, so when fewer than the launched programs take part the idle ones are
+    spread over the XCDs instead of packed onto the last XCDs. IDLE says the launch
+    has programs beyond N; they get rank N. With N <= NUM_XCDS the transpose is the
+    identity on pid < N, so it is skipped."""
     pid = gl.program_id(axis=0)
     rank = pid
-    if NUM_XCDS != 1:
-        rank = round_robin_to_xcd_blocked(pid, N, NUM_XCDS)
+    if NUM_XCDS != 1 and N > NUM_XCDS:
+        rank = ragged_transpose(pid, N, NUM_XCDS)
     if IDLE:
         rank = gl.where(pid < N, rank, N)
     return rank
@@ -1473,72 +1581,120 @@ def streamk_first_segment(
     SPLIT_N: gl.constexpr,
     END_TO_END: gl.constexpr,
     L2: gl.constexpr,
-    XCD_SPLIT: gl.constexpr,
     NUM_PROGRAMS: gl.constexpr,
     NUM_XCDS: gl.constexpr,
 ):
     """(has, tile id, k0) of the first segment the Stream-K phase runs on this program
     (the kernel's segment assignment, full-grid launches only); has is 0 for an idle
-    program, whose tile and k0 are then tile 0's last pair."""
+    program, whose tile and k0 are then tile 0's last pair. k0 is a logical K-step:
+    pair 0 is loaded from the physical last pair (see quadrant_segment)."""
     if END_TO_END:
-        SK_PAIRS: gl.constexpr = STREAMK_TILES * PAIRS_PER_TILE
-        rank = streamk_rank(NUM_PROGRAMS, NUM_XCDS)
-        sk_start = even_split_start(rank, SK_PAIRS, NUM_PROGRAMS)
-        cur = even_split_start(rank + 1, SK_PAIRS, NUM_PROGRAMS)
-        t = (cur - 1) // PAIRS_PER_TILE
-        tile_start = t * PAIRS_PER_TILE
-        k0 = (gl.maximum(tile_start, sk_start) - tile_start) * 2
+        rank, sk_pair_start, sk_pair_end = e2e_pair_range(
+            STREAMK_TILES, PAIRS_PER_TILE, NUM_PROGRAMS, NUM_XCDS
+        )
+        sk_t, _, k0, _, _ = e2e_segment_ending_at(
+            sk_pair_end,
+            sk_pair_start,
+            rank,
+            STREAMK_TILES,
+            PAIRS_PER_TILE,
+            NUM_PROGRAMS,
+        )
         has = 1
     else:
         if L2:
-            rank = streamk_rank(NUM_PROGRAMS, NUM_XCDS)
-            t, j, n_tile = xcd_local_chunk_of(
-                rank, STREAMK_TILES, NUM_PROGRAMS // NUM_XCDS, NUM_XCDS, XCD_SPLIT
+            rank = xcd_blocked_rank(NUM_PROGRAMS, NUM_XCDS)
+            sk_t, j, n_tile = xcd_local_chunk_of(
+                rank, STREAMK_TILES, NUM_PROGRAMS // NUM_XCDS, NUM_XCDS, SPLIT_N
             )
             has = (n_tile > 0).to(gl.int32)
         else:
-            rank = streamk_rank(STREAMK_TILES * SPLIT_N, NUM_XCDS, IDLE=True)
+            rank = xcd_blocked_rank(STREAMK_TILES * SPLIT_N, NUM_XCDS, IDLE=True)
             has = (rank < STREAMK_TILES * SPLIT_N).to(gl.int32)
-            t = rank // SPLIT_N
+            sk_t = rank // SPLIT_N
             j = rank % SPLIT_N
         k0 = even_split_start(j, PAIRS_PER_TILE, SPLIT_N) * 2 * has
-        t = t * has
-    return has, total_full_tiles + t, k0
+        sk_t = sk_t * has
+    return has, total_full_tiles + sk_t, k0
 
 
 @gluon.jit
 def xcd_local_chunk_of(
     rank,
     S: gl.constexpr,
-    PER: gl.constexpr,
+    PROGS_PER_XCD: gl.constexpr,
     NUM_XCDS: gl.constexpr,
-    N: gl.constexpr,
+    SPLIT_N: gl.constexpr,
 ):
     """(tile, chunk, programs on the tile) of the program with this rank in the
-    XCD-local split (l2), with 0 programs if it idles. XCD x = rank // PER owns part x
-    of an even split of the S Stream-K tiles over the XCDs; its local program l works
-    on its tile l // N as chunk l % N, so a tile's N programs are on one XCD. The host
-    checks ceil(S / NUM_XCDS) N <= PER."""
-    x = rank // PER
-    local = rank % PER
-    tl = local // N
+    XCD-local split (l2), with 0 programs if it idles. XCD x = rank // PROGS_PER_XCD
+    owns part x of an even split of the S Stream-K tiles over the XCDs; its local
+    program l works on its tile l // SPLIT_N as chunk l % SPLIT_N, so a tile's SPLIT_N
+    programs are on one XCD. The host checks
+    ceil(S / NUM_XCDS) * SPLIT_N <= PROGS_PER_XCD."""
+    x = rank // PROGS_PER_XCD
+    local = rank % PROGS_PER_XCD
+    tl = local // SPLIT_N
     t = even_split_start(x, S, NUM_XCDS) + tl
-    n = N * (tl < even_split_size(x, S, NUM_XCDS)).to(gl.int32)
-    return t, local % N, n
+    n_tile = SPLIT_N * (tl < even_split_size(x, S, NUM_XCDS)).to(gl.int32)
+    return t, local % SPLIT_N, n_tile
 
 
 @gluon.jit
-def streamk_owner_of(i, L: gl.constexpr, R: gl.constexpr):
-    """End-to-end split: the program whose range holds pair i, when the first R
-    programs hold L + 1 pairs and the rest L."""
+def e2e_rank_of_pair(i, L: gl.constexpr, R: gl.constexpr):
+    """End-to-end split: rank of the program whose range holds pair i, when the first
+    R programs hold L + 1 pairs and the rest L."""
     head: gl.constexpr = R * (L + 1)
     if L == 0:
-        owner = i // (L + 1)
+        rank = i // (L + 1)
     else:
-        owner = i // (L + 1)
+        rank = i // (L + 1)
         if i >= head:
-            owner = R + (i - head) // L
-    return owner
+            rank = R + (i - head) // L
+    return rank
+
+
+@gluon.jit
+def e2e_pair_range(
+    STREAMK_TILES: gl.constexpr,
+    PAIRS_PER_TILE: gl.constexpr,
+    NUM_PROGRAMS: gl.constexpr,
+    NUM_XCDS: gl.constexpr,
+):
+    """End-to-end split: (rank, sk_pair_start, sk_pair_end) of this program, whose range
+    [sk_pair_start, sk_pair_end) of the Stream-K tiles' pairs is part rank of an even
+    split over the full grid (XCD-blocked ranks)."""
+    SK_PAIRS: gl.constexpr = STREAMK_TILES * PAIRS_PER_TILE
+    gl.static_assert(NUM_PROGRAMS <= SK_PAIRS)
+    rank = xcd_blocked_rank(NUM_PROGRAMS, NUM_XCDS)
+    sk_pair_start = even_split_start(rank, SK_PAIRS, NUM_PROGRAMS)
+    sk_pair_end = even_split_start(rank + 1, SK_PAIRS, NUM_PROGRAMS)
+    return rank, sk_pair_start, sk_pair_end
+
+
+@gluon.jit
+def e2e_segment_ending_at(
+    seg_end,
+    sk_pair_start,
+    rank,
+    STREAMK_TILES: gl.constexpr,
+    PAIRS_PER_TILE: gl.constexpr,
+    NUM_PROGRAMS: gl.constexpr,
+):
+    """End-to-end split, segments run last to first (STREAMK_VARIANTS.md, concept 6):
+    (tile t, seg_start, k0, is_owner, n_peers) of this program's segment that ends at
+    pair seg_end. It covers pairs [seg_start, seg_end) of Stream-K tile t, from logical
+    K-step k0. is_owner: it holds the tile's last pair and collects the tile. n_peers:
+    the programs holding the tile's earlier pairs (0 unless is_owner)."""
+    SK_PAIRS: gl.constexpr = STREAMK_TILES * PAIRS_PER_TILE
+    L: gl.constexpr = SK_PAIRS // NUM_PROGRAMS
+    R: gl.constexpr = SK_PAIRS % NUM_PROGRAMS
+    t = (seg_end - 1) // PAIRS_PER_TILE
+    tile_pair_start = t * PAIRS_PER_TILE
+    seg_start = gl.maximum(tile_pair_start, sk_pair_start)
+    is_owner = (seg_end == tile_pair_start + PAIRS_PER_TILE).to(gl.int32)
+    n_peers = (rank - e2e_rank_of_pair(tile_pair_start, L, R)) * is_owner
+    return t, seg_start, (seg_start - tile_pair_start) * 2, is_owner, n_peers
 
 
 # ---------------------------------------------------------------------------------
@@ -1704,6 +1860,17 @@ def l2_tile_barrier(
 # vector), each a 32x32 square of the tile.
 # ---------------------------------------------------------------------------------
 
+# One 32x32 MFMA accumulator block (a register vector over 4 warps): each warp holds
+# one 16x16 MFMA output, in which lane l holds row l % 16, columns 4 (l // 16) .. + 3.
+# Its elements are stored [warp][lane][4 registers].
+MFMA_DIM = gl.constexpr(16)  # rows and columns of one warp's MFMA output
+MFMA_BLOCK_DIM = gl.constexpr(2 * MFMA_DIM.value)  # 32, the 2 x 2 warps' outputs
+MFMA_LANE_ELEMS = gl.constexpr(4)  # registers 0-3 of a lane, 4 adjacent columns
+# 64, the 4 columns of 16 lanes
+MFMA_GROUP_ELEMS = gl.constexpr(MFMA_DIM.value * MFMA_LANE_ELEMS.value)
+MFMA_WARP_ELEMS = gl.constexpr(64 * MFMA_LANE_ELEMS.value)  # 256, a 16x16 output
+MFMA_BLOCK_ELEMS = gl.constexpr(4 * MFMA_WARP_ELEMS.value)  # 1024, the 32x32 block
+
 
 @gluon.jit
 def edge_mask(
@@ -1761,9 +1928,9 @@ def store_c(
 @constexpr_function
 def lane_map_matches(ll, half_m, half_n):
     """True if a HALF_M x HALF_N quadrant's MFMA layout (as a linear layout) has the
-    bases lane_contiguous_offsets assumes: registers col 1, 2, then the column blocks
-    32 .. HALF_N / 2, then the row blocks 32 .. HALF_M / 2; lanes row 1, 2, 4, 8 and
-    col 4, 8; warps col 16 and row 16."""
+    bases lane_contiguous_offsets and the reduce-scatter readers assume: registers
+    col 1, 2, then the column blocks 32 .. HALF_N / 2, then the row blocks 32 ..
+    HALF_M / 2; lanes row 1, 2, 4, 8 and col 4, 8; warps col 16 and row 16."""
     reg = (
         [[0, 1], [0, 2]]
         + [[0, c] for c in (32, 64) if c < half_n]
@@ -1774,6 +1941,35 @@ def lane_map_matches(ll, half_m, half_n):
         and [list(b) for b in ll.lane_bases]
         == [[1, 0], [2, 0], [4, 0], [8, 0], [0, 4], [0, 8]]
         and [list(b) for b in ll.warp_bases] == [[0, 16], [16, 0]]
+    )
+
+
+@gluon.jit
+def in_block_row(r):
+    """Offset of element (r, 0) in its 32x32 MFMA block: row r is lane r % 16 of the
+    top warps (0, 1), or from row 16 of the bottom warps (2, 3). r is a row of the
+    quadrant; only its row inside the block, r % MFMA_BLOCK_DIM, counts, and
+    lane_contiguous_offsets adds the block's offset."""
+    return (
+        (r % MFMA_DIM) * MFMA_LANE_ELEMS
+        + (r // MFMA_DIM % 2) * (2 * MFMA_WARP_ELEMS)
+    )
+
+
+@gluon.jit
+def in_block_col(c):
+    """Offset of element (0, c) in its 32x32 MFMA block: column c is register c % 4 of
+    lane group c // 4 % 4 (16 lanes each) in the left warps (0, 2), or from column 16
+    the right warps (1, 3). Written as c plus terms constant over each 4 columns, not
+    with c % 4, so axis analysis sees 4 contiguous columns (lane_contiguous_offsets).
+    c already counts each step it crosses, so each term adds the rest: a lane group is
+    MFMA_GROUP_ELEMS on, of which c counted MFMA_LANE_ELEMS, and the right warps are
+    MFMA_WARP_ELEMS on, of which c counted MFMA_DIM."""
+    GROUPS: gl.constexpr = MFMA_DIM // MFMA_LANE_ELEMS
+    return (
+        c
+        + (c // MFMA_LANE_ELEMS % GROUPS) * (MFMA_GROUP_ELEMS - MFMA_LANE_ELEMS)
+        + (c // MFMA_DIM % 2) * (MFMA_WARP_ELEMS - MFMA_DIM)
     )
 
 
@@ -1795,23 +1991,13 @@ def lane_contiguous_offsets(
         ),
         "the MFMA layout's bases are not the order the partial map assumes",
     )
-    VN: gl.constexpr = HALF_N // 32
+    VN: gl.constexpr = HALF_N // MFMA_BLOCK_DIM
     r = gl.arange(0, HALF_M, gl.SliceLayout(1, mfmaLayout))
     c = gl.arange(0, HALF_N, gl.SliceLayout(0, mfmaLayout))
-    # The column term is c plus terms constant over each 4 columns, so axis analysis
-    # still sees 4 contiguous, aligned elements (16-byte accesses); written with c % 4
-    # or shifts and masks, the same map compiles to single-dword accesses. Vector v =
-    # column block + VN row block.
-    f = (r % 16) * 4 + (r // 16 % 2) * 512
-    if HALF_M == 128:
-        f = f + (r // 32 % 2) * (VN * 1024) + (r // 64) * (2 * VN * 1024)
-    elif HALF_M == 64:
-        f = f + (r // 32) * (VN * 1024)
-    g = c + (c // 4 % 4) * 60 + (c // 16 % 2) * 240
-    if HALF_N == 128:
-        g = g + (c // 32 % 2) * 992 + (c // 64) * 1984
-    elif HALF_N == 64:
-        g = g + (c // 32) * 992
+    # The row and column parts add because every basis of the layout steps only the
+    # row or only the column (lane_map_matches). Vector v = column block + VN row block.
+    f = in_block_row(r) + (r // MFMA_BLOCK_DIM) * (VN * MFMA_BLOCK_ELEMS)
+    g = in_block_col(c) + (c // MFMA_BLOCK_DIM) * (MFMA_BLOCK_ELEMS - MFMA_BLOCK_DIM)
     return f[:, None] + g[None, :]
 
 
@@ -2096,46 +2282,21 @@ def owner_ending(
 @gluon.jit
 def block_col(v, VN: gl.constexpr):
     """Column of register vector (32x32 block) v in its quadrant, VN blocks across."""
-    col = 0
-    if VN == 4:
-        col = (v % 2) * 32 + (v // 2 % 2) * 64
-    elif VN == 2:
-        col = (v % 2) * 32
-    return col
+    return (v % VN) * 32
 
 
 @gluon.jit
-def to_band(x, G: gl.constexpr, VN: gl.constexpr = 4):
+def to_band(x, G: gl.constexpr, VN: gl.constexpr):
     """(G, 32, 32) aligned blocks -> their 2-D band, VN blocks across a quadrant. Block
-    index bits from the lowest: the column blocks, then the row blocks. VN = 4: G = 1,
-    2, 4: 32 x 32 G; 8, 16: 8 G x 128."""
-    if VN == 4:
-        if G == 1:
-            y = gl.reshape(x, [32, 32])
-        elif G == 2:
-            y = gl.reshape(gl.permute(x, [1, 0, 2]), [32, 64])
-        elif G == 4:
-            y = gl.reshape(
-                gl.permute(gl.reshape(x, [2, 2, 32, 32]), [2, 0, 1, 3]), [32, 128]
-            )
-        elif G == 8:
-            y = gl.reshape(
-                gl.permute(gl.reshape(x, [2, 2, 2, 32, 32]), [0, 3, 1, 2, 4]),
-                [64, 128],
-            )
-        else:
-            y = gl.reshape(
-                gl.permute(gl.reshape(x, [2, 2, 2, 2, 32, 32]), [0, 1, 4, 2, 3, 5]),
-                [128, 128],
-            )
-    else:
-        CB: gl.constexpr = min(G, VN)
-        RB: gl.constexpr = G // CB
-        y = gl.reshape(
-            gl.permute(gl.reshape(x, [RB, CB, 32, 32]), [0, 2, 1, 3]),
-            [RB * 32, CB * 32],
-        )
-    return y
+    index bits from the lowest: the column blocks, then the row blocks, so the band is
+    RB = G / CB row blocks of CB = min(G, VN) blocks (VN = 4: G = 1, 2, 4: 32 x 32 G;
+    8, 16: 8 G x 128)."""
+    CB: gl.constexpr = min(G, VN)
+    RB: gl.constexpr = G // CB
+    return gl.reshape(
+        gl.permute(gl.reshape(x, [RB, CB, 32, 32]), [0, 2, 1, 3]),
+        [RB * 32, CB * 32],
+    )
 
 
 @gluon.jit
@@ -2188,7 +2349,7 @@ def reduce_scatter_slice(
     - 1], adds the bias and stores them to C. NB blocks (NB <= VQ, so a group stays in
     one quadrant) at a time, U partials of a group per trip, so NB U loads per lane are
     in flight. Each group is reshaped to its 2-D band and stored along C's rows, 16
-    bytes per lane (8 at NB = 1)."""
+    bytes per lane (8 for a single 32x32 block)."""
     HALF_M: gl.constexpr = BLOCK_M // 2
     HALF_N: gl.constexpr = BLOCK_N // 2
     VN: gl.constexpr = HALF_N // 32
@@ -2206,23 +2367,29 @@ def reduce_scatter_slice(
     i = gl.arange(0, NB, gl.SliceLayout(1, gl.SliceLayout(2, L3)))[:, None, None]
     r = gl.arange(0, 32, gl.SliceLayout(0, gl.SliceLayout(2, L3)))[None, :, None]
     c = gl.arange(0, 32, gl.SliceLayout(0, gl.SliceLayout(1, L3)))[None, None, :]
-    # lane_contiguous_offsets restricted to one block: rows 0-31 and columns 0-31.
-    in_blk = (r % 16) * 4 + (r // 16) * 512 + c + (c // 4 % 4) * 60 + (c // 16) * 240
+    # in_block_row(r) + in_block_col(c) (the two add: lane_contiguous_offsets) for rows
+    # and columns 0-31, written without the modulo on bit 16 (the helpers' form costs
+    # instructions here).
+    GROUPS: gl.constexpr = MFMA_DIM // MFMA_LANE_ELEMS
+    in_blk = (
+        (r % MFMA_DIM) * MFMA_LANE_ELEMS
+        + (r // MFMA_DIM) * (2 * MFMA_WARP_ELEMS)
+        + c
+        + (c // MFMA_LANE_ELEMS % GROUPS) * (MFMA_GROUP_ELEMS - MFMA_LANE_ELEMS)
+        + (c // MFMA_DIM) * (MFMA_WARP_ELEMS - MFMA_DIM)
+    )
     cb = gl.arange(0, 32, gl.SliceLayout(0, gl.SliceLayout(1, L3)))[None, :]
     ib = gl.arange(0, NB, gl.SliceLayout(1, gl.SliceLayout(1, L3)))[:, None]
     # The band: min(NB, VN) blocks across, the rest down.
     ROWS: gl.constexpr = 32 * (NB // min(NB, VN))
     COLS: gl.constexpr = 32 * min(NB, VN)
-    if COLS == 128:
-        SL: gl.constexpr = gl.BlockedLayout([1, 8], [4, 16], [4, 1], [1, 0])
-    elif COLS == 64:
-        SL: gl.constexpr = gl.BlockedLayout([1, 8], [8, 8], [4, 1], [1, 0])
-    else:
-        SL: gl.constexpr = gl.BlockedLayout([1, 4], [8, 8], [4, 1], [1, 0])
+    SL: gl.constexpr = coalesced_store_layout(
+        ROWS, COLS, out_dtype.primitive_bitwidth // 8, gl.num_warps()
+    )
     for g in range(blk_lo, blk_hi, NB):
         blk = g + i
         valid = blk < blk_hi
-        p_off = blk * 1024 + in_blk
+        p_off = blk * MFMA_BLOCK_ELEMS + in_blk
         s = gl.zeros((NB, 32, 32), gl.float32, L3)
         for p0 in range(0, n, U):
             for u in gl.static_range(U):
@@ -2236,15 +2403,10 @@ def reduce_scatter_slice(
                 ).to(gl.float32)
         if ADD_BIAS:
             # Block q VQ + v: quadrant q (tl, bl, tr, br); register vector v's bits are
-            # the column blocks (32, 64), then the row blocks.
+            # the column blocks, then the row blocks.
             qb = (g + ib) // VQ
             vb = (g + ib) % VQ
-            col_b = (qb // 2) * HALF_N
-            if VN >= 2:
-                col_b = col_b + (vb % 2) * 32
-            if VN == 4:
-                col_b = col_b + (vb // 2 % 2) * 64
-            col_b = col_b + cb
+            col_b = (qb // 2) * HALF_N + block_col(vb, VN) + cb
             bias_mask = (g + ib) < blk_hi
             if not EVEN_N:
                 bias_mask = bias_mask & (col_b < n_left)
@@ -2294,11 +2456,19 @@ def rs_ending(
     mfmaLayout: gl.constexpr,
     EVEN_M: gl.constexpr,
     EVEN_N: gl.constexpr,
+    RS_E: gl.constexpr = 0,
+    BAR_STRIDE: gl.constexpr = 0,
 ):
     """The reduce-scatter ending of tile-aligned segment j of n_tile (its slots are
     rank - j .. + n_tile - 1). A whole tile stores C directly. A split tile's programs
-    all store their partial and arrive on the tile's barrier; the first r_tile wait on
-    it and each reduces its slice (reduce_scatter_slice)."""
+    all store their partial and arrive on the tile's barrier; the first
+    min(n_tile, r_tile) wait on it and each reduces slice j of r_tile
+    (reduce_scatter_slice).
+
+    With RS_E > 0, r_tile = n_tile + RS_E: RS_E idle programs read slices n_tile ..
+    r_tile - 1 (rs_extra_reader) and arrive too, so the barrier counts n_tile + RS_E.
+    Tile t's barrier is slot t BAR_STRIDE (0: rank - j = t n_tile), which gives each
+    tile its own cache line (selection.rs_readers)."""
     HALF_M: gl.constexpr = BLOCK_M // 2
     HALF_N: gl.constexpr = BLOCK_N // 2
     is_split = gl.to_tensor(n_tile > 1).to(gl.int32)
@@ -2332,7 +2502,10 @@ def rs_ending(
         # completed.
         drain_and_barrier()
         is_reader = j < r_tile
-        tile_barrier(sync_ptr, rank - j, n_tile, is_reader)
+        slot = rank - j
+        if BAR_STRIDE > 0:
+            slot = slot // n_tile * BAR_STRIDE
+        tile_barrier(sync_ptr, slot, n_tile + RS_E, is_reader)
         if is_reader:
             reduce_scatter_slice(
                 p_ptr,
@@ -2357,6 +2530,72 @@ def rs_ending(
                 EVEN_M,
                 EVEN_N,
             )
+
+
+@gluon.jit
+def rs_extra_reader(
+    t,
+    jr,
+    total_full_tiles,
+    p_ptr,
+    bias_ptr,
+    c_ptr,
+    sync_ptr,
+    M,
+    N,
+    stride_cm,
+    stride_cn,
+    BLOCK_M: gl.constexpr,
+    BLOCK_N: gl.constexpr,
+    GROUP_SIZE_M: gl.constexpr,
+    SPLIT_N: gl.constexpr,
+    R: gl.constexpr,
+    E: gl.constexpr,
+    NB: gl.constexpr,
+    U: gl.constexpr,
+    ADD_BIAS: gl.constexpr,
+    EVEN_M: gl.constexpr,
+    EVEN_N: gl.constexpr,
+    BAR_STRIDE: gl.constexpr,
+):
+    """An idle program as reader jr (SPLIT_N <= jr < R) of Stream-K tile t (rs_ending
+    with RS_E > 0). It arrives on the tile's barrier at once: a waiter that only polled
+    could read the generation after the last arrival had bumped it and spin forever.
+    Then it waits for the producers and reduces its slice."""
+    tile_barrier(sync_ptr, t * BAR_STRIDE, SPLIT_N + E, True)
+    pid_m, pid_n = group_m_tile_coords(
+        total_full_tiles + t, M, N, BLOCK_M, BLOCK_N, GROUP_SIZE_M
+    )
+    m_left = M - pid_m * BLOCK_M
+    n_left = gl.multiple_of(N - pid_n * BLOCK_N, 8)
+    c_tile = (
+        c_ptr
+        + pid_m.to(gl.int64) * BLOCK_M * stride_cm
+        + pid_n.to(gl.int64) * BLOCK_N * stride_cn
+    )
+    reduce_scatter_slice(
+        p_ptr,
+        bias_ptr,
+        c_tile,
+        t * SPLIT_N,
+        jr,
+        SPLIT_N,
+        R,
+        pid_n,
+        stride_cm,
+        stride_cn,
+        BLOCK_M,
+        BLOCK_N,
+        ADD_BIAS,
+        NB,
+        U,
+        c_ptr.dtype.element_ty,
+        ".cv",
+        m_left,
+        n_left,
+        EVEN_M,
+        EVEN_N,
+    )
 
 
 @gluon.jit
@@ -2500,6 +2739,8 @@ def quadrant_segment(
     PREFETCHED: gl.constexpr = False,
     a_top_in=None,
     b_left_in=None,
+    RS_E: gl.constexpr = 0,
+    BAR_STRIDE: gl.constexpr = 0,
 ):
     """K-steps [k0, k0 + 2 n_pairs) of tile tile_id (n_pairs >= 1), from its own
     prologue, then the segment's ending: XCD-local reduce-scatter (l2_rs_ending, L2),
@@ -2529,7 +2770,7 @@ def quadrant_segment(
     dotOpLayoutB: gl.constexpr = gl.DotOperandLayout(
         operand_index=1, parent=mfmaLayout, k_width=8
     )
-    pid_m, pid_n = _get_pids(tile_id, M, N, BLOCK_M, BLOCK_N, 0, 1, GROUP_SIZE_M)
+    pid_m, pid_n = group_m_tile_coords(tile_id, M, N, BLOCK_M, BLOCK_N, GROUP_SIZE_M)
     m_left = M - pid_m * BLOCK_M
     n_left = gl.multiple_of(N - pid_n * BLOCK_N, 8)
 
@@ -2629,13 +2870,10 @@ def quadrant_segment(
     # overwrites the buffers other waves may still be reading.
     drain_and_barrier()
 
-    STORE_CONTIG: gl.constexpr = 8
-    STORE_LANES_N: gl.constexpr = (BLOCK_N // 2) // STORE_CONTIG
-    STORE_LANES_M: gl.constexpr = 64 // STORE_LANES_N
-    gStoreLayoutC: gl.constexpr = gl.BlockedLayout(
-        [1, STORE_CONTIG], [STORE_LANES_M, STORE_LANES_N], [4, 1], [1, 0]
-    )
     out_dtype: gl.constexpr = c_ptr.dtype.element_ty
+    gStoreLayoutC: gl.constexpr = coalesced_store_layout(
+        BLOCK_M // 2, BLOCK_N // 2, out_dtype.primitive_bitwidth // 8, gl.num_warps()
+    )
     offs_cm = gl.arange(0, BLOCK_M // 2, gl.SliceLayout(1, gStoreLayoutC))
     offs_cn = gl.arange(0, BLOCK_N // 2, gl.SliceLayout(0, gStoreLayoutC))
     c_tl_base = c_ptr + pid_m.to(gl.int64) * BLOCK_M * stride_cm
@@ -2707,6 +2945,8 @@ def quadrant_segment(
             mfmaLayout,
             EVEN_M,
             EVEN_N,
+            RS_E,
+            BAR_STRIDE,
         )
     else:
         owner_ending(
@@ -2811,7 +3051,7 @@ def _launch_constants(M, N, K, config, num_programs, num_xcds):
 
     end_to_end = config.policy in ("two_tile", "spread")
     l2 = config.exchange == "l2"
-    xcd_split = 1
+    per_xcd_tiles = 0
     if config.policy == "one_tile":
         split_n = config.split_n
         split_cap = min(num_programs // streamk_tiles, pairs)
@@ -2823,9 +3063,10 @@ def _launch_constants(M, N, K, config, num_programs, num_xcds):
             raise ValueError(
                 f"split_n={split_n} exceeds this shape's maximum {split_cap}"
             )
+        streamk_programs = streamk_tiles * split_n
         if l2:
             per_xcd_tiles = triton.cdiv(streamk_tiles, num_xcds)
-            xcd_split = max(
+            xcd_max = max(
                 1,
                 min(
                     split_n,
@@ -2833,12 +3074,11 @@ def _launch_constants(M, N, K, config, num_programs, num_xcds):
                     (num_programs // num_xcds) // per_xcd_tiles,
                 ),
             )
-            if xcd_split != split_n:
+            if xcd_max != split_n:
                 raise ValueError(
                     f"split_n={split_n} cannot be placed within one XCD; "
-                    f"maximum is {xcd_split}"
+                    f"maximum is {xcd_max}"
                 )
-        streamk_programs = streamk_tiles * split_n
     elif end_to_end:
         split_n = 1
         streamk_programs = num_programs
@@ -2851,30 +3091,31 @@ def _launch_constants(M, N, K, config, num_programs, num_xcds):
         split_n = 1
         streamk_programs = 0
 
+    if config.policy == "one_tile" and config.fixup == "rs" and not l2:
+        rs = rs_readers(tile, streamk_tiles, split_n, num_programs)
+    else:
+        rs = reduce_scatter_config(tile, split_n if config.policy == "one_tile" else 1)
+    # The L2 split gives every XCD ceil(S / NUM_XCDS) tiles' programs (pid p runs
+    # on XCD p % NUM_XCDS), so its grid is a whole number of those per XCD. The wt
+    # reduce-scatter also launches its S extra idle readers per tile.
+    working_grid = (
+        num_xcds * per_xcd_tiles * split_n
+        if per_xcd_tiles
+        else streamk_programs + streamk_tiles * rs.extra
+    )
     compact = (
         streamk_tiles > 0
         and streamk_tiles == total_tiles
-        and not l2
-        and streamk_programs < num_programs
+        and working_grid < num_programs
     )
     # Data-parallel launches have no Stream-K phase to keep resident, so a grid of
     # fewer tiles than programs launches only the programs with a tile.
     if compact:
-        grid = streamk_programs
+        grid = working_grid
     elif streamk_tiles == 0:
         grid = min(num_programs, total_tiles)
     else:
         grid = num_programs
-    rs_split = split_n if config.policy == "one_tile" else 1
-    readers = min(1 << (rs_split.bit_length() - 1), tile.blocks)
-    blocks_per_group = max(
-        1,
-        min(
-            tile.blocks // readers,
-            16,
-            tile.quadrant_blocks,
-        ),
-    )
     return config, {
         "TOTAL_TILES": total_tiles,
         "STREAMK_TILES": streamk_tiles,
@@ -2882,12 +3123,13 @@ def _launch_constants(M, N, K, config, num_programs, num_xcds):
         "RESOLVED_SPLIT_N": split_n,
         "END_TO_END": end_to_end,
         "L2": l2,
-        "XCD_SPLIT": xcd_split,
         "COMPACT": compact,
         "GRID": grid,
-        "RS_NB": blocks_per_group,
-        "RS_U": max(16 // blocks_per_group, 1),
-        "RS_R": readers,
+        "RS_NB": rs.blocks_per_group,
+        "RS_U": rs.partials_per_trip,
+        "RS_R": rs.readers,
+        "RS_E": rs.extra,
+        "BAR_STRIDE": rs.barrier_stride,
     }
 
 
@@ -2988,10 +3230,11 @@ def gemm_a16w16(
         RS_R=launch["RS_R"],
         END_TO_END=launch["END_TO_END"],
         L2=launch["L2"],
-        XCD_SPLIT=launch["XCD_SPLIT"],
         HAS_FULL=has_full,
         GRID=launch["GRID"] if launch["COMPACT"] else 0,
         OWNER_QPB=owner_qpb,
+        RS_E=launch["RS_E"],
+        BAR_STRIDE=launch["BAR_STRIDE"],
         num_warps=NUM_WARPS,
         schedule_hint=schedule_hint(),
     )

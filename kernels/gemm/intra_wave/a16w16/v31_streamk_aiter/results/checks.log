@@ -1,0 +1,233 @@
+[aiter] import [module_aiter_core] under /home/jbowley/repos/aiter/aiter/jit/module_aiter_core.so
+............................
+----------------------------------------------------------------------
+Ran 28 tests in 0.309s
+
+OK
+[aiter] import [module_aiter_core] under /home/jbowley/repos/aiter/aiter/jit/module_aiter_core.so
+dp         1024x1024x512 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=256 error=0.00000 correct=True guard=True rearmed=True
+capped     1088x1024x8192 one_tile/rs S=16 n=8 R=4 E=0 programs=128 grid=256 error=0.00000 correct=True guard=True rearmed=True
+owner      1088x1024x512 one_tile/owner S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+rs         1088x1024x512 one_tile/rs S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+l2         1088x1024x512 one_tile/rs S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+two_tile   1088x1024x512 two_tile/owner S=272 n=1 R=1 E=0 programs=256 grid=256 error=0.00000 correct=True guard=True rearmed=True
+spread     1024x1792x512 spread/owner S=192 n=1 R=1 E=0 programs=256 grid=256 error=0.00000 correct=True guard=True rearmed=True
+compact    192x704x512 one_tile/owner S=33 n=2 R=2 E=0 programs=66 grid=66 error=0.00000 correct=True guard=True rearmed=True
+l2_compact 192x704x512 one_tile/rs S=33 n=4 R=4 E=0 programs=132 grid=160 error=0.00000 correct=True guard=True rearmed=True
+l2_compact4 128x128x512 one_tile/rs S=4 n=4 R=4 E=0 programs=16 grid=32 error=0.00000 correct=True guard=True rearmed=True
+compact_rs 192x704x512 one_tile/rs S=33 n=2 R=4 E=2 programs=66 grid=132 error=0.00000 correct=True guard=True rearmed=True
+ragged     1080x1016x496 one_tile/rs S=16 n=2 R=4 E=2 programs=32 grid=256 error=0.00000 correct=True guard=True rearmed=True
+ragged_m   1080x1024x512 one_tile/rs S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+ragged_n   1088x1016x512 one_tile/owner S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+dp_below_wave 192x704x512 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=33 error=0.00000 correct=True guard=True rearmed=True
+dp_single  64x64x512 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=1 error=0.00000 correct=True guard=True rearmed=True
+dp_ragged_wave 184x696x496 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=33 error=0.00000 correct=True guard=True rearmed=True
+kres_gt_dp 1088x1024x432 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=256 error=0.00000 correct=True guard=True rearmed=True
+kres_gt_rs 1088x1024x432 one_tile/rs S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+kres_eq_dp 1088x1024x448 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=256 error=0.00000 correct=True guard=True rearmed=True
+kres_eq_owner 1088x1024x448 one_tile/owner S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+[aiter] import [module_aiter_core] under /home/jbowley/repos/aiter/aiter/jit/module_aiter_core.so
+graph replay passed: 20 rounds of single, two-node and mixed
+[aiter] import [module_aiter_core] under /home/jbowley/repos/aiter/aiter/jit/module_aiter_core.so
+dp         2048x2048x1024 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=256 error=0.00000 correct=True guard=True rearmed=True
+capped     2176x2048x8192 one_tile/rs S=16 n=8 R=16 E=8 programs=128 grid=256 error=0.00000 correct=True guard=True rearmed=True
+owner      2176x2048x1024 one_tile/owner S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+rs         2176x2048x1024 one_tile/rs S=16 n=4 R=16 E=12 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+l2         2176x2048x1024 one_tile/rs S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+two_tile   2176x2048x1024 two_tile/owner S=272 n=1 R=1 E=0 programs=256 grid=256 error=0.00000 correct=True guard=True rearmed=True
+spread     2048x3584x1024 spread/owner S=192 n=1 R=1 E=0 programs=256 grid=256 error=0.00000 correct=True guard=True rearmed=True
+compact    384x1408x1024 one_tile/owner S=33 n=2 R=2 E=0 programs=66 grid=66 error=0.00000 correct=True guard=True rearmed=True
+l2_compact 384x1408x1024 one_tile/rs S=33 n=4 R=4 E=0 programs=132 grid=160 error=0.00000 correct=True guard=True rearmed=True
+l2_compact4 256x256x1024 one_tile/rs S=4 n=4 R=4 E=0 programs=16 grid=32 error=0.00000 correct=True guard=True rearmed=True
+compact_rs 384x1408x1024 one_tile/rs S=33 n=2 R=4 E=2 programs=66 grid=132 error=0.00000 correct=True guard=True rearmed=True
+ragged     2160x2032x1008 one_tile/rs S=16 n=2 R=16 E=14 programs=32 grid=256 error=0.00000 correct=True guard=True rearmed=True
+ragged_m   2160x2048x1024 one_tile/rs S=16 n=4 R=16 E=12 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+ragged_n   2176x2032x1024 one_tile/owner S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+dp_below_wave 384x1408x1024 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=33 error=0.00000 correct=True guard=True rearmed=True
+dp_single  128x128x1024 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=1 error=0.00000 correct=True guard=True rearmed=True
+dp_ragged_wave 368x1392x1008 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=33 error=0.00000 correct=True guard=True rearmed=True
+kres_gt_dp 2176x2048x880 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=256 error=0.00000 correct=True guard=True rearmed=True
+kres_gt_rs 2176x2048x880 one_tile/rs S=16 n=4 R=16 E=12 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+kres_eq_dp 2176x2048x896 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=256 error=0.00000 correct=True guard=True rearmed=True
+kres_eq_owner 2176x2048x896 one_tile/owner S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+[aiter] import [module_aiter_core] under /home/jbowley/repos/aiter/aiter/jit/module_aiter_core.so
+graph replay passed: 20 rounds of single, two-node and mixed
+[aiter] import [module_aiter_core] under /home/jbowley/repos/aiter/aiter/jit/module_aiter_core.so
+dp         4096x2048x512 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=256 error=0.00000 correct=True guard=True rearmed=True
+capped     4352x2048x8192 one_tile/rs S=16 n=8 R=16 E=8 programs=128 grid=256 error=0.00000 correct=True guard=True rearmed=True
+owner      4352x2048x512 one_tile/owner S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+rs         4352x2048x512 one_tile/rs S=16 n=4 R=16 E=12 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+l2         4352x2048x512 one_tile/rs S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+two_tile   4352x2048x512 two_tile/owner S=272 n=1 R=1 E=0 programs=256 grid=256 error=0.00000 correct=True guard=True rearmed=True
+spread     4096x3584x512 spread/owner S=192 n=1 R=1 E=0 programs=256 grid=256 error=0.00000 correct=True guard=True rearmed=True
+compact    768x1408x512 one_tile/owner S=33 n=2 R=2 E=0 programs=66 grid=66 error=0.00000 correct=True guard=True rearmed=True
+l2_compact 768x1408x512 one_tile/rs S=33 n=4 R=4 E=0 programs=132 grid=160 error=0.00000 correct=True guard=True rearmed=True
+l2_compact4 512x256x512 one_tile/rs S=4 n=4 R=4 E=0 programs=16 grid=32 error=0.00000 correct=True guard=True rearmed=True
+compact_rs 768x1408x512 one_tile/rs S=33 n=2 R=4 E=2 programs=66 grid=132 error=0.00000 correct=True guard=True rearmed=True
+ragged     4320x2032x496 one_tile/rs S=16 n=2 R=16 E=14 programs=32 grid=256 error=0.00000 correct=True guard=True rearmed=True
+ragged_m   4320x2048x512 one_tile/rs S=16 n=4 R=16 E=12 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+ragged_n   4352x2032x512 one_tile/owner S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+dp_below_wave 768x1408x512 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=33 error=0.00000 correct=True guard=True rearmed=True
+dp_single  256x128x512 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=1 error=0.00000 correct=True guard=True rearmed=True
+dp_ragged_wave 736x1392x496 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=33 error=0.00000 correct=True guard=True rearmed=True
+kres_gt_dp 4352x2048x432 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=256 error=0.00000 correct=True guard=True rearmed=True
+kres_gt_rs 4352x2048x432 one_tile/rs S=16 n=4 R=16 E=12 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+kres_eq_dp 4352x2048x448 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=256 error=0.00000 correct=True guard=True rearmed=True
+kres_eq_owner 4352x2048x448 one_tile/owner S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+[aiter] import [module_aiter_core] under /home/jbowley/repos/aiter/aiter/jit/module_aiter_core.so
+graph replay passed: 20 rounds of single, two-node and mixed
+[aiter] import [module_aiter_core] under /home/jbowley/repos/aiter/aiter/jit/module_aiter_core.so
+dp         2048x4096x512 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=256 error=0.00000 correct=True guard=True rearmed=True
+capped     2176x4096x8192 one_tile/rs S=16 n=8 R=16 E=8 programs=128 grid=256 error=0.00000 correct=True guard=True rearmed=True
+owner      2176x4096x512 one_tile/owner S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+rs         2176x4096x512 one_tile/rs S=16 n=4 R=16 E=12 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+l2         2176x4096x512 one_tile/rs S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+two_tile   2176x4096x512 two_tile/owner S=272 n=1 R=1 E=0 programs=256 grid=256 error=0.00000 correct=True guard=True rearmed=True
+spread     2048x7168x512 spread/owner S=192 n=1 R=1 E=0 programs=256 grid=256 error=0.00000 correct=True guard=True rearmed=True
+compact    384x2816x512 one_tile/owner S=33 n=2 R=2 E=0 programs=66 grid=66 error=0.00000 correct=True guard=True rearmed=True
+l2_compact 384x2816x512 one_tile/rs S=33 n=4 R=4 E=0 programs=132 grid=160 error=0.00000 correct=True guard=True rearmed=True
+l2_compact4 256x512x512 one_tile/rs S=4 n=4 R=4 E=0 programs=16 grid=32 error=0.00000 correct=True guard=True rearmed=True
+compact_rs 384x2816x512 one_tile/rs S=33 n=2 R=4 E=2 programs=66 grid=132 error=0.00000 correct=True guard=True rearmed=True
+ragged     2160x4064x496 one_tile/rs S=16 n=2 R=16 E=14 programs=32 grid=256 error=0.00000 correct=True guard=True rearmed=True
+ragged_m   2160x4096x512 one_tile/rs S=16 n=4 R=16 E=12 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+ragged_n   2176x4064x512 one_tile/owner S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+dp_below_wave 384x2816x512 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=33 error=0.00000 correct=True guard=True rearmed=True
+dp_single  128x256x512 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=1 error=0.00000 correct=True guard=True rearmed=True
+dp_ragged_wave 368x2784x496 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=33 error=0.00000 correct=True guard=True rearmed=True
+kres_gt_dp 2176x4096x432 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=256 error=0.00000 correct=True guard=True rearmed=True
+kres_gt_rs 2176x4096x432 one_tile/rs S=16 n=4 R=16 E=12 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+kres_eq_dp 2176x4096x448 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=256 error=0.00000 correct=True guard=True rearmed=True
+kres_eq_owner 2176x4096x448 one_tile/owner S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+[aiter] import [module_aiter_core] under /home/jbowley/repos/aiter/aiter/jit/module_aiter_core.so
+graph replay passed: 20 rounds of single, two-node and mixed
+[aiter] import [module_aiter_core] under /home/jbowley/repos/aiter/aiter/jit/module_aiter_core.so
+dp         4096x4096x512 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=256 error=0.00000 correct=True guard=True rearmed=True
+capped     4352x4096x8192 one_tile/rs S=16 n=8 R=16 E=8 programs=128 grid=256 error=0.00000 correct=True guard=True rearmed=True
+owner      4352x4096x512 one_tile/owner S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+rs         4352x4096x512 one_tile/rs S=16 n=4 R=16 E=12 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+l2         4352x4096x512 one_tile/rs S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+two_tile   4352x4096x512 two_tile/owner S=272 n=1 R=1 E=0 programs=256 grid=256 error=0.00000 correct=True guard=True rearmed=True
+spread     4096x7168x512 spread/owner S=192 n=1 R=1 E=0 programs=256 grid=256 error=0.00000 correct=True guard=True rearmed=True
+compact    768x2816x512 one_tile/owner S=33 n=2 R=2 E=0 programs=66 grid=66 error=0.00000 correct=True guard=True rearmed=True
+l2_compact 768x2816x512 one_tile/rs S=33 n=4 R=4 E=0 programs=132 grid=160 error=0.00000 correct=True guard=True rearmed=True
+l2_compact4 512x512x512 one_tile/rs S=4 n=4 R=4 E=0 programs=16 grid=32 error=0.00000 correct=True guard=True rearmed=True
+compact_rs 768x2816x512 one_tile/rs S=33 n=2 R=4 E=2 programs=66 grid=132 error=0.00000 correct=True guard=True rearmed=True
+ragged     4320x4064x496 one_tile/rs S=16 n=2 R=16 E=14 programs=32 grid=256 error=0.00000 correct=True guard=True rearmed=True
+ragged_m   4320x4096x512 one_tile/rs S=16 n=4 R=16 E=12 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+ragged_n   4352x4064x512 one_tile/owner S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+dp_below_wave 768x2816x512 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=33 error=0.00000 correct=True guard=True rearmed=True
+dp_single  256x256x512 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=1 error=0.00000 correct=True guard=True rearmed=True
+dp_ragged_wave 736x2784x496 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=33 error=0.00000 correct=True guard=True rearmed=True
+kres_gt_dp 4352x4096x432 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=256 error=0.00000 correct=True guard=True rearmed=True
+kres_gt_rs 4352x4096x432 one_tile/rs S=16 n=4 R=16 E=12 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+kres_eq_dp 4352x4096x448 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=256 error=0.00000 correct=True guard=True rearmed=True
+kres_eq_owner 4352x4096x448 one_tile/owner S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+[aiter] import [module_aiter_core] under /home/jbowley/repos/aiter/aiter/jit/module_aiter_core.so
+graph replay passed: 20 rounds of single, two-node and mixed
+[aiter] import [module_aiter_core] under /home/jbowley/repos/aiter/aiter/jit/module_aiter_core.so
+stale-flag failed as expected
+[aiter] import [module_aiter_core] under /home/jbowley/repos/aiter/aiter/jit/module_aiter_core.so
+stale-count hung as expected
+[aiter] import [module_aiter_core] under /home/jbowley/repos/aiter/aiter/jit/module_aiter_core.so
+concurrent streams passed: 20 rounds
+[aiter] import [module_aiter_core] under /home/jbowley/repos/aiter/aiter/jit/module_aiter_core.so
+dp         1024x1024x512 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=256 error=0.00000 correct=True guard=True rearmed=True
+capped     1088x1024x8192 one_tile/rs S=16 n=8 R=4 E=0 programs=128 grid=256 error=0.00000 correct=True guard=True rearmed=True
+owner      1088x1024x512 one_tile/owner S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+rs         1088x1024x512 one_tile/rs S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+l2         1088x1024x512 one_tile/rs S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+two_tile   1088x1024x512 two_tile/owner S=272 n=1 R=1 E=0 programs=256 grid=256 error=0.00000 correct=True guard=True rearmed=True
+spread     1024x1792x512 spread/owner S=192 n=1 R=1 E=0 programs=256 grid=256 error=0.00000 correct=True guard=True rearmed=True
+compact    192x704x512 one_tile/owner S=33 n=2 R=2 E=0 programs=66 grid=66 error=0.00000 correct=True guard=True rearmed=True
+l2_compact 192x704x512 one_tile/rs S=33 n=4 R=4 E=0 programs=132 grid=160 error=0.00000 correct=True guard=True rearmed=True
+l2_compact4 128x128x512 one_tile/rs S=4 n=4 R=4 E=0 programs=16 grid=32 error=0.00000 correct=True guard=True rearmed=True
+compact_rs 192x704x512 one_tile/rs S=33 n=2 R=4 E=2 programs=66 grid=132 error=0.00000 correct=True guard=True rearmed=True
+ragged     1080x1016x496 one_tile/rs S=16 n=2 R=4 E=2 programs=32 grid=256 error=0.00000 correct=True guard=True rearmed=True
+ragged_m   1080x1024x512 one_tile/rs S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+ragged_n   1088x1016x512 one_tile/owner S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+dp_below_wave 192x704x512 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=33 error=0.00000 correct=True guard=True rearmed=True
+dp_single  64x64x512 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=1 error=0.00000 correct=True guard=True rearmed=True
+dp_ragged_wave 184x696x496 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=33 error=0.00000 correct=True guard=True rearmed=True
+kres_gt_dp 1088x1024x432 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=256 error=0.00000 correct=True guard=True rearmed=True
+kres_gt_rs 1088x1024x432 one_tile/rs S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+kres_eq_dp 1088x1024x448 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=256 error=0.00000 correct=True guard=True rearmed=True
+kres_eq_owner 1088x1024x448 one_tile/owner S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+[aiter] import [module_aiter_core] under /home/jbowley/repos/aiter/aiter/jit/module_aiter_core.so
+dp_1wave   1024x1024x512 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=256 error=0.00000 correct=True guard=True rearmed=True
+dp_4wave   2048x2048x512 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=256 error=0.00000 correct=True guard=True rearmed=True
+dp_4w_kres 2048x2048x432 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=256 error=0.00000 correct=True guard=True rearmed=True
+rs_3wave   3136x1024x512 one_tile/rs S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+rs_3w_kres 3136x1024x432 one_tile/rs S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+l2_3w_kres 3136x1024x448 one_tile/rs S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+two_tile_2w 2112x1024x512 two_tile/owner S=272 n=1 R=1 E=0 programs=256 grid=256 error=0.00000 correct=True guard=True rearmed=True
+two_tile_kres 2104x1024x432 two_tile/owner S=272 n=1 R=1 E=0 programs=256 grid=256 error=0.00000 correct=True guard=True rearmed=True
+spread_2w  1024x2816x512 spread/owner S=192 n=1 R=1 E=0 programs=256 grid=256 error=0.00000 correct=True guard=True rearmed=True
+[aiter] import [module_aiter_core] under /home/jbowley/repos/aiter/aiter/jit/module_aiter_core.so
+concurrent streams passed: 20 rounds
+[aiter] import [module_aiter_core] under /home/jbowley/repos/aiter/aiter/jit/module_aiter_core.so
+dp         2048x2048x1024 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=256 error=0.00000 correct=True guard=True rearmed=True
+capped     2176x2048x8192 one_tile/rs S=16 n=8 R=16 E=8 programs=128 grid=256 error=0.00000 correct=True guard=True rearmed=True
+owner      2176x2048x1024 one_tile/owner S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+rs         2176x2048x1024 one_tile/rs S=16 n=4 R=16 E=12 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+l2         2176x2048x1024 one_tile/rs S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+two_tile   2176x2048x1024 two_tile/owner S=272 n=1 R=1 E=0 programs=256 grid=256 error=0.00000 correct=True guard=True rearmed=True
+spread     2048x3584x1024 spread/owner S=192 n=1 R=1 E=0 programs=256 grid=256 error=0.00000 correct=True guard=True rearmed=True
+compact    384x1408x1024 one_tile/owner S=33 n=2 R=2 E=0 programs=66 grid=66 error=0.00000 correct=True guard=True rearmed=True
+l2_compact 384x1408x1024 one_tile/rs S=33 n=4 R=4 E=0 programs=132 grid=160 error=0.00000 correct=True guard=True rearmed=True
+l2_compact4 256x256x1024 one_tile/rs S=4 n=4 R=4 E=0 programs=16 grid=32 error=0.00000 correct=True guard=True rearmed=True
+compact_rs 384x1408x1024 one_tile/rs S=33 n=2 R=4 E=2 programs=66 grid=132 error=0.00000 correct=True guard=True rearmed=True
+ragged     2160x2032x1008 one_tile/rs S=16 n=2 R=16 E=14 programs=32 grid=256 error=0.00000 correct=True guard=True rearmed=True
+ragged_m   2160x2048x1024 one_tile/rs S=16 n=4 R=16 E=12 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+ragged_n   2176x2032x1024 one_tile/owner S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+dp_below_wave 384x1408x1024 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=33 error=0.00000 correct=True guard=True rearmed=True
+dp_single  128x128x1024 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=1 error=0.00000 correct=True guard=True rearmed=True
+dp_ragged_wave 368x1392x1008 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=33 error=0.00000 correct=True guard=True rearmed=True
+kres_gt_dp 2176x2048x880 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=256 error=0.00000 correct=True guard=True rearmed=True
+kres_gt_rs 2176x2048x880 one_tile/rs S=16 n=4 R=16 E=12 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+kres_eq_dp 2176x2048x896 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=256 error=0.00000 correct=True guard=True rearmed=True
+kres_eq_owner 2176x2048x896 one_tile/owner S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+[aiter] import [module_aiter_core] under /home/jbowley/repos/aiter/aiter/jit/module_aiter_core.so
+dp_1wave   2048x2048x1024 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=256 error=0.00000 correct=True guard=True rearmed=True
+dp_4wave   4096x4096x1024 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=256 error=0.00000 correct=True guard=True rearmed=True
+dp_4w_kres 4096x4096x880 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=256 error=0.00000 correct=True guard=True rearmed=True
+rs_3wave   6272x2048x1024 one_tile/rs S=16 n=4 R=16 E=12 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+rs_3w_kres 6272x2048x880 one_tile/rs S=16 n=4 R=16 E=12 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+l2_3w_kres 6272x2048x896 one_tile/rs S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+two_tile_2w 4224x2048x1024 two_tile/owner S=272 n=1 R=1 E=0 programs=256 grid=256 error=0.00000 correct=True guard=True rearmed=True
+two_tile_kres 4208x2048x880 two_tile/owner S=272 n=1 R=1 E=0 programs=256 grid=256 error=0.00000 correct=True guard=True rearmed=True
+spread_2w  2048x5632x1024 spread/owner S=192 n=1 R=1 E=0 programs=256 grid=256 error=0.00000 correct=True guard=True rearmed=True
+[aiter] import [module_aiter_core] under /home/jbowley/repos/aiter/aiter/jit/module_aiter_core.so
+concurrent streams passed: 20 rounds
+[aiter] import [module_aiter_core] under /home/jbowley/repos/aiter/aiter/jit/module_aiter_core.so
+dp         4096x4096x512 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=256 error=0.00000 correct=True guard=True rearmed=True
+capped     4352x4096x8192 one_tile/rs S=16 n=8 R=16 E=8 programs=128 grid=256 error=0.00000 correct=True guard=True rearmed=True
+owner      4352x4096x512 one_tile/owner S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+rs         4352x4096x512 one_tile/rs S=16 n=4 R=16 E=12 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+l2         4352x4096x512 one_tile/rs S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+two_tile   4352x4096x512 two_tile/owner S=272 n=1 R=1 E=0 programs=256 grid=256 error=0.00000 correct=True guard=True rearmed=True
+spread     4096x7168x512 spread/owner S=192 n=1 R=1 E=0 programs=256 grid=256 error=0.00000 correct=True guard=True rearmed=True
+compact    768x2816x512 one_tile/owner S=33 n=2 R=2 E=0 programs=66 grid=66 error=0.00000 correct=True guard=True rearmed=True
+l2_compact 768x2816x512 one_tile/rs S=33 n=4 R=4 E=0 programs=132 grid=160 error=0.00000 correct=True guard=True rearmed=True
+l2_compact4 512x512x512 one_tile/rs S=4 n=4 R=4 E=0 programs=16 grid=32 error=0.00000 correct=True guard=True rearmed=True
+compact_rs 768x2816x512 one_tile/rs S=33 n=2 R=4 E=2 programs=66 grid=132 error=0.00000 correct=True guard=True rearmed=True
+ragged     4320x4064x496 one_tile/rs S=16 n=2 R=16 E=14 programs=32 grid=256 error=0.00000 correct=True guard=True rearmed=True
+ragged_m   4320x4096x512 one_tile/rs S=16 n=4 R=16 E=12 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+ragged_n   4352x4064x512 one_tile/owner S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+dp_below_wave 768x2816x512 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=33 error=0.00000 correct=True guard=True rearmed=True
+dp_single  256x256x512 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=1 error=0.00000 correct=True guard=True rearmed=True
+dp_ragged_wave 736x2784x496 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=33 error=0.00000 correct=True guard=True rearmed=True
+kres_gt_dp 4352x4096x432 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=256 error=0.00000 correct=True guard=True rearmed=True
+kres_gt_rs 4352x4096x432 one_tile/rs S=16 n=4 R=16 E=12 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+kres_eq_dp 4352x4096x448 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=256 error=0.00000 correct=True guard=True rearmed=True
+kres_eq_owner 4352x4096x448 one_tile/owner S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+[aiter] import [module_aiter_core] under /home/jbowley/repos/aiter/aiter/jit/module_aiter_core.so
+dp_1wave   4096x4096x512 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=256 error=0.00000 correct=True guard=True rearmed=True
+dp_4wave   8192x8192x512 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=256 error=0.00000 correct=True guard=True rearmed=True
+dp_4w_kres 8192x8192x432 dp/owner S=0 n=1 R=1 E=0 programs=0 grid=256 error=0.00000 correct=True guard=True rearmed=True
+rs_3wave   12544x4096x512 one_tile/rs S=16 n=4 R=16 E=12 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+rs_3w_kres 12544x4096x432 one_tile/rs S=16 n=4 R=16 E=12 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+l2_3w_kres 12544x4096x448 one_tile/rs S=16 n=4 R=4 E=0 programs=64 grid=256 error=0.00000 correct=True guard=True rearmed=True
+two_tile_2w 8448x4096x512 two_tile/owner S=272 n=1 R=1 E=0 programs=256 grid=256 error=0.00000 correct=True guard=True rearmed=True
+two_tile_kres 8416x4096x432 two_tile/owner S=272 n=1 R=1 E=0 programs=256 grid=256 error=0.00000 correct=True guard=True rearmed=True
+spread_2w  4096x11264x512 spread/owner S=192 n=1 R=1 E=0 programs=256 grid=256 error=0.00000 correct=True guard=True rearmed=True
+ALL CHECKS PASSED

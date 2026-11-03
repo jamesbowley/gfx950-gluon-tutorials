@@ -1,0 +1,71 @@
+2026-10-31 12:25:15 guard: start on rocm-smi GPU 1: python3 /home/jbowley/repos/aiter/csrc/gemm_a16w16/gemm_a16w16_tune.py -i check.csv -o check_tuned.csv -o2 check_profile.csv --libtype flydsl --mp 1 --timeout 14400
+[aiter] import [module_aiter_core] under /home/jbowley/repos/aiter/aiter/jit/module_aiter_core.so
+[aiter] FlyDSL bf16 catalog size for M=2561, N=6288, K=7168: 15 kernels
+[aiter] FlyDSL candidate count for M=2561, N=6288, K=7168: 15
+Not exist tuned file: check_tuned.csv
+untunedf is        gfx  cu_num     M  ...        outdtype  scaleAB  bpreshuffle
+0  gfx950     256  2561  ...  torch.bfloat16    False        False
+
+[1 rows x 10 columns]
+      gfx  cu_num     M  ...        outdtype  scaleAB  bpreshuffle
+0  gfx950     256  2561  ...  torch.bfloat16    False        False
+
+[1 rows x 10 columns]
+[Task Grouping] Grouped 15 tasks into 1 groups by info_keys
+Distributing 1 task groups across 1 GPUs
+[aiter] import [module_aiter_core] under /home/jbowley/repos/aiter/aiter/jit/module_aiter_core.so
+USDT:2026-10-31 12:25:24 1729126:1729126 SyncActivityProfilerHandler.cpp:52] profiler_start
+USDT:2026-10-31 12:25:24 1729126:1729126 SyncActivityProfilerHandler.cpp:59] profiler_stop
+USDT:2026-10-31 12:25:24 1729126:1729126 SyncActivityProfilerHandler.cpp:52] profiler_start
+USDT:2026-10-31 12:25:25 1729126:1729126 SyncActivityProfilerHandler.cpp:59] profiler_stop
+USDT:2026-10-31 12:25:25 1729126:1729126 SyncActivityProfilerHandler.cpp:52] profiler_start
+USDT:2026-10-31 12:25:26 1729126:1729126 SyncActivityProfilerHandler.cpp:59] profiler_stop
+USDT:2026-10-31 12:25:26 1729126:1729126 SyncActivityProfilerHandler.cpp:52] profiler_start
+USDT:2026-10-31 12:25:26 1729126:1729126 SyncActivityProfilerHandler.cpp:59] profiler_stop
+USDT:2026-10-31 12:25:26 1729126:1729126 SyncActivityProfilerHandler.cpp:52] profiler_start
+USDT:2026-10-31 12:25:27 1729126:1729126 SyncActivityProfilerHandler.cpp:59] profiler_stop
+USDT:2026-10-31 12:25:27 1729126:1729126 SyncActivityProfilerHandler.cpp:52] profiler_start
+USDT:2026-10-31 12:25:27 1729126:1729126 SyncActivityProfilerHandler.cpp:59] profiler_stop
+USDT:2026-10-31 12:25:27 1729126:1729126 SyncActivityProfilerHandler.cpp:52] profiler_start
+USDT:2026-10-31 12:25:27 1729126:1729126 SyncActivityProfilerHandler.cpp:59] profiler_stop
+USDT:2026-10-31 12:25:28 1729126:1729126 SyncActivityProfilerHandler.cpp:52] profiler_start
+USDT:2026-10-31 12:25:28 1729126:1729126 SyncActivityProfilerHandler.cpp:59] profiler_stop
+USDT:2026-10-31 12:25:28 1729126:1729126 SyncActivityProfilerHandler.cpp:52] profiler_start
+USDT:2026-10-31 12:25:28 1729126:1729126 SyncActivityProfilerHandler.cpp:59] profiler_stop
+USDT:2026-10-31 12:25:29 1729126:1729126 SyncActivityProfilerHandler.cpp:52] profiler_start
+USDT:2026-10-31 12:25:29 1729126:1729126 SyncActivityProfilerHandler.cpp:59] profiler_stop
+USDT:2026-10-31 12:25:29 1729126:1729126 SyncActivityProfilerHandler.cpp:52] profiler_start
+USDT:2026-10-31 12:25:29 1729126:1729126 SyncActivityProfilerHandler.cpp:59] profiler_stop
+USDT:2026-10-31 12:25:30 1729126:1729126 SyncActivityProfilerHandler.cpp:52] profiler_start
+USDT:2026-10-31 12:25:30 1729126:1729126 SyncActivityProfilerHandler.cpp:59] profiler_stop
+USDT:2026-10-31 12:25:30 1729126:1729126 SyncActivityProfilerHandler.cpp:52] profiler_start
+USDT:2026-10-31 12:25:30 1729126:1729126 SyncActivityProfilerHandler.cpp:59] profiler_stop
+USDT:2026-10-31 12:25:31 1729126:1729126 SyncActivityProfilerHandler.cpp:52] profiler_start
+USDT:2026-10-31 12:25:31 1729126:1729126 SyncActivityProfilerHandler.cpp:59] profiler_stop
+USDT:2026-10-31 12:25:31 1729126:1729126 SyncActivityProfilerHandler.cpp:52] profiler_start
+USDT:2026-10-31 12:25:31 1729126:1729126 SyncActivityProfilerHandler.cpp:59] profiler_stop
+/home/jbowley/repos/aiter/aiter/utility/base_tuner.py:541: FutureWarning: The behavior of DataFrame concatenation with empty or all-NA entries is deprecated. In a future version, this will no longer exclude empty or all-NA columns when determining the result dtypes. To retain the old behavior, exclude the relevant entries before the concat operation.
+  profiledf = pd.concat([old_df, profiledf], ignore_index=True)
+/home/jbowley/repos/aiter/aiter/utility/base_tuner.py:1731: FutureWarning: The behavior of DataFrame concatenation with empty or all-NA entries is deprecated. In a future version, this will no longer exclude empty or all-NA columns when determining the result dtypes. To retain the old behavior, exclude the relevant entries before the concat operation.
+  self.success = pd.concat(
+/home/jbowley/repos/aiter/aiter/utility/base_tuner.py:1747: FutureWarning: The behavior of DataFrame concatenation with empty or all-NA entries is deprecated. In a future version, this will no longer exclude empty or all-NA columns when determining the result dtypes. To retain the old behavior, exclude the relevant entries before the concat operation.
+  resultdf = pd.concat([old_df, update_tunedf], ignore_index=True)
+[aiter] processed 1 batches of 1, Processing Status ====> 100.0% tuned in GemmA16W16Tuner
+[aiter] ============= Tuning results Summary: ==============
+/home/jbowley/repos/aiter/aiter/utility/base_tuner.py:593: FutureWarning: The behavior of DataFrame concatenation with empty or all-NA entries is deprecated. In a future version, this will no longer exclude empty or all-NA columns when determining the result dtypes. To retain the old behavior, exclude the relevant entries before the concat operation.
+  tunedf = pd.concat([self.success, self.failed])
+[aiter] Tuning Finished. tune 1 shapes, total tuning time is 12.6218 seconds
+[aiter] Successfully tuned shapes:
+Waiting for 1 tasks to complete (timeout=14400s each)...
+Tuning result for 'gfx': 'gfx950', 'cu_num': 256, 'M': np.int64(2561), 'N': np.int64(6288), 'K': np.int64(7168), 'bias': np.False_, 'dtype': 'torch.bfloat16', 'outdtype': 'torch.bfloat16', 'scaleAB': np.False_, 'bpreshuffle': np.False_ is libtype=flydsl kernelId=14 flydsl_hgemm_abf16_wbf16_bf16_t64x256x64x4_ks1_w2x4x1_bias0_ktail0_gm0_pft_gfx950 splitK=1, 501.2114us, err_ratio=0.0, tflops=460.61 TFLOPS, bw=317.36 GB/s
+Not exist tuned file: check_tuned.csv
+      gfx cu_num     M  ... err_ratio  tflops      bw
+0  gfx950    256  2561  ...       0.0  460.61  317.36
+
+[1 rows x 18 columns]
+[aiter] Failed shapes:
+Empty DataFrame
+Columns: [gfx, cu_num, M, N, K, bias, dtype, outdtype, scaleAB, bpreshuffle, libtype, solidx, splitK, us, kernelName, err_ratio, tflops, bw]
+Index: []
+2026-10-31 12:25:32 guard: exit 0: python3 /home/jbowley/repos/aiter/csrc/gemm_a16w16/gemm_a16w16_tune.py -i check.csv -o check_tuned.csv -o2 check_profile.csv --libtype flydsl --mp 1 --timeout 14400
+EXIT 0

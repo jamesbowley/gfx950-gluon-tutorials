@@ -1,0 +1,66 @@
+{
+ "created": "2026-10-17 07:51:45 +0000",
+ "files": {
+  "v27_streamk_tile/matmul_kernel.py": "1175b73525d3cc3f00e47159868c8eb109337e2b3f8df9ba0ff89c6d717103a7",
+  "v27_streamk_tile/sweep.py": "9cdc7918435ba13d3f3d644fb98dac5c04e331ff122806ad9fd11258025bc193",
+  "v27_streamk_tile/refit.py": "dd1a7f7511f58d1ef63fd833c60b5c7d78b1fee6809bc07e3d0dec781ca12371",
+  "v9_tile/matmul_kernel.py": "d757b2ea8326314bd8de9f62f0f48f62c22dde4bb4c05d987188e939924af30a",
+  "v27_streamk_tile/split_sweep.py": "39a1e1b08492aa87c3725272aed606ec0293ef778295bdbf14b828e13376ea85"
+ },
+ "triton": {
+  "version": "3.9.0",
+  "path": "/home/jbowley/repos/triton/python/triton/__init__.py",
+  "commit": "872c90a6a0574fc30071885186d64c725c1c3ea7",
+  "dirty": true
+ },
+ "gpu_hip": "2",
+ "gpu_smi": "2",
+ "seed": 2710,
+ "z": 2.0,
+ "delta": 0.01,
+ "ref": "cap:256x256x64:4096x4096x4096",
+ "ref_limit": 0.05,
+ "quad_tiles": [
+  "256x256x64",
+  "256x128x64",
+  "128x256x64",
+  "128x128x64",
+  "128x128x128",
+  "64x128x128",
+  "64x64x128"
+ ],
+ "small_tiles": [
+  "1x16x256",
+  "16x16x256",
+  "16x16x128",
+  "16x32x128",
+  "32x32x128",
+  "32x128x128"
+ ],
+ "k_tiles": [
+  4,
+  8,
+  16,
+  32,
+  64,
+  128,
+  256,
+  512
+ ],
+ "wave_classes": {
+  "0": [
+   0
+  ],
+  "1": [
+   1,
+   2,
+   3
+  ],
+  "4": [
+   4,
+   5,
+   6,
+   7
+  ]
+ }
+}

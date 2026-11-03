@@ -1,0 +1,16 @@
+{
+ "below": {
+  "k_min": 16,
+  "owner_max_per_tile": 3,
+  "owner_n_max": 3,
+  "owner_k_min": 20,
+  "rs_b": 6
+ },
+ "after": {
+  "k_min": 16,
+  "owner_max_per_tile": 4,
+  "owner_n_max": 3,
+  "owner_k_min": 32,
+  "rs_b": 8
+ }
+}

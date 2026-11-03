@@ -83,13 +83,22 @@ SAME_SHAPE = [(4096, n, k) for k in (4096, 8192) for n in (1024, 2048, 3072)] + 
 WQ_TILES = ("256x256", "128x256", "128x128x128")
 WQ_N = range(256, 16384 + 1, 256)
 WQ_SK_N = [w * 4096 + d for w in range(4) for d in (256, 512, 1024, 2048)]
+# v31_streamk_aiter at 256x256x64 (source v31_streamk_aiter/env.sh): "v31" with its default plan,
+# "v31sk" with each leftover tile split n = 256 / S ways (sk256's split, v31's ending rule), and
+# "v31spread" (S > 128 only) with the tail's k-steps laid end to end over all 256 programs.
+# "v31t128x256" is v31's default plan at 128x256x64.
+V31_DEFAULT = {"v31": (256, 256, 64), "v31t128x256": (128, 256, 64)}
+V31_TILES = ("v31", "v31sk", "v31spread", "v31t128x256")
+WQ_SPREAD_N = [n for n in WQ_N if (n // 256) * 16 % 256 > 128]
 TILE_RE = re.compile(r"^(tri)?(\d+)x(\d+)(?:x(\d+))?(r2)?(?:w([1248]))?(m4)?(?:e(\d))?(p)?$")
 
 
 def tile_spec(tile):
     """(BM, BN, BK, regions, W, pin) as matmul_kernel.parse_spec, with v9_tile_small's default W.
     "tri..." is the Triton tl.dot reference (triton_ref.py, 4 warps unless wW)."""
-    if tile in ("v9", "sk256"):
+    if tile in V31_DEFAULT:
+        return (*V31_DEFAULT[tile], 4, 4, False)
+    if tile in ("v9", "sk256") + V31_TILES:
         return 256, 256, 64, 4, 4, False
     tri, bm, bn, bk, r2, w, _, _, pin = TILE_RE.match(tile).groups()
     bm, bn, bk = int(bm), int(bn), int(bk or 64)
@@ -100,7 +109,7 @@ def tile_spec(tile):
 
 def is_small(tile):
     bm, bn, _, regions, _, _ = tile_spec(tile)
-    return tile not in ("v9", "sk256") and not tile.startswith("tri") and regions != 2 and min(bm, bn) <= 32
+    return tile not in ("v9", "sk256") + V31_TILES and not tile.startswith("tri") and regions != 2 and min(bm, bn) <= 32
 
 
 def regs_ok(tile):
@@ -144,6 +153,23 @@ def full_wave_shape(tile, K=8192):
     pairs = [(mb * bm, T // mb * bn) for mb in range(1, T + 1) if T % mb == 0]
     M, N = min(pairs, key=lambda p: (abs(math.log(p[0] / p[1])), -p[0]))
     return f"{M}x{N}x{K}"
+
+
+def square_shape(tile, T, K):
+    """M x N x K with exactly T tiles on the most-square grid (the longer side on M)."""
+    bm, bn = tile_spec(tile)[:2]
+    pairs = [(T // gn, gn) for gn in range(1, T + 1) if T % gn == 0 and T // gn >= gn]
+    gm, gn = min(pairs, key=lambda p: p[0] / p[1])
+    return f"{gm * bm}x{gn * bn}x{K}"
+
+
+# One wave of 256x256 (WORKLOG §20). SQ: T = 16..256 tiles on near-square grids, fixed K: the clock
+# against busy CUs with every busy CU doing the same work. SHAPEGRID: T busy CUs from square to 1 x T
+# (the longer side on M), to separate the memory traffic's power from the CU count's. SKIDEAL: the
+# full-chip shape with the total k-steps of the first-wave point at T tiles (K' = K T / 256), Stream-K
+# without its fixup.
+ONE_WAVE_T = range(16, 256 + 1, 16)
+SHAPEGRID = {32: (4, 2, 1), 64: (8, 4, 2, 1), 128: (8, 4, 2, 1), 192: (12, 6, 3, 1), 256: (16, 8, 4, 2, 1)}
 
 
 # Per-tile latency (WORKLOG §16): the tiles two stages are enough for (§14.5), pinned where LDS allows,
@@ -220,6 +246,15 @@ POINTS = {
     + [f"{t}:4096x3840x8192" for t in ("128x240", "128x128", "128x256", "256x256")]
     + [f"192x256:{m}x4096x8192" for m in (2304, 3072)],
     **{f"WQSK{k}": [f"sk256:4096x{n}x{k}" for n in WQ_SK_N] for k in (4096, 8192)},
+    **{f"WQ31_{k}": [f"v31:4096x{n}x{k}" for n in WQ_N] + [f"v31sk:4096x{n}x{k}" for n in WQ_SK_N]
+       + [f"v31spread:4096x{n}x{k}" for n in WQ_SPREAD_N] for k in (4096, 8192)},
+    **{f"WQ31T_{k}": [f"v31t128x256:4096x{n}x{k}" for n in WQ_N] for k in (4096, 8192)},
+    **{f"WQ1W{k}": [f"256x256:4096x{n}x{k}" for n in WQ_N if n <= 4096] for k in (4096, 8192)},
+    **{f"WQ31_1W{k}": [f"v31:4096x{n}x{k}" for n in WQ_N if n <= 4096] for k in (4096, 8192)},
+    **{f"SQ{k}": [f"256x256:{square_shape('256x256', t, k)}" for t in ONE_WAVE_T] for k in (4096, 8192)},
+    **{f"SHAPEGRID{k}": [f"256x256:{t // gn * 256}x{gn * 256}x{k}" for t, gns in SHAPEGRID.items() for gn in gns]
+       for k in (4096, 8192)},
+    **{f"SKIDEAL{k}": [f"256x256:4096x4096x{k * t // 256}" for t in ONE_WAVE_T] for k in (4096, 8192)},
     # 256x256 down to 256x128 in steps of 16 on N (WORKLOG §19), each on a 16x16 grid: 256 tiles, one per CU.
     # 256x192 needs amdgcnas off, so the whole set runs without it.
     "TILE_N": [f"256x{bn}:4096x{16 * bn}x8192" for bn in range(256, 127, -16)],
@@ -257,12 +292,15 @@ def parse_point(p):
     return tile, M, N, K
 
 
-KERNELS = ("v9_tile", "v9_tile_2r", "v9_tile_small", "v9_beyond_hotloop", "v26_streamk_ragged_k", "triton_ref_matmul")
+KERNELS = ("v9_tile", "v9_tile_2r", "v9_tile_small", "v9_beyond_hotloop", "v26_streamk_ragged_k", "triton_ref_matmul",
+           "_gemm_a16w16_compute_bound_kernel")
 
 
 def kernel_name(tile):
     if tile == "sk256":
         return "v26_streamk_ragged_k"
+    if tile in V31_TILES:
+        return "_gemm_a16w16_compute_bound_kernel"
     if tile == "v9":
         return "v9_beyond_hotloop"
     if tile.startswith("tri"):
@@ -283,6 +321,9 @@ def runner(tile):
     if tile == "sk256":
         os.environ.update(SK_ENV)
         return importlib.import_module("v26_streamk_ragged_k.matmul_kernel").matmul
+    if tile in V31_TILES:
+        v31 = importlib.import_module("v31_streamk_aiter.matmul_kernel")
+        return lambda a, b, c: v31.gemm_a16w16_streamk(a, b.T, c, config=v31_config(tile, a.shape[0], b.shape[1]))
     if tile.startswith("tri"):
         ref = importlib.import_module("v9_tile.triton_ref")
         return lambda a, b, c: ref.matmul(a, b, c, tile)
@@ -290,10 +331,30 @@ def runner(tile):
     return lambda a, b, c: mk.matmul(a, b, c, tile=tile)
 
 
-def busy_cus(tile, tiles):
-    """Average busy CUs: stream-K keeps all 256 busy; a non-persistent launch runs its tiles in
-    ceil(tiles / 256) waves."""
-    return 256 if tile == "sk256" else tiles / -(-tiles // 256)
+def v31_config(tile, M, N):
+    if tile in V31_DEFAULT:
+        return dict(zip(("BLOCK_M", "BLOCK_N", "BLOCK_K"), V31_DEFAULT[tile]))
+    cfg = {"BLOCK_M": 256, "BLOCK_N": 256, "BLOCK_K": 64}
+    if tile == "v31spread":
+        return {**cfg, "GROUP_SIZE_M": 4, "STREAMK_POLICY": "spread", "STREAMK_FIXUP": "owner", "SPLIT_N": None,
+                "STREAMK_EXCHANGE": "wt"}
+    n = 256 // ((M // 256) * (N // 256) % 256)
+    return {**cfg, "GROUP_SIZE_M": 4, "STREAMK_POLICY": "one_tile", "STREAMK_FIXUP": "owner" if n <= 3 else "rs",
+            "SPLIT_N": n, "STREAMK_EXCHANGE": "wt"}
+
+
+def busy_cus(tile, tiles, K):
+    """Average busy CUs: stream-K keeps all 256 busy (v31's default plan, M = 4096: taken as 256
+    whenever it splits); a non-persistent launch runs its tiles in ceil(tiles / 256) waves."""
+    if tile in ("sk256", "v31sk", "v31spread"):
+        return 256
+    if tile in V31_DEFAULT:
+        sys.path.insert(0, A16)
+        from v31_streamk_aiter.matmul_kernel import streamk_plan
+        bm, bn, bk = V31_DEFAULT[tile]
+        if streamk_plan(4096, tiles // (4096 // bm) * bn, K, (bm, bn, bk), 256)[0] != "dp":
+            return 256
+    return tiles / -(-tiles // 256)
 
 
 def loaded_cus(tiles):
@@ -425,6 +486,12 @@ def base_row(p, correct):
 def unique_bytes(r):
     """Bytes of A, B and C (bf16), each touched once: the memory-bound roof's numerator."""
     return 2 * (r["M"] * r["K"] + r["K"] * r["N"] + r["M"] * r["N"])
+
+
+# SHAPEGRID points whose A, B and C fit the 256 MB MALL with room to spare: run with --rotating-mb 0.
+for _k in (4096, 8192):
+    POINTS[f"SHAPEGRID_WARM{_k}"] = [p for p in POINTS[f"SHAPEGRID{_k}"]
+                                     if unique_bytes(dict(zip("MNK", parse_point(p)[1:]))) <= 192 * 2**20]
 
 
 # ---------------------------------------------------------------------------------------------
@@ -590,7 +657,7 @@ def clock(args):
         r.update({"sustained_tflops": round(tflops, 1), "sclk_ghz": round(ghz, 3),
                   "power_w": round(S.mean(s[2] for s in win)), "samples": len(win),
                   "mfma_util": round(util, 4),
-                  "mfma_util_busy": round(util * 256 / busy_cus(r["tile"], r["tiles"]), 4)})
+                  "mfma_util_busy": round(util * 256 / busy_cus(r["tile"], r["tiles"], r["K"]), 4)})
         res.append(r)
     return res
 

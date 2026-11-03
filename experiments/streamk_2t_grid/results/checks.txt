@@ -1,0 +1,78 @@
+rejected G=144 (T >= 2G): streamk_grid=144 needs G < T < 2 G, got T=300
+rejected G=204 (not a multiple of 8): streamk_grid=204 must be a positive multiple of 8 and at most 256
+rejected G=264 (above the CUs): streamk_grid=264 must be a positive multiple of 8 and at most 256
+rejected G=200 (not two_tile): streamk_grid requires two_tile, got dp
+t300_g256  3840x5120x2048 T=300 G=256 r=1.172 bias=False error=0.00000 correct=True guard=True rearmed=True
+t300_g240  3840x5120x2048 T=300 G=240 r=1.250 bias=False error=0.00000 correct=True guard=True rearmed=True
+t300_g200  3840x5120x2048 T=300 G=200 r=1.500 bias=True error=0.00000 correct=True guard=True rearmed=True
+t300_g152  3840x5120x2048 T=300 G=152 r=1.974 bias=False error=0.00000 correct=True guard=True rearmed=True
+t300_g224  3840x5120x2176 T=300 G=224 r=1.339 bias=False error=0.00000 correct=True guard=True rearmed=True
+t200_g136  2560x5120x2048 T=200 G=136 r=1.471 bias=False error=0.00000 correct=True guard=True rearmed=True
+t200_g104  2560x5120x2048 T=200 G=104 r=1.923 bias=True error=0.00000 correct=True guard=True rearmed=True
+t200_g192  2560x5120x2048 T=200 G=192 r=1.042 bias=False error=0.00000 correct=True guard=True rearmed=True
+ragged     3808x5088x2032 T=300 G=200 r=1.500 bias=True error=0.00000 correct=True guard=True rearmed=True
+ragged_k   3840x5120x1968 T=300 G=184 r=1.630 bias=False error=0.00000 correct=True guard=True rearmed=True
+short_k    3840x5120x256 T=300 G=200 r=1.500 bias=False error=0.00000 correct=True guard=True rearmed=True
+ALL PASSED
+rejected G=144 (T >= 2G): streamk_grid=144 needs G < T < 2 G, got T=300
+rejected G=204 (not a multiple of 8): streamk_grid=204 must be a positive multiple of 8 and at most 256
+rejected G=264 (above the CUs): streamk_grid=264 must be a positive multiple of 8 and at most 256
+rejected G=200 (not two_tile): streamk_grid requires two_tile, got dp
+t300_g256  3840x5120x2048 T=300 G=256 r=1.172 bias=False error=0.00000 correct=True guard=True rearmed=True
+t300_g240  3840x5120x2048 T=300 G=240 r=1.250 bias=False error=0.00000 correct=True guard=True rearmed=True
+t300_g200  3840x5120x2048 T=300 G=200 r=1.500 bias=True error=0.00000 correct=True guard=True rearmed=True
+t300_g152  3840x5120x2048 T=300 G=152 r=1.974 bias=False error=0.00000 correct=True guard=True rearmed=True
+t300_g224  3840x5120x2176 T=300 G=224 r=1.339 bias=False error=0.00000 correct=True guard=True rearmed=True
+t200_g136  2560x5120x2048 T=200 G=136 r=1.471 bias=False error=0.00000 correct=True guard=True rearmed=True
+t200_g104  2560x5120x2048 T=200 G=104 r=1.923 bias=True error=0.00000 correct=True guard=True rearmed=True
+t200_g192  2560x5120x2048 T=200 G=192 r=1.042 bias=False error=0.00000 correct=True guard=True rearmed=True
+ragged     3808x5088x2032 T=300 G=200 r=1.500 bias=True error=0.00000 correct=True guard=True rearmed=True
+ragged_k   3840x5120x1968 T=300 G=184 r=1.630 bias=False error=0.00000 correct=True guard=True rearmed=True
+short_k    3840x5120x256 T=300 G=200 r=1.500 bias=False error=0.00000 correct=True guard=True rearmed=True
+ALL PASSED
+graph replay passed: 10 replays of 2 launches
+Traceback (most recent call last):
+  File "/home/jbowley/repos/gfx950-gluon-tutorials/experiments/streamk_2t_grid/check_grid.py", line 200, in <module>
+    main()
+  File "/home/jbowley/repos/gfx950-gluon-tutorials/experiments/streamk_2t_grid/check_grid.py", line 193, in main
+    return stale_lock(tile)
+           ^^^^^^^^^^^^^^^^
+  File "/home/jbowley/repos/gfx950-gluon-tutorials/experiments/streamk_2t_grid/check_grid.py", line 177, in stale_lock
+    raise AssertionError("stale-lock negative control unexpectedly passed")
+AssertionError: stale-lock negative control unexpectedly passed
+stale-lock exit 1
+rejected G=144 (T >= 2G): streamk_grid=144 needs G < T < 2 G, got T=300
+rejected G=204 (not a multiple of 8): streamk_grid=204 must be a positive multiple of 8 and at most 256
+rejected G=264 (above the CUs): streamk_grid=264 must be a positive multiple of 8 and at most 256
+rejected G=200 (not two_tile): streamk_grid requires two_tile, got dp
+t300_g256  1920x2560x4096 T=300 G=256 r=1.172 bias=False error=0.00000 correct=True guard=True rearmed=True
+t300_g240  1920x2560x4096 T=300 G=240 r=1.250 bias=False error=0.00000 correct=True guard=True rearmed=True
+t300_g200  1920x2560x4096 T=300 G=200 r=1.500 bias=True error=0.00000 correct=True guard=True rearmed=True
+t300_g152  1920x2560x4096 T=300 G=152 r=1.974 bias=False error=0.00000 correct=True guard=True rearmed=True
+t300_g224  1920x2560x4352 T=300 G=224 r=1.339 bias=False error=0.00000 correct=True guard=True rearmed=True
+t200_g136  1280x2560x4096 T=200 G=136 r=1.471 bias=False error=0.00000 correct=True guard=True rearmed=True
+t200_g104  1280x2560x4096 T=200 G=104 r=1.923 bias=True error=0.00000 correct=True guard=True rearmed=True
+t200_g192  1280x2560x4096 T=200 G=192 r=1.042 bias=False error=0.00000 correct=True guard=True rearmed=True
+ragged     1904x2544x4080 T=300 G=200 r=1.500 bias=True error=0.00000 correct=True guard=True rearmed=True
+ragged_k   1920x2560x3952 T=300 G=184 r=1.630 bias=False error=0.00000 correct=True guard=True rearmed=True
+short_k    1920x2560x512 T=300 G=200 r=1.500 bias=False error=0.00000 correct=True guard=True rearmed=True
+ALL PASSED
+rejected G=144 (T >= 2G): streamk_grid=144 needs G < T < 2 G, got T=300
+rejected G=204 (not a multiple of 8): streamk_grid=204 must be a positive multiple of 8 and at most 256
+rejected G=264 (above the CUs): streamk_grid=264 must be a positive multiple of 8 and at most 256
+rejected G=200 (not two_tile): streamk_grid requires two_tile, got dp
+t300_g256  3840x2560x2048 T=300 G=256 r=1.172 bias=False error=0.00000 correct=True guard=True rearmed=True
+t300_g240  3840x2560x2048 T=300 G=240 r=1.250 bias=False error=0.00000 correct=True guard=True rearmed=True
+t300_g200  3840x2560x2048 T=300 G=200 r=1.500 bias=True error=0.00000 correct=True guard=True rearmed=True
+t300_g152  3840x2560x2048 T=300 G=152 r=1.974 bias=False error=0.00000 correct=True guard=True rearmed=True
+t300_g224  3840x2560x2176 T=300 G=224 r=1.339 bias=False error=0.00000 correct=True guard=True rearmed=True
+t200_g136  2560x2560x2048 T=200 G=136 r=1.471 bias=False error=0.00000 correct=True guard=True rearmed=True
+t200_g104  2560x2560x2048 T=200 G=104 r=1.923 bias=True error=0.00000 correct=True guard=True rearmed=True
+t200_g192  2560x2560x2048 T=200 G=192 r=1.042 bias=False error=0.00000 correct=True guard=True rearmed=True
+ragged     3808x2544x2032 T=300 G=200 r=1.500 bias=True error=0.00000 correct=True guard=True rearmed=True
+ragged_k   3840x2560x1968 T=300 G=184 r=1.630 bias=False error=0.00000 correct=True guard=True rearmed=True
+short_k    3840x2560x256 T=300 G=200 r=1.500 bias=False error=0.00000 correct=True guard=True rearmed=True
+ALL PASSED
+stale-lock drop=0: correct=True error=0.0
+stale-lock drop=8: correct=False error=nan
+negative control failed as expected

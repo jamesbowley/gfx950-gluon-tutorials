@@ -1,0 +1,17 @@
+#!/bin/bash
+# The formula sweep (every spec, at least 3 shapes per regime x m x k cell) and then the joint held-out
+# sweep (597 AITER shapes x every spec x every valid method), on rocm-smi GPU 1 (HIP 3), two rounds each.
+set -euo pipefail
+cd /home/jbowley/repos/gfx950-gluon-tutorials
+R=experiments/streamk_v31_rule/results
+S=experiments/streamk_v31_rule/sweep.py
+for set in FORMULA JOINT_HELDOUT; do
+    name=$(echo $set | tr A-Z a-z)
+    python $S list --points $set > $R/$name.points
+    wc -l $R/$name.points
+    python $S warm --points @$R/$name.points --jobs 64 > $R/${name}_warm.log 2>&1
+    tail -1 $R/${name}_warm.log
+    python $S timing --points @$R/$name.points --round 1 --out $R/${name}_r1.csv
+    python $S timing --points @$R/$name.points --round 2 --out $R/${name}_r2.csv
+    echo "$set DONE"
+done

@@ -1,0 +1,615 @@
+## 64x64x64
+tail n=2     1088x1024x512 bias=0 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     1088x1024x512 bias=0 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     1088x1024x512 bias=0 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     1088x1024x512 bias=0 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     1088x1024x512 bias=0 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     1088x1024x512 bias=0 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     1088x1024x512 bias=0 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     1088x1024x512 bias=0 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     1088x1024x512 bias=0 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     1088x1024x512 bias=1 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     1088x1024x512 bias=1 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     1088x1024x512 bias=1 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     1088x1024x512 bias=1 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     1088x1024x512 bias=1 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     1088x1024x512 bias=1 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     1088x1024x512 bias=1 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     1088x1024x512 bias=1 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     1088x1024x512 bias=1 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     1088x1024x512 bias=0 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     1088x1024x512 bias=0 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     1088x1024x512 bias=0 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     1088x1024x512 bias=0 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     1088x1024x512 bias=0 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     1088x1024x512 bias=0 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     1088x1024x512 bias=0 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     1088x1024x512 bias=0 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     1088x1024x512 bias=0 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    1088x1024x8192 bias=0 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    1088x1024x8192 bias=0 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    1088x1024x8192 bias=0 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    1088x1024x8192 bias=0 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    1088x1024x8192 bias=0 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    1088x1024x8192 bias=0 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    1088x1024x8192 bias=0 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    1088x1024x8192 bias=0 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    1088x1024x8192 bias=0 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    1088x1024x8192 bias=1 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    1088x1024x8192 bias=1 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    1088x1024x8192 bias=1 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    1088x1024x8192 bias=1 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    1088x1024x8192 bias=1 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    1088x1024x8192 bias=1 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    1088x1024x8192 bias=1 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    1088x1024x8192 bias=1 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    1088x1024x8192 bias=1 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   1088x1024x8192 bias=0 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   1088x1024x8192 bias=0 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   1088x1024x8192 bias=0 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   1088x1024x8192 bias=0 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   1088x1024x8192 bias=0 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   1088x1024x8192 bias=0 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   1088x1024x8192 bias=0 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   1088x1024x8192 bias=0 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   1088x1024x8192 bias=0 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   1088x1024x8192 bias=0 tree8      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      192x704x512 bias=1 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      192x704x512 bias=1 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      192x704x512 bias=1 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      192x704x512 bias=1 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      192x704x512 bias=1 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      192x704x512 bias=1 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      192x704x512 bias=1 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      192x704x512 bias=1 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      192x704x512 bias=1 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       1080x1016x496 bias=1 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       1080x1016x496 bias=1 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       1080x1016x496 bias=1 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       1080x1016x496 bias=1 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       1080x1016x496 bias=1 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       1080x1016x496 bias=1 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       1080x1016x496 bias=1 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       1080x1016x496 bias=1 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       1080x1016x496 bias=1 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     1080x1024x512 bias=1 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     1080x1024x512 bias=1 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     1080x1024x512 bias=1 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     1080x1024x512 bias=1 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     1080x1024x512 bias=1 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     1080x1024x512 bias=1 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     1080x1024x512 bias=1 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     1080x1024x512 bias=1 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     1080x1024x512 bias=1 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     1088x1016x512 bias=0 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     1088x1016x512 bias=0 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     1088x1016x512 bias=0 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     1088x1016x512 bias=0 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     1088x1016x512 bias=0 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     1088x1016x512 bias=0 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     1088x1016x512 bias=0 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     1088x1016x512 bias=0 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     1088x1016x512 bias=0 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      1088x1024x432 bias=1 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      1088x1024x432 bias=1 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      1088x1024x432 bias=1 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      1088x1024x432 bias=1 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      1088x1024x432 bias=1 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      1088x1024x432 bias=1 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      1088x1024x432 bias=1 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      1088x1024x432 bias=1 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      1088x1024x432 bias=1 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      1088x1024x448 bias=0 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      1088x1024x448 bias=0 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      1088x1024x448 bias=0 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      1088x1024x448 bias=0 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      1088x1024x448 bias=0 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      1088x1024x448 bias=0 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      1088x1024x448 bias=0 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      1088x1024x448 bias=0 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      1088x1024x448 bias=0 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+exit 0
+tree2: graph replay passed, 20 rounds of a two-launch graph
+tree4: graph replay passed, 20 rounds of a two-launch graph
+tree2 loop: graph replay passed, 20 rounds of a two-launch graph
+tree4 loop: graph replay passed, 20 rounds of a two-launch graph
+separate: graph replay passed, 20 rounds of a two-launch graph
+rs_all: graph replay passed, 20 rounds of a two-launch graph
+rs_all slp: graph replay passed, 20 rounds of a two-launch graph
+rs_all pkd: graph replay passed, 20 rounds of a two-launch graph
+graph exit 0
+stale-lock failed as expected
+stale-lock exit 0
+stale-count exit 124 (124 = hung as expected)
+## 128x128x128
+tail n=2     2176x2048x1024 bias=0 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     2176x2048x1024 bias=0 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     2176x2048x1024 bias=0 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     2176x2048x1024 bias=0 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     2176x2048x1024 bias=0 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     2176x2048x1024 bias=0 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     2176x2048x1024 bias=0 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     2176x2048x1024 bias=0 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     2176x2048x1024 bias=0 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     2176x2048x1024 bias=1 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     2176x2048x1024 bias=1 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     2176x2048x1024 bias=1 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     2176x2048x1024 bias=1 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     2176x2048x1024 bias=1 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     2176x2048x1024 bias=1 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     2176x2048x1024 bias=1 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     2176x2048x1024 bias=1 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     2176x2048x1024 bias=1 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     2176x2048x1024 bias=0 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     2176x2048x1024 bias=0 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     2176x2048x1024 bias=0 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     2176x2048x1024 bias=0 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     2176x2048x1024 bias=0 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     2176x2048x1024 bias=0 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     2176x2048x1024 bias=0 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     2176x2048x1024 bias=0 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     2176x2048x1024 bias=0 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    2176x2048x8192 bias=0 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    2176x2048x8192 bias=0 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    2176x2048x8192 bias=0 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    2176x2048x8192 bias=0 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    2176x2048x8192 bias=0 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    2176x2048x8192 bias=0 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    2176x2048x8192 bias=0 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    2176x2048x8192 bias=0 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    2176x2048x8192 bias=0 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    2176x2048x8192 bias=1 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    2176x2048x8192 bias=1 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    2176x2048x8192 bias=1 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    2176x2048x8192 bias=1 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    2176x2048x8192 bias=1 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    2176x2048x8192 bias=1 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    2176x2048x8192 bias=1 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    2176x2048x8192 bias=1 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    2176x2048x8192 bias=1 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   2176x2048x8192 bias=0 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   2176x2048x8192 bias=0 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   2176x2048x8192 bias=0 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   2176x2048x8192 bias=0 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   2176x2048x8192 bias=0 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   2176x2048x8192 bias=0 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   2176x2048x8192 bias=0 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   2176x2048x8192 bias=0 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   2176x2048x8192 bias=0 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   2176x2048x8192 bias=0 tree8      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      384x1408x1024 bias=1 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      384x1408x1024 bias=1 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      384x1408x1024 bias=1 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      384x1408x1024 bias=1 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      384x1408x1024 bias=1 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      384x1408x1024 bias=1 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      384x1408x1024 bias=1 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      384x1408x1024 bias=1 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      384x1408x1024 bias=1 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       2160x2032x1008 bias=1 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       2160x2032x1008 bias=1 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       2160x2032x1008 bias=1 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       2160x2032x1008 bias=1 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       2160x2032x1008 bias=1 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       2160x2032x1008 bias=1 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       2160x2032x1008 bias=1 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       2160x2032x1008 bias=1 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       2160x2032x1008 bias=1 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     2160x2048x1024 bias=1 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     2160x2048x1024 bias=1 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     2160x2048x1024 bias=1 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     2160x2048x1024 bias=1 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     2160x2048x1024 bias=1 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     2160x2048x1024 bias=1 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     2160x2048x1024 bias=1 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     2160x2048x1024 bias=1 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     2160x2048x1024 bias=1 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     2176x2032x1024 bias=0 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     2176x2032x1024 bias=0 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     2176x2032x1024 bias=0 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     2176x2032x1024 bias=0 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     2176x2032x1024 bias=0 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     2176x2032x1024 bias=0 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     2176x2032x1024 bias=0 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     2176x2032x1024 bias=0 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     2176x2032x1024 bias=0 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      2176x2048x880 bias=1 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      2176x2048x880 bias=1 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      2176x2048x880 bias=1 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      2176x2048x880 bias=1 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      2176x2048x880 bias=1 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      2176x2048x880 bias=1 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      2176x2048x880 bias=1 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      2176x2048x880 bias=1 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      2176x2048x880 bias=1 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      2176x2048x896 bias=0 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      2176x2048x896 bias=0 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      2176x2048x896 bias=0 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      2176x2048x896 bias=0 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      2176x2048x896 bias=0 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      2176x2048x896 bias=0 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      2176x2048x896 bias=0 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      2176x2048x896 bias=0 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      2176x2048x896 bias=0 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+exit 0
+tree2: graph replay passed, 20 rounds of a two-launch graph
+tree4: graph replay passed, 20 rounds of a two-launch graph
+tree2 loop: graph replay passed, 20 rounds of a two-launch graph
+tree4 loop: graph replay passed, 20 rounds of a two-launch graph
+separate: graph replay passed, 20 rounds of a two-launch graph
+rs_all: graph replay passed, 20 rounds of a two-launch graph
+rs_all slp: graph replay passed, 20 rounds of a two-launch graph
+rs_all pkd: graph replay passed, 20 rounds of a two-launch graph
+graph exit 0
+stale-lock failed as expected
+stale-lock exit 0
+stale-count exit 124 (124 = hung as expected)
+## 256x128x64
+tail n=2     4352x2048x512 bias=0 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     4352x2048x512 bias=0 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     4352x2048x512 bias=0 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     4352x2048x512 bias=0 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     4352x2048x512 bias=0 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     4352x2048x512 bias=0 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     4352x2048x512 bias=0 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     4352x2048x512 bias=0 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     4352x2048x512 bias=0 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     4352x2048x512 bias=1 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     4352x2048x512 bias=1 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     4352x2048x512 bias=1 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     4352x2048x512 bias=1 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     4352x2048x512 bias=1 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     4352x2048x512 bias=1 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     4352x2048x512 bias=1 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     4352x2048x512 bias=1 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     4352x2048x512 bias=1 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     4352x2048x512 bias=0 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     4352x2048x512 bias=0 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     4352x2048x512 bias=0 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     4352x2048x512 bias=0 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     4352x2048x512 bias=0 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     4352x2048x512 bias=0 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     4352x2048x512 bias=0 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     4352x2048x512 bias=0 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     4352x2048x512 bias=0 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    4352x2048x8192 bias=0 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    4352x2048x8192 bias=0 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    4352x2048x8192 bias=0 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    4352x2048x8192 bias=0 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    4352x2048x8192 bias=0 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    4352x2048x8192 bias=0 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    4352x2048x8192 bias=0 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    4352x2048x8192 bias=0 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    4352x2048x8192 bias=0 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    4352x2048x8192 bias=1 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    4352x2048x8192 bias=1 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    4352x2048x8192 bias=1 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    4352x2048x8192 bias=1 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    4352x2048x8192 bias=1 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    4352x2048x8192 bias=1 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    4352x2048x8192 bias=1 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    4352x2048x8192 bias=1 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    4352x2048x8192 bias=1 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   4352x2048x8192 bias=0 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   4352x2048x8192 bias=0 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   4352x2048x8192 bias=0 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   4352x2048x8192 bias=0 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   4352x2048x8192 bias=0 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   4352x2048x8192 bias=0 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   4352x2048x8192 bias=0 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   4352x2048x8192 bias=0 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   4352x2048x8192 bias=0 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   4352x2048x8192 bias=0 tree8      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      768x1408x512 bias=1 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      768x1408x512 bias=1 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      768x1408x512 bias=1 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      768x1408x512 bias=1 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      768x1408x512 bias=1 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      768x1408x512 bias=1 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      768x1408x512 bias=1 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      768x1408x512 bias=1 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      768x1408x512 bias=1 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       4320x2032x496 bias=1 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       4320x2032x496 bias=1 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       4320x2032x496 bias=1 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       4320x2032x496 bias=1 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       4320x2032x496 bias=1 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       4320x2032x496 bias=1 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       4320x2032x496 bias=1 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       4320x2032x496 bias=1 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       4320x2032x496 bias=1 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     4320x2048x512 bias=1 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     4320x2048x512 bias=1 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     4320x2048x512 bias=1 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     4320x2048x512 bias=1 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     4320x2048x512 bias=1 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     4320x2048x512 bias=1 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     4320x2048x512 bias=1 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     4320x2048x512 bias=1 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     4320x2048x512 bias=1 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     4352x2032x512 bias=0 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     4352x2032x512 bias=0 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     4352x2032x512 bias=0 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     4352x2032x512 bias=0 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     4352x2032x512 bias=0 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     4352x2032x512 bias=0 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     4352x2032x512 bias=0 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     4352x2032x512 bias=0 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     4352x2032x512 bias=0 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      4352x2048x432 bias=1 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      4352x2048x432 bias=1 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      4352x2048x432 bias=1 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      4352x2048x432 bias=1 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      4352x2048x432 bias=1 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      4352x2048x432 bias=1 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      4352x2048x432 bias=1 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      4352x2048x432 bias=1 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      4352x2048x432 bias=1 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      4352x2048x448 bias=0 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      4352x2048x448 bias=0 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      4352x2048x448 bias=0 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      4352x2048x448 bias=0 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      4352x2048x448 bias=0 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      4352x2048x448 bias=0 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      4352x2048x448 bias=0 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      4352x2048x448 bias=0 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      4352x2048x448 bias=0 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+exit 0
+tree2: graph replay passed, 20 rounds of a two-launch graph
+tree4: graph replay passed, 20 rounds of a two-launch graph
+tree2 loop: graph replay passed, 20 rounds of a two-launch graph
+tree4 loop: graph replay passed, 20 rounds of a two-launch graph
+separate: graph replay passed, 20 rounds of a two-launch graph
+rs_all: graph replay passed, 20 rounds of a two-launch graph
+rs_all slp: graph replay passed, 20 rounds of a two-launch graph
+rs_all pkd: graph replay passed, 20 rounds of a two-launch graph
+graph exit 0
+stale-lock failed as expected
+stale-lock exit 0
+stale-count exit 124 (124 = hung as expected)
+## 128x256x64
+tail n=2     2176x4096x512 bias=0 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     2176x4096x512 bias=0 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     2176x4096x512 bias=0 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     2176x4096x512 bias=0 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     2176x4096x512 bias=0 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     2176x4096x512 bias=0 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     2176x4096x512 bias=0 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     2176x4096x512 bias=0 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     2176x4096x512 bias=0 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     2176x4096x512 bias=1 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     2176x4096x512 bias=1 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     2176x4096x512 bias=1 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     2176x4096x512 bias=1 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     2176x4096x512 bias=1 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     2176x4096x512 bias=1 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     2176x4096x512 bias=1 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     2176x4096x512 bias=1 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     2176x4096x512 bias=1 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     2176x4096x512 bias=0 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     2176x4096x512 bias=0 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     2176x4096x512 bias=0 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     2176x4096x512 bias=0 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     2176x4096x512 bias=0 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     2176x4096x512 bias=0 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     2176x4096x512 bias=0 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     2176x4096x512 bias=0 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     2176x4096x512 bias=0 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    2176x4096x8192 bias=0 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    2176x4096x8192 bias=0 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    2176x4096x8192 bias=0 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    2176x4096x8192 bias=0 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    2176x4096x8192 bias=0 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    2176x4096x8192 bias=0 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    2176x4096x8192 bias=0 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    2176x4096x8192 bias=0 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    2176x4096x8192 bias=0 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    2176x4096x8192 bias=1 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    2176x4096x8192 bias=1 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    2176x4096x8192 bias=1 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    2176x4096x8192 bias=1 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    2176x4096x8192 bias=1 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    2176x4096x8192 bias=1 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    2176x4096x8192 bias=1 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    2176x4096x8192 bias=1 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    2176x4096x8192 bias=1 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   2176x4096x8192 bias=0 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   2176x4096x8192 bias=0 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   2176x4096x8192 bias=0 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   2176x4096x8192 bias=0 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   2176x4096x8192 bias=0 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   2176x4096x8192 bias=0 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   2176x4096x8192 bias=0 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   2176x4096x8192 bias=0 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   2176x4096x8192 bias=0 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   2176x4096x8192 bias=0 tree8      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      384x2816x512 bias=1 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      384x2816x512 bias=1 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      384x2816x512 bias=1 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      384x2816x512 bias=1 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      384x2816x512 bias=1 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      384x2816x512 bias=1 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      384x2816x512 bias=1 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      384x2816x512 bias=1 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      384x2816x512 bias=1 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       2160x4064x496 bias=1 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       2160x4064x496 bias=1 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       2160x4064x496 bias=1 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       2160x4064x496 bias=1 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       2160x4064x496 bias=1 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       2160x4064x496 bias=1 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       2160x4064x496 bias=1 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       2160x4064x496 bias=1 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       2160x4064x496 bias=1 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     2160x4096x512 bias=1 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     2160x4096x512 bias=1 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     2160x4096x512 bias=1 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     2160x4096x512 bias=1 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     2160x4096x512 bias=1 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     2160x4096x512 bias=1 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     2160x4096x512 bias=1 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     2160x4096x512 bias=1 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     2160x4096x512 bias=1 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     2176x4064x512 bias=0 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     2176x4064x512 bias=0 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     2176x4064x512 bias=0 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     2176x4064x512 bias=0 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     2176x4064x512 bias=0 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     2176x4064x512 bias=0 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     2176x4064x512 bias=0 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     2176x4064x512 bias=0 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     2176x4064x512 bias=0 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      2176x4096x432 bias=1 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      2176x4096x432 bias=1 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      2176x4096x432 bias=1 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      2176x4096x432 bias=1 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      2176x4096x432 bias=1 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      2176x4096x432 bias=1 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      2176x4096x432 bias=1 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      2176x4096x432 bias=1 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      2176x4096x432 bias=1 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      2176x4096x448 bias=0 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      2176x4096x448 bias=0 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      2176x4096x448 bias=0 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      2176x4096x448 bias=0 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      2176x4096x448 bias=0 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      2176x4096x448 bias=0 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      2176x4096x448 bias=0 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      2176x4096x448 bias=0 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      2176x4096x448 bias=0 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+exit 0
+tree2: graph replay passed, 20 rounds of a two-launch graph
+tree4: graph replay passed, 20 rounds of a two-launch graph
+tree2 loop: graph replay passed, 20 rounds of a two-launch graph
+tree4 loop: graph replay passed, 20 rounds of a two-launch graph
+separate: graph replay passed, 20 rounds of a two-launch graph
+rs_all: graph replay passed, 20 rounds of a two-launch graph
+rs_all slp: graph replay passed, 20 rounds of a two-launch graph
+rs_all pkd: graph replay passed, 20 rounds of a two-launch graph
+graph exit 0
+stale-lock failed as expected
+stale-lock exit 0
+stale-count exit 124 (124 = hung as expected)
+## 256x256x64
+tail n=2     4352x4096x512 bias=0 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     4352x4096x512 bias=0 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     4352x4096x512 bias=0 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     4352x4096x512 bias=0 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     4352x4096x512 bias=0 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     4352x4096x512 bias=0 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     4352x4096x512 bias=0 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     4352x4096x512 bias=0 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=2     4352x4096x512 bias=0 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     4352x4096x512 bias=1 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     4352x4096x512 bias=1 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     4352x4096x512 bias=1 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     4352x4096x512 bias=1 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     4352x4096x512 bias=1 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     4352x4096x512 bias=1 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     4352x4096x512 bias=1 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     4352x4096x512 bias=1 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=3     4352x4096x512 bias=1 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     4352x4096x512 bias=0 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     4352x4096x512 bias=0 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     4352x4096x512 bias=0 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     4352x4096x512 bias=0 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     4352x4096x512 bias=0 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     4352x4096x512 bias=0 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     4352x4096x512 bias=0 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     4352x4096x512 bias=0 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+tail n=4     4352x4096x512 bias=0 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    4352x4096x8192 bias=0 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    4352x4096x8192 bias=0 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    4352x4096x8192 bias=0 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    4352x4096x8192 bias=0 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    4352x4096x8192 bias=0 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    4352x4096x8192 bias=0 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    4352x4096x8192 bias=0 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    4352x4096x8192 bias=0 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=5    4352x4096x8192 bias=0 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    4352x4096x8192 bias=1 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    4352x4096x8192 bias=1 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    4352x4096x8192 bias=1 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    4352x4096x8192 bias=1 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    4352x4096x8192 bias=1 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    4352x4096x8192 bias=1 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    4352x4096x8192 bias=1 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    4352x4096x8192 bias=1 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=8    4352x4096x8192 bias=1 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   4352x4096x8192 bias=0 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   4352x4096x8192 bias=0 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   4352x4096x8192 bias=0 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   4352x4096x8192 bias=0 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   4352x4096x8192 bias=0 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   4352x4096x8192 bias=0 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   4352x4096x8192 bias=0 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   4352x4096x8192 bias=0 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   4352x4096x8192 bias=0 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+longk n=16   4352x4096x8192 bias=0 tree8      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      768x2816x512 bias=1 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      768x2816x512 bias=1 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      768x2816x512 bias=1 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      768x2816x512 bias=1 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      768x2816x512 bias=1 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      768x2816x512 bias=1 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      768x2816x512 bias=1 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      768x2816x512 bias=1 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+compact      768x2816x512 bias=1 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       4320x4064x496 bias=1 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       4320x4064x496 bias=1 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       4320x4064x496 bias=1 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       4320x4064x496 bias=1 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       4320x4064x496 bias=1 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       4320x4064x496 bias=1 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       4320x4064x496 bias=1 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       4320x4064x496 bias=1 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged       4320x4064x496 bias=1 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     4320x4096x512 bias=1 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     4320x4096x512 bias=1 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     4320x4096x512 bias=1 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     4320x4096x512 bias=1 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     4320x4096x512 bias=1 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     4320x4096x512 bias=1 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     4320x4096x512 bias=1 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     4320x4096x512 bias=1 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_m     4320x4096x512 bias=1 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     4352x4064x512 bias=0 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     4352x4064x512 bias=0 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     4352x4064x512 bias=0 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     4352x4064x512 bias=0 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     4352x4064x512 bias=0 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     4352x4064x512 bias=0 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     4352x4064x512 bias=0 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     4352x4064x512 bias=0 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+ragged_n     4352x4064x512 bias=0 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      4352x4096x432 bias=1 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      4352x4096x432 bias=1 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      4352x4096x432 bias=1 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      4352x4096x432 bias=1 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      4352x4096x432 bias=1 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      4352x4096x432 bias=1 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      4352x4096x432 bias=1 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      4352x4096x432 bias=1 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_gt      4352x4096x432 bias=1 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      4352x4096x448 bias=0 rs         error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      4352x4096x448 bias=0 tree2      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      4352x4096x448 bias=0 tree4      error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      4352x4096x448 bias=0 tree2 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      4352x4096x448 bias=0 tree4 loop error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      4352x4096x448 bias=0 separate   error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      4352x4096x448 bias=0 rs_all     error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      4352x4096x448 bias=0 rs_all slp error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+kres_eq      4352x4096x448 bias=0 rs_all pkd error=0.00000 correct=True guard=True rearmed=True bitwise_prod=True
+exit 0
+tree2: graph replay passed, 20 rounds of a two-launch graph
+tree4: graph replay passed, 20 rounds of a two-launch graph
+tree2 loop: graph replay passed, 20 rounds of a two-launch graph
+tree4 loop: graph replay passed, 20 rounds of a two-launch graph
+separate: graph replay passed, 20 rounds of a two-launch graph
+rs_all: graph replay passed, 20 rounds of a two-launch graph
+rs_all slp: graph replay passed, 20 rounds of a two-launch graph
+rs_all pkd: graph replay passed, 20 rounds of a two-launch graph
+graph exit 0
+stale-lock failed as expected
+stale-lock exit 0
+stale-count exit 124 (124 = hung as expected)

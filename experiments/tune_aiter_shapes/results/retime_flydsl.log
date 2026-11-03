@@ -1,0 +1,50 @@
+2026-10-31 17:55:44 guard: start on rocm-smi GPU 1: python experiments/tune_aiter_shapes/tune.py timing
+17:55:45 37344 points already timed; 1773 to time in 45 chunks
+17:56:01 chunk 1 / 45: 40 / 1773 points
+17:56:15 chunk 2 / 45: 80 / 1773 points
+17:56:32 chunk 3 / 45: 120 / 1773 points
+17:56:53 chunk 4 / 45: 160 / 1773 points
+17:57:08 chunk 5 / 45: 200 / 1773 points
+17:57:24 chunk 6 / 45: 240 / 1773 points
+17:57:42 chunk 7 / 45: 280 / 1773 points
+17:58:02 chunk 8 / 45: 320 / 1773 points
+17:58:21 chunk 9 / 45: 360 / 1773 points
+17:58:43 chunk 10 / 45: 400 / 1773 points
+17:59:02 chunk 11 / 45: 440 / 1773 points
+17:59:22 chunk 12 / 45: 480 / 1773 points
+17:59:49 chunk 13 / 45: 520 / 1773 points
+18:00:07 chunk 14 / 45: 560 / 1773 points
+18:00:24 chunk 15 / 45: 600 / 1773 points
+18:00:47 chunk 16 / 45: 640 / 1773 points
+18:01:06 chunk 17 / 45: 680 / 1773 points
+18:01:26 chunk 18 / 45: 720 / 1773 points
+18:01:43 chunk 19 / 45: 760 / 1773 points
+18:01:58 chunk 20 / 45: 800 / 1773 points
+18:02:17 chunk 21 / 45: 840 / 1773 points
+18:02:34 chunk 22 / 45: 880 / 1773 points
+18:02:50 chunk 23 / 45: 920 / 1773 points
+18:03:18 chunk 24 / 45: 960 / 1773 points
+18:03:33 chunk 25 / 45: 1000 / 1773 points
+18:03:49 chunk 26 / 45: 1040 / 1773 points
+18:04:06 chunk 27 / 45: 1080 / 1773 points
+18:04:21 chunk 28 / 45: 1120 / 1773 points
+18:04:35 chunk 29 / 45: 1160 / 1773 points
+18:04:52 chunk 30 / 45: 1200 / 1773 points
+18:05:15 chunk 31 / 45: 1240 / 1773 points
+18:05:35 chunk 32 / 45: 1280 / 1773 points
+18:05:49 chunk 33 / 45: 1320 / 1773 points
+18:06:09 chunk 34 / 45: 1360 / 1773 points
+18:06:25 chunk 35 / 45: 1400 / 1773 points
+18:06:42 chunk 36 / 45: 1440 / 1773 points
+18:06:58 chunk 37 / 45: 1480 / 1773 points
+18:07:18 chunk 38 / 45: 1520 / 1773 points
+18:07:30 chunk 39 / 45: 1560 / 1773 points
+18:07:55 chunk 40 / 45: 1600 / 1773 points
+18:08:10 chunk 41 / 45: 1640 / 1773 points
+18:08:28 chunk 42 / 45: 1680 / 1773 points
+18:08:46 chunk 43 / 45: 1720 / 1773 points
+18:09:01 chunk 44 / 45: 1760 / 1773 points
+18:09:11 chunk 45 / 45: 1773 / 1773 points
+2026-10-31 18:09:11 guard: exit 0: python experiments/tune_aiter_shapes/tune.py timing
+18:09:12 report: 39117 points, 380 shapes, 153 failed or incorrect
+RETIME DONE

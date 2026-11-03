@@ -1,0 +1,3 @@
+tile,M,N,K,tiles,sustained_tflops,sclk_ghz,power_w,samples,mfma_util,mfma_util_busy
+256x256,4096,2304,4096,144,1004.8,2.133,1166,104,0.4493,0.7987
+256x256,3072,3072,4096,144,1061.9,2.335,1331,104,0.4338,0.7711

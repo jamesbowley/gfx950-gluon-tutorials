@@ -1,0 +1,10 @@
+2026-10-31 12:21:29 AITER bd4ff1c70 Sat Oct 31 12:22:10 2026 +0800 flydsl 0.4.1
+2026-10-31 12:21:29 generating inputs
+pilot: [((640, 7168, 35840), 601), ((1153, 7168, 35840), 163), ((2561, 6288, 7168), 15), ((3582, 3584, 7168), 144)] total 923
+380 shapes, 143552 candidates, 5239 unique kernels, 20 shapes with none
+2026-10-31 12:25:15 one-shape check
+check: 15 candidates, 0 with no time, fastest 491.7 us
+check: 0 kernel names tune.py cannot parse
+2026-10-31 12:25:32 tuning every shape
+2026-10-31 17:55:43 re-timing in our harness
+2026-10-31 18:09:13 pipeline finished

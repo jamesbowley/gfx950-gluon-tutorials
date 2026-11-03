@@ -1,0 +1,34 @@
+[aiter] import [module_aiter_core] under /home/jbowley/repos/aiter/aiter/jit/module_aiter_core.so
+............................
+----------------------------------------------------------------------
+Ran 28 tests in 0.316s
+
+OK
+[aiter] import [module_aiter_core] under /home/jbowley/repos/aiter/aiter/jit/module_aiter_core.so
+dp_waves     4096x4096x8192 plan=dp/owner/None S=0 grid=256 correct=True guard=True rearmed=True
+dp_short_k   4352x4096x512 plan=dp/owner/None S=0 grid=256 correct=True guard=True rearmed=True
+rs_after     4352x4096x8192 plan=one_tile/rs/12 S=16 grid=256 correct=True guard=True rearmed=True
+owner_after  4096x6144x8192 plan=one_tile/owner/2 S=128 grid=256 correct=True guard=True rearmed=True
+rs_below     2048x2048x8192 plan=one_tile/rs/4 S=64 grid=256 correct=True guard=True rearmed=True
+owner_below  2048x4096x8192 plan=one_tile/owner/2 S=128 grid=256 correct=True guard=True rearmed=True
+dp_below     2048x2048x512 plan=dp/owner/None S=0 grid=64 correct=True guard=True rearmed=True
+rs_ragged    4320x4064x8176 plan=one_tile/rs/12 S=16 grid=256 correct=True guard=True rearmed=True
+[aiter] import [module_aiter_core] under /home/jbowley/repos/aiter/aiter/jit/module_aiter_core.so
+dp_waves     2048x1024x8192 plan=dp/owner/None S=0 grid=256 correct=True guard=True rearmed=True
+dp_short_k   2176x1024x512 plan=dp/owner/None S=0 grid=256 correct=True guard=True rearmed=True
+rs_after     2176x1024x8192 plan=one_tile/rs/12 S=16 grid=256 correct=True guard=True rearmed=True
+owner_after  2048x1536x8192 plan=one_tile/owner/2 S=128 grid=256 correct=True guard=True rearmed=True
+rs_below     1024x512x8192 plan=one_tile/rs/4 S=64 grid=256 correct=True guard=True rearmed=True
+owner_below  1024x1024x8192 plan=one_tile/owner/2 S=128 grid=256 correct=True guard=True rearmed=True
+dp_below     1024x512x512 plan=dp/owner/None S=0 grid=64 correct=True guard=True rearmed=True
+rs_ragged    2160x1016x8176 plan=one_tile/rs/12 S=16 grid=256 correct=True guard=True rearmed=True
+[aiter] import [module_aiter_core] under /home/jbowley/repos/aiter/aiter/jit/module_aiter_core.so
+dp_waves     2048x2048x16384 plan=dp/owner/None S=0 grid=256 correct=True guard=True rearmed=True
+dp_short_k   2176x2048x1024 plan=dp/owner/None S=0 grid=256 correct=True guard=True rearmed=True
+rs_after     2176x2048x16384 plan=one_tile/rs/12 S=16 grid=256 correct=True guard=True rearmed=True
+owner_after  2048x3072x16384 plan=one_tile/owner/2 S=128 grid=256 correct=True guard=True rearmed=True
+rs_below     1024x1024x16384 plan=one_tile/rs/4 S=64 grid=256 correct=True guard=True rearmed=True
+owner_below  1024x2048x16384 plan=one_tile/owner/2 S=128 grid=256 correct=True guard=True rearmed=True
+dp_below     1024x1024x1024 plan=dp/owner/None S=0 grid=64 correct=True guard=True rearmed=True
+rs_ragged    2160x2032x16368 plan=one_tile/rs/12 S=16 grid=256 correct=True guard=True rearmed=True
+DEFAULT CHECKS PASSED

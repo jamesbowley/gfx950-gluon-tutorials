@@ -1,0 +1,42 @@
+2026-10-30 18:00:51 guard: start on rocm-smi GPU 1: python experiments/tune_2561x6288x7168/tune.py all
+18:01:17 warm: 198 of 198 compiled, 0 failures
+18:01:37 batch 1 / 6 done
+18:01:57 batch 2 / 6 done
+18:02:17 batch 3 / 6 done
+18:02:37 batch 4 / 6 done
+18:02:57 batch 5 / 6 done
+18:03:02 batch 6 / 6 done
+# 2561x6288x7168 bf16: v31 Stream-K, v9 and hipBLASLt
+
+230.9 GFLOP per call. Each point: 1000 launches traced with rocprofv3 (a graph of 100 replayed 10 times) over 2048 MB of rotating inputs; time is the median of all 1000, TFLOPS from the median. `vs torch` is hipBLASLt's time over the point's (above 1 is faster than torch). `*` marks the v31 default formula's plan for that tile.
+
+## Summary
+
+| version | tile | method | median us | mean us | TFLOPS | vs torch |
+|---|---|---|---|---|---|---|
+| v31 (best) | 256x256x64 | one_tile rs n=8 | 190.321 | 191.045 | 1213.0 | 0.959 |
+| v9 (best) | 128x128x64 | dp | 247.682 | 248.272 | 932.1 | 0.737 |
+| torch (best) | hbl (320x224x64 SK5 GSU0) | hipBLASLt | 182.541 | 183.814 | 1264.7 | 1.000 |
+
+## Best per tile
+
+| tile | best v31 method | v31 median us | v31 TFLOPS | v31 dp us | formula's plan (us) | v9 us | v9 TFLOPS |
+|---|---|---|---|---|---|---|---|
+| 256x256x64 | one_tile rs n=8 | 190.321 | 1213.0 | 269.162 | one_tile rs n=12 (192.362) | 265.842 | 868.4 |
+| 256x128x64 | one_tile rs n=4 | 211.361 | 1092.3 | 252.802 | one_tile rs n=6 (212.282) | 252.042 | 916.0 |
+| 128x256x64 | one_tile rs n=12 | 205.482 | 1123.5 | 252.922 | one_tile rs n=12 (205.482) | 252.122 | 915.7 |
+| 128x128x64 | one_tile rs (l2) n=8 | 247.962 | 931.0 | 271.922 | one_tile rs n=8 (248.402) | 247.682 | 932.1 |
+| 128x128x128 | one_tile rs n=8 | 233.842 | 987.3 | 258.723 | one_tile rs n=6 (234.321) |  |  |
+| 256x64x64 | one_tile owner n=3 | 299.322 | 771.3 | 335.083 | one_tile owner n=3 (299.322) | 324.763 | 710.9 |
+| 64x256x64 | one_tile owner n=6 | 277.662 | 831.4 | 307.882 | one_tile rs n=32 (282.522) | 304.043 | 759.3 |
+| 128x64x64 | one_tile rs n=8 | 326.623 | 706.8 | 342.003 | one_tile rs n=8 (326.623) | 317.022 | 728.2 |
+| 128x64x128 | one_tile rs (l2) n=4 | 303.082 | 761.7 | 314.423 | one_tile rs n=6 (303.963) |  |  |
+| 64x128x64 | one_tile rs (l2) n=32 | 310.283 | 744.0 | 324.882 | one_tile rs n=32 (313.163) | 296.923 | 777.5 |
+| 64x128x128 | two_tile | 293.483 | 786.6 | 301.562 | one_tile rs n=16 (296.402) |  |  |
+| 64x64x64 | dp | 465.244 | 496.2 | 465.244 | dp (465.244) | 365.323 | 631.9 |
+| 64x64x128 | dp | 364.784 | 632.9 | 364.784 | dp (364.784) |  |  |
+
+## Every point, fastest first
+
+| # | version | tile | method | median us | mean us | min us | p90 us | TFLOPS | vs torch |
+2026-10-30 18:03:02 guard: exit 0: python experiments/tune_2561x6288x7168/tune.py all

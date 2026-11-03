@@ -1,0 +1,9 @@
+2026-10-31 05:33:48 guard: start on rocm-smi GPU 1: bash /tmp/aiter_v31_smoke/run_smoke.sh
+FAILED op_tests/triton_tests/gemm/basic/test_gemm_a16w16.py::test_gemm_a16_w16_gluon_compute_bound[True-True-dtype0-4096-4096-8192]
+FAILED op_tests/triton_tests/gemm/basic/test_gemm_a16w16.py::test_gemm_a16_w16_gluon_compute_bound[True-True-dtype0-8192-8192-8192]
+FAILED op_tests/triton_tests/gemm/basic/test_gemm_a16w16.py::test_gemm_a16_w16_gluon_compute_bound[True-False-dtype0-4096-4096-8192]
+FAILED op_tests/triton_tests/gemm/basic/test_gemm_a16w16.py::test_gemm_a16_w16_gluon_compute_bound[True-False-dtype0-8192-8192-8192]
+FAILED op_tests/triton_tests/gemm/basic/test_gemm_a16w16.py::test_gemm_a16_w16_gluon_compute_bound_tiles[False-tile8]
+FAILED op_tests/triton_tests/gemm/basic/test_gemm_a16w16.py::test_gemm_a16_w16_gluon_compute_bound_tiles[True-tile8]
+6 failed, 89 passed, 179 skipped, 842 deselected in 5.59s
+2026-10-31 05:33:59 guard: exit 1: bash /tmp/aiter_v31_smoke/run_smoke.sh
