@@ -70,10 +70,9 @@ def run_fn(kind, tile):
     from v31_streamk_aiter import matmul_kernel as mk
 
     config = grid.config_for(kind, tile)
-    G = grid.streamk_grid(kind)
 
     def run(x, w, y):
-        mk.gemm_a16w16(x, w, dtype=y.dtype, y=y, config=config, streamk_grid=G)
+        mk.gemm_a16w16(x, w, dtype=y.dtype, y=y, config=config)
 
     return run
 
@@ -228,9 +227,8 @@ def row(p, correct="", error=""):
     c = grid.config_for(kind, tile)
     r = dict.fromkeys(FIELDS, "")
     r.update(point=p, kind=kind, tile=tile, M=M, N=N, K=K, T=sh["T"], S=sh["S"], W=sh["W"], k=sh["k"],
-             pairs=sh["pairs"], policy=c.get("STREAMK_POLICY", "default"),
-             fixup=c.get("STREAMK_FIXUP", ""), split_n=c.get("SPLIT_N") or 1,
-             exchange=c.get("STREAMK_EXCHANGE", ""), grid=grid.streamk_grid(kind) or "",
+             pairs=sh["pairs"], policy=c["STREAMK_POLICY"], fixup=c["STREAMK_FIXUP"],
+             split_n=c["SPLIT_N"] or 1, exchange=c["STREAMK_EXCHANGE"],
              persistent=1,
              correct=correct, error=error)
     return r

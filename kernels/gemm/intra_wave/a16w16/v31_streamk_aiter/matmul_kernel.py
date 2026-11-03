@@ -538,7 +538,7 @@ def _gemm_a16w16_compute_bound_kernel(
         b_left = 0
 
     if END_TO_END and STREAMK_TILES > 0:
-        # Two-tile and spread always use the whole grid of NUM_PROGRAMS.
+        # Two-tile and spread always use the full resident grid.
         rank, sk_pair_start, seg_end = e2e_pair_range(
             STREAMK_TILES, PAIRS_PER_TILE, NUM_PROGRAMS, NUM_XCDS
         )
@@ -3510,25 +3510,6 @@ def unsupported_reason(
     return None
 
 
-def _reduced_grid(M, N, K, config, grid, num_programs, num_xcds):
-    """Validate a two_tile reduced grid (gemm_a16w16's streamk_grid) and return it."""
-    config = StreamKConfig.from_dict(complete_config(config, M, N, K, num_programs))
-    if config.policy != "two_tile":
-        raise ValueError(f"streamk_grid requires two_tile, got {config.policy}")
-    if type(grid) is not int or grid <= 0 or grid % num_xcds or grid > num_programs:
-        raise ValueError(
-            f"streamk_grid={grid} must be a positive multiple of {num_xcds} "
-            f"and at most {num_programs}"
-        )
-    tile = config.tile
-    total_tiles = triton.cdiv(M, tile.block_m) * triton.cdiv(N, tile.block_n)
-    if not grid < total_tiles < 2 * grid:
-        raise ValueError(
-            f"streamk_grid={grid} needs G < T < 2 G, got T={total_tiles}"
-        )
-    return grid
-
-
 def gemm_a16w16(
     x,
     w,
@@ -3537,18 +3518,12 @@ def gemm_a16w16(
     y=None,
     config=None,
     persistent_partials=False,
-    streamk_grid=None,
 ):
     """Run ``y = x @ w.T (+ bias)`` with a Stream-K ``config``: a complete one, or
     one that names only the tile and gets the default plan (complete_config).
 
     ``persistent_partials`` keeps one full-grid fp32 partial buffer sized for the
     largest tile per (device, stream) instead of allocating per call.
-
-    ``streamk_grid`` (experiments only) runs two_tile on G programs instead of one
-    per CU: G must be a multiple of the XCD count, at most the CUs, and satisfy
-    G < T < 2 G, so every tile is in the end-to-end split and no program
-    strides a data-parallel loop over the smaller grid.
     """
     if x.ndim != 2 or w.ndim != 2:
         raise ValueError("x and w must be rank-2 tensors")
@@ -3567,8 +3542,6 @@ def gemm_a16w16(
     if config is None:
         raise ValueError("gfx950 gluon a16w16 needs a config naming at least the tile")
     num_programs, num_xcds = streamk_topology()
-    if streamk_grid is not None:
-        num_programs = _reduced_grid(M, N, K, config, streamk_grid, num_programs, num_xcds)
     config, launch = _launch_constants(M, N, K, config, num_programs, num_xcds)
     tile = config.tile
     k_pad = triton.cdiv(K, 2 * tile.block_k) * 2 * tile.block_k

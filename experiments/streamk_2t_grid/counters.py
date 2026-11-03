@@ -17,7 +17,7 @@ import sys
 from collections import defaultdict
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SWEEP = os.path.join(HERE, "..", "streamk_v31_rule", "sweep.py")
+SWEEP = os.path.join(HERE, "sweep_2tg.py")
 KERNEL = "_gemm_a16w16_compute_bound_kernel"
 TILE = "256x256x64"
 POINTS = [f"{k}:{TILE}:3840x5120x8192" for k in ("dp", "ow2", "rs4", "2t", "2tg240", "2tg224", "2tg200")]

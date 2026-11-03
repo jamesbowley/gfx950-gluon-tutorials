@@ -8,7 +8,7 @@ HERE=$(dirname "$(readlink -f "$0")")
 source "$HERE/../../kernels/gemm/intra_wave/a16w16/v31_streamk_aiter/env.sh"
 cd "$REPO"
 python "$HERE/points.py"
-SWEEP=experiments/streamk_v31_rule/sweep.py
+SWEEP=experiments/streamk_2t_grid/sweep_2tg.py
 GUARD="python experiments/streamk_v31_rule/gpu_guard.py --smi-index 1 --log $HERE/results/run.guard --"
 for name in pilot matrix; do
     [ "$WHAT" = all ] || [ "$WHAT" = "$name" ] || continue

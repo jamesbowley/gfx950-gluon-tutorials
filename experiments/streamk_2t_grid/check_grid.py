@@ -1,4 +1,4 @@
-"""Correctness of two_tile on a reduced grid (gemm_a16w16's streamk_grid).
+"""Correctness of two_tile on a reduced grid (reduced_grid.py).
 
     source kernels/gemm/intra_wave/a16w16/v31_streamk_aiter/env.sh
     python $REPO/experiments/streamk_2t_grid/check_grid.py --tile 256x256x64
@@ -19,7 +19,9 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 A16 = os.path.abspath(os.path.join(HERE, "..", "..", "kernels", "gemm", "intra_wave", "a16w16"))
 sys.path.insert(0, A16)
+sys.path.insert(0, HERE)
 import torch  # noqa: E402
+import reduced_grid  # noqa: E402
 from v31_streamk_aiter import matmul_kernel as mk  # noqa: E402
 
 SENTINEL = 1234.0
@@ -74,7 +76,7 @@ def rearmed(G):
 
 
 def run(a, w, bias, c, config, G, persistent):
-    mk.gemm_a16w16(a, w, bias, y=c, config=config, streamk_grid=G, persistent_partials=persistent)
+    reduced_grid.gemm(a, w, bias, y=c, config=config, G=G, persistent_partials=persistent)
 
 
 def verdict(c, ref, backing, M, N):
@@ -115,7 +117,7 @@ def check_rejects(tile):
            (config, 264, "above the CUs"), (dict(config, STREAMK_POLICY="dp"), 200, "not two_tile")]
     for cfg, G, why in bad:
         try:
-            mk.gemm_a16w16(a, w, config=cfg, streamk_grid=G)
+            reduced_grid.gemm(a, w, config=cfg, G=G)
         except ValueError as e:
             print(f"rejected G={G} ({why}): {e}")
         else:

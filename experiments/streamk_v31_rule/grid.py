@@ -151,9 +151,7 @@ def config_for(kind, tile):
              STREAMK_FIXUP="owner", SPLIT_N=None, STREAMK_EXCHANGE="wt")
     if kind == "dp":
         return c
-    if kind == "def":
-        return dict(BLOCK_M=bm, BLOCK_N=bn, BLOCK_K=bk)
-    if kind == "2t" or kind.startswith("2tg"):
+    if kind == "2t":
         return dict(c, STREAMK_POLICY="two_tile")
     if kind == "sp":
         return dict(c, STREAMK_POLICY="spread")
@@ -164,22 +162,11 @@ def config_for(kind, tile):
     raise ValueError(kind)
 
 
-def streamk_grid(kind):
-    """G of a ``2tg{G}`` kind (two_tile on G programs), else None."""
-    return int(kind[3:]) if kind.startswith("2tg") else None
-
-
 def valid(kind, tile, M, N, K):
     """The point runs. Uses the offline resolver (test_selection checks it against
     the kernel's launch constants), so this process never opens the GPU."""
     from v31_streamk_aiter.selection import DeviceConfig, try_resolve_config
 
-    G = streamk_grid(kind)
-    if G is not None:
-        T, pairs = shape_info(tile, M, N, K)["T"], shape_info(tile, M, N, K)["pairs"]
-        return G % NUM_XCDS == 0 and G <= P and G < T < 2 * G and T * pairs >= G and pairs >= 2
-    if kind == "def":
-        return True
     device = DeviceConfig("gfx950", P, NUM_XCDS, 160 * 1024)
     if try_resolve_config(M, N, K, config=config_for(kind, tile), device=device) is None:
         return False

@@ -3,7 +3,8 @@
     python experiments/streamk_2t_grid/points.py      # writes results/pilot.txt, results/matrix.txt
 
 A point is experiments/streamk_v31_rule's ``KIND:BMxBNxBK:MxNxK``; ``2tg{G}`` is two_tile
-on G programs (G < T < 2 G, a multiple of 8), ``def`` the v31 default plan. Every shape
+on G programs (G < T < 2 G, a multiple of 8), ``def`` the v31 default plan (both from
+sweep_2tg.py). Every shape
 also gets dp, ``2t`` (G = 256) and every valid one-tile owner and reduce-scatter split.
 """
 
@@ -13,6 +14,8 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "streamk_v31_rule"))
+sys.path.insert(0, HERE)
+import sweep_2tg  # noqa: E402,F401  (adds the 2tg and def kinds to grid)
 import grid  # noqa: E402
 
 TILE = "256x256x64"
