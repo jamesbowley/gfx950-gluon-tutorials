@@ -67,6 +67,7 @@ VERSION_MAP = {
     7: "v7_sliceN",
     8: "v8_sliceMN",
     9: "v9_beyond_hotloop",
+    10: "v9_beyond_hotloop_tiles",
 }
 
 DEVICE = triton.runtime.driver.active.get_active_torch_device()
@@ -137,7 +138,7 @@ def parse_args():
         "--version",
         type=int,
         default=9,
-        choices=range(0, 10),
+        choices=range(0, 11),
         help="Kernel version to benchmark (default: 9, the final version)",
     )
     parser.add_argument(
@@ -158,6 +159,11 @@ def parse_args():
         default=None,
         help='Triton schedule_hint compile option for the kernel ("" turns the MFMA scheduler '
         "off; default: the kernel's own choice, see matmul() in matmul_kernel.py; ignored by v0-v4)",
+    )
+    parser.add_argument(
+        "--tile",
+        default=None,
+        help="v10 only: BMxBN tile, run on M = 16 x BM, N = 16 x BN (256 workgroups)",
     )
     return parser.parse_args()
 
@@ -253,6 +259,10 @@ def main():
             print(f"[{version_dir}] does not use the MFMA scheduler; --schedule-hint ignored")
 
     gemm_sizes = get_gemm_sizes(args.K)
+    if args.tile is not None:
+        bm, bn = map(int, args.tile.split("x"))
+        matmul = functools.partial(matmul, tile=(bm, bn))
+        gemm_sizes = [(16 * bm, 16 * bn, k) for _, _, k in gemm_sizes]
     dtypes = get_dtypes(args.dtype)
 
     for dtype in dtypes:

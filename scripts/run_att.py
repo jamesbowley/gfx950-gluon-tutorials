@@ -116,6 +116,11 @@ def parse_args():
     )
 
     parser.add_argument(
+        "--kernel-regex",
+        help="First write att_matmul.json (run_perf_table.py's ATT template) for this kernel name",
+    )
+
+    parser.add_argument(
         "python_cmd",
         nargs=argparse.REMAINDER,
         help="Python script and arguments to profile (after --)",
@@ -129,6 +134,11 @@ def main():
 
     if not args.python_cmd:
         raise ValueError("You must provide a python command to run after --")
+
+    if args.kernel_regex:
+        from run_perf_table import write_att_config
+
+        write_att_config(args.kernel_regex)
 
     run_rocprof_att(args.att_output, args.python_cmd)
 
